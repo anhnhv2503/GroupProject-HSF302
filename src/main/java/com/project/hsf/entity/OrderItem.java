@@ -60,7 +60,7 @@ public class OrderItem {
     @Column(name = "unit_price", nullable = false, precision = 10, scale = 2)
     private BigDecimal unitPrice;
 
-    @ColumnDefault("[quantity]*[unit_price]")
+//    @ColumnDefault("[quantity]*[unit_price]")
     @Column(name = "subtotal", precision = 21, scale = 2)
     private BigDecimal subtotal;
 

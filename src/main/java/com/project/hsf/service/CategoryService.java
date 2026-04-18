@@ -1,7 +1,6 @@
 package com.project.hsf.service;
 
 import com.project.hsf.entity.Category;
-import com.project.hsf.entity.SeafoodProduct;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,4 +15,8 @@ public interface CategoryService {
     Category save(Category category);
 
     void deleteById(Long id);
+
+    Category update(Category category);
+
+    List<Category> findByActiveTrue();
 }

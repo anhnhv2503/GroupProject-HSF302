@@ -40,7 +40,7 @@ public class Order {
     @Column(name = "shipping_fee", nullable = false, precision = 10, scale = 2)
     private BigDecimal shippingFee;
 
-    @ColumnDefault("([total_price]-[discount_amount])+[shipping_fee]")
+//    @ColumnDefault("([total_price]-[discount_amount])+[shipping_fee]")
     @Column(name = "final_price", precision = 12, scale = 2)
     private BigDecimal finalPrice;
 
