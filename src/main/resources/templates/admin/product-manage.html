@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org" class="light" lang="vi">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>The Oceanic - Quản Lý Sản Phẩm</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&amp;family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#F26522", // Brand Orange
+                        "secondary": "#E8C872", // Golden Sand
+                        "accent": "#F26522", // Brand Orange (Actions)
+                        "surface": "#FDFBF7",
+                        "on-surface": "#1B1C17",
+                        "on-surface-variant": "#44483D",
+                        "outline-variant": "#C4C8BA",
+                        "background": "#F4F7F5",
+                        "tertiary": "#0D4A7A", // Brand Deep Blue (Sidebar)
+                        "primary-container": "#FFEDE5",
+                        "on-primary-container": "#F26522",
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Playfair Display", "serif"],
+                        "body": ["Plus Jakarta Sans", "sans-serif"],
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .font-headline {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+    </style>
+</head>
+
+<body class="bg-background text-on-surface flex min-h-screen">
+    <!-- SideNavBar Fragment -->
+    <div th:replace="~{admin/fragments/sidebar :: sidebar}"></div>
+
+    <!-- Main Canvas -->
+    <main class="flex-1 ml-72 min-h-screen relative">
+        <!-- TopNavBar Fragment -->
+        <div th:replace="~{admin/fragments/header :: header}"></div>
+        <!-- Content Area -->
+        <div class="p-10">
+            <!-- Hero Header -->
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-12">
+                <div class="max-w-3xl">
+                    <nav
+                        class="flex items-center gap-2 mb-4 text-xs font-bold uppercase tracking-widest text-tertiary/60">
+                        <span>Hệ thống</span>
+                        <span class="material-symbols-outlined text-[10px]">chevron_right</span>
+                        <span>Quản lý kho</span>
+                        <span class="material-symbols-outlined text-[10px]">chevron_right</span>
+                        <span class="text-primary">Sản phẩm</span>
+                    </nav>
+                    <h2 class="text-5xl font-headline font-bold text-tertiary tracking-tight mb-4">Quản Lý Sản Phẩm</h2>
+                    <p class="text-on-surface-variant leading-relaxed text-lg italic opacity-80">"Kho tàng mỹ vị từ đại dương, đảm bảo chất lượng tươi ngon nhất tới từng bàn tiệc."</p>
+                </div>
+                <button onclick="openModal()"
+                    class="bg-primary text-white font-bold px-8 py-4 rounded-xl flex items-center gap-3 shadow-xl shadow-primary/20 hover:-translate-y-1 active:translate-y-0 transition-all cursor-pointer uppercase tracking-wider text-sm">
+                    <span class="material-symbols-outlined">add_box</span>
+                    Thêm sản phẩm mới
+                </button>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+                <div
+                    class="bg-white p-8 rounded-2xl border border-outline-variant/10 shadow-sm relative overflow-hidden group hover:shadow-lg transition-all duration-300">
+                    <div
+                        class="absolute -right-6 -bottom-6 opacity-[0.03] group-hover:scale-110 transition-transform duration-500">
+                        <span class="material-symbols-outlined text-[160px] text-tertiary"
+                            style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+                    </div>
+                    <div class="relative z-10">
+                        <p
+                            class="text-xs font-bold text-on-surface-variant/60 uppercase tracking-widest mb-6 flex items-center gap-2">
+                            <span class="w-2 h-2 bg-secondary rounded-full"></span> Tổng Số Sản Phẩm
+                        </p>
+                        <div class="flex items-end justify-between">
+                            <h3 class="text-5xl font-headline font-bold text-tertiary" th:text="${totalProducts}">0</h3>
+                        </div>
+                    </div>
+                </div>
+                <div
+                    class="bg-white p-8 rounded-2xl border border-outline-variant/10 shadow-sm relative overflow-hidden group hover:shadow-lg transition-all duration-300">
+                    <div
+                        class="absolute -right-6 -bottom-6 opacity-[0.03] group-hover:scale-110 transition-transform duration-500 text-green-600">
+                        <span class="material-symbols-outlined text-[160px]"
+                            style="font-variation-settings: 'FILL' 1;">verified</span>
+                    </div>
+                    <div class="relative z-10">
+                        <p
+                            class="text-xs font-bold text-on-surface-variant/60 uppercase tracking-widest mb-6 flex items-center gap-2">
+                            <span class="w-2 h-2 bg-green-500 rounded-full"></span> Đang Hoạt Động
+                        </p>
+                        <div class="flex items-end justify-between">
+                            <h3 class="text-5xl font-headline font-bold text-tertiary" th:text="${activeProducts}">0</h3>
+                            <span
+                                class="text-on-surface-variant text-xs font-bold flex items-center gap-1 bg-surface-container-high px-3 py-1.5 rounded-full">
+                                Sẵn sàng phục vụ
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div
+                    class="bg-tertiary text-white p-8 rounded-2xl shadow-xl relative overflow-hidden group hover:scale-[1.02] transition-all duration-300">
+                    <div
+                        class="absolute -right-6 -bottom-6 opacity-10 group-hover:scale-110 transition-transform duration-500">
+                        <span class="material-symbols-outlined text-[160px]"
+                            style="font-variation-settings: 'FILL' 1;">warning</span>
+                    </div>
+                    <div class="relative z-10">
+                        <p
+                            class="text-xs font-bold text-secondary uppercase tracking-widest mb-6 flex items-center gap-2">
+                            <span class="w-2 h-2 bg-primary rounded-full animate-pulse"></span> Sắp Hết Hàng
+                        </p>
+                        <div class="flex flex-col">
+                            <h3 class="text-5xl font-headline font-bold text-white mb-2" th:text="${lowStockProducts}">0</h3>
+                            <p class="text-sm text-secondary font-medium">Cần bổ sung nguồn cung</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Data Table -->
+            <div class="bg-white rounded-2xl shadow-sm overflow-hidden border border-outline-variant/20">
+                <div
+                    class="px-8 py-6 border-b border-outline-variant/10 flex flex-col md:flex-row justify-between items-center gap-4 bg-surface/50">
+                    <div class="flex items-center gap-6">
+                        <div>
+                            <h4 class="font-headline font-bold text-xl text-tertiary">Danh sách sản phẩm chi tiết</h4>
+                        </div>
+                    </div>
+                    <div class="flex gap-3">
+                        <button
+                            class="flex items-center gap-2 px-4 py-2 hover:bg-surface-container rounded-lg transition-all border border-outline-variant/30 text-sm font-semibold text-on-surface-variant">
+                            <span class="material-symbols-outlined text-lg">tune</span> Bộ lọc
+                        </button>
+                        <button
+                            class="flex items-center gap-2 px-4 py-2 hover:bg-surface-container rounded-lg transition-all border border-outline-variant/30 text-sm font-semibold text-on-surface-variant">
+                            <span class="material-symbols-outlined text-lg">ios_share</span> Xuất dữ liệu
+                        </button>
+                    </div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-background/50">
+                                <th
+                                    class="px-8 py-5 text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant/60">
+                                    Mã ID</th>
+                                <th
+                                    class="px-8 py-5 text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant/60">
+                                    Sản Phẩm</th>
+                                <th
+                                    class="px-8 py-5 text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant/60">
+                                    Danh Mục</th>
+                                <th
+                                    class="px-8 py-5 text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant/60">
+                                    Giá Bán</th>
+                                <th
+                                    class="px-8 py-5 text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant/60 text-center">
+                                    Tồn Kho</th>
+                                <th
+                                    class="px-8 py-5 text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant/60">
+                                    Trạng Thái</th>
+                                <th
+                                    class="px-8 py-5 text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant/60 text-right">
+                                    Quản Lý</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-outline-variant/10">
+                            <tr th:each="product : ${products}" class="hover:bg-background/40 transition-colors group">
+                                <td class="px-8 py-6 font-mono text-xs text-tertiary/60 font-semibold"
+                                    th:text="'#PRO-' + ${product.id}">#PRO-001</td>
+                                <td class="px-8 py-6">
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-12 h-12 rounded-xl border border-outline-variant/20 overflow-hidden bg-surface flex-shrink-0">
+                                            <img src="https://via.placeholder.com/150?text=Seafood" alt="Image" class="w-full h-full object-cover">
+                                        </div>
+                                        <div>
+                                            <span class="font-headline font-bold text-tertiary block text-base"
+                                                th:text="${product.name}">Tên Sản Phẩm</span>
+                                            <span class="text-[10px] text-on-surface-variant/60 font-bold uppercase" th:text="${product.importedFrom}">Xuất xứ</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-8 py-6">
+                                    <span class="px-3 py-1 bg-tertiary/5 text-tertiary text-[10px] font-bold rounded-full border border-tertiary/10 uppercase tracking-wider"
+                                        th:text="${product.category.name}">Danh mục</span>
+                                </td>
+                                <td class="px-8 py-6">
+                                    <span class="font-bold text-tertiary" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' đ'">1.000.000 đ</span>
+                                </td>
+                                <td class="px-8 py-6 text-center">
+                                    <span class="font-mono font-bold" th:classappend="${product.stockQuantity < 10} ? 'text-primary' : 'text-tertiary'" 
+                                          th:text="${product.stockQuantity}">10</span>
+                                </td>
+                                <td class="px-8 py-6">
+                                    <span th:if="${product.active}"
+                                        class="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-green-50 text-green-700 text-[10px] font-bold uppercase rounded-full border border-green-200">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+                                        Đang bán
+                                    </span>
+                                    <span th:unless="${product.active}"
+                                        class="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-red-50 text-red-700 text-[10px] font-bold uppercase rounded-full border border-red-200">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
+                                        Tạm ngưng
+                                    </span>
+                                </td>
+                                <td class="px-8 py-6 text-right">
+                                    <div class="flex justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <!-- Edit Button -->
+                                        <button type="button" 
+                                            th:data-id="${product.id}"
+                                            th:data-name="${product.name}"
+                                            th:data-description="${product.description}"
+                                            th:data-price="${product.price}"
+                                            th:data-stock="${product.stockQuantity}"
+                                            th:data-category-id="${product.category.id}"
+                                            th:data-active="${product.active}"
+                                            th:data-imported-from="${product.importedFrom}"
+                                            th:data-freshness="${product.freshnessStatus}"
+                                            onclick="openEditModal(this)"
+                                            class="w-9 h-9 flex items-center justify-center bg-tertiary/5 hover:bg-tertiary hover:text-white rounded-lg transition-all text-tertiary">
+                                            <span class="material-symbols-outlined text-lg">edit</span>
+                                        </button>
+                                        <!-- Delete Button -->
+                                        <button type="button" 
+                                            th:data-id="${product.id}"
+                                            th:data-name="${product.name}" 
+                                            onclick="openDeleteModal(this)"
+                                            class="w-9 h-9 flex items-center justify-center bg-primary/5 hover:bg-primary hover:text-white rounded-lg transition-all text-primary">
+                                            <span class="material-symbols-outlined text-lg">delete</span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- Background Decorative Element -->
+        <div
+            class="fixed bottom-0 right-0 w-[500px] h-[500px] bg-gradient-radial from-primary/10 to-transparent -z-10 opacity-30 blur-[100px] pointer-events-none">
+        </div>
+    </main>
+
+    <!-- Create/Edit Product Modal -->
+    <div id="productModal" class="fixed inset-0 z-[100] hidden overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="fixed inset-0 bg-tertiary/40 backdrop-blur-sm transition-opacity" onclick="closeModal()"></div>
+            <div class="relative bg-white rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden transform transition-all border border-outline-variant/10">
+                <div class="px-8 py-6 bg-tertiary text-white flex justify-between items-center">
+                    <div>
+                        <h3 id="modalTitle" class="text-2xl font-headline font-bold">Thêm Sản Phẩm Mới</h3>
+                        <p id="modalSubtitle" class="text-xs text-secondary/80 font-medium mt-1">Khởi tạo mỹ vị mới cho thực đơn đại dương</p>
+                    </div>
+                    <button onclick="closeModal()" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10 transition-colors">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                </div>
+
+                <form id="productForm" th:action="@{/admin/seafood-products/create}" method="post" class="p-8">
+                    <input type="hidden" name="id" id="productId">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Tên Sản Phẩm -->
+                        <div class="space-y-2 md:col-span-2">
+                            <label class="text-[10px] font-bold uppercase tracking-widest text-tertiary/60 px-1">Tên Sản Phẩm</label>
+                            <input type="text" name="name" required
+                                class="w-full px-5 py-3 bg-background border border-outline-variant/30 rounded-2xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-semibold text-tertiary"
+                                placeholder="VD: Tôm Hùm Alaska XL">
+                        </div>
+
+                        <!-- Danh Mục -->
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-bold uppercase tracking-widest text-tertiary/60 px-1">Danh Mục</label>
+                            <select name="categoryId" required
+                                class="w-full px-5 py-3 bg-background border border-outline-variant/30 rounded-2xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-semibold text-tertiary">
+                                <option value="" disabled selected>Chọn danh mục</option>
+                                <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}">Category</option>
+                            </select>
+                        </div>
+
+                        <!-- Giá Bán -->
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-bold uppercase tracking-widest text-tertiary/60 px-1">Giá Bán (VNĐ)</label>
+                            <input type="number" name="price" required min="0"
+                                class="w-full px-5 py-3 bg-background border border-outline-variant/30 rounded-2xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-semibold text-tertiary"
+                                placeholder="0">
+                        </div>
+
+                        <!-- Tồn Kho -->
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-bold uppercase tracking-widest text-tertiary/60 px-1">Số Lượng Tồn Kho</label>
+                            <input type="number" name="stockQuantity" required min="0"
+                                class="w-full px-5 py-3 bg-background border border-outline-variant/30 rounded-2xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-semibold text-tertiary"
+                                placeholder="0">
+                        </div>
+
+                        <!-- Xuất Xứ -->
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-bold uppercase tracking-widest text-tertiary/60 px-1">Xuất Xứ</label>
+                            <input type="text" name="importedFrom"
+                                class="w-full px-5 py-3 bg-background border border-outline-variant/30 rounded-2xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-semibold text-tertiary"
+                                placeholder="VD: Alaska, USA">
+                        </div>
+
+                        <!-- Tình Trạng Tươi Ngon -->
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-bold uppercase tracking-widest text-tertiary/60 px-1">Tình Trạng</label>
+                            <select name="freshnessStatus"
+                                class="w-full px-5 py-3 bg-background border border-outline-variant/30 rounded-2xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-semibold text-tertiary">
+                                <option value="FRESH">Tươi Sống (Fresh)</option>
+                                <option value="FROZEN">Đông Lạnh (Frozen)</option>
+                                <option value="PROCESSED">Đã Chế Biến</option>
+                            </select>
+                        </div>
+
+                        <!-- Trạng Thái -->
+                        <div class="flex items-center justify-between p-4 bg-background rounded-2xl border border-outline-variant/20">
+                            <div class="flex items-center gap-3">
+                                <span class="material-symbols-outlined text-primary">visibility</span>
+                                <div>
+                                    <p class="text-sm font-bold text-tertiary">Hoạt động</p>
+                                    <p class="text-[10px] text-on-surface-variant font-medium">Hiển thị trên menu</p>
+                                </div>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" name="active" value="true" checked class="sr-only peer">
+                                <div class="w-11 h-6 bg-outline-variant/30 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                            </label>
+                        </div>
+
+                        <!-- Mô Tả -->
+                        <div class="space-y-2 md:col-span-2">
+                            <label class="text-[10px] font-bold uppercase tracking-widest text-tertiary/60 px-1">Mô Tả Sản Phẩm</label>
+                            <textarea name="description" rows="3"
+                                class="w-full px-5 py-3 bg-background border border-outline-variant/30 rounded-2xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-medium text-tertiary resize-none"
+                                placeholder="Chi tiết về sản phẩm..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="flex gap-4 pt-8">
+                        <button type="button" onclick="closeModal()"
+                            class="flex-1 px-6 py-4 border border-outline-variant/30 text-on-surface-variant font-bold rounded-2xl hover:bg-surface-container transition-all uppercase tracking-widest text-xs">
+                            Hủy bỏ
+                        </button>
+                        <button type="submit"
+                            class="flex-[1.5] px-6 py-4 bg-primary text-white font-bold rounded-2xl shadow-xl shadow-primary/20 hover:-translate-y-1 transition-all uppercase tracking-widest text-xs">
+                            Lưu thông tin
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="fixed inset-0 z-[100] hidden overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="fixed inset-0 bg-tertiary/40 backdrop-blur-sm transition-opacity" onclick="closeDeleteModal()"></div>
+            <div class="relative bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all border border-primary/10">
+                <div class="p-8 text-center">
+                    <div class="w-16 h-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto mb-6">
+                        <span class="material-symbols-outlined text-4xl">warning</span>
+                    </div>
+                    <h3 class="text-2xl font-headline font-bold text-tertiary mb-2">Xác Nhận Xóa</h3>
+                    <p class="text-on-surface-variant font-medium mb-8">Bạn có chắc chắn muốn xóa sản phẩm <span id="deleteProductName" class="font-bold text-primary"></span>? Hành động này không thể hoàn tác.</p>
+
+                    <form id="deleteForm" method="post" class="flex gap-4">
+                        <button type="button" onclick="closeDeleteModal()"
+                            class="flex-1 px-6 py-4 border border-outline-variant/30 text-on-surface-variant font-bold rounded-2xl hover:bg-surface-container transition-all">
+                            HỦY BỎ
+                        </button>
+                        <button type="submit"
+                            class="flex-1 px-6 py-4 bg-primary text-white font-bold rounded-2xl shadow-xl shadow-primary/20 hover:-translate-y-1 transition-all">
+                            XÓA NGAY
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openEditModal(btn) {
+            const data = {
+                id: btn.getAttribute('data-id'),
+                name: btn.getAttribute('data-name'),
+                description: btn.getAttribute('data-description'),
+                price: btn.getAttribute('data-price'),
+                stock: btn.getAttribute('data-stock'),
+                categoryId: btn.getAttribute('data-category-id'),
+                active: btn.getAttribute('data-active') === 'true',
+                importedFrom: btn.getAttribute('data-imported-from'),
+                freshness: btn.getAttribute('data-freshness')
+            };
+            openModal(true, data);
+        }
+
+        function openModal(isEdit = false, data = null) {
+            const modal = document.getElementById('productModal');
+            const title = document.getElementById('modalTitle');
+            const subtitle = document.getElementById('modalSubtitle');
+            const form = document.getElementById('productForm');
+
+            form.reset();
+            document.getElementById('productId').value = '';
+
+            if (isEdit && data) {
+                title.innerText = 'Chỉnh Sửa Sản Phẩm';
+                subtitle.innerText = 'Cập nhật thông tin chi tiết cho sản phẩm';
+                form.action = `/admin/seafood-products/${data.id}/edit`;
+                document.getElementById('productId').value = data.id;
+                form.name.value = data.name;
+                form.description.value = data.description;
+                form.price.value = parseFloat(data.price);
+                form.stockQuantity.value = data.stock;
+                form.categoryId.value = data.categoryId;
+                form.active.checked = data.active;
+                form.importedFrom.value = data.importedFrom;
+                form.freshnessStatus.value = data.freshness;
+            } else {
+                title.innerText = 'Thêm Sản Phẩm Mới';
+                subtitle.innerText = 'Khởi tạo mỹ vị mới cho thực đơn đại dương';
+                form.action = '/admin/seafood-products/create';
+            }
+
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('productModal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        function openDeleteModal(btn) {
+            const id = btn.getAttribute('data-id');
+            const name = btn.getAttribute('data-name');
+            document.getElementById('deleteProductName').innerText = name;
+            document.getElementById('deleteForm').action = `/admin/seafood-products/${id}/delete`;
+            document.getElementById('deleteModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeModal();
+                closeDeleteModal();
+            }
+        });
+    </script>
+</body>
+
+</html>

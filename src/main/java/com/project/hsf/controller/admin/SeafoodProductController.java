@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
+
+
 @Controller
 @RequestMapping("/admin/seafood-products")
 @RequiredArgsConstructor
@@ -27,7 +30,20 @@ public class SeafoodProductController {
 
     @GetMapping
     public String list(Model model) {
-        model.addAttribute("products", seafoodProductService.findAll());
+        List<SeafoodProduct> products = seafoodProductService.findAll();
+        model.addAttribute("products", products);
+        model.addAttribute("categories", categoryService.findAll());
+        
+        // Calculate Statistics
+        long totalProducts = products.size();
+        long activeProducts = products.stream().filter(SeafoodProduct::getActive).count();
+        long lowStockProducts = products.stream().filter(p -> p.getStockQuantity() < 10).count();
+        
+        model.addAttribute("totalProducts", totalProducts);
+        model.addAttribute("activeProducts", activeProducts);
+        model.addAttribute("lowStockProducts", lowStockProducts);
+        model.addAttribute("page", "products");
+        
         return "admin/product-manage";
     }
 
@@ -49,10 +65,10 @@ public class SeafoodProductController {
         try {
             seafoodProductService.save(seafoodProduct, categoryId);
             redirectAttributes.addFlashAttribute("successMessage", "Tao san pham thanh cong");
-            return "redirect:/seafood-products";
+            return "redirect:/admin/seafood-products";
         } catch (IllegalArgumentException ex) {
             redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
-            return "redirect:/seafood-products/create";
+            return "redirect:/admin/seafood-products";
         }
     }
 
@@ -65,7 +81,7 @@ public class SeafoodProductController {
             return "seafood-products/form";
         } catch (IllegalArgumentException ex) {
             redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
-            return "redirect:/seafood-products";
+            return "redirect:/admin/seafood-products";
         }
     }
 
@@ -78,10 +94,10 @@ public class SeafoodProductController {
             seafoodProduct.setId(id);
             seafoodProductService.save(seafoodProduct, categoryId);
             redirectAttributes.addFlashAttribute("successMessage", "Cap nhat san pham thanh cong");
-            return "redirect:/seafood-products";
+            return "redirect:/admin/seafood-products";
         } catch (IllegalArgumentException ex) {
             redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
-            return "redirect:/seafood-products/" + id + "/edit";
+            return "redirect:/admin/seafood-products";
         }
     }
 
@@ -93,6 +109,6 @@ public class SeafoodProductController {
         } catch (IllegalArgumentException ex) {
             redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
         }
-        return "redirect:/seafood-products";
+        return "redirect:/admin/seafood-products";
     }
 }

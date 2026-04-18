@@ -21,6 +21,7 @@ public class CategoryController {
     public String list(Model model) {
         model.addAttribute("categories", categoryService.findAll());
         model.addAttribute("activeCategories", categoryService.findByActiveTrue());
+        model.addAttribute("page", "categories");
         return "admin/category-manage";
     }
 
