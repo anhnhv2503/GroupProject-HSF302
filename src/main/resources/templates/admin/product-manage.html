@@ -13,6 +13,8 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
         rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
@@ -215,7 +217,10 @@
                                 <td class="px-8 py-6">
                                     <div class="flex items-center gap-4">
                                         <div class="w-12 h-12 rounded-xl border border-outline-variant/20 overflow-hidden bg-surface flex-shrink-0">
-                                            <img src="https://via.placeholder.com/150?text=Seafood" alt="Image" class="w-full h-full object-cover">
+                                            <img th:if="${product.images != null and !product.images.isEmpty()}" 
+                                                 th:with="primaryImg=${product.images.^[isPrimary != null and isPrimary]}"
+                                                 th:src="@{${primaryImg != null ? primaryImg.imageUrl : product.images[0].imageUrl}}" alt="Image" class="w-full h-full object-cover">
+                                            <img th:unless="${product.images != null and !product.images.isEmpty()}" src="https://via.placeholder.com/150?text=Seafood" alt="Image" class="w-full h-full object-cover">
                                         </div>
                                         <div>
                                             <span class="font-headline font-bold text-tertiary block text-base"
@@ -249,6 +254,14 @@
                                 </td>
                                 <td class="px-8 py-6 text-right">
                                     <div class="flex justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <!-- Gallery Button -->
+                                        <button type="button" 
+                                            th:data-name="${product.name}"
+                                            th:data-images="${#strings.listJoin(product.images.![imageUrl], ',')}"
+                                            onclick="openGalleryModal(this)"
+                                            class="w-9 h-9 flex items-center justify-center bg-blue-500/10 hover:bg-blue-500 hover:text-white rounded-lg transition-all text-blue-500">
+                                            <span class="material-symbols-outlined text-lg">imagesmode</span>
+                                        </button>
                                         <!-- Edit Button -->
                                         <button type="button" 
                                             th:data-id="${product.id}"
@@ -260,6 +273,8 @@
                                             th:data-active="${product.active}"
                                             th:data-imported-from="${product.importedFrom}"
                                             th:data-freshness="${product.freshnessStatus}"
+                                            th:data-images="${#strings.listJoin(product.images.![imageUrl], ',')}"
+                                            th:data-primary-flags="${#strings.listJoin(product.images.![isPrimary], ',')}"
                                             onclick="openEditModal(this)"
                                             class="w-9 h-9 flex items-center justify-center bg-tertiary/5 hover:bg-tertiary hover:text-white rounded-lg transition-all text-tertiary">
                                             <span class="material-symbols-outlined text-lg">edit</span>
@@ -301,7 +316,7 @@
                     </button>
                 </div>
 
-                <form id="productForm" th:action="@{/admin/seafood-products/create}" method="post" class="p-8">
+                <form id="productForm" th:action="@{/admin/seafood-products/create}" method="post" enctype="multipart/form-data" class="p-8">
                     <input type="hidden" name="id" id="productId">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- Tên Sản Phẩm -->
@@ -372,6 +387,33 @@
                             </label>
                         </div>
 
+                        <!-- Hình ảnh SP -->
+                        <div class="space-y-3 md:col-span-2">
+                            <div class="flex items-center justify-between px-1">
+                                <label class="text-[10px] font-bold uppercase tracking-widest text-tertiary/60">Hình Ảnh Sản Phẩm (Tối đa 4 ảnh)</label>
+                                <span id="imageCountLabel" class="text-[10px] font-bold text-primary">0 / 4</span>
+                            </div>
+                            
+                            <!-- Dropzone -->
+                            <div id="dropzone" class="w-full relative px-5 py-10 bg-white border-2 border-dashed border-outline-variant/50 rounded-3xl hover:bg-surface transition-all cursor-pointer group flex flex-col items-center justify-center text-center">
+                                <input type="file" id="fileInput" multiple accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" title="Kéo thả hoặc click">
+                                <div class="w-16 h-16 bg-background rounded-full flex items-center justify-center shadow-sm text-tertiary/40 mb-4 group-hover:rotate-6 group-hover:scale-110 group-hover:text-primary transition-all">
+                                    <span class="material-symbols-outlined text-3xl">add_photo_alternate</span>
+                                </div>
+                                <h4 class="text-tertiary font-bold text-lg mb-1">Kéo thả thư mục ảnh vào đây</h4>
+                                <p class="text-on-surface-variant text-xs font-medium">hoặc click để tải lên tối đa 4 ảnh (PNG, JPG)</p>
+                            </div>
+                            
+                            <!-- Real Hidden Input for Form Submission -->
+                            <input type="file" id="realFileInput" name="imageFiles" multiple accept="image/*" class="hidden">
+                            <input type="hidden" id="primaryImageIndex" name="primaryImageIndex" value="0">
+
+                            <!-- Image Preview Grid -->
+                            <div id="previewGrid" class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-2 empty:hidden">
+                                <!-- JS will inject rendering here -->
+                            </div>
+                        </div>
+
                         <!-- Mô Tả -->
                         <div class="space-y-2 md:col-span-2">
                             <label class="text-[10px] font-bold uppercase tracking-widest text-tertiary/60 px-1">Mô Tả Sản Phẩm</label>
@@ -424,8 +466,75 @@
         </div>
     </div>
 
+    <!-- Gallery Modal -->
+    <div id="galleryModal" class="fixed inset-0 z-[100] hidden overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="fixed inset-0 bg-black/80 backdrop-blur-sm transition-opacity" onclick="closeGalleryModal()"></div>
+            <div class="relative bg-white rounded-3xl shadow-2xl w-full max-w-4xl overflow-hidden transform transition-all p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 id="galleryTitle" class="text-2xl font-headline font-bold text-tertiary">Hình Ảnh Sản Phẩm</h3>
+                    <button onclick="closeGalleryModal()" class="w-10 h-10 flex items-center justify-center rounded-full bg-outline-variant/20 hover:bg-outline-variant/40 transition-colors">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                </div>
+                
+                <!-- Swiper -->
+                <div style="--swiper-navigation-color: #F26522; --swiper-pagination-color: #F26522" class="swiper gallerySwiper w-full h-[500px] rounded-2xl overflow-hidden">
+                    <div class="swiper-wrapper" id="galleryWrapper">
+                        <!-- Dynamic Images will be injected here -->
+                    </div>
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
+                    <div class="swiper-pagination"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
-        function openEditModal(btn) {
+        let swiperInstance = null;
+
+        function openGalleryModal(btn) {
+            const name = btn.getAttribute('data-name');
+            const imagesStr = btn.getAttribute('data-images') || '';
+            const images = imagesStr ? imagesStr.split(',') : [];
+
+            document.getElementById('galleryTitle').innerText = 'Hình Ảnh: ' + name;
+            
+            const wrapper = document.getElementById('galleryWrapper');
+            if (images.length === 0) {
+                wrapper.innerHTML = '<div class="swiper-slide flex items-center justify-center bg-background"><p class="text-on-surface-variant font-bold">Không có hình ảnh nào</p></div>';
+            } else {
+                wrapper.innerHTML = images.map(img => `<div class="swiper-slide flex items-center justify-center bg-black/10"><img src="${img}" class="h-full object-contain mx-auto" /></div>`).join('');
+            }
+
+            document.getElementById('galleryModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+
+            if (!swiperInstance) {
+                swiperInstance = new Swiper('.gallerySwiper', {
+                    loop: true,
+                    spaceBetween: 10,
+                    navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev',
+                    },
+                    pagination: {
+                        el: '.swiper-pagination',
+                        clickable: true,
+                    },
+                });
+            } else {
+                swiperInstance.update();
+            }
+        }
+
+        function closeGalleryModal() {
+            document.getElementById('galleryModal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        async function openEditModal(btn) {
             const data = {
                 id: btn.getAttribute('data-id'),
                 name: btn.getAttribute('data-name'),
@@ -435,9 +544,45 @@
                 categoryId: btn.getAttribute('data-category-id'),
                 active: btn.getAttribute('data-active') === 'true',
                 importedFrom: btn.getAttribute('data-imported-from'),
-                freshness: btn.getAttribute('data-freshness')
+                freshness: btn.getAttribute('data-freshness'),
+                images: btn.getAttribute('data-images'),
+                primaryFlags: btn.getAttribute('data-primary-flags')
             };
             openModal(true, data);
+            
+            // Load existing images if available
+            if (data.images) {
+                const imageUrls = data.images.split(',').filter(u => u.trim() !== '');
+                const flags = data.primaryFlags ? data.primaryFlags.split(',') : [];
+                let srvPrimaryIndex = flags.findIndex(f => f === 'true');
+                if (srvPrimaryIndex === -1) srvPrimaryIndex = 0;
+                
+                if (imageUrls.length > 0) {
+                    await loadServerImagesAsFiles(imageUrls, srvPrimaryIndex);
+                }
+            }
+        }
+        
+        async function loadServerImagesAsFiles(urls, srvPrimaryIndex) {
+            const dropzone = document.getElementById('dropzone');
+            dropzone.querySelector('h4').innerText = "Đang tải ảnh cũ...";
+            
+            for (let i = 0; i < urls.length; i++) {
+                if (i >= maxFiles) break;
+                try {
+                    const response = await fetch(urls[i]);
+                    const blob = await response.blob();
+                    const filename = urls[i].substring(urls[i].lastIndexOf('/') + 1) || ("image_" + i + ".jpg");
+                    const file = new File([blob], filename, {type: blob.type});
+                    allSelectedFiles.push(file);
+                    dt.items.add(file);
+                } catch (e) {
+                    console.error("Lỗi khi fetch ảnh cũ:", e);
+                }
+            }
+            primaryImgIndexUrl = srvPrimaryIndex;
+            dropzone.querySelector('h4').innerText = "Kéo thả thư mục ảnh vào đây";
+            updateRealFileInputAndRender();
         }
 
         function openModal(isEdit = false, data = null) {
@@ -448,6 +593,12 @@
 
             form.reset();
             document.getElementById('productId').value = '';
+
+            // Clear File Previews
+            allSelectedFiles = [];
+            primaryImgIndexUrl = 0;
+            dt.items.clear();
+            updateRealFileInputAndRender();
 
             if (isEdit && data) {
                 title.innerText = 'Chỉnh Sửa Sản Phẩm';
@@ -489,6 +640,129 @@
         function closeDeleteModal() {
             document.getElementById('deleteModal').classList.add('hidden');
             document.body.style.overflow = 'auto';
+        }
+
+        // --- Image Upload Logic ---
+        let allSelectedFiles = [];
+        let primaryImgIndexUrl = 0;
+        const maxFiles = 4;
+        
+        const fileInput = document.getElementById('fileInput');
+        const realFileInput = document.getElementById('realFileInput');
+        const previewGrid = document.getElementById('previewGrid');
+        const primaryImageIndexInput = document.getElementById('primaryImageIndex');
+        const dt = new DataTransfer();
+
+        fileInput.addEventListener('change', function (e) {
+            handleFiles(e.target.files);
+            // Reset input so trigger on same file repeats selection if needed
+            fileInput.value = '';
+        });
+
+        // Dropzone drag-and-drop visuals
+        const dropzone = document.getElementById('dropzone');
+        dropzone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropzone.classList.add('bg-primary/5', 'border-primary', 'scale-[1.02]');
+        });
+        dropzone.addEventListener('dragleave', () => {
+            dropzone.classList.remove('bg-primary/5', 'border-primary', 'scale-[1.02]');
+        });
+        dropzone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropzone.classList.remove('bg-primary/5', 'border-primary', 'scale-[1.02]');
+            if (e.dataTransfer.files) {
+                handleFiles(e.dataTransfer.files);
+            }
+        });
+
+        function handleFiles(files) {
+            const addedFiles = Array.from(files);
+            
+            if (allSelectedFiles.length + addedFiles.length > maxFiles) {
+                alert(`Bạn chỉ được phép tải lên tối đa ${maxFiles} hình ảnh!`);
+                const allowedAmt = maxFiles - allSelectedFiles.length;
+                addedFiles.splice(allowedAmt);
+            }
+
+            addedFiles.forEach(file => {
+                allSelectedFiles.push(file);
+                dt.items.add(file);
+            });
+
+            updateRealFileInputAndRender();
+        }
+
+        function updateRealFileInputAndRender() {
+            realFileInput.files = dt.files;
+            document.getElementById('imageCountLabel').innerText = `${allSelectedFiles.length} / ${maxFiles}`;
+            renderPreviews();
+        }
+
+        function removeFile(index) {
+            allSelectedFiles.splice(index, 1);
+            
+            // Rebuild DataTransfer
+            dt.items.clear();
+            allSelectedFiles.forEach(f => dt.items.add(f));
+            
+            // Adjust Primary index
+            if (index === primaryImgIndexUrl) {
+                primaryImgIndexUrl = 0; // fallback to first
+            } else if (index < primaryImgIndexUrl) {
+                primaryImgIndexUrl--;
+            }
+            updateRealFileInputAndRender();
+        }
+
+        function setPrimary(index) {
+            primaryImgIndexUrl = index;
+            updateRealFileInputAndRender();
+        }
+
+        function renderPreviews() {
+            previewGrid.innerHTML = '';
+            primaryImageIndexInput.value = primaryImgIndexUrl;
+
+            allSelectedFiles.forEach((file, index) => {
+                const isPrimary = index === primaryImgIndexUrl;
+                const objectUrl = URL.createObjectURL(file);
+                
+                const card = document.createElement('div');
+                card.className = "relative rounded-2xl overflow-hidden border-2 group " + (isPrimary ? "border-primary shadow-md shadow-primary/20" : "border-outline-variant/30");
+            
+                card.innerHTML = `
+                    <div class="h-32 w-full bg-surface-container">
+                        <img src="${objectUrl}" class="w-full h-full object-cover" />
+                    </div>
+                    
+                    <!-- Action Hover Area -->
+                    <div class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    
+                    <!-- Delete Button -->
+                    <div class="absolute top-2 right-2">
+                        <button type="button" onclick="removeFile(${index})" class="w-8 h-8 bg-white/90 hover:bg-red-50 text-red-500 rounded-full flex items-center justify-center shadow-sm transition-transform hover:scale-110 active:scale-95 duration-200">
+                            <span class="material-symbols-outlined text-[16px]">close</span>
+                        </button>
+                    </div>
+                    
+                    <!-- Primary Tag & Button -->
+                    <div class="absolute bottom-2 left-2 right-2 flex justify-between items-end">
+                        ${isPrimary ?
+                        `<span class="bg-primary text-white text-[10px] font-bold px-2.5 py-1 rounded-lg shadow-sm flex items-center gap-1"><span class="w-1.5 h-1.5 bg-secondary rounded-full animate-pulse"></span>Ảnh chính</span>`
+                        :
+                        `<span class="bg-black/50 text-white backdrop-blur-md text-[10px] font-bold px-2 py-1 rounded-lg">#${index + 1}</span>`
+                    }
+                        <button type="button" onclick="setPrimary(${index})" title="Đặt làm ảnh đại diện" class="w-9 h-9 rounded-full flex items-center justify-center backdrop-blur-sm shadow-sm transition-all duration-300 hover:scale-110 active:scale-95 ${isPrimary ? 'bg-primary text-secondary' : 'bg-black/40 text-white hover:bg-black/60'}">
+                            <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' ${isPrimary ? 1 : 0}">star</span>
+                        </button>
+                    </div>
+                `;
+                previewGrid.appendChild(card);
+                
+                // Cleanup memory
+                card.querySelector('img').onload = () => URL.revokeObjectURL(objectUrl);
+            });
         }
 
         window.addEventListener('keydown', (e) => {

@@ -18,7 +18,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
-
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/admin/seafood-products")
@@ -61,9 +62,11 @@ public class SeafoodProductController {
     @PostMapping("/create")
     public String create(@ModelAttribute SeafoodProduct seafoodProduct,
             @RequestParam("categoryId") Long categoryId,
+            @RequestParam(value = "imageFiles", required = false) List<MultipartFile> imageFiles,
+            @RequestParam(value = "primaryImageIndex", defaultValue = "0") Integer primaryImageIndex,
             RedirectAttributes redirectAttributes) {
         try {
-            seafoodProductService.save(seafoodProduct, categoryId);
+            seafoodProductService.save(seafoodProduct, categoryId, imageFiles, primaryImageIndex);
             redirectAttributes.addFlashAttribute("successMessage", "Tao san pham thanh cong");
             return "redirect:/admin/seafood-products";
         } catch (IllegalArgumentException ex) {
@@ -78,7 +81,7 @@ public class SeafoodProductController {
             model.addAttribute("seafoodProduct", seafoodProductService.findById(id));
             model.addAttribute("categories", categoryService.findAll());
             model.addAttribute("isEdit", true);
-            return "seafood-products/form";
+            return "seafood-products/form"; // Wait, earlier it was "seafood-products/form", let's keep it. Actually it's probably "admin/product-manage" with edit mode? I will just leave the template paths as is.
         } catch (IllegalArgumentException ex) {
             redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
             return "redirect:/admin/seafood-products";
@@ -89,10 +92,12 @@ public class SeafoodProductController {
     public String update(@PathVariable Long id,
             @ModelAttribute SeafoodProduct seafoodProduct,
             @RequestParam("categoryId") Long categoryId,
+             @RequestParam(value = "imageFiles", required = false) List<MultipartFile> imageFiles,
+            @RequestParam(value = "primaryImageIndex", defaultValue = "0") Integer primaryImageIndex,
             RedirectAttributes redirectAttributes) {
         try {
             seafoodProduct.setId(id);
-            seafoodProductService.save(seafoodProduct, categoryId);
+            seafoodProductService.save(seafoodProduct, categoryId, imageFiles, primaryImageIndex);
             redirectAttributes.addFlashAttribute("successMessage", "Cap nhat san pham thanh cong");
             return "redirect:/admin/seafood-products";
         } catch (IllegalArgumentException ex) {

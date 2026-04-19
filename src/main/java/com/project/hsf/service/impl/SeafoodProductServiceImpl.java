@@ -12,6 +12,14 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Instant;
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+import com.project.hsf.entity.ProductImage;
+import com.project.hsf.util.FileUploadUtil;
+import org.springframework.util.StringUtils;
+
+import java.io.IOException;
+import java.util.ArrayList;
+
 @Service
 @RequiredArgsConstructor
 public class SeafoodProductServiceImpl implements SeafoodProductService {
@@ -34,29 +42,93 @@ public class SeafoodProductServiceImpl implements SeafoodProductService {
 
     @Override
     @Transactional
-    public SeafoodProduct save(SeafoodProduct seafoodProduct, Long categoryId) {
+    public SeafoodProduct save(SeafoodProduct seafoodProduct, Long categoryId, List<MultipartFile> imageFiles, Integer primaryImageIndex) {
+        SeafoodProduct productToSave = seafoodProduct;
+
+        // If it's an update, handle image replacement and property copying to managed entity
+        if (seafoodProduct.getId() != null) {
+            SeafoodProduct existing = seafoodProductRepository.findById(seafoodProduct.getId()).orElse(null);
+            if (existing != null) {
+                // If new images provided, clean up the old ones physically and in DB
+                if (imageFiles != null && !imageFiles.isEmpty()) {
+                    if (existing.getImages() != null) {
+                        for (ProductImage oldImg : existing.getImages()) {
+                            FileUploadUtil.deleteFile(oldImg.getImageUrl());
+                        }
+                        existing.getImages().clear();
+                    }
+                }
+
+                // Sync properties
+                existing.setName(seafoodProduct.getName());
+                existing.setDescription(seafoodProduct.getDescription());
+                existing.setPrice(seafoodProduct.getPrice());
+                existing.setStockQuantity(seafoodProduct.getStockQuantity());
+                existing.setFreshnessStatus(seafoodProduct.getFreshnessStatus());
+                existing.setImportedFrom(seafoodProduct.getImportedFrom());
+                existing.setActive(seafoodProduct.getActive());
+                existing.setImportedDate(seafoodProduct.getImportedDate());
+                existing.setExpiryDate(seafoodProduct.getExpiryDate());
+
+                productToSave = existing;
+            }
+        }
+
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new IllegalArgumentException("Khong tim thay danh muc voi id: " + categoryId));
 
-        seafoodProduct.setCategory(category);
+        productToSave.setCategory(category);
 
-        if (seafoodProduct.getSoldCount() == null) {
-            seafoodProduct.setSoldCount(0);
+        if (productToSave.getSoldCount() == null) {
+            productToSave.setSoldCount(0);
         }
-        if (seafoodProduct.getCreatedDate() == null) {
-            seafoodProduct.setCreatedDate(Instant.now());
+        if (productToSave.getCreatedDate() == null) {
+            productToSave.setCreatedDate(Instant.now());
         }
-        seafoodProduct.setUpdatedDate(Instant.now());
+        productToSave.setUpdatedDate(Instant.now());
 
-        return seafoodProductRepository.save(seafoodProduct);
+        // Handle Images
+        if (imageFiles != null && !imageFiles.isEmpty()) {
+            if (productToSave.getImages() == null) {
+                productToSave.setImages(new ArrayList<>());
+            }
+            int index = 0;
+            String uploadDir = "uploads";
+            for (MultipartFile file : imageFiles) {
+                if (!file.isEmpty()) {
+                    try {
+                        String fileName = FileUploadUtil.saveFile(uploadDir, file);
+                        ProductImage productImage = new ProductImage();
+                        productImage.setImageUrl("/" + uploadDir + "/" + fileName);
+                        productImage.setProduct(productToSave);
+                        productImage.setIsPrimary(primaryImageIndex != null && index == primaryImageIndex);
+                        productImage.setCreatedDate(Instant.now());
+
+                        productToSave.getImages().add(productImage);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                index++;
+            }
+        }
+
+        return seafoodProductRepository.save(productToSave);
     }
 
     @Override
     @Transactional
     public void deleteById(Long id) {
-        if (!seafoodProductRepository.existsById(id)) {
-            throw new IllegalArgumentException("Khong tim thay san pham voi id: " + id);
+        SeafoodProduct seafoodProduct = seafoodProductRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Khong tim thay san pham voi id: " + id));
+
+        // Delete associated files from disk
+        if (seafoodProduct.getImages() != null) {
+            for (ProductImage image : seafoodProduct.getImages()) {
+                FileUploadUtil.deleteFile(image.getImageUrl());
+            }
         }
-        seafoodProductRepository.deleteById(id);
+
+        seafoodProductRepository.delete(seafoodProduct);
     }
 }

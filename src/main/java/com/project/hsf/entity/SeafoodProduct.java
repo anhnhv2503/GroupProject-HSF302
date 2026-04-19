@@ -10,6 +10,8 @@ import org.hibernate.annotations.Nationalized;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -38,7 +40,7 @@ public class SeafoodProduct {
     private String description;
 
     @NotNull
-    @Column(name = "price", nullable = false, precision = 10, scale = 2)
+    @Column(name = "price", nullable = false, precision = 18, scale = 2)
     private BigDecimal price;
 
     @NotNull
@@ -81,5 +83,8 @@ public class SeafoodProduct {
     @ColumnDefault("getdate()")
     @Column(name = "updated_date")
     private Instant updatedDate;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProductImage> images = new ArrayList<>();
 
 }
