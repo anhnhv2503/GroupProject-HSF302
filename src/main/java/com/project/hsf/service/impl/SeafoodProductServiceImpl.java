@@ -9,6 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.project.hsf.specification.SeafoodProductSpecification;
+import org.springframework.data.domain.Sort;
+
 import java.time.Instant;
 import java.util.List;
 
@@ -31,6 +34,13 @@ public class SeafoodProductServiceImpl implements SeafoodProductService {
     @Transactional(readOnly = true)
     public List<SeafoodProduct> findAll() {
         return seafoodProductRepository.findAll();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<SeafoodProduct> search(String keyword, Long categoryId, Boolean active, Boolean lowStock, String sortBy, String sortDir) {
+        Sort sort = Sort.by(sortDir.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
+        return seafoodProductRepository.findAll(SeafoodProductSpecification.filter(keyword, categoryId, active, lowStock), sort);
     }
 
     @Override

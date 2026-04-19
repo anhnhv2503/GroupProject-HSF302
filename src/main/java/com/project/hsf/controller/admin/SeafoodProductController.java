@@ -30,19 +30,36 @@ public class SeafoodProductController {
     private final CategoryServiceImpl categoryService;
 
     @GetMapping
-    public String list(Model model) {
-        List<SeafoodProduct> products = seafoodProductService.findAll();
+    public String list(
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false) Boolean active,
+            @RequestParam(required = false) Boolean lowStock,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "desc") String sortDir,
+            Model model) {
+        
+        List<SeafoodProduct> products = seafoodProductService.search(keyword, categoryId, active, lowStock, sortBy, sortDir);
         model.addAttribute("products", products);
         model.addAttribute("categories", categoryService.findAll());
         
-        // Calculate Statistics
-        long totalProducts = products.size();
-        long activeProducts = products.stream().filter(SeafoodProduct::getActive).count();
-        long lowStockProducts = products.stream().filter(p -> p.getStockQuantity() < 10).count();
+        // Pass filter values back to UI to maintain state
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("categoryId", categoryId);
+        model.addAttribute("active", active);
+        model.addAttribute("lowStock", lowStock);
+        model.addAttribute("sortBy", sortBy);
+        model.addAttribute("sortDir", sortDir);
+        
+        // Calculate Global Statistics (using all products for business overview)
+        List<SeafoodProduct> allProducts = seafoodProductService.findAll();
+        long totalProducts = allProducts.size();
+        long activeProductsCount = allProducts.stream().filter(SeafoodProduct::getActive).count();
+        long lowStockProductsCount = allProducts.stream().filter(p -> p.getStockQuantity() != null && p.getStockQuantity() < 10).count();
         
         model.addAttribute("totalProducts", totalProducts);
-        model.addAttribute("activeProducts", activeProducts);
-        model.addAttribute("lowStockProducts", lowStockProducts);
+        model.addAttribute("activeProducts", activeProductsCount);
+        model.addAttribute("lowStockProducts", lowStockProductsCount);
         model.addAttribute("page", "products");
         
         return "admin/product-manage";
