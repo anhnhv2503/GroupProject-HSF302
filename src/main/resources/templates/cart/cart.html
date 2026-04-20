@@ -20,7 +20,7 @@
         <span th:text="${success}"></span>
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
-    <div th:if="${param.empty}" class="alert alert-warning alert-dismissible fade show" role="alert">
+    <div th:if="${param.isEmpty()}" class="alert alert-warning alert-dismissible fade show" role="alert">
         Giỏ hàng đang trống, hãy thêm sản phẩm trước khi thanh toán.
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>

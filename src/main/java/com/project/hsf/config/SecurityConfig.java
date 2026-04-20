@@ -1,6 +1,5 @@
 package com.project.hsf.config;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,27 +18,25 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final List<String> publicUrl =
-            List.of(
-                    "/",
-                    "/home",
-                    "/login/**",
-                    "/register/**",
-                    "/products/**",
-                    "/css/**",
-                    "/js/**",
-                    "/images/**",
-                    "/webjars/**",
-                    "/register-user",
-                    "/cart"
-            );
-//    private final List<String> privateUrl = new ArrayList<>();
+    private final List<String> publicUrl = List.of(
+            "/",
+            "/home",
+            "/login/**",
+            "/register/**",
+            "/products/**",
+            "/css/**",
+            "/js/**",
+            "/images/**",
+            "/webjars/**",
+            "/register-user",
+            "/cart");
+    // private final List<String> privateUrl = new ArrayList<>();
 
     @Autowired
     private UserDetailsService userDetailsService;
 
     @Bean
-    public static PasswordEncoder passwordEncoder(){
+    public static PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
@@ -52,23 +49,15 @@ public class SecurityConfig {
                 .formLogin((form) -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/login")
-<<<<<<< HEAD
                         .defaultSuccessUrl("/", true)
-=======
-                        .defaultSuccessUrl("/home", true)
->>>>>>> 128b6766143db09ce36969c9be0c165d1fdf5cc7
                         .failureUrl("/login?error=true")
                         .permitAll())
                 .logout((logout) -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/login?logout=true")
                         .invalidateHttpSession(true)
-<<<<<<< HEAD
                         .deleteCookies("JSESSIONID")
                         .permitAll());
-=======
-                        .clearAuthentication(true).permitAll());
->>>>>>> 128b6766143db09ce36969c9be0c165d1fdf5cc7
         return http.build();
     }
 

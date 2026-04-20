@@ -6,11 +6,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.project.hsf.entity.User;
 import java.util.List;
 
 @Service
-
 public interface OrderService {
-
-   public void placeOrder(List<CartItemDTO> cartItems, String couponCode, Object orderTmp) throws RuntimeException;
+    void placeOrder(List<CartItemDTO> cartItems, String couponCode, String shippingAddress, String paymentMethod, String notes, User customer) throws RuntimeException;
 }

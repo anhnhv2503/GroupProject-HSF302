@@ -102,21 +102,33 @@
 
                         <!-- Address radio -->
                         <div th:unless="${#lists.isEmpty(addresses)}" class="mb-4">
-                            <label class="form-label fw-bold small text-muted text-uppercase">Chọn Địa Chỉ</label>
+                            <label class="form-label fw-bold small text-muted text-uppercase">Chọn Địa Chỉ Giao Hàng</label>
                             <div th:each="addr : ${addresses}" class="form-check border rounded-3 p-3 ps-5 mb-2">
-                                <input class="form-check-input" type="radio" name="addressInfo" required
-                                       th:value="${addr.address_line + ', ' + addr.ward + ', ' + addr.city + ' (SĐT: ' + addr.phone + ')'}"
-                                       th:checked="${addr.is_default}" th:id="'addr-' + ${addr.id}"/>
+                                <input class="form-check-input" type="radio" name="address" required
+                                       th:value="${addr.addressLine + ', ' + addr.ward + ', ' + addr.city + ' (SĐT: ' + addr.phone + ')'}"
+                                       th:checked="${addr.isDefault}" th:id="'addr-' + ${addr.id}"/>
                                 <label class="form-check-label w-100" th:for="'addr-' + ${addr.id}">
                                     <span class="d-flex align-items-center gap-2">
                                         <i class="bi bi-geo-alt text-primary"></i>
-                                        <strong>Giao đến địa chỉ này</strong>
-                                        <span th:if="${addr.is_default}" class="badge bg-primary ms-auto" style="font-size:.6rem;">Mặc định</span>
+                                        <strong th:text="${addr.addressLine}"></strong>
+                                        <span th:if="${addr.isDefault}" class="badge bg-primary ms-auto" style="font-size:.6rem;">Mặc định</span>
                                     </span>
                                     <small class="text-muted d-block mt-1">SĐT: <span th:text="${addr.phone}"></span></small>
-                                    <small class="text-muted d-block" th:text="${addr.address_line + ', ' + addr.ward + ', ' + addr.city}"></small>
+                                    <small class="text-muted d-block" th:text="${addr.ward + ', ' + addr.city}"></small>
                                 </label>
                             </div>
+                        </div>
+
+                        <!-- Manual Address if no addresses -->
+                        <div th:if="${#lists.isEmpty(addresses)}" class="mb-4">
+                            <label class="form-label fw-bold small text-muted text-uppercase">Địa Chỉ Nhận Hàng</label>
+                            <textarea name="address" class="form-control" rows="2" placeholder="Nhập địa chỉ nhận hàng của bạn..." required></textarea>
+                        </div>
+
+                        <!-- Notes -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold small text-muted text-uppercase">Ghi chú (Tùy chọn)</label>
+                            <textarea name="notes" class="form-control" rows="2" placeholder="VD: Giao sau 17h, gọi trước khi đến..."></textarea>
                         </div>
 
                         <!-- Payment -->
