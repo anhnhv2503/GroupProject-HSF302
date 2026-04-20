@@ -2,6 +2,7 @@ package com.project.hsf.controller;
 
 import com.project.hsf.dto.RegisterDTO;
 import com.project.hsf.service.UserService;
+import com.project.hsf.service.impl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final UserService userService;
+    private final UserServiceImpl userService;
 
     @GetMapping("/login")
     public String showLoginForm() {
