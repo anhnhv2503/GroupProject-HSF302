@@ -4,6 +4,7 @@ import com.project.hsf.dto.RegisterDTO;
 import com.project.hsf.service.UserService;
 import com.project.hsf.service.impl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,5 +40,12 @@ public class AuthController {
             model.addAttribute("error", "Đã xảy ra lỗi trong quá trình đăng ký. Vui lòng thử lại.");
             return "auth/register";
         }
+    }
+
+    @GetMapping("/profile")
+    public String showProfileForm(Authentication  authentication, Model model) {
+        String username = authentication.getName();
+        model.addAttribute("username", username);
+        return "user/profile";
     }
 }

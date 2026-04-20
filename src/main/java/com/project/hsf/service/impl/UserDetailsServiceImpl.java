@@ -2,6 +2,7 @@ package com.project.hsf.service.impl;
 
 import com.project.hsf.entity.User;
 import com.project.hsf.repository.UserRepository;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,14 +19,19 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private final UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy người dùng: " + username));
+    public UserDetails loadUserByUsername(@NonNull String username) throws UsernameNotFoundException {
+        User user = userRepository.findByUsername(username);
 
-        return new org.springframework.security.core.userdetails.User(
-                user.getUsername(),
-                user.getPassword(),
-                Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + user.getRole()))
-        );
+        if (user != null) {
+            return new org.springframework.security.core.userdetails.User(
+                    user.getUsername(),
+                    user.getPassword(),
+                    user.getRole().equals("ADMIN") ?
+                            Collections.singletonList(new SimpleGrantedAuthority("ROLE_ADMIN")) :
+                            Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))
+            );
+        }else{
+            throw new UsernameNotFoundException("Invalid email or password.");
+        }
     }
 }

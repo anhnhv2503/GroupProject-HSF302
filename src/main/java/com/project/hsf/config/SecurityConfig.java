@@ -22,6 +22,7 @@ public class SecurityConfig {
     private final List<String> publicUrl =
             List.of(
                     "/",
+                    "/home",
                     "/login/**",
                     "/register/**",
                     "/css/**",
@@ -49,9 +50,14 @@ public class SecurityConfig {
                 .formLogin((form) -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/login")
-                        .defaultSuccessUrl("/", true)
+                        .defaultSuccessUrl("/home", true)
+                        .failureUrl("/login?error=true")
                         .permitAll())
-                .logout((logout) -> logout.permitAll());
+                .logout((logout) -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login?logout=true")
+                        .invalidateHttpSession(true)
+                        .clearAuthentication(true).permitAll());
         return http.build();
     }
 
