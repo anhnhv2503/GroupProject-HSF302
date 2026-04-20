@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/customer-layout}">
+<head>
+    <title>403 - Lỗi Truy Cập</title>
+</head>
+<body>
+    <div layout:fragment="content" class="min-h-[60vh] flex flex-col items-center justify-center text-center px-4">
+        <span class="material-symbols-outlined text-9xl text-red-500 mb-6">gpp_bad</span>
+        <h1 class="text-4xl font-bold text-gray-800 mb-4">403 - Lỗi Phân Quyền</h1>
+        <p class="text-lg text-gray-600 mb-8 max-w-md">Rất tiếc! Bạn không có quyền truy cập vào khu vực này. Vui lòng liên hệ với quản trị viên nếu bạn cho rằng đây là sự cố.</p>
+        <a href="/" class="bg-primary text-white font-medium px-8 py-3 rounded-full shadow-md hover:bg-orange-600 transition-colors inline-flex items-center gap-2">
+            <span class="material-symbols-outlined">home</span>
+            Về Trang Chủ
+        </a>
+    </div>
+</body>
+</html>

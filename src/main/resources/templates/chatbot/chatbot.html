@@ -1,0 +1,149 @@
+<!-- Chatbot Widget Fragment -->
+<div th:fragment="widget" id="chatbot-widget" class="fixed bottom-6 right-6 z-50 font-sans">
+    
+    <!-- Chat Panel -->
+    <div id="chat-panel" class="hidden w-80 h-[480px] bg-white rounded-xl shadow-2xl flex flex-col mb-4 overflow-hidden border border-gray-200 transition-all duration-300">
+        
+        <!-- Header -->
+        <div class="bg-primary text-white p-4 flex justify-between items-center relative overflow-hidden">
+            <div class="flex items-center gap-2 relative z-10">
+                <span class="material-symbols-outlined">smart_toy</span>
+                <span class="font-bold text-sm">Trợ lý Oceanic</span>
+            </div>
+            <button id="close-chat" class="hover:text-gray-200 transition-colors relative z-10">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+            <!-- Decorative circle -->
+            <div class="absolute -top-10 -right-10 w-24 h-24 bg-white opacity-10 rounded-full"></div>
+        </div>
+
+        <!-- Messages Area -->
+        <div id="chat-messages" class="flex-1 p-4 overflow-y-auto flex flex-col gap-3 bg-gray-50 text-sm">
+            <!-- Greeting -->
+            <div class="flex flex-col items-start">
+                <div class="bg-white border border-gray-100 text-gray-800 px-4 py-2 rounded-2xl rounded-bl-sm shadow-sm max-w-[85%]">
+                    Xin chào! Tôi là trợ lý AI Culinary Curator. Tôi có thể giúp gì cho bạn hôm nay?
+                </div>
+            </div>
+        </div>
+
+        <!-- Input Area -->
+        <div class="p-3 bg-white border-t border-gray-100 flex items-center gap-2">
+            <input type="text" id="chat-input" maxlength="300" placeholder="Nhập câu hỏi của bạn..." 
+                   class="flex-1 bg-gray-100 border-transparent focus:border-primary focus:bg-white focus:ring-0 rounded-full px-4 py-2 text-sm transition-colors"
+                   autocomplete="off">
+            <button id="send-chat" class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center hover:bg-orange-600 transition-colors shrink-0">
+                <span class="material-symbols-outlined text-sm">send</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Floating Button -->
+    <button id="chat-toggle" class="w-14 h-14 rounded-full bg-primary text-white shadow-lg flex items-center justify-center hover:bg-orange-600 hover:scale-105 transition-all outline-none mx-auto float-right group shadow-orange-500/30">
+        <span class="material-symbols-outlined text-2xl group-hover:rotate-12 transition-transform">chat_bubble</span>
+    </button>
+
+    <script th:inline="javascript">
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggleBtn = document.getElementById('chat-toggle');
+            const closeBtn = document.getElementById('close-chat');
+            const chatPanel = document.getElementById('chat-panel');
+            const chatInput = document.getElementById('chat-input');
+            const sendBtn = document.getElementById('send-chat');
+            const messagesArea = document.getElementById('chat-messages');
+
+            // Toggle Panel
+            const toggleChat = () => {
+                const isHidden = chatPanel.classList.contains('hidden');
+                if (isHidden) {
+                    chatPanel.classList.remove('hidden');
+                    chatPanel.classList.add('flex');
+                    chatInput.focus();
+                } else {
+                    chatPanel.classList.add('hidden');
+                    chatPanel.classList.remove('flex');
+                }
+            };
+
+            toggleBtn.addEventListener('click', toggleChat);
+            closeBtn.addEventListener('click', toggleChat);
+
+            const appendMessage = (text, isUser) => {
+                const container = document.createElement('div');
+                container.className = `flex flex-col ${isUser ? 'items-end' : 'items-start'}`;
+                
+                const bubble = document.createElement('div');
+                bubble.className = isUser 
+                    ? 'bg-primary text-white px-4 py-2 rounded-2xl rounded-br-sm shadow-sm max-w-[85%]'
+                    : 'bg-white border border-gray-100 text-gray-800 px-4 py-2 rounded-2xl rounded-bl-sm shadow-sm max-w-[85%]';
+                
+                // Allow basic HTML like <br> in text
+                bubble.innerHTML = text.replace(/\n/g, '<br>');
+                
+                container.appendChild(bubble);
+                messagesArea.appendChild(container);
+                scrollToBottom();
+            };
+
+            const appendLoading = () => {
+                const container = document.createElement('div');
+                container.id = 'chat-loading';
+                container.className = 'flex flex-col items-start mb-2';
+                container.innerHTML = `
+                    <div class="bg-gray-100 text-gray-400 px-4 py-2 rounded-2xl rounded-bl-sm flex gap-1 items-center h-9">
+                        <div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0s"></div>
+                        <div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.15s"></div>
+                        <div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.3s"></div>
+                    </div>
+                `;
+                messagesArea.appendChild(container);
+                scrollToBottom();
+            };
+
+            const removeLoading = () => {
+                const loading = document.getElementById('chat-loading');
+                if (loading) loading.remove();
+            };
+
+            const scrollToBottom = () => {
+                messagesArea.scrollTop = messagesArea.scrollHeight;
+            };
+
+            const sendMessage = async () => {
+                const text = chatInput.value.trim();
+                if (!text) return;
+
+                // Send to UI immediately
+                appendMessage(text, true);
+                chatInput.value = '';
+                
+                // Show thinking
+                appendLoading();
+
+                try {
+                    const response = await fetch('/chatbot/send', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ message: text })
+                    });
+                    
+                    const data = await response.json();
+                    removeLoading();
+                    appendMessage(data.reply, false);
+                } catch (error) {
+                    removeLoading();
+                    appendMessage('Xin lỗi, tôi đang bận. Vui lòng thử lại sau.', false);
+                }
+            };
+
+            sendBtn.addEventListener('click', sendMessage);
+            chatInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+        });
+    </script>
+</div>

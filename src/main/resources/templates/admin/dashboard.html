@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/admin-layout}">
+<head>
+    <title>Tổng Quan Dashboard</title>
+</head>
+<body>
+
+    <!-- Breadcrumb Override -->
+    <div layout:fragment="breadcrumb" class="text-xl font-bold text-gray-800">
+        Tổng Quan
+    </div>
+
+    <!-- Main Content -->
+    <div layout:fragment="content" class="space-y-6">
+        
+        <!-- Metrics Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            
+            <!-- Metric 1: Tổng đơn hôm nay -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex items-center">
+                <div class="flex-shrink-0 bg-orange-100 p-3 rounded-lg text-primary mr-4">
+                    <span class="material-symbols-outlined text-3xl">shopping_bag</span>
+                </div>
+                <div>
+                    <p class="text-sm font-medium text-gray-500">Đơn hàng hôm nay</p>
+                    <p class="text-2xl font-bold text-gray-800" th:text="${todayOrders}">0</p>
+                </div>
+            </div>
+
+            <!-- Metric 2: Doanh thu tháng này -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex items-center">
+                <div class="flex-shrink-0 bg-green-100 p-3 rounded-lg text-green-600 mr-4">
+                    <span class="material-symbols-outlined text-3xl">payments</span>
+                </div>
+                <div>
+                    <p class="text-sm font-medium text-gray-500">Doanh thu tháng (VNĐ)</p>
+                    <p class="text-2xl font-bold text-gray-800" th:text="${#numbers.formatDecimal(monthlyRevenue, 0, 'COMMA', 0, 'POINT')}">0</p>
+                </div>
+            </div>
+
+            <!-- Metric 3: Sản phẩm sắp hết hàng -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex items-center">
+                <div class="flex-shrink-0 bg-yellow-100 p-3 rounded-lg text-yellow-600 mr-4">
+                    <span class="material-symbols-outlined text-3xl">warning</span>
+                </div>
+                <div>
+                    <p class="text-sm font-medium text-gray-500">Sản phẩm sắp hết</p>
+                    <p class="text-2xl font-bold text-gray-800" th:text="${lowStockProducts}">0</p>
+                </div>
+            </div>
+
+            <!-- Metric 4: Sản phẩm sắp hết hạn -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex items-center">
+                <div class="flex-shrink-0 bg-red-100 p-3 rounded-lg text-red-600 mr-4">
+                    <span class="material-symbols-outlined text-3xl">event_busy</span>
+                </div>
+                <div>
+                    <p class="text-sm font-medium text-gray-500">Sắp hết hạn</p>
+                    <p class="text-2xl font-bold text-gray-800" th:text="${expiringProducts}">0</p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Recent Orders Table -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+                <h3 class="text-lg font-bold text-gray-800">10 Đơn hàng mới nhất</h3>
+                <a href="/admin/orders" class="text-sm text-primary hover:text-orange-600 font-medium">Xem tất cả</a>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm whitespace-nowrap">
+                    <thead class="text-xs text-gray-500 uppercase bg-white border-b border-gray-100">
+                        <tr>
+                            <th scope="col" class="px-6 py-4 font-medium">STT</th>
+                            <th scope="col" class="px-6 py-4 font-medium">Mã Đơn</th>
+                            <th scope="col" class="px-6 py-4 font-medium">Khách Hàng</th>
+                            <th scope="col" class="px-6 py-4 font-medium">Tổng Tiền</th>
+                            <th scope="col" class="px-6 py-4 font-medium">Trạng Thái</th>
+                            <th scope="col" class="px-6 py-4 font-medium">Ngày Tạo</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-50">
+                        <!-- Trống -->
+                        <tr th:if="${#lists.isEmpty(recentOrders)}">
+                            <td colspan="6" class="px-6 py-8 text-center text-gray-500">Chưa có đơn hàng nào</td>
+                        </tr>
+                        <!-- Dữ liệu -->
+                        <tr th:each="order, stat : ${recentOrders}" class="hover:bg-gray-50 transition-colors">
+                            <td class="px-6 py-4 text-gray-500" th:text="${stat.count}">1</td>
+                            <td class="px-6 py-4 font-semibold text-gray-800" th:text="${order.order_code}">#ORD001</td>
+                            <td class="px-6 py-4 text-gray-600" th:text="${order.customer_name ?: 'Khách vãng lai'}">Nguyễn Văn A</td>
+                            <td class="px-6 py-4 font-medium text-gray-800" th:text="${#numbers.formatDecimal(order.final_price, 0, 'COMMA', 0, 'POINT')} + ' đ'">100,000 đ</td>
+                            <td class="px-6 py-4">
+                                <span th:if="${order.order_status == 'PENDING'}" class="px-2.5 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">Chờ xử lý</span>
+                                <span th:if="${order.order_status == 'PROCESSING'}" class="px-2.5 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">Đang xử lý</span>
+                                <span th:if="${order.order_status == 'SHIPPED'}" class="px-2.5 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">Đang giao</span>
+                                <span th:if="${order.order_status == 'DELIVERED'}" class="px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">Đã giao</span>
+                                <span th:if="${order.order_status == 'CANCELLED'}" class="px-2.5 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">Đã hủy</span>
+                                <!-- Mặc định nếu không match -->
+                                <span th:unless="${order.order_status == 'PENDING' or order.order_status == 'PROCESSING' or order.order_status == 'SHIPPED' or order.order_status == 'DELIVERED' or order.order_status == 'CANCELLED'}"
+                                      class="px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800" th:text="${order.order_status}">Status</span>
+                            </td>
+                            <td class="px-6 py-4 text-gray-500" th:text="${#dates.format(order.created_date, 'dd/MM/yyyy HH:mm')}">01/01/2026</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

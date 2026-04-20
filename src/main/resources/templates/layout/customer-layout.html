@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title layout:title-pattern="$CONTENT_TITLE - The Culinary Curator">The Culinary Curator</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-high": "#e7e8e9",
+                        "primary-fixed-dim": "#ffb599",
+                        "tertiary-fixed-dim": "#8cceff",
+                        "on-surface": "#191c1d",
+                        "tertiary": "#006492",
+                        "on-primary-container": "#4f1800",
+                        "primary-container": "#f26522",
+                        "tertiary-container": "#009ade",
+                        "on-tertiary-fixed-variant": "#004b6f",
+                        "surface-container-highest": "#e1e3e4",
+                        "on-secondary-fixed-variant": "#0b4979",
+                        "surface": "#f8f9fa",
+                        "on-secondary-container": "#1c5384",
+                        "surface-container-low": "#f3f4f5",
+                        "on-primary-fixed": "#370e00",
+                        "on-background": "#191c1d",
+                        "surface-bright": "#f8f9fa",
+                        "on-tertiary-fixed": "#001e2f",
+                        "on-error": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "secondary-container": "#98c7ff",
+                        "on-tertiary-container": "#002d45",
+                        "primary-fixed": "#ffdbce",
+                        "on-primary-fixed-variant": "#7f2b00",
+                        "on-tertiary": "#ffffff",
+                        "on-surface-variant": "#594138",
+                        "secondary-fixed": "#d1e4ff",
+                        "inverse-surface": "#2e3132",
+                        "on-error-container": "#93000a",
+                        "secondary": "#2e6192",
+                        "outline": "#8d7166",
+                        "background": "#f8f9fa",
+                        "on-secondary-fixed": "#001d35",
+                        "on-primary": "#ffffff",
+                        "surface-container": "#edeeef",
+                        "surface-tint": "#a63b00",
+                        "surface-dim": "#d9dadb",
+                        "inverse-on-surface": "#f0f1f2",
+                        "secondary-fixed-dim": "#9dcaff",
+                        "tertiary-fixed": "#cae6ff",
+                        "outline-variant": "#e1bfb3",
+                        "surface-container-lowest": "#ffffff",
+                        "inverse-primary": "#ffb599",
+                        "primary": "#a63b00",
+                        "error-container": "#ffdad6",
+                        "error": "#ba1a1a",
+                        "surface-variant": "#e1e3e4"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Inter", "sans-serif"],
+                        "body": ["Inter", "sans-serif"],
+                        "label": ["Inter", "sans-serif"],
+                        "price": ["Roboto", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    
+    <!-- Alpine.js for Dropdown -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        .font-price { font-family: 'Roboto', sans-serif; }
+        .bg-ocean-spray {
+            background: linear-gradient(135deg, #a63b00 0%, #f26522 100%);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen flex flex-col antialiased">
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center">
+                    <a href="/" class="flex items-center gap-2 text-primary font-bold text-xl tracking-tight">
+                        <span class="material-symbols-outlined text-3xl">restaurant</span>
+                        The Culinary Curator
+                    </a>
+                </div>
+
+                <!-- Search Bar -->
+                <div class="flex-1 max-w-2xl px-8 hidden md:block">
+                    <form action="/products" method="get" class="relative">
+                        <input type="text" name="q" placeholder="Tìm kiếm hải sản cao cấp..." 
+                               class="w-full bg-gray-100 border-transparent focus:bg-white focus:border-primary focus:ring-1 focus:ring-primary rounded-full py-2 pl-4 pr-10 text-sm transition-colors duration-200">
+                        <button type="submit" class="absolute right-3 top-1.5 text-gray-400 hover:text-primary">
+                            <span class="material-symbols-outlined">search</span>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Right Nav -->
+                <div class="flex items-center space-x-6">
+                    
+                    <!-- Wishlist -->
+                    <a href="/wishlist" class="text-gray-500 hover:text-primary relative transition-colors">
+                        <span class="material-symbols-outlined">favorite</span>
+                        <span class="absolute -top-1.5 -right-1.5 bg-primary text-white text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center"
+                              th:text="${session.wishlistCount ?: 0}">0</span>
+                    </a>
+                    
+                    <!-- Cart -->
+                    <a href="/cart" class="text-gray-500 hover:text-primary relative transition-colors">
+                        <span class="material-symbols-outlined">shopping_cart</span>
+                        <span class="absolute -top-1.5 -right-1.5 bg-primary text-white text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center"
+                              th:text="${session.cartCount ?: 0}">0</span>
+                    </a>
+
+                    <!-- Auth check -->
+                    <div sec:authorize="!isAuthenticated()" class="flex space-x-4">
+                        <a href="/login" class="text-sm font-medium text-gray-700 hover:text-primary">Đăng nhập</a>
+                        <a href="/register" class="text-sm font-medium text-white bg-primary hover:bg-orange-600 px-4 py-2 rounded-full transition-colors">Đăng ký</a>
+                    </div>
+
+                    <!-- User Menu Dropdown -->
+                    <div sec:authorize="isAuthenticated()" class="relative" x-data="{ open: false }" @click.away="open = false">
+                        <button @click="open = !open" class="flex items-center space-x-2 text-sm font-medium text-gray-700 hover:text-primary focus:outline-none">
+                            <span class="material-symbols-outlined">account_circle</span>
+                            <span sec:authentication="principal.username">Username</span>
+                            <span class="material-symbols-outlined text-sm transition-transform duration-200" :class="{'rotate-180': open}">expand_more</span>
+                        </button>
+
+                        <div x-show="open" x-transition.opacity
+                             class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 ring-1 ring-black ring-opacity-5 focus:outline-none" style="display: none;">
+                            <div class="px-4 py-2 text-xs text-gray-500 border-b border-gray-100">
+                                Đã đăng nhập với <br>
+                                <strong sec:authentication="principal.username" class="text-gray-800"></strong>
+                            </div>
+                            <!-- Admin Link -->
+                            <a sec:authorize="hasRole('ADMIN')" href="/admin/dashboard" class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-primary">Admin Panel</a>
+                            
+                            <a href="/orders/my" class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-primary">Đơn hàng của tôi</a>
+                            <a href="/profile" class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-primary">Hồ sơ cá nhân</a>
+                            
+                            <form th:action="@{/logout}" method="post" class="w-full">
+                                <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                                    Đăng xuất
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow">
+        <div layout:fragment="content">
+            <!-- Content will be injected here -->
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-secondary text-white py-8 mt-12 border-t-4 border-primary">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <div class="flex items-center justify-center gap-2 text-primary font-bold text-xl mb-4">
+                <span class="material-symbols-outlined">restaurant</span>
+                The Culinary Curator
+            </div>
+            <p class="text-gray-400 text-sm">&copy; 2026 The Culinary Curator. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Chatbot Widget -->
+    <div th:replace="chatbot/chatbot :: widget"></div>
+
+</body>
+</html>
