@@ -22,15 +22,28 @@ public class CartController {
         return "cart/cart";
     }
 
+    /**
+     * Add item to cart.
+     * Either productId or comboId must be provided (not both).
+     */
     @PostMapping("/add")
-    public String addToCart(HttpSession session,
-                            @RequestParam(required = false) Integer productId,
-                            @RequestParam(required = false) Integer comboId,
-                            @RequestParam String name,
-                            @RequestParam Double price,
-                            @RequestParam(defaultValue = "1") Integer quantity) {
-        
+    public String addToCart(
+            HttpSession session,
+            @RequestParam(required = false) Integer productId,
+            @RequestParam(required = false) Integer comboId,
+            @RequestParam String name,
+            @RequestParam Double price,
+            @RequestParam(defaultValue = "1") Integer quantity,
+            @RequestParam(required = false) String imageUrl) {
+
+        // Validate: must have either productId or comboId
+        if (productId == null && comboId == null) {
+            return "redirect:/cart?error=invalid";
+        }
+
         String key = (productId != null) ? "P_" + productId : "C_" + comboId;
+        String type = (productId != null) ? "PRODUCT" : "COMBO";
+
         CartItemDTO item = CartItemDTO.builder()
                 .itemKey(key)
                 .productId(productId)
@@ -38,23 +51,41 @@ public class CartController {
                 .name(name)
                 .unitPrice(price)
                 .quantity(quantity)
+                .imageUrl(imageUrl != null ? imageUrl : "")
+                .itemType(type)
                 .build();
-                
+
         cartService.addToCart(session, item);
+
+        // Update session cart count for navbar badge
+        session.setAttribute("cartCount", cartService.getCart(session).values()
+                .stream().mapToInt(CartItemDTO::getQuantity).sum());
+
         return "redirect:/cart?added=true";
     }
 
     @PostMapping("/update")
-    public String updateQuantity(HttpSession session,
-                                 @RequestParam String itemKey,
-                                 @RequestParam Integer quantity) {
+    public String updateQuantity(
+            HttpSession session,
+            @RequestParam String itemKey,
+            @RequestParam Integer quantity) {
         cartService.updateQuantity(session, itemKey, quantity);
+
+        // Refresh cart count
+        session.setAttribute("cartCount", cartService.getCart(session).values()
+                .stream().mapToInt(CartItemDTO::getQuantity).sum());
+
         return "redirect:/cart";
     }
 
     @PostMapping("/remove")
     public String removeFromCart(HttpSession session, @RequestParam String itemKey) {
         cartService.removeItem(session, itemKey);
+
+        // Refresh cart count
+        session.setAttribute("cartCount", cartService.getCart(session).values()
+                .stream().mapToInt(CartItemDTO::getQuantity).sum());
+
         return "redirect:/cart";
     }
 }

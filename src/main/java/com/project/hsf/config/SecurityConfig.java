@@ -24,9 +24,11 @@ public class SecurityConfig {
                     "/",
                     "/login/**",
                     "/register/**",
+                    "/products/**",
                     "/css/**",
                     "/js/**",
                     "/images/**",
+                    "/webjars/**",
                     "/register-user",
                     "/cart"
             );
@@ -50,8 +52,14 @@ public class SecurityConfig {
                         .loginPage("/login")
                         .loginProcessingUrl("/login")
                         .defaultSuccessUrl("/", true)
+                        .failureUrl("/login?error=true")
                         .permitAll())
-                .logout((logout) -> logout.permitAll());
+                .logout((logout) -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login?logout=true")
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
+                        .permitAll());
         return http.build();
     }
 

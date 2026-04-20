@@ -137,12 +137,26 @@
                 <h2 class="text-3xl font-bold text-on-surface tracking-tight">Chào mừng bạn trở lại!</h2>
                 <p class="text-on-surface-variant mt-2">Vui lòng nhập thông tin để truy cập kho lưu trữ đặc sản.</p>
             </div>
+            <!-- Messages -->
+            <div th:if="${param.error}" class="mb-6 p-4 rounded-lg bg-error-container text-on-error-container text-sm flex items-center gap-3">
+                <span class="material-symbols-outlined text-[20px]" data-icon="error">error</span>
+                <span>Tên đăng nhập hoặc mật khẩu không chính xác.</span>
+            </div>
+            <div th:if="${param.logout}" class="mb-6 p-4 rounded-lg bg-tertiary-fixed text-on-tertiary-fixed text-sm flex items-center gap-3">
+                <span class="material-symbols-outlined text-[20px]" data-icon="info">info</span>
+                <span>Bạn đã đăng xuất thành công.</span>
+            </div>
+            <div th:if="${param.registerSuccess}" class="mb-6 p-4 rounded-lg bg-primary-container text-on-primary-container text-sm flex items-center gap-3">
+                <span class="material-symbols-outlined text-[20px]" data-icon="check_circle">check_circle</span>
+                <span>Đăng ký tài khoản thành công! Vui lòng đăng nhập.</span>
+            </div>
+
             <!-- Form -->
             <form class="space-y-6" th:action="@{/login}" method="post" role="form">
                 <!-- Email Field -->
                 <div class="relative floating-label-input">
                     <input class="peer w-full px-4 py-4 bg-white border-none ring-1 ring-outline-variant/30 focus:ring-2 focus:ring-primary rounded-lg transition-all outline-none text-on-surface"
-                           id="username" placeholder=" " type="text"/>
+                           id="username" name="username" placeholder=" " type="text" required/>
                     <label class="absolute left-4 top-4 text-on-surface-variant pointer-events-none transition-all origin-left"
                            for="username">
                         Tên đăng nhập
@@ -151,7 +165,7 @@
                 <!-- Password Field -->
                 <div class="relative floating-label-input">
                     <input class="peer w-full px-4 py-4 bg-white border-none ring-1 ring-outline-variant/30 focus:ring-2 focus:ring-primary rounded-lg transition-all outline-none text-on-surface"
-                           id="password" placeholder=" " type="password"/>
+                           id="password" name="password" placeholder=" " type="password" required/>
                     <label class="absolute left-4 top-4 text-on-surface-variant pointer-events-none transition-all origin-left"
                            for="password">
                         Mật khẩu
