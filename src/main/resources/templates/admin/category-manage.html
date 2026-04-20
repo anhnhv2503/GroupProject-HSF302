@@ -1,492 +1,200 @@
 <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/admin-layout}">
+<head><title>Quản Lý Danh Mục</title></head>
+<body>
+<div layout:fragment="content">
 
-<html xmlns:th="http://www.thymeleaf.org" class="light" lang="vi">
+    <!-- Header -->
+    <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-5">
+        <div>
+            <nav class="breadcrumb-custom mb-2">
+                <span>Hệ thống</span> <i class="bi bi-chevron-right mx-1" style="font-size:.5rem;"></i>
+                <span>Quản lý kho</span> <i class="bi bi-chevron-right mx-1" style="font-size:.5rem;"></i>
+                <span class="active">Danh mục</span>
+            </nav>
+            <h2 class="font-serif fw-bold text-brand-secondary mb-1" style="font-size:2.5rem;">Quản Lý Danh Mục</h2>
+            <p class="text-muted fst-italic">"Nơi khởi nguồn của những thực đơn tinh tế."</p>
+        </div>
+        <button class="btn btn-primary btn-lg d-flex align-items-center gap-2 fw-bold" data-bs-toggle="modal" data-bs-target="#createCatModal">
+            <i class="bi bi-plus-square"></i> Thêm danh mục mới
+        </button>
+    </div>
 
-<head>
-    <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>The Oceanic - Quản Lý Danh Mục</title>
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&amp;family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;display=swap"
-        rel="stylesheet" />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
-        rel="stylesheet" />
-    <script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    "colors": {
-                        "primary": "#F26522", // Brand Orange
-                        "secondary": "#E8C872", // Golden Sand
-                        "accent": "#F26522", // Brand Orange (Actions)
-                        "surface": "#FDFBF7",
-                        "on-surface": "#1B1C17",
-                        "on-surface-variant": "#44483D",
-                        "outline-variant": "#C4C8BA",
-                        "background": "#F4F7F5",
-                        "tertiary": "#0D4A7A", // Brand Deep Blue (Sidebar)
-                        "primary-container": "#FFEDE5",
-                        "on-primary-container": "#F26522",
-                    },
-                    "borderRadius": {
-                        "DEFAULT": "0.5rem",
-                        "lg": "1rem",
-                        "xl": "1.5rem",
-                        "full": "9999px"
-                    },
-                    "fontFamily": {
-                        "headline": ["Playfair Display", "serif"],
-                        "body": ["Plus Jakarta Sans", "sans-serif"],
-                    }
-                },
-            },
-        }
-    </script>
-    <style>
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-        }
-
-        .font-headline {
-            font-family: 'Playfair Display', serif;
-        }
-
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-
-        .glass-effect {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-        }
-    </style>
-</head>
-
-<body class="bg-background text-on-surface flex min-h-screen">
-    <!-- SideNavBar Fragment -->
-    <div th:replace="~{admin/fragments/sidebar :: sidebar}"></div>
-
-    <!-- Main Canvas -->
-    <main class="flex-1 ml-72 min-h-screen relative">
-        <!-- TopNavBar Fragment -->
-        <div th:replace="~{admin/fragments/header :: header}"></div>
-        <!-- Content Area -->
-        <div class="p-10">
-            <!-- Hero Header -->
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-12">
-                <div class="max-w-3xl">
-                    <nav
-                        class="flex items-center gap-2 mb-4 text-xs font-bold uppercase tracking-widest text-tertiary/60">
-                        <span>Hệ thống</span>
-                        <span class="material-symbols-outlined text-[10px]">chevron_right</span>
-                        <span>Quản lý kho</span>
-                        <span class="material-symbols-outlined text-[10px]">chevron_right</span>
-                        <span class="text-primary">Danh mục</span>
-                    </nav>
-                    <h2 class="text-5xl font-headline font-bold text-tertiary tracking-tight mb-4">Quản Lý Danh Mục</h2>
-                    <p class="text-on-surface-variant leading-relaxed text-lg italic opacity-80">"Nơi khởi nguồn của
-                        những thực đơn tinh tế, tổ chức kho tàng mỹ vị từ đại dương."</p>
-                </div>
-                <button onclick="openModal()"
-                    class="bg-primary text-white font-bold px-8 py-4 rounded-xl flex items-center gap-3 shadow-xl shadow-primary/20 hover:-translate-y-1 active:translate-y-0 transition-all cursor-pointer">
-                    <span class="material-symbols-outlined">add_box</span>
-                    THÊM DANH MỤC MỚI
-                </button>
-            </div>
-            <!-- Stats Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-                <div
-                    class="bg-white p-8 rounded-2xl border border-outline-variant/10 shadow-sm relative overflow-hidden group hover:shadow-lg transition-all duration-300">
-                    <div
-                        class="absolute -right-6 -bottom-6 opacity-[0.03] group-hover:scale-110 transition-transform duration-500">
-                        <span class="material-symbols-outlined text-[160px] text-tertiary"
-                            style="font-variation-settings: 'FILL' 1;">layers</span>
-                    </div>
-                    <div class="relative z-10">
-                        <p
-                            class="text-xs font-bold text-on-surface-variant/60 uppercase tracking-widest mb-6 flex items-center gap-2">
-                            <span class="w-2 h-2 bg-secondary rounded-full"></span> Tổng Số Danh Mục
-                        </p>
-                        <div class="flex items-end justify-between">
-                            <h3 class="text-5xl font-headline font-bold text-tertiary" th:text="${categories.size()}">0
-                            </h3>
-<!--                            <span-->
-<!--                                class="text-primary text-xs font-bold flex items-center gap-1 bg-primary/10 px-3 py-1.5 rounded-full">-->
-<!--                                <span class="material-symbols-outlined text-sm">trending_up</span> +2 tháng này-->
-<!--                            </span>-->
-                        </div>
-                    </div>
-                </div>
-                <div
-                    class="bg-white p-8 rounded-2xl border border-outline-variant/10 shadow-sm relative overflow-hidden group hover:shadow-lg transition-all duration-300">
-                    <div
-                        class="absolute -right-6 -bottom-6 opacity-[0.03] group-hover:scale-110 transition-transform duration-500 text-green-600">
-                        <span class="material-symbols-outlined text-[160px]"
-                            style="font-variation-settings: 'FILL' 1;">verified</span>
-                    </div>
-                    <div class="relative z-10">
-                        <p
-                            class="text-xs font-bold text-on-surface-variant/60 uppercase tracking-widest mb-6 flex items-center gap-2">
-                            <span class="w-2 h-2 bg-green-500 rounded-full"></span> Trạng Thái Hoạt Động
-                        </p>
-                        <div class="flex items-end justify-between">
-                            <h3 class="text-5xl font-headline font-bold text-tertiary"
-                                th:text="${activeCategories.size()}">0
-                            </h3>
-                            <span
-                                class="text-on-surface-variant text-xs font-bold flex items-center gap-1 bg-surface-container-high px-3 py-1.5 rounded-full">
-                                Danh mục đang quản lý
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <div
-                    class="bg-tertiary text-white p-8 rounded-2xl shadow-xl relative overflow-hidden group hover:scale-[1.02] transition-all duration-300">
-                    <div
-                        class="absolute -right-6 -bottom-6 opacity-10 group-hover:scale-110 transition-transform duration-500">
-                        <span class="material-symbols-outlined text-[160px]"
-                            style="font-variation-settings: 'FILL' 1;">restaurant</span>
-                    </div>
-                    <div class="relative z-10">
-                        <p
-                            class="text-xs font-bold text-secondary uppercase tracking-widest mb-6 flex items-center gap-2">
-                            <span class="w-2 h-2 bg-primary rounded-full animate-pulse"></span> Phổ Biến Nhất
-                        </p>
-                        <div class="flex flex-col">
-                            <h3 class="text-2xl font-headline font-bold text-white mb-2 truncate">Hải Sản Tươi Sống</h3>
-                            <p class="text-sm text-secondary font-medium">45 sản phẩm đang phục vụ</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Main Data Table -->
-            <div class="bg-white rounded-2xl shadow-sm overflow-hidden border border-outline-variant/20">
-                <div
-                    class="px-8 py-6 border-b border-outline-variant/10 flex flex-col md:flex-row justify-between items-center gap-4 bg-surface/50">
-                    <div class="flex items-center gap-6">
-                        <div>
-                            <h4 class="font-headline font-bold text-xl text-tertiary">Danh sách phân loại</h4>
-
-                        </div>
-                        <span
-                            class="bg-primary/10 text-primary px-4 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest border border-primary/20">QUÝ
-                            2 - 2026</span>
-                    </div>
-                    <div class="flex gap-3">
-                        <button
-                            class="flex items-center gap-2 px-4 py-2 hover:bg-surface-container rounded-lg transition-all border border-outline-variant/30 text-sm font-semibold text-on-surface-variant">
-                            <span class="material-symbols-outlined text-lg">tune</span> Bộ lọc
-                        </button>
-                        <button
-                            class="flex items-center gap-2 px-4 py-2 hover:bg-surface-container rounded-lg transition-all border border-outline-variant/30 text-sm font-semibold text-on-surface-variant">
-                            <span class="material-symbols-outlined text-lg">ios_share</span> Xuất dữ liệu
-                        </button>
-                    </div>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="bg-background/50">
-                                <th
-                                    class="px-8 py-5 text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant/60">
-                                    Mã ID</th>
-                                <th
-                                    class="px-8 py-5 text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant/60">
-                                    Danh Mục</th>
-                                <th
-                                    class="px-8 py-5 text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant/60">
-                                    Mô Tả Chi Tiết</th>
-                                <th
-                                    class="px-8 py-5 text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant/60 text-center">
-                                    Sản Phẩm</th>
-                                <th
-                                    class="px-8 py-5 text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant/60">
-                                    Trạng Thái</th>
-                                <th
-                                    class="px-8 py-5 text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant/60 text-center">
-                                    Thứ Tự</th>
-                                <th
-                                    class="px-8 py-5 text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant/60 text-right">
-                                    Quản Lý</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-outline-variant/10">
-                            <!-- Row Template -->
-                            <tr th:each="category : ${categories}"
-                                class="hover:bg-background/40 transition-colors group">
-                                <td class="px-4 py-6 font-mono text-xs text-tertiary/60 font-semibold"
-                                    th:text="'#CAT-' + ${category.id}">#CAT-001</td>
-                                <td class="px-8 py-6">
-                                    <div class="flex items-center gap-4">
-                                        <div>
-                                            <span class="font-headline font-bold text-tertiary block text-lg"
-                                                th:text="${category.name}">Tên Danh Mục</span>
-                                            <span class="text-[10px] text-primary font-bold uppercase">Phân loại</span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="px-8 py-6">
-                                    <p class="text-sm text-on-surface-variant line-clamp-2 max-w-xs"
-                                        th:text="${category.description}">Mô tả chi tiết của danh mục hải sản này.</p>
-                                </td>
-                                <td class="px-8 py-6 text-center">
-                                    <span class="text-lg font-bold text-tertiary">-</span>
-                                </td>
-                                <td class="px-6 py-6">
-                                    <span th:if="${category.active}"
-                                        class="inline-flex items-center gap-1.5 px-2 py-1.5 bg-green-50 text-green-700 text-[10px] font-bold uppercase rounded-full border border-green-200">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
-                                        Đang Hoạt Động
-                                    </span>
-                                    <span th:unless="${category.active}"
-                                        class="inline-flex items-center gap-1.5 px-2 py-1.5 bg-red-50 text-red-700 text-[10px] font-bold uppercase rounded-full border border-red-200">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
-                                        Đang Ẩn
-                                    </span>
-                                </td>
-                                <td class="px-8 py-6 text-center">
-                                    <div class="flex items-center justify-center gap-2">
-                                        <span
-                                            class="text-sm font-bold text-white bg-primary w-7 h-7 flex items-center justify-center rounded-lg"
-                                            th:text="${categoryStat.index + 1}">1</span>
-                                    </div>
-                                </td>
-                                <td class="px-8 py-6 text-right">
-                                    <div
-                                        class="flex justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                                        <!-- Edit Button -->
-                                        <button type="button" th:data-id="${category.id}"
-                                            th:data-name="${category.name}"
-                                            th:data-description="${category.description}"
-                                            th:data-active="${category.active}" onclick="openEditModal(this)"
-                                            class="w-9 h-9 flex items-center justify-center bg-tertiary/5 hover:bg-tertiary hover:text-white rounded-lg transition-all text-tertiary">
-                                            <span class="material-symbols-outlined text-lg">edit</span>
-                                        </button>
-                                        <!-- Delete Button -->
-                                        <button type="button" th:data-id="${category.id}"
-                                            th:data-name="${category.name}" onclick="openDeleteModal(this)"
-                                            class="w-9 h-9 flex items-center justify-center bg-primary/5 hover:bg-primary hover:text-white rounded-lg transition-all text-primary">
-                                            <span class="material-symbols-outlined text-lg">delete</span>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <!-- Pagination -->
-                <div
-                    class="px-8 py-6 border-t border-outline-variant/10 flex flex-col md:flex-row items-center justify-between bg-surface/30 gap-4">
-                    <p class="text-sm text-on-surface-variant font-medium">Hiển thị <span
-                            class="font-bold text-tertiary" th:text="'1 - ' + ${categories.size()}">1 - 4</span> trong
-                        tổng số <span th:text="${categories.size()}">12</span> danh mục hiện có</p>
-                    <div class="flex items-center gap-2">
-                        <button
-                            class="w-10 h-10 flex items-center justify-center rounded-xl border border-outline-variant/30 hover:bg-tertiary hover:text-white transition-all disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-on-surface-variant"
-                            disabled="">
-                            <span class="material-symbols-outlined">chevron_left</span>
-                        </button>
-                        <button
-                            class="w-10 h-10 flex items-center justify-center rounded-xl bg-primary text-white font-bold text-sm shadow-lg shadow-primary/20">1</button>
-                        <button
-                            class="w-10 h-10 flex items-center justify-center rounded-xl border border-outline-variant/30 hover:bg-tertiary/5 transition-all font-bold text-sm text-on-surface-variant">2</button>
-                        <button
-                            class="w-10 h-10 flex items-center justify-center rounded-xl border border-outline-variant/30 hover:bg-tertiary/5 transition-all font-bold text-sm text-on-surface-variant">3</button>
-                        <button
-                            class="w-10 h-10 flex items-center justify-center rounded-xl border border-outline-variant/30 hover:bg-tertiary hover:text-white transition-all">
-                            <span class="material-symbols-outlined">chevron_right</span>
-                        </button>
-                    </div>
-                </div>
+    <!-- Stats -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="card stat-card position-relative p-4">
+                <i class="bi bi-layers stat-icon text-brand-secondary"></i>
+                <p class="text-muted fw-bold small mb-3"><span class="d-inline-block rounded-circle bg-warning me-2" style="width:8px;height:8px;"></span>Tổng Số Danh Mục</p>
+                <h3 class="stat-value" th:text="${categories.size()}">0</h3>
             </div>
         </div>
-        <!-- Background Decorative Element -->
-        <div
-            class="fixed bottom-0 right-0 w-[500px] h-[500px] bg-gradient-radial from-primary/10 to-transparent -z-10 opacity-30 blur-[100px] pointer-events-none">
+        <div class="col-md-4">
+            <div class="card stat-card position-relative p-4">
+                <i class="bi bi-patch-check stat-icon text-success"></i>
+                <p class="text-muted fw-bold small mb-3"><span class="d-inline-block rounded-circle bg-success me-2" style="width:8px;height:8px;"></span>Đang Hoạt Động</p>
+                <h3 class="stat-value" th:text="${activeCategories.size()}">0</h3>
+            </div>
         </div>
-    </main>
+        <div class="col-md-4">
+            <div class="card stat-card stat-card-accent position-relative p-4">
+                <i class="bi bi-star stat-icon text-white"></i>
+                <p class="fw-bold small mb-3" style="color:var(--brand-gold);">Phổ Biến Nhất</p>
+                <h4 class="fw-bold text-white font-serif mb-1">Hải Sản Tươi Sống</h4>
+                <p class="small mb-0" style="color:var(--brand-gold);">Danh mục hàng đầu</p>
+            </div>
+        </div>
+    </div>
 
-    <!-- Create Category Modal -->
-    <div id="categoryModal" class="fixed inset-0 z-[100] hidden overflow-y-auto">
-        <div class="flex items-center justify-center min-h-screen p-4">
-            <!-- Overlay -->
-            <div class="fixed inset-0 bg-tertiary/40 backdrop-blur-sm transition-opacity" onclick="closeModal()"></div>
+    <!-- Data Table -->
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center py-3 px-4">
+            <h5 class="font-serif fw-bold text-brand-secondary mb-0">Danh sách phân loại</h5>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-modern mb-0">
+                <thead>
+                <tr>
+                    <th>Mã ID</th><th>Danh Mục</th><th>Mô Tả</th><th class="text-center">Trạng Thái</th><th class="text-end">Quản Lý</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="category, stat : ${categories}">
+                    <td class="text-muted small fw-semibold font-monospace" th:text="'#CAT-' + ${category.id}">#CAT-001</td>
+                    <td>
+                        <span class="fw-bold font-serif text-brand-secondary" th:text="${category.name}">Tên DM</span><br/>
+                        <small class="text-primary fw-bold text-uppercase" style="font-size:.6rem;">Phân loại</small>
+                    </td>
+                    <td><p class="text-muted small mb-0 text-truncate" style="max-width:250px;" th:text="${category.description}">Mô tả</p></td>
+                    <td class="text-center">
+                        <span th:if="${category.active}" class="badge badge-active rounded-pill"><i class="bi bi-circle-fill me-1" style="font-size:.4rem;"></i>Đang Hoạt Động</span>
+                        <span th:unless="${category.active}" class="badge badge-inactive rounded-pill"><i class="bi bi-circle-fill me-1" style="font-size:.4rem;"></i>Đang Ẩn</span>
+                    </td>
+                    <td class="text-end">
+                        <button class="btn btn-sm btn-outline-secondary rounded-2 me-1" data-bs-toggle="modal" data-bs-target="#editCatModal"
+                                th:data-id="${category.id}" th:data-name="${category.name}"
+                                th:data-description="${category.description}" th:data-active="${category.active}">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger rounded-2" data-bs-toggle="modal" data-bs-target="#deleteCatModal"
+                                th:data-id="${category.id}" th:data-name="${category.name}">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 
-            <!-- Modal Content -->
-            <div
-                class="relative bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden transform transition-all border border-outline-variant/10">
-                <div class="px-8 py-6 bg-tertiary text-white flex justify-between items-center">
-                    <div>
-                        <h3 id="modalTitle" class="text-2xl font-headline font-bold">Thêm Danh Mục Mới</h3>
-                        <p id="modalSubtitle" class="text-xs text-secondary/80 font-medium mt-1">Khởi tạo phân loại hải
-                            sản mới cho hệ thống</p>
-                    </div>
-                    <button onclick="closeModal()"
-                        class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10 transition-colors">
-                        <span class="material-symbols-outlined">close</span>
-                    </button>
+    <!-- CREATE MODAL -->
+    <div class="modal fade" id="createCatModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 overflow-hidden">
+                <div class="modal-header modal-header-brand">
+                    <div><h5 class="modal-title font-serif fw-bold">Thêm Danh Mục Mới</h5><small class="opacity-75">Khởi tạo phân loại hải sản mới</small></div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-
-                <form id="categoryForm" th:action="@{/admin/categories/save}" method="post" class="p-8 space-y-6">
-                    <input type="hidden" name="id" id="categoryId">
-                    <!-- Tên Danh Mục -->
-                    <div class="space-y-2">
-                        <label class="text-[10px] font-bold uppercase tracking-widest text-tertiary/60 px-1">Tên Danh
-                            Mục</label>
-                        <input type="text" name="name" required
-                            class="w-full px-5 py-4 bg-background border border-outline-variant/30 rounded-2xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-semibold text-tertiary"
-                            placeholder="VD: Cua & Ghẹ Biển">
-                    </div>
-
-                    <!-- Mô Tả -->
-                    <div class="space-y-2">
-                        <label class="text-[10px] font-bold uppercase tracking-widest text-tertiary/60 px-1">Mô Tả Chi
-                            Tiết</label>
-                        <textarea name="description" rows="4"
-                            class="w-full px-5 py-4 bg-background border border-outline-variant/30 rounded-2xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-medium text-tertiary resize-none"
-                            placeholder="Mô tả ngắn gọn về phân loại này..."></textarea>
-                    </div>
-
-                    <!-- Trạng Thái -->
-                    <div
-                        class="flex items-center justify-between p-4 bg-background rounded-2xl border border-outline-variant/20">
-                        <div class="flex items-center gap-3">
-                            <span class="material-symbols-outlined text-primary">visibility</span>
-                            <div>
-                                <p class="text-sm font-bold text-tertiary">Trạng thái hoạt động</p>
-                                <p class="text-[10px] text-on-surface-variant font-medium">Hiện/Ẩn trên trang bán hàng
-                                </p>
-                            </div>
+                <form th:action="@{/admin/categories/save}" method="post">
+                    <div class="modal-body p-4">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold small text-muted text-uppercase">Tên Danh Mục</label>
+                            <input type="text" name="name" class="form-control form-control-lg" required placeholder="VD: Cua &amp; Ghẹ Biển"/>
                         </div>
-                        <label class="relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" name="active" value="true" checked class="sr-only peer">
-                            <div
-                                class="w-11 h-6 bg-outline-variant/30 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary">
-                            </div>
-                        </label>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold small text-muted text-uppercase">Mô Tả</label>
+                            <textarea name="description" class="form-control" rows="3" placeholder="Mô tả ngắn gọn..."></textarea>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" name="active" value="true" checked id="createCatActive"/>
+                            <label class="form-check-label fw-bold" for="createCatActive">Trạng thái hoạt động</label>
+                        </div>
                     </div>
-
-                    <!-- Actions -->
-                    <div class="flex gap-4 pt-4">
-                        <button type="button" onclick="closeModal()"
-                            class="flex-1 px-6 py-4 border border-outline-variant/30 text-on-surface-variant font-bold rounded-2xl hover:bg-surface-container transition-all">
-                            HỦY BỎ
-                        </button>
-                        <button type="submit"
-                            class="flex-[1.5] px-6 py-4 bg-primary text-white font-bold rounded-2xl shadow-xl shadow-primary/20 hover:-translate-y-1 transition-all">
-                            LƯU DANH MỤC
-                        </button>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light fw-bold" data-bs-dismiss="modal">Hủy bỏ</button>
+                        <button type="submit" class="btn btn-primary fw-bold px-4">Lưu danh mục</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- Delete Confirmation Modal -->
-    <div id="deleteModal" class="fixed inset-0 z-[100] hidden overflow-y-auto">
-        <div class="flex items-center justify-center min-h-screen p-4">
-            <div class="fixed inset-0 bg-tertiary/40 backdrop-blur-sm transition-opacity" onclick="closeDeleteModal()">
-            </div>
-            <div
-                class="relative bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all border border-primary/10">
-                <div class="p-8 text-center">
-                    <div
-                        class="w-16 h-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto mb-6">
-                        <span class="material-symbols-outlined text-4xl">warning</span>
+    <!-- EDIT MODAL -->
+    <div class="modal fade" id="editCatModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 overflow-hidden">
+                <div class="modal-header modal-header-brand">
+                    <div><h5 class="modal-title font-serif fw-bold">Chỉnh Sửa Danh Mục</h5><small class="opacity-75">Cập nhật thông tin phân loại</small></div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form th:action="@{/admin/categories/update}" method="post">
+                    <input type="hidden" name="id" id="editCatId"/>
+                    <div class="modal-body p-4">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold small text-muted text-uppercase">Tên Danh Mục</label>
+                            <input type="text" name="name" id="editCatName" class="form-control form-control-lg" required/>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold small text-muted text-uppercase">Mô Tả</label>
+                            <textarea name="description" id="editCatDesc" class="form-control" rows="3"></textarea>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" name="active" value="true" id="editCatActive"/>
+                            <label class="form-check-label fw-bold" for="editCatActive">Trạng thái hoạt động</label>
+                        </div>
                     </div>
-                    <h3 class="text-2xl font-headline font-bold text-tertiary mb-2">Xác Nhận Xóa</h3>
-                    <p class="text-on-surface-variant font-medium mb-8">Bạn có chắc chắn muốn xóa danh mục <span
-                            id="deleteCategoryName" class="font-bold text-primary"></span>? Hành động này không thể hoàn
-                        tác.</p>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light fw-bold" data-bs-dismiss="modal">Hủy bỏ</button>
+                        <button type="submit" class="btn btn-primary fw-bold px-4">Cập nhật</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
-                    <form id="deleteForm" method="post" class="flex gap-4">
-                        <button type="button" onclick="closeDeleteModal()"
-                            class="flex-1 px-6 py-4 border border-outline-variant/30 text-on-surface-variant font-bold rounded-2xl hover:bg-surface-container transition-all">
-                            HỦY BỎ
-                        </button>
-                        <button type="submit"
-                            class="flex-1 px-6 py-4 bg-primary text-white font-bold rounded-2xl shadow-xl shadow-primary/20 hover:-translate-y-1 transition-all">
-                            XÓA NGAY
-                        </button>
+    <!-- DELETE MODAL -->
+    <div class="modal fade" id="deleteCatModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 overflow-hidden">
+                <div class="modal-body text-center p-5">
+                    <div class="bg-danger bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-4" style="width:64px;height:64px;">
+                        <i class="bi bi-exclamation-triangle text-danger fs-3"></i>
+                    </div>
+                    <h5 class="font-serif fw-bold text-brand-secondary mb-2">Xác Nhận Xóa</h5>
+                    <p class="text-muted">Bạn có chắc chắn muốn xóa danh mục <strong id="deleteCatName" class="text-primary"></strong>?</p>
+                    <form id="deleteCatForm" method="post" class="d-flex gap-3 justify-content-center mt-4">
+                        <button type="button" class="btn btn-light fw-bold px-4" data-bs-dismiss="modal">Hủy bỏ</button>
+                        <button type="submit" class="btn btn-danger fw-bold px-4">Xóa ngay</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Minimal JS: Bootstrap modal events -->
     <script>
-        function openEditModal(btn) {
-            const data = {
-                id: btn.getAttribute('data-id'),
-                name: btn.getAttribute('data-name'),
-                description: btn.getAttribute('data-description'),
-                active: btn.getAttribute('data-active') === 'true'
-            };
-            openModal(true, data);
+        const editCatModal = document.getElementById('editCatModal');
+        if (editCatModal) {
+            editCatModal.addEventListener('show.bs.modal', function (e) {
+                const btn = e.relatedTarget;
+                document.getElementById('editCatId').value = btn.getAttribute('data-id');
+                document.getElementById('editCatName').value = btn.getAttribute('data-name');
+                document.getElementById('editCatDesc').value = btn.getAttribute('data-description') || '';
+                document.getElementById('editCatActive').checked = btn.getAttribute('data-active') === 'true';
+            });
         }
-
-        function openModal(isEdit = false, data = null) {
-            const modal = document.getElementById('categoryModal');
-            const title = document.getElementById('modalTitle');
-            const subtitle = document.getElementById('modalSubtitle');
-            const form = document.getElementById('categoryForm');
-
-            // Reset form
-            form.reset();
-            document.getElementById('categoryId').value = '';
-
-            if (isEdit && data) {
-                title.innerText = 'Chỉnh Sửa Danh Mục';
-                subtitle.innerText = 'Cập nhật thông tin định danh cho phân loại';
-                form.action = '/admin/categories/update';
-                document.getElementById('categoryId').value = data.id;
-                form.name.value = data.name;
-                form.description.value = data.description;
-                form.active.checked = data.active;
-            } else {
-                title.innerText = 'Thêm Danh Mục Mới';
-                subtitle.innerText = 'Khởi tạo phân loại hải sản mới cho hệ thống';
-                form.action = '/admin/categories/save';
-            }
-
-            modal.classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
+        const deleteCatModal = document.getElementById('deleteCatModal');
+        if (deleteCatModal) {
+            deleteCatModal.addEventListener('show.bs.modal', function (e) {
+                const btn = e.relatedTarget;
+                document.getElementById('deleteCatName').innerText = btn.getAttribute('data-name');
+                document.getElementById('deleteCatForm').action = '/admin/categories/' + btn.getAttribute('data-id') + '/delete';
+            });
         }
-
-        function closeModal() {
-            document.getElementById('categoryModal').classList.add('hidden');
-            document.body.style.overflow = 'auto';
-        }
-
-        function openDeleteModal(btn) {
-            const id = btn.getAttribute('data-id');
-            const name = btn.getAttribute('data-name');
-            document.getElementById('deleteCategoryName').innerText = name;
-            document.getElementById('deleteForm').action = `/admin/categories/${id}/delete`;
-            document.getElementById('deleteModal').classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeDeleteModal() {
-            document.getElementById('deleteModal').classList.add('hidden');
-            document.body.style.overflow = 'auto';
-        }
-
-        window.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                closeModal();
-                closeDeleteModal();
-            }
-        });
     </script>
-</body>
 
+</div>
+</body>
 </html>

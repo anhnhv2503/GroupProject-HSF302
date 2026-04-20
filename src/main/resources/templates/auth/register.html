@@ -1,219 +1,101 @@
 <!DOCTYPE html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Đăng Ký | The Culinary Curator</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;family=Playfair+Display:ital,wght@0,700;1,700&amp;family=Roboto:wght@400;500;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<script id="tailwind-config">
-      tailwind.config = {
-        darkMode: "class",
-        theme: {
-          extend: {
-            "colors": {
-                    "outline-variant": "#e1bfb3",
-                    "surface-bright": "#f8f9fa",
-                    "on-error-container": "#93000a",
-                    "surface-dim": "#d9dadb",
-                    "primary-fixed": "#ffdbce",
-                    "tertiary": "#006492",
-                    "background": "#f8f9fa",
-                    "on-error": "#ffffff",
-                    "on-background": "#191c1d",
-                    "on-surface": "#191c1d",
-                    "on-primary-fixed": "#370e00",
-                    "surface-container-low": "#f3f4f5",
-                    "on-surface-variant": "#594138",
-                    "tertiary-fixed-dim": "#8cceff",
-                    "secondary-fixed-dim": "#9dcaff",
-                    "on-secondary-fixed-variant": "#0b4979",
-                    "on-primary": "#ffffff",
-                    "inverse-surface": "#2e3132",
-                    "on-tertiary-fixed-variant": "#004b6f",
-                    "surface-container-lowest": "#ffffff",
-                    "surface-container": "#edeeef",
-                    "on-tertiary-fixed": "#001e2f",
-                    "on-primary-fixed-variant": "#7f2b00",
-                    "tertiary-fixed": "#cae6ff",
-                    "on-tertiary": "#ffffff",
-                    "secondary-fixed": "#d1e4ff",
-                    "tertiary-container": "#009ade",
-                    "secondary-container": "#98c7ff",
-                    "secondary": "#2e6192",
-                    "error-container": "#ffdad6",
-                    "on-tertiary-container": "#002d45",
-                    "surface-variant": "#e1e3e4",
-                    "on-primary-container": "#4f1800",
-                    "inverse-primary": "#ffb599",
-                    "surface-tint": "#a63b00",
-                    "primary": "#F26522",
-                    "surface": "#f8f9fa",
-                    "surface-container-highest": "#e1e3e4",
-                    "primary-fixed-dim": "#ffb599",
-                    "outline": "#8d7166",
-                    "on-secondary-fixed": "#001d35",
-                    "on-secondary": "#ffffff",
-                    "surface-container-high": "#e7e8e9",
-                    "error": "#ba1a1a",
-                    "on-secondary-container": "#1c5384",
-                    "inverse-on-surface": "#f0f1f2",
-                    "primary-container": "#F26522"
-            },
-            "borderRadius": {
-                    "DEFAULT": "0.25rem",
-                    "lg": "0.5rem",
-                    "xl": "0.75rem",
-                    "full": "9999px"
-            },
-            "fontFamily": {
-                    "headline": ["Inter"],
-                    "body": ["Inter"],
-                    "label": ["Inter"],
-                    "serif": ["Playfair Display", "serif"],
-                    "numeric": ["Roboto"]
-            }
-          },
-        },
-      }
-    </script>
-<style>
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-        .ocean-overlay {
-            background: linear-gradient(to right, rgba(10, 25, 41, 0.5), rgba(10, 25, 41, 0.8));
-        }
-        .floating-label-input:focus-within label,
-        .floating-label-input input:not(:placeholder-shown) + label {
-            transform: translateY(-1.5rem) scale(0.85);
-            color: #F26522;
-        }
-    </style>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Đăng Ký | The Culinary Curator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;family=Playfair+Display:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+    <link th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"/>
+    <link th:href="@{/css/custom.css}" rel="stylesheet"/>
 </head>
-<body class="bg-surface font-body text-on-background antialiased selection:bg-primary-fixed selection:text-on-primary-fixed">
-<main class="min-h-screen flex flex-col md:flex-row">
-<!-- Left Side: Cinematic Visual (60%) -->
-<section class="relative hidden md:flex w-[60%] overflow-hidden items-center justify-center p-12 fixed h-screen">
-<div class="absolute inset-0 z-0">
-<img alt="Hải sản tươi sống cao cấp" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBR4aQdZKJvyF1y093CftYXJZ1_-KJXmuZlhyiMyxKH5CeOg9BgQvhUFapqQEQw0QQtT7JdJcEpajSTsd6X-QUaSeaMYDvuhhlhfrmT-C9K5PhnQUqCkFAXZardUs3UHuFjUwjh4CXk5Uf4wWu_l8CXwx0QXGSVAzKCVmYAX2jCdja3Pw_psl6Et_E7qHVhNr5oY8iIa1RkX3dkTBTHsyhvBsT2xZKDGo2LkJXJS0g8CYaY8TBPQ_Ug-JkFWHm_tWYC3lVTH_3gGCg"/>
-<div class="absolute inset-0 ocean-overlay backdrop-blur-[1px]"></div>
-</div>
-<div class="relative z-10 max-w-xl text-center">
-<h1 class="font-serif text-5xl lg:text-7xl text-white leading-tight drop-shadow-2xl">
-                Tinh Hoa Đại Dương,<br/>Giao Tận Bàn Ăn.
-            </h1>
-<div class="mt-8 flex justify-center">
-<div class="h-px w-24 bg-primary-container"></div>
-</div>
-<p class="mt-8 text-white/90 text-lg font-light tracking-wide max-w-md mx-auto">
-                Trải nghiệm hải sản cao cấp được tuyển chọn khắt khe từ những vùng biển tinh khiết nhất thế giới.
-            </p>
-</div>
-<!-- Absolute bottom decoration -->
-<div class="absolute bottom-8 left-8 flex items-center gap-4 text-white/60 text-sm tracking-widest uppercase">
-<span class="font-black text-white">THE CULINARY CURATOR</span>
-<span class="h-px w-8 bg-white/20"></span>
-<span>Thành lập 2024</span>
-</div>
-</section>
-<!-- Right Side: Auth Form (40%) -->
-<section class="w-full md:w-[40%] bg-white flex items-center justify-center p-8 lg:p-16 overflow-y-auto md:ml-[60%]">
-<div class="w-full max-w-md my-auto pb-12">
-<!-- Brand Header -->
-<div class="mb-12 border-b border-surface-container pb-8">
-<div class="flex items-center gap-3 mb-8">
-<div class="w-10 h-10 bg-primary-container rounded-lg flex items-center justify-center shadow-lg shadow-primary-container/20">
-<span class="material-symbols-outlined text-white" data-icon="restaurant_menu">restaurant_menu</span>
-</div>
-<span class="text-2xl font-bold tracking-tighter text-secondary">The Culinary Curator</span>
-</div>
-<h2 class="text-3xl font-bold text-on-surface tracking-tight">Tạo Tài Khoản</h2>
-<p class="text-on-surface-variant mt-2">Vui lòng điền thông tin để đăng ký.</p>
-</div>
+<body>
+<main class="d-flex min-vh-100">
 
-<!-- Form -->
-<form class="space-y-6" th:action="@{/register}" th:object="${dto}" method="post">
-    <!-- Username Field -->
-    <div>
-        <div class="relative floating-label-input">
-            <input class="peer w-full px-4 py-4 bg-white border-none ring-1 ring-outline-variant/30 focus:ring-2 focus:ring-primary rounded-lg transition-all outline-none text-on-surface" th:classappend="${#fields.hasErrors('username')} ? 'ring-error focus:ring-error'" id="username" th:field="*{username}" placeholder=" " type="text"/>
-            <label class="absolute left-4 top-4 text-on-surface-variant pointer-events-none transition-all origin-left" for="username">Tên đăng nhập</label>
+    <!-- Left: Cinematic Visual (60%) -->
+    <section class="d-none d-md-flex position-fixed w-60 vh-100 overflow-hidden align-items-center justify-content-center p-5" style="width:60%;">
+        <div class="position-absolute top-0 start-0 w-100 h-100">
+            <img alt="Hải sản tươi sống cao cấp" class="w-100 h-100" style="object-fit:cover;"
+                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuBR4aQdZKJvyF1y093CftYXJZ1_-KJXmuZlhyiMyxKH5CeOg9BgQvhUFapqQEQw0QQtT7JdJcEpajSTsd6X-QUaSeaMYDvuhhlhfrmT-C9K5PhnQUqCkFAXZardUs3UHuFjUwjh4CXk5Uf4wWu_l8CXwx0QXGSVAzKCVmYAX2jCdja3Pw_psl6Et_E7qHVhNr5oY8iIa1RkX3dkTBTHsyhvBsT2xZKDGo2LkJXJS0g8CYaY8TBPQ_Ug-JkFWHm_tWYC3lVTH_3gGCg"/>
+            <div class="auth-hero position-absolute top-0 start-0 w-100 h-100" style="backdrop-filter:blur(1px);"></div>
         </div>
-        <div class="text-[#ba1a1a] text-xs mt-1 font-medium" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
-    </div>
-
-    <!-- Full Name Field -->
-    <div>
-        <div class="relative floating-label-input">
-            <input class="peer w-full px-4 py-4 bg-white border-none ring-1 ring-outline-variant/30 focus:ring-2 focus:ring-primary rounded-lg transition-all outline-none text-on-surface" th:classappend="${#fields.hasErrors('fullName')} ? 'ring-error focus:ring-error'" id="fullName" th:field="*{fullName}" placeholder=" " type="text"/>
-            <label class="absolute left-4 top-4 text-on-surface-variant pointer-events-none transition-all origin-left" for="fullName">Họ và tên</label>
+        <div class="position-relative text-center" style="z-index:2;">
+            <h1 class="font-serif text-white display-3 lh-sm" style="text-shadow:0 4px 20px rgba(0,0,0,.3);">Tinh Hoa Đại Dương,<br/>Giao Tận Bàn Ăn.</h1>
+            <hr class="mx-auto mt-4 opacity-25" style="width:80px;border-color:var(--brand-primary);border-width:2px;">
+            <p class="text-white-50 mt-4 lead mx-auto" style="max-width:400px;">Trải nghiệm hải sản cao cấp được tuyển chọn khắt khe từ những vùng biển tinh khiết nhất thế giới.</p>
         </div>
-        <div class="text-[#ba1a1a] text-xs mt-1 font-medium" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}"></div>
-    </div>
-
-    <!-- Email Field -->
-    <div>
-        <div class="relative floating-label-input">
-            <input class="peer w-full px-4 py-4 bg-white border-none ring-1 ring-outline-variant/30 focus:ring-2 focus:ring-primary rounded-lg transition-all outline-none text-on-surface" th:classappend="${#fields.hasErrors('email')} ? 'ring-error focus:ring-error'" id="email" th:field="*{email}" placeholder=" " type="email"/>
-            <label class="absolute left-4 top-4 text-on-surface-variant pointer-events-none transition-all origin-left" for="email">Email</label>
+        <div class="position-absolute bottom-0 start-0 p-4 d-flex align-items-center gap-3 text-white-50 small text-uppercase" style="letter-spacing:.15em;">
+            <strong class="text-white">THE CULINARY CURATOR</strong>
+            <span class="border-bottom" style="width:32px;border-color:rgba(255,255,255,.2);"></span>
+            <span>Thành lập 2024</span>
         </div>
-        <div class="text-[#ba1a1a] text-xs mt-1 font-medium" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
-    </div>
+    </section>
 
-    <!-- Phone Field -->
-    <div>
-        <div class="relative floating-label-input">
-            <input class="peer w-full px-4 py-4 bg-white border-none ring-1 ring-outline-variant/30 focus:ring-2 focus:ring-primary rounded-lg transition-all outline-none text-on-surface" th:classappend="${#fields.hasErrors('phone')} ? 'ring-error focus:ring-error'" id="phone" th:field="*{phone}" placeholder=" " type="text"/>
-            <label class="absolute left-4 top-4 text-on-surface-variant pointer-events-none transition-all origin-left" for="phone">Số điện thoại</label>
+    <!-- Right: Auth Form (40%) -->
+    <section class="d-flex align-items-center justify-content-center p-4 p-lg-5 bg-white overflow-auto" style="width:40%;margin-left:60%;">
+        <div class="w-100 my-auto pb-4" style="max-width:420px;">
+            <!-- Brand -->
+            <div class="mb-5 pb-4 border-bottom">
+                <div class="d-flex align-items-center gap-3 mb-4">
+                    <div class="bg-primary rounded-3 d-flex align-items-center justify-content-center" style="width:40px;height:40px;">
+                        <i class="bi bi-tsunami text-white fs-5"></i>
+                    </div>
+                    <span class="text-brand-secondary fs-5 fw-bold">The Culinary Curator</span>
+                </div>
+                <h2 class="fw-bold fs-3">Tạo Tài Khoản</h2>
+                <p class="text-muted">Vui lòng điền thông tin để đăng ký.</p>
+            </div>
+
+            <!-- Error Messages -->
+            <div th:if="${error}" class="alert alert-danger small py-2" role="alert">
+                <i class="bi bi-exclamation-circle me-1"></i><span th:text="${error}"></span>
+            </div>
+
+            <!-- Form -->
+            <form th:action="@{/register}" th:object="${dto}" method="post">
+                <div class="mb-3">
+                    <label for="username" class="form-label fw-semibold small text-muted text-uppercase">Tên đăng nhập</label>
+                    <input type="text" id="username" th:field="*{username}" class="form-control form-control-lg" th:classappend="${#fields.hasErrors('username')} ? 'is-invalid' : ''"/>
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
+                </div>
+                <div class="mb-3">
+                    <label for="fullName" class="form-label fw-semibold small text-muted text-uppercase">Họ và tên</label>
+                    <input type="text" id="fullName" th:field="*{fullName}" class="form-control form-control-lg" th:classappend="${#fields.hasErrors('fullName')} ? 'is-invalid' : ''"/>
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}"></div>
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label fw-semibold small text-muted text-uppercase">Email</label>
+                    <input type="email" id="email" th:field="*{email}" class="form-control form-control-lg" th:classappend="${#fields.hasErrors('email')} ? 'is-invalid' : ''"/>
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+                </div>
+                <div class="mb-3">
+                    <label for="phone" class="form-label fw-semibold small text-muted text-uppercase">Số điện thoại</label>
+                    <input type="text" id="phone" th:field="*{phone}" class="form-control form-control-lg" th:classappend="${#fields.hasErrors('phone')} ? 'is-invalid' : ''"/>
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></div>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label fw-semibold small text-muted text-uppercase">Mật khẩu</label>
+                    <input type="password" id="password" th:field="*{password}" class="form-control form-control-lg" th:classappend="${#fields.hasErrors('password')} ? 'is-invalid' : ''"/>
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+                </div>
+                <div class="mb-4">
+                    <label for="confirmPassword" class="form-label fw-semibold small text-muted text-uppercase">Xác nhận mật khẩu</label>
+                    <input type="password" id="confirmPassword" th:field="*{confirmPassword}" class="form-control form-control-lg" th:classappend="${#fields.hasErrors('confirmPassword')} ? 'is-invalid' : ''"/>
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></div>
+                    <div class="text-danger small mt-1" th:if="${#fields.hasErrors('passwordMatch')}" th:errors="*{passwordMatch}"></div>
+                </div>
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold">Đăng Ký</button>
+            </form>
+
+            <!-- Login Link -->
+            <div class="mt-5 text-center text-muted">
+                Đã có tài khoản?
+                <a th:href="@{/login}" class="text-primary fw-bold text-decoration-none ms-1">Đăng nhập ngay</a>
+            </div>
         </div>
-        <div class="text-[#ba1a1a] text-xs mt-1 font-medium" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></div>
-    </div>
-
-    <!-- Password Field -->
-    <div>
-        <div class="relative floating-label-input">
-            <input class="peer w-full px-4 py-4 bg-white border-none ring-1 ring-outline-variant/30 focus:ring-2 focus:ring-primary rounded-lg transition-all outline-none text-on-surface" th:classappend="${#fields.hasErrors('password')} ? 'ring-error focus:ring-error'" id="password" th:field="*{password}" placeholder=" " type="password"/>
-            <label class="absolute left-4 top-4 text-on-surface-variant pointer-events-none transition-all origin-left" for="password">Mật khẩu</label>
-            <button class="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-primary transition-colors" type="button">
-                <span class="material-symbols-outlined text-[20px]" data-icon="visibility">visibility</span>
-            </button>
-        </div>
-        <div class="text-[#ba1a1a] text-xs mt-1 font-medium" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
-    </div>
-
-    <!-- Confirm Password Field -->
-    <div>
-        <div class="relative floating-label-input">
-            <input class="peer w-full px-4 py-4 bg-white border-none ring-1 ring-outline-variant/30 focus:ring-2 focus:ring-primary rounded-lg transition-all outline-none text-on-surface" th:classappend="${#fields.hasErrors('confirmPassword')} ? 'ring-error focus:ring-error'" id="confirmPassword" th:field="*{confirmPassword}" placeholder=" " type="password"/>
-            <label class="absolute left-4 top-4 text-on-surface-variant pointer-events-none transition-all origin-left" for="confirmPassword">Xác nhận mật khẩu</label>
-            <button class="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-primary transition-colors" type="button">
-                <span class="material-symbols-outlined text-[20px]" data-icon="visibility">visibility</span>
-            </button>
-        </div>
-        <div class="text-[#ba1a1a] text-xs mt-1 font-medium" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></div>
-        <div class="text-[#ba1a1a] text-xs mt-1 font-medium" th:if="${#fields.hasErrors('passwordMatch')}" th:errors="*{passwordMatch}"></div>
-    </div>
-
-    <!-- CSRF -->
-    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-
-    <!-- Main CTA -->
-    <button class="w-full py-4 bg-primary-container text-white font-bold rounded-lg shadow-lg shadow-primary-container/20 hover:shadow-xl hover:shadow-primary-container/30 active:scale-[0.98] transition-all tracking-wide" type="submit">
-        Đăng Ký
-    </button>
-</form>
-
-<!-- Footer Toggle -->
-<div class="mt-12 text-center">
-<p class="text-on-surface-variant">
-    Đã có tài khoản? 
-    <a class="text-primary font-bold hover:underline underline-offset-4 ml-1" th:href="@{/login}">Đăng nhập ngay</a>
-</p>
-</div>
-
-</div>
-</section>
+    </section>
 </main>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
 </body>
 </html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/customer-layout}">
+<head><title>Danh Sách Hải Sản - The Culinary Curator</title></head>
+<body>
+<div layout:fragment="content" class="container py-5">
+
+    <div class="row g-4">
+        <!-- Sidebar Filters -->
+        <div class="col-lg-3">
+            <div class="card border-0 shadow-sm rounded-4 p-4 sticky-top" style="top: 6rem;">
+                <h5 class="fw-bold mb-4 font-serif">Bộ Lọc Sống</h5>
+                <form th:action="@{/products}" method="get">
+                    <div class="mb-4">
+                        <label class="form-label fw-bold small text-muted text-uppercase">Tìm Kiếm</label>
+                        <input type="text" name="q" th:value="${param.q}" class="form-control rounded-pill" placeholder="Tên sản phẩm..."/>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold small text-muted text-uppercase">Danh Mục</label>
+                        <div class="d-flex flex-column gap-2">
+                             <!-- This would ideally loop through categories from model, but simple static for now or just name links -->
+                             <a href="/products" class="text-decoration-none text-brand-secondary fw-medium py-1 small hover-primary border-bottom border-light">Tất cả sản phẩm</a>
+                             <a href="#" class="text-decoration-none text-muted py-1 small hover-primary">Cá Hồi Cao Cấp</a>
+                             <a href="#" class="text-decoration-none text-muted py-1 small hover-primary">Tôm &amp; Cua Biển</a>
+                             <a href="#" class="text-decoration-none text-muted py-1 small hover-primary">Ốc &amp; Sò Mỹ Vị</a>
+                             <a href="#" class="text-decoration-none text-muted py-1 small hover-primary">Combo Tiệc Tùng</a>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold small text-muted text-uppercase">Tình Trạng</label>
+                        <div class="form-check small mb-1">
+                            <input class="form-check-input" type="checkbox" value="FRESH" id="f-fresh" checked/>
+                            <label class="form-check-label" for="f-fresh">Tươi Sống</label>
+                        </div>
+                        <div class="form-check small mb-1">
+                            <input class="form-check-input" type="checkbox" value="FROZEN" id="f-frozen"/>
+                            <label class="form-check-label" for="f-frozen">Đông Lạnh</label>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 fw-bold rounded-pill">Áp Dụng Bộ Lọc</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Product Grid -->
+        <div class="col-lg-9">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="font-serif fw-bold text-brand-secondary mb-0">Thực Đơn Oceanic</h2>
+                <div class="d-flex align-items-center gap-2">
+                    <span class="text-muted small">Sắp xếp:</span>
+                    <select class="form-select form-select-sm border-0 bg-light rounded-pill px-3" style="min-width: 150px;">
+                        <option>Mới nhất</option>
+                        <option>Giá thấp đến cao</option>
+                        <option>Giá cao đến thấp</option>
+                        <option>Phổ biến nhất</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row g-4">
+                <!-- If no products -->
+                <div th:if="${#lists.isEmpty(products)}" class="col-12 text-center py-5">
+                    <i class="bi bi-inbox display-1 text-muted opacity-25"></i>
+                    <p class="mt-3 text-muted">Không tìm thấy sản phẩm nào phù hợp.</p>
+                </div>
+
+                <!-- Product Card -->
+                <div th:each="product : ${products}" class="col-md-6 col-xl-4">
+                    <div class="card product-card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+                        <div class="position-relative overflow-hidden">
+                            <img th:if="${product.images != null and !product.images.isEmpty()}"
+                                 th:with="primaryImg=${product.images.^[isPrimary != null and isPrimary]}"
+                                 th:src="@{${primaryImg != null ? primaryImg.imageUrl : product.images[0].imageUrl}}"
+                                 class="card-img-top" th:alt="${product.name}" style="aspect-ratio: 1/1; object-fit: cover;"/>
+                            <img th:unless="${product.images != null and !product.images.isEmpty()}"
+                                 src="https://via.placeholder.com/400x300?text=Seafood" class="card-img-top" alt="Seafood" style="aspect-ratio: 1/1; object-fit: cover;"/>
+                            
+                            <!-- Badge -->
+                            <div class="position-absolute top-0 start-0 m-2">
+                                <span th:if="${product.freshnessStatus == 'FRESH'}" class="badge bg-success rounded-pill px-2 py-1" style="font-size: .6rem;">TƯƠI</span>
+                                <span th:if="${product.freshnessStatus == 'FROZEN'}" class="badge bg-info rounded-pill px-2 py-1" style="font-size: .6rem;">LẠNH</span>
+                            </div>
+                        </div>
+                        <div class="card-body p-4 d-flex flex-column">
+                            <small class="text-primary fw-bold text-uppercase" style="font-size: .6rem; letter-spacing: 1px;" th:text="${product.category.name}">DANH MỤC</small>
+                            <a th:href="@{'/products/' + ${product.id}}" class="text-decoration-none">
+                                <h5 class="card-title fw-bold text-brand-secondary mt-1 mb-3" th:text="${product.name}">Tên Sản Phẩm</h5>
+                            </a>
+                            <div class="mt-auto d-flex justify-content-between align-items-center">
+                                <span class="fw-bold text-primary fs-5" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + '₫'">0₫</span>
+                                <form th:action="@{/cart/add}" method="post">
+                                    <input type="hidden" name="productId" th:value="${product.id}"/>
+                                    <input type="hidden" name="name" th:value="${product.name}"/>
+                                    <input type="hidden" name="price" th:value="${product.price}"/>
+                                    <button type="submit" class="btn btn-outline-primary btn-sm rounded-circle" style="width:36px;height:36px;">
+                                        <i class="bi bi-cart-plus"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>
