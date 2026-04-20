@@ -7,42 +7,79 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>The Oceanic - Quản Lý Danh Mục</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&amp;family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;display=swap"
-        rel="stylesheet" />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
-        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap"
+          rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+          rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+          rel="stylesheet"/>
     <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
             theme: {
                 extend: {
                     "colors": {
-                        "primary": "#F26522", // Brand Orange
-                        "secondary": "#E8C872", // Golden Sand
-                        "accent": "#F26522", // Brand Orange (Actions)
-                        "surface": "#FDFBF7",
-                        "on-surface": "#1B1C17",
-                        "on-surface-variant": "#44483D",
-                        "outline-variant": "#C4C8BA",
-                        "background": "#F4F7F5",
-                        "tertiary": "#0D4A7A", // Brand Deep Blue (Sidebar)
-                        "primary-container": "#FFEDE5",
-                        "on-primary-container": "#F26522",
+                        "secondary-fixed": "#d1e4ff",
+                        "on-primary-fixed": "#370e00",
+                        "on-primary-container": "#4f1800",
+                        "surface-dim": "#d9dadb",
+                        "on-surface": "#191c1d",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "primary": "#a63b00",
+                        "surface-variant": "#e1e3e4",
+                        "surface-tint": "#a63b00",
+                        "inverse-primary": "#ffb599",
+                        "on-tertiary-fixed-variant": "#004b6f",
+                        "primary-fixed-dim": "#ffb599",
+                        "on-error-container": "#93000a",
+                        "outline-variant": "#e1bfb3",
+                        "surface": "#f8f9fa",
+                        "tertiary-fixed": "#cae6ff",
+                        "error": "#ba1a1a",
+                        "primary-fixed": "#ffdbce",
+                        "on-error": "#ffffff",
+                        "outline": "#8d7166",
+                        "tertiary-fixed-dim": "#8cceff",
+                        "tertiary": "#006492",
+                        "surface-container-high": "#e7e8e9",
+                        "on-tertiary-fixed": "#001e2f",
+                        "surface-container-low": "#f3f4f5",
+                        "error-container": "#ffdad6",
+                        "surface-container": "#edeeef",
+                        "on-secondary-fixed": "#001d35",
+                        "on-secondary-fixed-variant": "#0b4979",
+                        "on-secondary-container": "#1c5384",
+                        "secondary-fixed-dim": "#9dcaff",
+                        "background": "#f8f9fa",
+                        "surface-container-highest": "#e1e3e4",
+                        "surface-bright": "#f8f9fa",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface-variant": "#594138",
+                        "secondary": "#0d4a7a",
+                        "primary-container": "#f26522",
+                        "tertiary-container": "#009ade",
+                        "on-tertiary-container": "#002d45",
+                        "on-background": "#191c1d",
+                        "inverse-surface": "#2e3132",
+                        "inverse-on-surface": "#f0f1f2",
+                        "on-primary": "#ffffff",
+                        "on-primary-fixed-variant": "#7f2b00",
+                        "secondary-container": "#98c7ff"
                     },
                     "borderRadius": {
-                        "DEFAULT": "0.5rem",
-                        "lg": "1rem",
-                        "xl": "1.5rem",
-                        "full": "9999px"
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
                     },
                     "fontFamily": {
-                        "headline": ["Playfair Display", "serif"],
-                        "body": ["Plus Jakarta Sans", "sans-serif"],
+                        "headline": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
                     }
-                },
-            },
+                }
+            }
         }
     </script>
     <style>
@@ -50,22 +87,7 @@
             font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         }
 
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-        }
-
         .font-headline {
-            font-family: 'Playfair Display', serif;
-        }
-
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-
-        .glass-effect {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
         }
     </style>
 </head>
