@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/customer-layout}">
+<head>
+    <title>404 - Không Tìm Thấy Trang</title>
+</head>
+<body>
+    <div layout:fragment="content" class="min-h-[60vh] flex flex-col items-center justify-center text-center px-4">
+        <span class="material-symbols-outlined text-9xl text-gray-400 mb-6">explore_off</span>
+        <h1 class="text-4xl font-bold text-gray-800 mb-4">404 - Không Tìm Thấy Trang</h1>
+        <p class="text-lg text-gray-600 mb-8 max-w-md">Rất tiếc! Chúng tôi không thể tìm thấy trang mà bạn yêu cầu. Có thể nội dung đã bị gỡ bỏ hoặc bạn nhập sai địa chỉ.</p>
+        <a href="/" class="bg-primary text-white font-medium px-8 py-3 rounded-full shadow-md hover:bg-orange-600 transition-colors inline-flex items-center gap-2">
+            <span class="material-symbols-outlined">home</span>
+            Về Trang Chủ
+        </a>
+    </div>
+</body>
+</html>

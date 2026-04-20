@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/customer-layout}">
+<head>
+    <title>Trang Chủ</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <!-- Hero Section using the new design system colors and layout -->
+        <section class="relative bg-surface-container-highest overflow-hidden">
+            <div class="absolute inset-0 z-0">
+                <!-- Using a placeholder or gradient if image is not accessible -->
+                <div class="w-full h-full bg-ocean-spray opacity-90"></div>
+                <!-- Abstract sea wave pattern overlay -->
+                <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-20 mix-blend-overlay"></div>
+            </div>
+            
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-24 sm:py-32 lg:py-40">
+                <div class="max-w-2xl text-white">
+                    <span class="inline-flex items-center rounded-full bg-white/20 px-3 py-1 text-sm font-medium text-white ring-1 ring-inset ring-white/20 mb-6 backdrop-blur-sm">
+                        <span class="material-symbols-outlined text-sm mr-2">verified</span>
+                        Hải sản tươi sống 100%
+                    </span>
+                    <h1 class="text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl mb-6 text-white drop-shadow-md">
+                        Tinh hoa hải sản từ đại dương xanh
+                    </h1>
+                    <p class="text-lg sm:text-xl text-primary-fixed mb-8 leading-relaxed max-w-xl font-medium drop-shadow-sm">
+                        Khám phá bộ sưu tập hải sản cao cấp được tuyển chọn kỹ lưỡng. Giao hàng nhanh chóng, giữ trọn hương vị tươi ngon.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <a href="/products" class="inline-flex items-center justify-center rounded-full bg-white text-primary px-8 py-4 text-base font-bold shadow-lg hover:bg-surface-container-low transition-all duration-300 transform hover:-translate-y-1">
+                            <span class="material-symbols-outlined mr-2">shopping_bag</span>
+                            Mua sắm ngay
+                        </a>
+                        <a href="/about" class="inline-flex items-center justify-center rounded-full bg-primary-container/30 text-white px-8 py-4 text-base font-semibold ring-1 ring-inset ring-white/50 backdrop-blur-md hover:bg-primary-container/50 transition-all duration-300">
+                            Tìm hiểu thêm
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Categories Section -->
+        <section class="py-16 bg-surface">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between mb-8">
+                    <h2 class="text-2xl font-extrabold text-on-surface tracking-tight">Danh Mục Nổi Bật</h2>
+                    <a href="/categories" class="text-primary font-semibold hover:text-primary-container flex items-center gap-1 transition-colors">
+                        Xem tất cả
+                        <span class="material-symbols-outlined">arrow_forward</span>
+                    </a>
+                </div>
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                    <!-- Category Card 1 -->
+                    <a href="/products?category=shrimp" class="group relative overflow-hidden rounded-2xl aspect-[4/3] bg-surface-container-high shadow-sm hover:shadow-md transition-all duration-300">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent z-10 transition-opacity duration-300 group-hover:opacity-90"></div>
+                        <!-- Placeholder using neutral background -->
+                        <div class="w-full h-full bg-secondary-container flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
+                            <span class="material-symbols-outlined text-6xl text-on-secondary-container/50">sailing</span>
+                        </div>
+                        <div class="absolute bottom-4 left-4 z-20">
+                            <h3 class="text-white font-bold text-lg">Tôm Các Loại</h3>
+                        </div>
+                    </a>
+                    
+                    <!-- Category Card 2 -->
+                    <a href="/products?category=crab" class="group relative overflow-hidden rounded-2xl aspect-[4/3] bg-surface-container-high shadow-sm hover:shadow-md transition-all duration-300">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent z-10 transition-opacity duration-300 group-hover:opacity-90"></div>
+                        <div class="w-full h-full bg-tertiary-container flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
+                            <span class="material-symbols-outlined text-6xl text-on-tertiary-container/50">set_meal</span>
+                        </div>
+                        <div class="absolute bottom-4 left-4 z-20">
+                            <h3 class="text-white font-bold text-lg">Cua & Ghẹ</h3>
+                        </div>
+                    </a>
+
+                    <!-- Category Card 3 -->
+                    <a href="/products?category=fish" class="group relative overflow-hidden rounded-2xl aspect-[4/3] bg-surface-container-high shadow-sm hover:shadow-md transition-all duration-300">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent z-10 transition-opacity duration-300 group-hover:opacity-90"></div>
+                        <div class="w-full h-full bg-primary-container/40 flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
+                            <span class="material-symbols-outlined text-6xl text-primary/50">water</span>
+                        </div>
+                        <div class="absolute bottom-4 left-4 z-20">
+                            <h3 class="text-white font-bold text-lg">Cá Tươi Sống</h3>
+                        </div>
+                    </a>
+
+                    <!-- Category Card 4 -->
+                    <a href="/products?category=shellfish" class="group relative overflow-hidden rounded-2xl aspect-[4/3] bg-surface-container-high shadow-sm hover:shadow-md transition-all duration-300">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent z-10 transition-opacity duration-300 group-hover:opacity-90"></div>
+                        <div class="w-full h-full bg-surface-dim flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
+                            <span class="material-symbols-outlined text-6xl text-on-surface-variant/50">phishing</span>
+                        </div>
+                        <div class="absolute bottom-4 left-4 z-20">
+                            <h3 class="text-white font-bold text-lg">Ốc & Ngao Dán</h3>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Featured Products Section -->
+        <section class="py-16 bg-surface-container-lowest">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-extrabold text-on-surface tracking-tight mb-4">Sản Phẩm Đang Hot</h2>
+                    <p class="text-on-surface-variant max-w-2xl mx-auto">
+                        Những loại hải sản được yêu thích nhất trong tuần qua, đảm bảo chất lượng và độ tươi ngon tuyệt đối.
+                    </p>
+                </div>
+
+                <!-- Product Grid (Mocked data, replace with thymeleaf iteration) -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                    
+                    <!-- If we had backend data, we would use: -->
+                    <!-- <div th:each="product : ${featuredProducts}" class="..."> -->
+                    
+                    <!-- Product Card 1 -->
+                    <div class="group bg-white rounded-2xl shadow-sm border border-surface-variant overflow-hidden hover:shadow-xl hover:border-primary-fixed transition-all duration-300 flex flex-col h-full">
+                        <div class="relative aspect-square overflow-hidden bg-surface-container-high flex items-center justify-center p-4">
+                            <!-- Placeholder image icon, you can replace with actual image later -->
+                            <span class="material-symbols-outlined text-8xl text-surface-dim group-hover:scale-110 transition-transform duration-500">set_meal</span>
+                            <span class="absolute top-4 right-4 bg-error text-on-error text-xs font-bold px-2 py-1 rounded-md shadow-sm">Mới</span>
+                        </div>
+                        <div class="p-6 flex flex-col flex-grow">
+                            <div class="flex justify-between items-start mb-2 gap-2">
+                                <h3 class="text-lg font-bold text-on-surface line-clamp-2 title-font hover:text-primary transition-colors cursor-pointer">
+                                    Cua Hoàng Đế Alaska Cao Cấp
+                                </h3>
+                                <button class="text-surface-dim hover:text-error transition-colors p-1 rounded-full hover:bg-error-container flex-shrink-0">
+                                    <span class="material-symbols-outlined text-[20px]">favorite</span>
+                                </button>
+                            </div>
+                            <div class="flex items-center gap-1 text-sm text-on-surface-variant mb-4">
+                                <span class="material-symbols-outlined text-orange-400 text-[16px] filled">star</span>
+                                <span class="font-medium">4.9</span>
+                                <span class="text-surface-dim mx-1">|</span>
+                                <span>Đã bán 124</span>
+                            </div>
+                            <!-- Spacer to push pricing and button down -->
+                            <div class="mt-auto"></div>
+                            
+                            <div class="flex flex-col gap-1 mb-4">
+                                <div class="flex items-baseline gap-2">
+                                    <span class="text-xl font-bold font-price text-primary">2.450.000 ₫</span>
+                                    <span class="text-sm text-on-surface-variant">/kg</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Add to cart -->
+                            <form action="/cart/add" method="post" class="mt-2">
+                                <!-- <input type="hidden" name="productId" th:value="${product.id}"> -->
+                                <input type="hidden" name="productId" value="1">
+                                <input type="hidden" name="quantity" value="1">
+                                <button type="submit" class="w-full flex items-center justify-center gap-2 bg-surface-container text-on-surface font-semibold py-3 rounded-xl hover:bg-primary hover:text-white transition-colors duration-300 group/btn">
+                                    <span class="material-symbols-outlined text-lg group-hover/btn:-translate-y-1 transition-transform">add_shopping_cart</span>
+                                    Thêm vào giỏ
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Product Card 2 -->
+                    <div class="group bg-white rounded-2xl shadow-sm border border-surface-variant overflow-hidden hover:shadow-xl hover:border-primary-fixed transition-all duration-300 flex flex-col h-full">
+                        <div class="relative aspect-square overflow-hidden bg-surface-container-high flex items-center justify-center p-4">
+                            <span class="material-symbols-outlined text-8xl text-surface-dim group-hover:scale-110 transition-transform duration-500">phishing</span>
+                            <span class="absolute top-4 right-4 bg-tertiary text-on-tertiary text-xs font-bold px-2 py-1 rounded-md shadow-sm">Bán chạy</span>
+                        </div>
+                        <div class="p-6 flex flex-col flex-grow">
+                            <div class="flex justify-between items-start mb-2 gap-2">
+                                <h3 class="text-lg font-bold text-on-surface line-clamp-2 title-font hover:text-primary transition-colors cursor-pointer">
+                                    Tôm Hùm Bông Việt Nam
+                                </h3>
+                                <button class="text-surface-dim hover:text-error transition-colors p-1 rounded-full hover:bg-error-container flex-shrink-0">
+                                    <span class="material-symbols-outlined text-[20px]">favorite</span>
+                                </button>
+                            </div>
+                            <div class="flex items-center gap-1 text-sm text-on-surface-variant mb-4">
+                                <span class="material-symbols-outlined text-orange-400 text-[16px] filled">star</span>
+                                <span class="font-medium">4.8</span>
+                                <span class="text-surface-dim mx-1">|</span>
+                                <span>Đã bán 89</span>
+                            </div>
+                            <div class="mt-auto"></div>
+                            <div class="flex flex-col gap-1 mb-4">
+                                <div class="flex items-baseline gap-2">
+                                    <span class="text-xl font-bold font-price text-primary">1.850.000 ₫</span>
+                                    <span class="text-sm text-on-surface-variant">/kg</span>
+                                </div>
+                            </div>
+                            <form action="/cart/add" method="post" class="mt-2">
+                                <input type="hidden" name="productId" value="2">
+                                <input type="hidden" name="quantity" value="1">
+                                <button type="submit" class="w-full flex items-center justify-center gap-2 bg-surface-container text-on-surface font-semibold py-3 rounded-xl hover:bg-primary hover:text-white transition-colors duration-300 group/btn">
+                                    <span class="material-symbols-outlined text-lg group-hover/btn:-translate-y-1 transition-transform">add_shopping_cart</span>
+                                    Thêm vào giỏ
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Product Card 3 -->
+                    <div class="group bg-white rounded-2xl shadow-sm border border-surface-variant overflow-hidden hover:shadow-xl hover:border-primary-fixed transition-all duration-300 flex flex-col h-full">
+                        <div class="relative aspect-square overflow-hidden bg-surface-container-high flex items-center justify-center p-4">
+                            <span class="material-symbols-outlined text-8xl text-surface-dim group-hover:scale-110 transition-transform duration-500">water</span>
+                            <span class="absolute top-4 left-4 bg-error-container text-on-error-container text-xs font-bold px-2 py-1 rounded-md shadow-sm">-15%</span>
+                        </div>
+                        <div class="p-6 flex flex-col flex-grow">
+                            <div class="flex justify-between items-start mb-2 gap-2">
+                                <h3 class="text-lg font-bold text-on-surface line-clamp-2 title-font hover:text-primary transition-colors cursor-pointer">
+                                    Cá Hồi Na Uy Tươi Fillet
+                                </h3>
+                                <button class="text-surface-dim hover:text-error transition-colors p-1 rounded-full hover:bg-error-container flex-shrink-0">
+                                    <span class="material-symbols-outlined text-[20px]">favorite</span>
+                                </button>
+                            </div>
+                            <div class="flex items-center gap-1 text-sm text-on-surface-variant mb-4">
+                                <span class="material-symbols-outlined text-orange-400 text-[16px] filled">star</span>
+                                <span class="font-medium">4.7</span>
+                                <span class="text-surface-dim mx-1">|</span>
+                                <span>Đã bán 512</span>
+                            </div>
+                            <div class="mt-auto"></div>
+                            <div class="flex flex-col gap-1 mb-4">
+                                <div class="flex items-baseline gap-2">
+                                    <span class="text-xl font-bold font-price text-primary">550.000 ₫</span>
+                                    <span class="text-sm line-through text-surface-dim font-price">650.000 ₫</span>
+                                </div>
+                            </div>
+                            <form action="/cart/add" method="post" class="mt-2">
+                                <input type="hidden" name="productId" value="3">
+                                <input type="hidden" name="quantity" value="1">
+                                <button type="submit" class="w-full flex items-center justify-center gap-2 bg-surface-container text-on-surface font-semibold py-3 rounded-xl hover:bg-primary hover:text-white transition-colors duration-300 group/btn">
+                                    <span class="material-symbols-outlined text-lg group-hover/btn:-translate-y-1 transition-transform">add_shopping_cart</span>
+                                    Thêm vào giỏ
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Product Card 4 -->
+                    <div class="group bg-white rounded-2xl shadow-sm border border-surface-variant overflow-hidden hover:shadow-xl hover:border-primary-fixed transition-all duration-300 flex flex-col h-full">
+                        <div class="relative aspect-square overflow-hidden bg-surface-container-high flex items-center justify-center p-4">
+                            <span class="material-symbols-outlined text-8xl text-surface-dim group-hover:scale-110 transition-transform duration-500">waves</span>
+                        </div>
+                        <div class="p-6 flex flex-col flex-grow">
+                            <div class="flex justify-between items-start mb-2 gap-2">
+                                <h3 class="text-lg font-bold text-on-surface line-clamp-2 title-font hover:text-primary transition-colors cursor-pointer">
+                                    Hàu Sữa Nhật Bản
+                                </h3>
+                                <button class="text-surface-dim hover:text-error transition-colors p-1 rounded-full hover:bg-error-container flex-shrink-0">
+                                    <span class="material-symbols-outlined text-[20px]">favorite</span>
+                                </button>
+                            </div>
+                            <div class="flex items-center gap-1 text-sm text-on-surface-variant mb-4">
+                                <span class="material-symbols-outlined text-orange-400 text-[16px] filled">star</span>
+                                <span class="font-medium">4.9</span>
+                                <span class="text-surface-dim mx-1">|</span>
+                                <span>Đã bán 340</span>
+                            </div>
+                            <div class="mt-auto"></div>
+                            <div class="flex flex-col gap-1 mb-4">
+                                <div class="flex items-baseline gap-2">
+                                    <span class="text-xl font-bold font-price text-primary">320.000 ₫</span>
+                                    <span class="text-sm text-on-surface-variant">/thùng 10 con</span>
+                                </div>
+                            </div>
+                            <form action="/cart/add" method="post" class="mt-2">
+                                <input type="hidden" name="productId" value="4">
+                                <input type="hidden" name="quantity" value="1">
+                                <button type="submit" class="w-full flex items-center justify-center gap-2 bg-surface-container text-on-surface font-semibold py-3 rounded-xl hover:bg-primary hover:text-white transition-colors duration-300 group/btn">
+                                    <span class="material-symbols-outlined text-lg group-hover/btn:-translate-y-1 transition-transform">add_shopping_cart</span>
+                                    Thêm vào giỏ
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+                
+                <!-- View All Button -->
+                <div class="mt-12 text-center">
+                    <a href="/products" class="inline-flex items-center justify-center rounded-full bg-white text-on-surface border-2 border-surface-variant px-8 py-3 text-base font-semibold shadow-sm hover:border-primary hover:text-primary transition-all duration-300">
+                        Xem tất cả sản phẩm
+                        <span class="material-symbols-outlined ml-2 text-sm">trending_flat</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Newsletter / Value Proposition -->
+        <section class="border-t border-surface-variant bg-surface-container-low py-16">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="bg-gradient-to-br from-primary to-primary-container rounded-3xl overflow-hidden shadow-2xl relative">
+                    <!-- Decorative blobs -->
+                    <div class="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 rounded-full bg-white/10 blur-2xl"></div>
+                    <div class="absolute bottom-0 left-0 -ml-16 -mb-16 w-64 h-64 rounded-full bg-black/10 blur-2xl"></div>
+                    
+                    <div class="relative p-8 sm:p-12 md:p-16 text-center lg:text-left lg:flex flex-row items-center justify-between gap-12">
+                        <div class="lg:w-1/2 mb-8 lg:mb-0">
+                            <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-4 drop-shadow-sm">
+                                Ưu Đãi Độc Quyền Cho Thành Viên
+                            </h2>
+                            <p class="text-primary-fixed mb-0 text-lg">
+                                Đăng ký nhận bản tin để nhận ngay voucher giảm 10% cho đơn hàng đầu tiên và cập nhật sớm nhất về các lô hải sản đặc biệt.
+                            </p>
+                        </div>
+                        <div class="lg:w-1/2 w-full max-w-md mx-auto lg:mx-0">
+                            <form class="flex flex-col sm:flex-row gap-3">
+                                <input type="email" placeholder="Nhập email của bạn..." 
+                                       class="flex-1 bg-white/10 border border-white/20 text-white placeholder-white/60 focus:bg-white focus:text-on-surface focus:ring-2 focus:ring-white rounded-xl py-3 px-4 outline-none transition-all duration-300 backdrop-blur-md">
+                                <button type="submit" class="bg-white text-primary font-bold py-3 px-6 rounded-xl hover:bg-surface-container-low transition-colors shadow-lg whitespace-nowrap">
+                                    Đăng ký ngay
+                                </button>
+                            </form>
+                            <p class="text-white/60 text-xs mt-3 lg:text-left text-center">Chúng tôi cam kết không gửi spam.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+</body>
+</html>
