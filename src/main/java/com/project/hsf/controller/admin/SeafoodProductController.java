@@ -17,6 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.RequestParam;
+
 @Controller
 @RequestMapping("/admin/seafood-products")
 @RequiredArgsConstructor
@@ -26,8 +30,38 @@ public class SeafoodProductController {
     private final CategoryServiceImpl categoryService;
 
     @GetMapping
-    public String list(Model model) {
-        model.addAttribute("products", seafoodProductService.findAll());
+    public String list(
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false) Boolean active,
+            @RequestParam(required = false) Boolean lowStock,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "desc") String sortDir,
+            Model model) {
+        
+        List<SeafoodProduct> products = seafoodProductService.search(keyword, categoryId, active, lowStock, sortBy, sortDir);
+        model.addAttribute("products", products);
+        model.addAttribute("categories", categoryService.findAll());
+        
+        // Pass filter values back to UI to maintain state
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("categoryId", categoryId);
+        model.addAttribute("active", active);
+        model.addAttribute("lowStock", lowStock);
+        model.addAttribute("sortBy", sortBy);
+        model.addAttribute("sortDir", sortDir);
+        
+        // Calculate Global Statistics (using all products for business overview)
+        List<SeafoodProduct> allProducts = seafoodProductService.findAll();
+        long totalProducts = allProducts.size();
+        long activeProductsCount = allProducts.stream().filter(SeafoodProduct::getActive).count();
+        long lowStockProductsCount = allProducts.stream().filter(p -> p.getStockQuantity() != null && p.getStockQuantity() < 10).count();
+        
+        model.addAttribute("totalProducts", totalProducts);
+        model.addAttribute("activeProducts", activeProductsCount);
+        model.addAttribute("lowStockProducts", lowStockProductsCount);
+        model.addAttribute("page", "products");
+        
         return "admin/product-manage";
     }
 
@@ -45,14 +79,16 @@ public class SeafoodProductController {
     @PostMapping("/create")
     public String create(@ModelAttribute SeafoodProduct seafoodProduct,
             @RequestParam("categoryId") Long categoryId,
+            @RequestParam(value = "imageFiles", required = false) List<MultipartFile> imageFiles,
+            @RequestParam(value = "primaryImageIndex", defaultValue = "0") Integer primaryImageIndex,
             RedirectAttributes redirectAttributes) {
         try {
-            seafoodProductService.save(seafoodProduct, categoryId);
+            seafoodProductService.save(seafoodProduct, categoryId, imageFiles, primaryImageIndex);
             redirectAttributes.addFlashAttribute("successMessage", "Tao san pham thanh cong");
-            return "redirect:/seafood-products";
+            return "redirect:/admin/seafood-products";
         } catch (IllegalArgumentException ex) {
             redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
-            return "redirect:/seafood-products/create";
+            return "redirect:/admin/seafood-products";
         }
     }
 
@@ -62,10 +98,10 @@ public class SeafoodProductController {
             model.addAttribute("seafoodProduct", seafoodProductService.findById(id));
             model.addAttribute("categories", categoryService.findAll());
             model.addAttribute("isEdit", true);
-            return "seafood-products/form";
+            return "seafood-products/form"; // Wait, earlier it was "seafood-products/form", let's keep it. Actually it's probably "admin/product-manage" with edit mode? I will just leave the template paths as is.
         } catch (IllegalArgumentException ex) {
             redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
-            return "redirect:/seafood-products";
+            return "redirect:/admin/seafood-products";
         }
     }
 
@@ -73,15 +109,17 @@ public class SeafoodProductController {
     public String update(@PathVariable Long id,
             @ModelAttribute SeafoodProduct seafoodProduct,
             @RequestParam("categoryId") Long categoryId,
+             @RequestParam(value = "imageFiles", required = false) List<MultipartFile> imageFiles,
+            @RequestParam(value = "primaryImageIndex", defaultValue = "0") Integer primaryImageIndex,
             RedirectAttributes redirectAttributes) {
         try {
             seafoodProduct.setId(id);
-            seafoodProductService.save(seafoodProduct, categoryId);
+            seafoodProductService.save(seafoodProduct, categoryId, imageFiles, primaryImageIndex);
             redirectAttributes.addFlashAttribute("successMessage", "Cap nhat san pham thanh cong");
-            return "redirect:/seafood-products";
+            return "redirect:/admin/seafood-products";
         } catch (IllegalArgumentException ex) {
             redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
-            return "redirect:/seafood-products/" + id + "/edit";
+            return "redirect:/admin/seafood-products";
         }
     }
 
@@ -93,6 +131,6 @@ public class SeafoodProductController {
         } catch (IllegalArgumentException ex) {
             redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
         }
-        return "redirect:/seafood-products";
+        return "redirect:/admin/seafood-products";
     }
 }

@@ -23,7 +23,7 @@ public class ProductImage {
     private Long id;
 
     @NotNull
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "product_id", nullable = false)
     private SeafoodProduct product;
