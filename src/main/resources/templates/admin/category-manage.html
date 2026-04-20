@@ -22,6 +22,7 @@
         </button>
     </div>
 
+<<<<<<< HEAD
     <!-- Stats -->
     <div class="row g-4 mb-5">
         <div class="col-md-4">
@@ -29,6 +30,334 @@
                 <i class="bi bi-layers stat-icon text-brand-secondary"></i>
                 <p class="text-muted fw-bold small mb-3"><span class="d-inline-block rounded-circle bg-warning me-2" style="width:8px;height:8px;"></span>Tổng Số Danh Mục</p>
                 <h3 class="stat-value" th:text="${categories.size()}">0</h3>
+=======
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>The Oceanic - Quản Lý Danh Mục</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap"
+          rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+          rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+          rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed": "#d1e4ff",
+                        "on-primary-fixed": "#370e00",
+                        "on-primary-container": "#4f1800",
+                        "surface-dim": "#d9dadb",
+                        "on-surface": "#191c1d",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "primary": "#a63b00",
+                        "surface-variant": "#e1e3e4",
+                        "surface-tint": "#a63b00",
+                        "inverse-primary": "#ffb599",
+                        "on-tertiary-fixed-variant": "#004b6f",
+                        "primary-fixed-dim": "#ffb599",
+                        "on-error-container": "#93000a",
+                        "outline-variant": "#e1bfb3",
+                        "surface": "#f8f9fa",
+                        "tertiary-fixed": "#cae6ff",
+                        "error": "#ba1a1a",
+                        "primary-fixed": "#ffdbce",
+                        "on-error": "#ffffff",
+                        "outline": "#8d7166",
+                        "tertiary-fixed-dim": "#8cceff",
+                        "tertiary": "#006492",
+                        "surface-container-high": "#e7e8e9",
+                        "on-tertiary-fixed": "#001e2f",
+                        "surface-container-low": "#f3f4f5",
+                        "error-container": "#ffdad6",
+                        "surface-container": "#edeeef",
+                        "on-secondary-fixed": "#001d35",
+                        "on-secondary-fixed-variant": "#0b4979",
+                        "on-secondary-container": "#1c5384",
+                        "secondary-fixed-dim": "#9dcaff",
+                        "background": "#f8f9fa",
+                        "surface-container-highest": "#e1e3e4",
+                        "surface-bright": "#f8f9fa",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface-variant": "#594138",
+                        "secondary": "#0d4a7a",
+                        "primary-container": "#f26522",
+                        "tertiary-container": "#009ade",
+                        "on-tertiary-container": "#002d45",
+                        "on-background": "#191c1d",
+                        "inverse-surface": "#2e3132",
+                        "inverse-on-surface": "#f0f1f2",
+                        "on-primary": "#ffffff",
+                        "on-primary-fixed-variant": "#7f2b00",
+                        "secondary-container": "#98c7ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .font-headline {
+        }
+    </style>
+</head>
+
+<body class="bg-background text-on-surface flex min-h-screen">
+    <!-- SideNavBar Fragment -->
+    <div th:replace="~{admin/fragments/sidebar :: sidebar}"></div>
+
+    <!-- Main Canvas -->
+    <main class="flex-1 ml-72 min-h-screen relative">
+        <!-- TopNavBar Fragment -->
+        <div th:replace="~{admin/fragments/header :: header}"></div>
+        <!-- Content Area -->
+        <div class="p-10">
+            <!-- Hero Header -->
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-12">
+                <div class="max-w-3xl">
+                    <nav
+                        class="flex items-center gap-2 mb-4 text-xs font-bold uppercase tracking-widest text-tertiary/60">
+                        <span>Hệ thống</span>
+                        <span class="material-symbols-outlined text-[10px]">chevron_right</span>
+                        <span>Quản lý kho</span>
+                        <span class="material-symbols-outlined text-[10px]">chevron_right</span>
+                        <span class="text-primary">Danh mục</span>
+                    </nav>
+                    <h2 class="text-5xl font-headline font-bold text-tertiary tracking-tight mb-4">Quản Lý Danh Mục</h2>
+                    <p class="text-on-surface-variant leading-relaxed text-lg italic opacity-80">"Nơi khởi nguồn của
+                        những thực đơn tinh tế, tổ chức kho tàng mỹ vị từ đại dương."</p>
+                </div>
+                <button onclick="openModal()"
+                    class="bg-primary text-white font-bold px-8 py-4 rounded-xl flex items-center gap-3 shadow-xl shadow-primary/20 hover:-translate-y-1 active:translate-y-0 transition-all cursor-pointer">
+                    <span class="material-symbols-outlined">add_box</span>
+                    THÊM DANH MỤC MỚI
+                </button>
+            </div>
+            <!-- Stats Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+                <div
+                    class="bg-white p-8 rounded-2xl border border-outline-variant/10 shadow-sm relative overflow-hidden group hover:shadow-lg transition-all duration-300">
+                    <div
+                        class="absolute -right-6 -bottom-6 opacity-[0.03] group-hover:scale-110 transition-transform duration-500">
+                        <span class="material-symbols-outlined text-[160px] text-tertiary"
+                            style="font-variation-settings: 'FILL' 1;">layers</span>
+                    </div>
+                    <div class="relative z-10">
+                        <p
+                            class="text-xs font-bold text-on-surface-variant/60 uppercase tracking-widest mb-6 flex items-center gap-2">
+                            <span class="w-2 h-2 bg-secondary rounded-full"></span> Tổng Số Danh Mục
+                        </p>
+                        <div class="flex items-end justify-between">
+                            <h3 class="text-5xl font-headline font-bold text-tertiary" th:text="${categories.size()}">0
+                            </h3>
+<!--                            <span-->
+<!--                                class="text-primary text-xs font-bold flex items-center gap-1 bg-primary/10 px-3 py-1.5 rounded-full">-->
+<!--                                <span class="material-symbols-outlined text-sm">trending_up</span> +2 tháng này-->
+<!--                            </span>-->
+                        </div>
+                    </div>
+                </div>
+                <div
+                    class="bg-white p-8 rounded-2xl border border-outline-variant/10 shadow-sm relative overflow-hidden group hover:shadow-lg transition-all duration-300">
+                    <div
+                        class="absolute -right-6 -bottom-6 opacity-[0.03] group-hover:scale-110 transition-transform duration-500 text-green-600">
+                        <span class="material-symbols-outlined text-[160px]"
+                            style="font-variation-settings: 'FILL' 1;">verified</span>
+                    </div>
+                    <div class="relative z-10">
+                        <p
+                            class="text-xs font-bold text-on-surface-variant/60 uppercase tracking-widest mb-6 flex items-center gap-2">
+                            <span class="w-2 h-2 bg-green-500 rounded-full"></span> Trạng Thái Hoạt Động
+                        </p>
+                        <div class="flex items-end justify-between">
+                            <h3 class="text-5xl font-headline font-bold text-tertiary"
+                                th:text="${activeCategories.size()}">0
+                            </h3>
+                            <span
+                                class="text-on-surface-variant text-xs font-bold flex items-center gap-1 bg-surface-container-high px-3 py-1.5 rounded-full">
+                                Danh mục đang quản lý
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div
+                    class="bg-tertiary text-white p-8 rounded-2xl shadow-xl relative overflow-hidden group hover:scale-[1.02] transition-all duration-300">
+                    <div
+                        class="absolute -right-6 -bottom-6 opacity-10 group-hover:scale-110 transition-transform duration-500">
+                        <span class="material-symbols-outlined text-[160px]"
+                            style="font-variation-settings: 'FILL' 1;">restaurant</span>
+                    </div>
+                    <div class="relative z-10">
+                        <p
+                            class="text-xs font-bold text-secondary uppercase tracking-widest mb-6 flex items-center gap-2">
+                            <span class="w-2 h-2 bg-primary rounded-full animate-pulse"></span> Phổ Biến Nhất
+                        </p>
+                        <div class="flex flex-col">
+                            <h3 class="text-2xl font-headline font-bold text-white mb-2 truncate">Hải Sản Tươi Sống</h3>
+                            <p class="text-sm text-secondary font-medium">45 sản phẩm đang phục vụ</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Main Data Table -->
+            <div class="bg-white rounded-2xl shadow-sm overflow-hidden border border-outline-variant/20">
+                <div
+                    class="px-8 py-6 border-b border-outline-variant/10 flex flex-col md:flex-row justify-between items-center gap-4 bg-surface/50">
+                    <div class="flex items-center gap-6">
+                        <div>
+                            <h4 class="font-headline font-bold text-xl text-tertiary">Danh sách phân loại</h4>
+
+                        </div>
+                        <span
+                            class="bg-primary/10 text-primary px-4 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest border border-primary/20">QUÝ
+                            2 - 2026</span>
+                    </div>
+                    <div class="flex gap-3">
+                        <button
+                            class="flex items-center gap-2 px-4 py-2 hover:bg-surface-container rounded-lg transition-all border border-outline-variant/30 text-sm font-semibold text-on-surface-variant">
+                            <span class="material-symbols-outlined text-lg">tune</span> Bộ lọc
+                        </button>
+                        <button
+                            class="flex items-center gap-2 px-4 py-2 hover:bg-surface-container rounded-lg transition-all border border-outline-variant/30 text-sm font-semibold text-on-surface-variant">
+                            <span class="material-symbols-outlined text-lg">ios_share</span> Xuất dữ liệu
+                        </button>
+                    </div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-background/50">
+                                <th
+                                    class="px-8 py-5 text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant/60">
+                                    Mã ID</th>
+                                <th
+                                    class="px-8 py-5 text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant/60">
+                                    Danh Mục</th>
+                                <th
+                                    class="px-8 py-5 text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant/60">
+                                    Mô Tả Chi Tiết</th>
+                                <th
+                                    class="px-8 py-5 text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant/60 text-center">
+                                    Sản Phẩm</th>
+                                <th
+                                    class="px-8 py-5 text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant/60">
+                                    Trạng Thái</th>
+                                <th
+                                    class="px-8 py-5 text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant/60 text-center">
+                                    Thứ Tự</th>
+                                <th
+                                    class="px-8 py-5 text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant/60 text-right">
+                                    Quản Lý</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-outline-variant/10">
+                            <!-- Row Template -->
+                            <tr th:each="category : ${categories}"
+                                class="hover:bg-background/40 transition-colors group">
+                                <td class="px-4 py-6 font-mono text-xs text-tertiary/60 font-semibold"
+                                    th:text="'#CAT-' + ${category.id}">#CAT-001</td>
+                                <td class="px-8 py-6">
+                                    <div class="flex items-center gap-4">
+                                        <div>
+                                            <span class="font-headline font-bold text-tertiary block text-lg"
+                                                th:text="${category.name}">Tên Danh Mục</span>
+                                            <span class="text-[10px] text-primary font-bold uppercase">Phân loại</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-8 py-6">
+                                    <p class="text-sm text-on-surface-variant line-clamp-2 max-w-xs"
+                                        th:text="${category.description}">Mô tả chi tiết của danh mục hải sản này.</p>
+                                </td>
+                                <td class="px-8 py-6 text-center">
+                                    <span class="text-lg font-bold text-tertiary">-</span>
+                                </td>
+                                <td class="px-6 py-6">
+                                    <span th:if="${category.active}"
+                                        class="inline-flex items-center gap-1.5 px-2 py-1.5 bg-green-50 text-green-700 text-[10px] font-bold uppercase rounded-full border border-green-200">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+                                        Đang Hoạt Động
+                                    </span>
+                                    <span th:unless="${category.active}"
+                                        class="inline-flex items-center gap-1.5 px-2 py-1.5 bg-red-50 text-red-700 text-[10px] font-bold uppercase rounded-full border border-red-200">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
+                                        Đang Ẩn
+                                    </span>
+                                </td>
+                                <td class="px-8 py-6 text-center">
+                                    <div class="flex items-center justify-center gap-2">
+                                        <span
+                                            class="text-sm font-bold text-white bg-primary w-7 h-7 flex items-center justify-center rounded-lg"
+                                            th:text="${categoryStat.index + 1}">1</span>
+                                    </div>
+                                </td>
+                                <td class="px-8 py-6 text-right">
+                                    <div
+                                        class="flex justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <!-- Edit Button -->
+                                        <button type="button" th:data-id="${category.id}"
+                                            th:data-name="${category.name}"
+                                            th:data-description="${category.description}"
+                                            th:data-active="${category.active}" onclick="openEditModal(this)"
+                                            class="w-9 h-9 flex items-center justify-center bg-tertiary/5 hover:bg-tertiary hover:text-white rounded-lg transition-all text-tertiary">
+                                            <span class="material-symbols-outlined text-lg">edit</span>
+                                        </button>
+                                        <!-- Delete Button -->
+                                        <button type="button" th:data-id="${category.id}"
+                                            th:data-name="${category.name}" onclick="openDeleteModal(this)"
+                                            class="w-9 h-9 flex items-center justify-center bg-primary/5 hover:bg-primary hover:text-white rounded-lg transition-all text-primary">
+                                            <span class="material-symbols-outlined text-lg">delete</span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Pagination -->
+                <div
+                    class="px-8 py-6 border-t border-outline-variant/10 flex flex-col md:flex-row items-center justify-between bg-surface/30 gap-4">
+                    <p class="text-sm text-on-surface-variant font-medium">Hiển thị <span
+                            class="font-bold text-tertiary" th:text="'1 - ' + ${categories.size()}">1 - 4</span> trong
+                        tổng số <span th:text="${categories.size()}">12</span> danh mục hiện có</p>
+                    <div class="flex items-center gap-2">
+                        <button
+                            class="w-10 h-10 flex items-center justify-center rounded-xl border border-outline-variant/30 hover:bg-tertiary hover:text-white transition-all disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-on-surface-variant"
+                            disabled="">
+                            <span class="material-symbols-outlined">chevron_left</span>
+                        </button>
+                        <button
+                            class="w-10 h-10 flex items-center justify-center rounded-xl bg-primary text-white font-bold text-sm shadow-lg shadow-primary/20">1</button>
+                        <button
+                            class="w-10 h-10 flex items-center justify-center rounded-xl border border-outline-variant/30 hover:bg-tertiary/5 transition-all font-bold text-sm text-on-surface-variant">2</button>
+                        <button
+                            class="w-10 h-10 flex items-center justify-center rounded-xl border border-outline-variant/30 hover:bg-tertiary/5 transition-all font-bold text-sm text-on-surface-variant">3</button>
+                        <button
+                            class="w-10 h-10 flex items-center justify-center rounded-xl border border-outline-variant/30 hover:bg-tertiary hover:text-white transition-all">
+                            <span class="material-symbols-outlined">chevron_right</span>
+                        </button>
+                    </div>
+                </div>
+>>>>>>> af6d615 (fix: rafactor sidebar)
             </div>
         </div>
         <div class="col-md-4">

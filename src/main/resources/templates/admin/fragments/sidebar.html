@@ -16,16 +16,31 @@
            th:class="${page == 'dashboard'} ? 'nav-link active d-flex align-items-center gap-3' : 'nav-link d-flex align-items-center gap-3'">
             <i class="bi bi-speedometer2"></i> Bảng điều khiển
         </a>
+<<<<<<< HEAD
         <a th:href="@{/admin/categories}"
            th:class="${page == 'categories'} ? 'nav-link active d-flex align-items-center gap-3' : 'nav-link d-flex align-items-center gap-3'">
             <i class="bi bi-collection"></i> Quản Lý Danh Mục
+=======
+        <a class="flex items-center gap-4 text-white/70 hover:text-white px-4 py-3.5 transition-all hover:bg-white/10 rounded-lg group"
+            th:href="@{/admin/categories}">
+            <span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">category</span>
+            <span class="text-sm">Quản Lý Danh Mục</span>
+>>>>>>> af6d615 (fix: rafactor sidebar)
         </a>
         <a th:href="@{/admin/seafood-products}"
            th:class="${page == 'products'} ? 'nav-link active d-flex align-items-center gap-3' : 'nav-link d-flex align-items-center gap-3'">
             <i class="bi bi-box-seam"></i> Kho Hàng
         </a>
+<<<<<<< HEAD
         <a href="#" class="nav-link d-flex align-items-center gap-3">
             <i class="bi bi-cart3"></i> Đơn hàng
+=======
+        <a class="flex items-center gap-4 text-white/70 hover:text-white px-4 py-3.5 transition-all hover:bg-white/10 rounded-lg group"
+            th:href="@{/admin/manage-orders}">
+            <span
+                class="material-symbols-outlined text-2xl group-hover:scale-110 transition-transform">shopping_basket</span>
+            <span class="text-sm font-semibold">Đơn hàng</span>
+>>>>>>> af6d615 (fix: rafactor sidebar)
         </a>
         <a href="#" class="nav-link d-flex align-items-center gap-3">
             <i class="bi bi-credit-card-2-front"></i> Tài chính
