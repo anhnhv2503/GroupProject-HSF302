@@ -52,23 +52,17 @@ public class SecurityConfig {
                 .formLogin((form) -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/login")
-<<<<<<< HEAD
-                        .defaultSuccessUrl("/", true)
-=======
                         .defaultSuccessUrl("/home", true)
->>>>>>> 128b6766143db09ce36969c9be0c165d1fdf5cc7
                         .failureUrl("/login?error=true")
                         .permitAll())
                 .logout((logout) -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/login?logout=true")
                         .invalidateHttpSession(true)
-<<<<<<< HEAD
                         .deleteCookies("JSESSIONID")
-                        .permitAll());
-=======
+                        .permitAll()
                         .clearAuthentication(true).permitAll());
->>>>>>> 128b6766143db09ce36969c9be0c165d1fdf5cc7
+
         return http.build();
     }
 

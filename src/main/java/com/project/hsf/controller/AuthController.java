@@ -68,9 +68,6 @@ public class AuthController {
             return "auth/register";
         }
     }
-<<<<<<< HEAD
-}
-=======
 
     @GetMapping("/profile")
     public String showProfileForm(Authentication  authentication, Model model) {
@@ -79,4 +76,4 @@ public class AuthController {
         return "user/profile";
     }
 }
->>>>>>> 128b6766143db09ce36969c9be0c165d1fdf5cc7
+
