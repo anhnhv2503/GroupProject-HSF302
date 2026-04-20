@@ -31,7 +31,7 @@ public class OrderServiceImpl implements OrderService {
         // Atomic Stock Deduct
         for (CartItemDTO item : cartItems) {
             if (item.getProductId() != null) {
-                int affected = seafoodProductRepository.deductStock(item.getProductId(), item.getQuantity());
+                int affected = seafoodProductRepository.deductStock(Long.valueOf(item.getProductId()), item.getQuantity());
                 if (affected == 0) {
                     throw new RuntimeException("Hết hàng hoặc sản phẩm không khả dụng: " + item.getName());
                 }

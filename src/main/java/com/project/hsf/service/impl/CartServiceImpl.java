@@ -3,10 +3,12 @@ package com.project.hsf.service.impl;
 import com.project.hsf.dto.CartItemDTO;
 import com.project.hsf.service.CartService;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@Service
 public class CartServiceImpl implements CartService {
 
     private static final String CART_SESSION_KEY = "CART";

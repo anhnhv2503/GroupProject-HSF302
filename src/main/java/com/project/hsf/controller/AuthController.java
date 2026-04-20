@@ -27,7 +27,7 @@ public class AuthController {
         return "auth/register";
     }
 
-    @PostMapping("/register")
+    @PostMapping("/register-user")
     public String processRegister(@ModelAttribute("registerDTO") RegisterDTO registerDTO, Model model) {
         try {
             userService.registerUser(registerDTO);
