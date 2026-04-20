@@ -27,15 +27,6 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("Mật khẩu xác nhận không khớp");
         }
 
-//        User user = User.builder()
-//                .username(registerDTO.getUsername())
-//                .password(passwordEncoder.encode(registerDTO.getPassword()))
-//                .email(registerDTO.getEmail())
-//                .fullName(registerDTO.getFullName())
-//                .phone(registerDTO.getPhone())
-//                .role("CUSTOMER")
-//                .build();
-
         User user = new User();
         user.setUsername(registerDTO.getUsername());
         user.setPassword(passwordEncoder.encode(registerDTO.getPassword()));

@@ -7,12 +7,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
@@ -20,8 +20,15 @@ import java.util.List;
 public class SecurityConfig {
 
     private final List<String> publicUrl =
-            List.of("/login", "/register", "/css/**", "/js/**", "/images/**", "/register-user","/cart"
-
+            List.of(
+                    "/",
+                    "/login/**",
+                    "/register/**",
+                    "/css/**",
+                    "/js/**",
+                    "/images/**",
+                    "/register-user",
+                    "/cart"
             );
 //    private final List<String> privateUrl = new ArrayList<>();
 
@@ -35,7 +42,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf((csrf) -> csrf.disable())
+        http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers(publicUrl.toArray(String[]::new)).permitAll()
                         .anyRequest().authenticated())

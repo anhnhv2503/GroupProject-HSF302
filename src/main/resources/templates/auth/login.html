@@ -1,87 +1,246 @@
 <!DOCTYPE html>
+
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <title>Đăng Nhập | The Culinary Curator</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;family=Playfair+Display:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet"/>
-    <link th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"/>
-    <link th:href="@{/css/custom.css}" rel="stylesheet"/>
-</head>
-<body>
-<main class="d-flex min-vh-100">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;family=Playfair+Display:ital,wght@0,700;1,700&amp;family=Roboto:wght@400;500;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+          rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "outline-variant": "#e1bfb3",
+                        "surface-bright": "#f8f9fa",
+                        "on-error-container": "#93000a",
+                        "surface-dim": "#d9dadb",
+                        "primary-fixed": "#ffdbce",
+                        "tertiary": "#006492",
+                        "background": "#f8f9fa",
+                        "on-error": "#ffffff",
+                        "on-background": "#191c1d",
+                        "on-surface": "#191c1d",
+                        "on-primary-fixed": "#370e00",
+                        "surface-container-low": "#f3f4f5",
+                        "on-surface-variant": "#594138",
+                        "tertiary-fixed-dim": "#8cceff",
+                        "secondary-fixed-dim": "#9dcaff",
+                        "on-secondary-fixed-variant": "#0b4979",
+                        "on-primary": "#ffffff",
+                        "inverse-surface": "#2e3132",
+                        "on-tertiary-fixed-variant": "#004b6f",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container": "#edeeef",
+                        "on-tertiary-fixed": "#001e2f",
+                        "on-primary-fixed-variant": "#7f2b00",
+                        "tertiary-fixed": "#cae6ff",
+                        "on-tertiary": "#ffffff",
+                        "secondary-fixed": "#d1e4ff",
+                        "tertiary-container": "#009ade",
+                        "secondary-container": "#98c7ff",
+                        "secondary": "#2e6192",
+                        "error-container": "#ffdad6",
+                        "on-tertiary-container": "#002d45",
+                        "surface-variant": "#e1e3e4",
+                        "on-primary-container": "#4f1800",
+                        "inverse-primary": "#ffb599",
+                        "surface-tint": "#a63b00",
+                        "primary": "#F26522",
+                        "surface": "#f8f9fa",
+                        "surface-container-highest": "#e1e3e4",
+                        "primary-fixed-dim": "#ffb599",
+                        "outline": "#8d7166",
+                        "on-secondary-fixed": "#001d35",
+                        "on-secondary": "#ffffff",
+                        "surface-container-high": "#e7e8e9",
+                        "error": "#ba1a1a",
+                        "on-secondary-container": "#1c5384",
+                        "inverse-on-surface": "#f0f1f2",
+                        "primary-container": "#F26522"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"],
+                        "serif": ["Playfair Display", "serif"],
+                        "numeric": ["Roboto"]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
 
-    <!-- Left: Cinematic Visual (60%) -->
-    <section class="d-none d-md-flex position-fixed w-60 vh-100 overflow-hidden align-items-center justify-content-center p-5" style="width:60%;">
-        <div class="position-absolute top-0 start-0 w-100 h-100">
-            <img alt="Hải sản tươi sống cao cấp" class="w-100 h-100" style="object-fit:cover;"
+        .ocean-overlay {
+            background: linear-gradient(to right, rgba(10, 25, 41, 0.5), rgba(10, 25, 41, 0.8));
+        }
+
+        .floating-label-input:focus-within label,
+        .floating-label-input input:not(:placeholder-shown) + label {
+            transform: translateY(-1.5rem) scale(0.85);
+            color: #F26522;
+        }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-background antialiased selection:bg-primary-fixed selection:text-on-primary-fixed">
+<main class="min-h-screen flex flex-col md:flex-row">
+    <!-- Left Side: Cinematic Visual (60%) -->
+    <section class="relative hidden md:flex w-[60%] overflow-hidden items-center justify-center p-12">
+        <div class="absolute inset-0 z-0">
+            <img alt="Hải sản tươi sống cao cấp" class="w-full h-full object-cover"
                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuBR4aQdZKJvyF1y093CftYXJZ1_-KJXmuZlhyiMyxKH5CeOg9BgQvhUFapqQEQw0QQtT7JdJcEpajSTsd6X-QUaSeaMYDvuhhlhfrmT-C9K5PhnQUqCkFAXZardUs3UHuFjUwjh4CXk5Uf4wWu_l8CXwx0QXGSVAzKCVmYAX2jCdja3Pw_psl6Et_E7qHVhNr5oY8iIa1RkX3dkTBTHsyhvBsT2xZKDGo2LkJXJS0g8CYaY8TBPQ_Ug-JkFWHm_tWYC3lVTH_3gGCg"/>
-            <div class="auth-hero position-absolute top-0 start-0 w-100 h-100" style="backdrop-filter:blur(1px);"></div>
+            <div class="absolute inset-0 ocean-overlay backdrop-blur-[1px]"></div>
         </div>
-        <div class="position-relative text-center" style="z-index:2;">
-            <h1 class="font-serif text-white display-3 lh-sm" style="text-shadow:0 4px 20px rgba(0,0,0,.3);">Tinh Hoa Đại Dương,<br/>Giao Tận Bàn Ăn.</h1>
-            <hr class="mx-auto mt-4 opacity-25" style="width:80px;border-color:var(--brand-primary);border-width:2px;">
-            <p class="text-white-50 mt-4 lead mx-auto" style="max-width:400px;">Trải nghiệm hải sản cao cấp được tuyển chọn khắt khe từ những vùng biển tinh khiết nhất thế giới.</p>
+        <div class="relative z-10 max-w-xl text-center">
+            <h1 class="font-serif text-5xl lg:text-7xl text-white leading-tight drop-shadow-2xl">
+                Tinh Hoa Đại Dương,<br/>Giao Tận Bàn Ăn.
+            </h1>
+            <div class="mt-8 flex justify-center">
+                <div class="h-px w-24 bg-primary-container"></div>
+            </div>
+            <p class="mt-8 text-white/90 text-lg font-light tracking-wide max-w-md mx-auto">
+                Trải nghiệm hải sản cao cấp được tuyển chọn khắt khe từ những vùng biển tinh khiết nhất thế giới.
+            </p>
         </div>
-        <div class="position-absolute bottom-0 start-0 p-4 d-flex align-items-center gap-3 text-white-50 small text-uppercase" style="letter-spacing:.15em;">
-            <strong class="text-white">THE CULINARY CURATOR</strong>
-            <span class="border-bottom" style="width:32px;border-color:rgba(255,255,255,.2);"></span>
+        <!-- Absolute bottom decoration -->
+        <div class="absolute bottom-8 left-8 flex items-center gap-4 text-white/60 text-sm tracking-widest uppercase">
+            <span class="font-black text-white">THE CULINARY CURATOR</span>
+            <span class="h-px w-8 bg-white/20"></span>
             <span>Thành lập 2024</span>
         </div>
     </section>
-
-    <!-- Right: Auth Form (40%) -->
-    <section class="d-flex align-items-center justify-content-center p-4 p-lg-5 bg-white" style="width:40%;margin-left:60%;">
-        <div class="w-100" style="max-width:420px;">
-            <!-- Brand -->
-            <div class="mb-5 pb-4 border-bottom">
-                <div class="d-flex align-items-center gap-3 mb-4">
-                    <div class="bg-primary rounded-3 d-flex align-items-center justify-content-center" style="width:40px;height:40px;">
-                        <i class="bi bi-tsunami text-white fs-5"></i>
+    <!-- Right Side: Auth Form (40%) -->
+    <section class="w-full md:w-[40%] bg-white flex items-center justify-center p-8 lg:p-16">
+        <div class="w-full max-w-md">
+            <!-- Brand Header -->
+            <div class="mb-12">
+                <div class="flex items-center gap-3 mb-8">
+                    <div class="w-10 h-10 bg-primary-container rounded-lg flex items-center justify-center shadow-lg shadow-primary-container/20">
+                        <span class="material-symbols-outlined text-white"
+                              data-icon="restaurant_menu">restaurant_menu</span>
                     </div>
-                    <span class="text-brand-secondary fs-5 fw-bold">The Culinary Curator</span>
+                    <span class="text-2xl font-bold tracking-tighter text-secondary">The Culinary Curator</span>
                 </div>
-                <h2 class="fw-bold fs-3">Chào Mừng Trở Lại</h2>
-                <p class="text-muted">Vui lòng đăng nhập để tiếp tục.</p>
+                <h2 class="text-3xl font-bold text-on-surface tracking-tight">Chào mừng bạn trở lại!</h2>
+                <p class="text-on-surface-variant mt-2">Vui lòng nhập thông tin để truy cập kho lưu trữ đặc sản.</p>
             </div>
-
-            <!-- Error Messages -->
-            <div th:if="${param.error}" class="alert alert-danger small py-2" role="alert">
-                <i class="bi bi-exclamation-circle me-1"></i> Tên đăng nhập hoặc mật khẩu không đúng.
-            </div>
-            <div th:if="${param.registerSuccess}" class="alert alert-success small py-2" role="alert">
-                <i class="bi bi-check-circle me-1"></i> Đăng ký thành công! Hãy đăng nhập.
-            </div>
-
             <!-- Form -->
-            <form th:action="@{/login}" method="post">
-                <div class="mb-3">
-                    <label for="username" class="form-label fw-semibold small text-muted text-uppercase">Tên đăng nhập</label>
-                    <input type="text" id="username" name="username" class="form-control form-control-lg" required placeholder=" "/>
+            <form class="space-y-6" th:action="@{/login}" method="post" role="form">
+                <!-- Email Field -->
+                <div class="relative floating-label-input">
+                    <input class="peer w-full px-4 py-4 bg-white border-none ring-1 ring-outline-variant/30 focus:ring-2 focus:ring-primary rounded-lg transition-all outline-none text-on-surface"
+                           id="username" placeholder=" " type="text"/>
+                    <label class="absolute left-4 top-4 text-on-surface-variant pointer-events-none transition-all origin-left"
+                           for="username">
+                        Tên đăng nhập
+                    </label>
                 </div>
-                <div class="mb-3">
-                    <label for="password" class="form-label fw-semibold small text-muted text-uppercase">Mật khẩu</label>
-                    <input type="password" id="password" name="password" class="form-control form-control-lg" required placeholder=" "/>
+                <!-- Password Field -->
+                <div class="relative floating-label-input">
+                    <input class="peer w-full px-4 py-4 bg-white border-none ring-1 ring-outline-variant/30 focus:ring-2 focus:ring-primary rounded-lg transition-all outline-none text-on-surface"
+                           id="password" placeholder=" " type="password"/>
+                    <label class="absolute left-4 top-4 text-on-surface-variant pointer-events-none transition-all origin-left"
+                           for="password">
+                        Mật khẩu
+                    </label>
+                    <button class="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-primary transition-colors"
+                            type="button">
+                        <span class="material-symbols-outlined text-[20px]" data-icon="visibility">visibility</span>
+                    </button>
                 </div>
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="remember-me" id="rememberMe"/>
-                        <label class="form-check-label small" for="rememberMe">Ghi nhớ đăng nhập</label>
-                    </div>
-                    <a href="#" class="text-primary small fw-semibold text-decoration-none">Quên mật khẩu?</a>
+                <!-- Options Row -->
+                <div class="flex items-center justify-between text-sm">
+                    <label class="flex items-center gap-2 cursor-pointer group">
+                        <div class="relative flex items-center">
+                            <input class="peer appearance-none w-5 h-5 rounded border border-outline-variant checked:bg-primary checked:border-primary transition-all cursor-pointer"
+                                   type="checkbox"/>
+                            <span class="material-symbols-outlined absolute text-white text-[16px] opacity-0 peer-checked:opacity-100 left-1/2 -translate-x-1/2"
+                                  data-icon="check" style="font-variation-settings: 'FILL' 1;">check</span>
+                        </div>
+                        <span class="text-on-surface-variant group-hover:text-on-surface transition-colors">Ghi nhớ đăng nhập</span>
+                    </label>
+                    <a class="text-primary font-medium hover:underline underline-offset-4" href="#">Quên mật khẩu?</a>
                 </div>
-                <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold">Đăng Nhập</button>
+                <!-- Main CTA -->
+                <button class="w-full py-4 bg-primary-container text-white font-bold rounded-lg shadow-lg shadow-primary-container/20 hover:shadow-xl hover:shadow-primary-container/30 active:scale-[0.98] transition-all tracking-wide"
+                        type="submit">
+                    Đăng Nhập
+                </button>
             </form>
-
-            <!-- Register Link -->
-            <div class="mt-5 text-center text-muted">
-                Chưa có tài khoản?
-                <a th:href="@{/register}" class="text-primary fw-bold text-decoration-none ms-1">Đăng ký ngay</a>
+            <!-- Divider -->
+            <div class="relative my-10">
+                <div class="absolute inset-0 flex items-center">
+                    <div class="w-full border-t border-outline-variant/20"></div>
+                </div>
+                <div class="relative flex justify-center text-xs uppercase tracking-widest">
+                    <span class="bg-white px-4 text-on-surface-variant">Hoặc đăng nhập với</span>
+                </div>
+            </div>
+            <!-- Social Logins -->
+<!--            <div class="grid grid-cols-2 gap-4">-->
+<!--                <button class="flex items-center justify-center gap-3 py-3 px-4 bg-white border border-outline-variant/30 rounded-lg hover:bg-surface-container-low transition-colors group">-->
+<!--                    <svg class="w-5 h-5" viewbox="0 0 24 24">-->
+<!--                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"-->
+<!--                              fill="#4285F4"></path>-->
+<!--                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"-->
+<!--                              fill="#34A853"></path>-->
+<!--                        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"-->
+<!--                              fill="#FBBC05"></path>-->
+<!--                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"-->
+<!--                              fill="#EA4335"></path>-->
+<!--                    </svg>-->
+<!--                    <span class="text-sm font-semibold text-on-surface">Google</span>-->
+<!--                </button>-->
+<!--                <button class="flex items-center justify-center gap-3 py-3 px-4 bg-white border border-outline-variant/30 rounded-lg hover:bg-surface-container-low transition-colors group">-->
+<!--                    <svg class="w-5 h-5 text-[#1877F2]" fill="currentColor" viewbox="0 0 24 24">-->
+<!--                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"></path>-->
+<!--                    </svg>-->
+<!--                    <span class="text-sm font-semibold text-on-surface">Facebook</span>-->
+<!--                </button>-->
+<!--            </div>-->
+            <!-- Footer Toggle -->
+            <div class="mt-12 text-center">
+                <p class="text-on-surface-variant">
+                    Chưa có tài khoản?
+                    <a class="text-primary font-bold hover:underline underline-offset-4 ml-1" th:href="@{/register}">Đăng ký ngay</a>
+                </p>
             </div>
         </div>
     </section>
 </main>
-<script th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<!-- Shared Footer Anchor -->
+<footer class="w-full py-12 px-8 bg-slate-50 border-t border-outline-variant/10">
+    <div class="flex flex-col md:flex-row justify-between items-center max-w-7xl mx-auto gap-8">
+        <div class="flex items-center gap-4">
+            <span class="font-black text-[#2e6192] text-lg uppercase tracking-tight">THE CULINARY CURATOR</span>
+        </div>
+        <nav class="flex flex-wrap justify-center gap-8">
+            <a class="text-sm uppercase tracking-widest text-slate-500 hover:text-slate-900 underline decoration-[#F26522] underline-offset-4 transition-all"
+               href="#">Nguồn gốc</a>
+            <a class="text-sm uppercase tracking-widest text-slate-500 hover:text-slate-900 hover:opacity-70 transition-all"
+               href="#">Vận chuyển</a>
+            <a class="text-sm uppercase tracking-widest text-slate-500 hover:text-slate-900 hover:opacity-70 transition-all"
+               href="#">Bảo mật</a>
+            <a class="text-sm uppercase tracking-widest text-slate-500 hover:text-slate-900 hover:opacity-70 transition-all"
+               href="#">Điều khoản</a>
+        </nav>
+        <div class="text-slate-400 text-[10px] uppercase tracking-widest text-center md:text-right">
+            © 2024 The Culinary Curator. Đặc sản quý hiếm, giao tận nơi.
+        </div>
+    </div>
+</footer>
 </body>
 </html>
