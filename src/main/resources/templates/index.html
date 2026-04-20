@@ -1,327 +1,228 @@
 <!DOCTYPE html>
-<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+<html xmlns:th="http://www.thymeleaf.org" lang="vi"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/customer-layout}">
-<head>
-    <title>Trang Chủ</title>
-</head>
+<head><title>Trang Chủ</title></head>
 <body>
-    <div layout:fragment="content">
-        <!-- Hero Section using the new design system colors and layout -->
-        <section class="relative bg-surface-container-highest overflow-hidden">
-            <div class="absolute inset-0 z-0">
-                <!-- Using a placeholder or gradient if image is not accessible -->
-                <div class="w-full h-full bg-ocean-spray opacity-90"></div>
-                <!-- Abstract sea wave pattern overlay -->
-                <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-20 mix-blend-overlay"></div>
-            </div>
-            
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-24 sm:py-32 lg:py-40">
-                <div class="max-w-2xl text-white">
-                    <span class="inline-flex items-center rounded-full bg-white/20 px-3 py-1 text-sm font-medium text-white ring-1 ring-inset ring-white/20 mb-6 backdrop-blur-sm">
-                        <span class="material-symbols-outlined text-sm mr-2">verified</span>
-                        Hải sản tươi sống 100%
-                    </span>
-                    <h1 class="text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl mb-6 text-white drop-shadow-md">
-                        Tinh hoa hải sản từ đại dương xanh
-                    </h1>
-                    <p class="text-lg sm:text-xl text-primary-fixed mb-8 leading-relaxed max-w-xl font-medium drop-shadow-sm">
-                        Khám phá bộ sưu tập hải sản cao cấp được tuyển chọn kỹ lưỡng. Giao hàng nhanh chóng, giữ trọn hương vị tươi ngon.
-                    </p>
-                    <div class="flex flex-col sm:flex-row gap-4">
-                        <a href="/products" class="inline-flex items-center justify-center rounded-full bg-white text-primary px-8 py-4 text-base font-bold shadow-lg hover:bg-surface-container-low transition-all duration-300 transform hover:-translate-y-1">
-                            <span class="material-symbols-outlined mr-2">shopping_bag</span>
-                            Mua sắm ngay
+<div layout:fragment="content">
+
+    <!-- Hero Banner -->
+    <section class="bg-ocean-spray text-white py-5">
+        <div class="container py-5">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h1 class="font-serif fw-bold display-4 mb-3" style="text-shadow: 0 2px 10px rgba(0,0,0,0.1);">Tinh Hoa Đại Dương,<br/>Giao Tận Bàn Ăn.</h1>
+                    <p class="lead opacity-75 mb-4">Trải nghiệm hải sản cao cấp được tuyển chọn khắt khe từ những vùng biển tinh khiết nhất.</p>
+                    <div class="d-flex gap-3">
+                        <a href="/products" class="btn btn-light btn-lg fw-bold rounded-pill px-5">
+                            <i class="bi bi-shop me-2"></i>Khám Phá Ngay
                         </a>
-                        <a href="/about" class="inline-flex items-center justify-center rounded-full bg-primary-container/30 text-white px-8 py-4 text-base font-semibold ring-1 ring-inset ring-white/50 backdrop-blur-md hover:bg-primary-container/50 transition-all duration-300">
-                            Tìm hiểu thêm
+                        <a href="#featured" class="btn btn-outline-light btn-lg fw-bold rounded-pill px-4">
+                            Xem Bảng Giá
                         </a>
                     </div>
                 </div>
-            </div>
-        </section>
-
-        <!-- Categories Section -->
-        <section class="py-16 bg-surface">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex items-center justify-between mb-8">
-                    <h2 class="text-2xl font-extrabold text-on-surface tracking-tight">Danh Mục Nổi Bật</h2>
-                    <a href="/categories" class="text-primary font-semibold hover:text-primary-container flex items-center gap-1 transition-colors">
-                        Xem tất cả
-                        <span class="material-symbols-outlined">arrow_forward</span>
-                    </a>
-                </div>
-                
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-                    <!-- Category Card 1 -->
-                    <a href="/products?category=shrimp" class="group relative overflow-hidden rounded-2xl aspect-[4/3] bg-surface-container-high shadow-sm hover:shadow-md transition-all duration-300">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent z-10 transition-opacity duration-300 group-hover:opacity-90"></div>
-                        <!-- Placeholder using neutral background -->
-                        <div class="w-full h-full bg-secondary-container flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
-                            <span class="material-symbols-outlined text-6xl text-on-secondary-container/50">sailing</span>
-                        </div>
-                        <div class="absolute bottom-4 left-4 z-20">
-                            <h3 class="text-white font-bold text-lg">Tôm Các Loại</h3>
-                        </div>
-                    </a>
-                    
-                    <!-- Category Card 2 -->
-                    <a href="/products?category=crab" class="group relative overflow-hidden rounded-2xl aspect-[4/3] bg-surface-container-high shadow-sm hover:shadow-md transition-all duration-300">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent z-10 transition-opacity duration-300 group-hover:opacity-90"></div>
-                        <div class="w-full h-full bg-tertiary-container flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
-                            <span class="material-symbols-outlined text-6xl text-on-tertiary-container/50">set_meal</span>
-                        </div>
-                        <div class="absolute bottom-4 left-4 z-20">
-                            <h3 class="text-white font-bold text-lg">Cua & Ghẹ</h3>
-                        </div>
-                    </a>
-
-                    <!-- Category Card 3 -->
-                    <a href="/products?category=fish" class="group relative overflow-hidden rounded-2xl aspect-[4/3] bg-surface-container-high shadow-sm hover:shadow-md transition-all duration-300">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent z-10 transition-opacity duration-300 group-hover:opacity-90"></div>
-                        <div class="w-full h-full bg-primary-container/40 flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
-                            <span class="material-symbols-outlined text-6xl text-primary/50">water</span>
-                        </div>
-                        <div class="absolute bottom-4 left-4 z-20">
-                            <h3 class="text-white font-bold text-lg">Cá Tươi Sống</h3>
-                        </div>
-                    </a>
-
-                    <!-- Category Card 4 -->
-                    <a href="/products?category=shellfish" class="group relative overflow-hidden rounded-2xl aspect-[4/3] bg-surface-container-high shadow-sm hover:shadow-md transition-all duration-300">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent z-10 transition-opacity duration-300 group-hover:opacity-90"></div>
-                        <div class="w-full h-full bg-surface-dim flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
-                            <span class="material-symbols-outlined text-6xl text-on-surface-variant/50">phishing</span>
-                        </div>
-                        <div class="absolute bottom-4 left-4 z-20">
-                            <h3 class="text-white font-bold text-lg">Ốc & Ngao Dán</h3>
-                        </div>
-                    </a>
+                <div class="col-lg-6 text-center mt-4 mt-lg-0">
+                    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBR4aQdZKJvyF1y093CftYXJZ1_-KJXmuZlhyiMyxKH5CeOg9BgQvhUFapqQEQw0QQtT7JdJcEpajSTsd6X-QUaSeaMYDvuhhlhfrmT-C9K5PhnQUqCkFAXZardUs3UHuFjUwjh4CXk5Uf4wWu_l8CXwx0QXGSVAzKCVmYAX2jCdja3Pw_psl6Et_E7qHVhNr5oY8iIa1RkX3dkTBTHsyhvBsT2xZKDGo2LkJXJS0g8CYaY8TBPQ_Ug-JkFWHm_tWYC3lVTH_3gGCg"
+                         alt="Hải sản tươi sống" class="img-fluid rounded-4 shadow-lg" style="max-height:400px;object-fit:cover;"/>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- Featured Products Section -->
-        <section class="py-16 bg-surface-container-lowest">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-12">
-                    <h2 class="text-3xl font-extrabold text-on-surface tracking-tight mb-4">Sản Phẩm Đang Hot</h2>
-                    <p class="text-on-surface-variant max-w-2xl mx-auto">
-                        Những loại hải sản được yêu thích nhất trong tuần qua, đảm bảo chất lượng và độ tươi ngon tuyệt đối.
-                    </p>
+    <!-- Why Choose Us (Features) -->
+    <section class="bg-white py-5">
+        <div class="container py-4">
+            <div class="row g-4 text-center">
+                <div class="col-md-4">
+                    <div class="p-4 rounded-4 hover-lift">
+                        <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width:72px;height:72px;">
+                            <i class="bi bi-patch-check text-primary fs-2"></i>
+                        </div>
+                        <h5 class="fw-bold text-brand-secondary">Chất Lượng Đảm Bảo</h5>
+                        <p class="text-muted small">Mỗi sản phẩm đều được kiểm định chất lượng nghiêm ngặt trước khi giao đến bạn.</p>
+                    </div>
                 </div>
-
-                <!-- Product Grid (Mocked data, replace with thymeleaf iteration) -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                    
-                    <!-- If we had backend data, we would use: -->
-                    <!-- <div th:each="product : ${featuredProducts}" class="..."> -->
-                    
-                    <!-- Product Card 1 -->
-                    <div class="group bg-white rounded-2xl shadow-sm border border-surface-variant overflow-hidden hover:shadow-xl hover:border-primary-fixed transition-all duration-300 flex flex-col h-full">
-                        <div class="relative aspect-square overflow-hidden bg-surface-container-high flex items-center justify-center p-4">
-                            <!-- Placeholder image icon, you can replace with actual image later -->
-                            <span class="material-symbols-outlined text-8xl text-surface-dim group-hover:scale-110 transition-transform duration-500">set_meal</span>
-                            <span class="absolute top-4 right-4 bg-error text-on-error text-xs font-bold px-2 py-1 rounded-md shadow-sm">Mới</span>
+                <div class="col-md-4">
+                    <div class="p-4 rounded-4 hover-lift">
+                        <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width:72px;height:72px;">
+                            <i class="bi bi-truck text-primary fs-2"></i>
                         </div>
-                        <div class="p-6 flex flex-col flex-grow">
-                            <div class="flex justify-between items-start mb-2 gap-2">
-                                <h3 class="text-lg font-bold text-on-surface line-clamp-2 title-font hover:text-primary transition-colors cursor-pointer">
-                                    Cua Hoàng Đế Alaska Cao Cấp
-                                </h3>
-                                <button class="text-surface-dim hover:text-error transition-colors p-1 rounded-full hover:bg-error-container flex-shrink-0">
-                                    <span class="material-symbols-outlined text-[20px]">favorite</span>
-                                </button>
-                            </div>
-                            <div class="flex items-center gap-1 text-sm text-on-surface-variant mb-4">
-                                <span class="material-symbols-outlined text-orange-400 text-[16px] filled">star</span>
-                                <span class="font-medium">4.9</span>
-                                <span class="text-surface-dim mx-1">|</span>
-                                <span>Đã bán 124</span>
-                            </div>
-                            <!-- Spacer to push pricing and button down -->
-                            <div class="mt-auto"></div>
-                            
-                            <div class="flex flex-col gap-1 mb-4">
-                                <div class="flex items-baseline gap-2">
-                                    <span class="text-xl font-bold font-price text-primary">2.450.000 ₫</span>
-                                    <span class="text-sm text-on-surface-variant">/kg</span>
-                                </div>
-                            </div>
-                            
-                            <!-- Add to cart -->
-                            <form action="/cart/add" method="post" class="mt-2">
-                                <!-- <input type="hidden" name="productId" th:value="${product.id}"> -->
-                                <input type="hidden" name="productId" value="1">
-                                <input type="hidden" name="quantity" value="1">
-                                <button type="submit" class="w-full flex items-center justify-center gap-2 bg-surface-container text-on-surface font-semibold py-3 rounded-xl hover:bg-primary hover:text-white transition-colors duration-300 group/btn">
-                                    <span class="material-symbols-outlined text-lg group-hover/btn:-translate-y-1 transition-transform">add_shopping_cart</span>
-                                    Thêm vào giỏ
-                                </button>
-                            </form>
-                        </div>
+                        <h5 class="fw-bold text-brand-secondary">Giao Hàng Nhanh</h5>
+                        <p class="text-muted small">Đội ngũ vận chuyển chuyên nghiệp, đảm bảo hải sản đến tay bạn luôn tươi ngon.</p>
                     </div>
-
-                    <!-- Product Card 2 -->
-                    <div class="group bg-white rounded-2xl shadow-sm border border-surface-variant overflow-hidden hover:shadow-xl hover:border-primary-fixed transition-all duration-300 flex flex-col h-full">
-                        <div class="relative aspect-square overflow-hidden bg-surface-container-high flex items-center justify-center p-4">
-                            <span class="material-symbols-outlined text-8xl text-surface-dim group-hover:scale-110 transition-transform duration-500">phishing</span>
-                            <span class="absolute top-4 right-4 bg-tertiary text-on-tertiary text-xs font-bold px-2 py-1 rounded-md shadow-sm">Bán chạy</span>
-                        </div>
-                        <div class="p-6 flex flex-col flex-grow">
-                            <div class="flex justify-between items-start mb-2 gap-2">
-                                <h3 class="text-lg font-bold text-on-surface line-clamp-2 title-font hover:text-primary transition-colors cursor-pointer">
-                                    Tôm Hùm Bông Việt Nam
-                                </h3>
-                                <button class="text-surface-dim hover:text-error transition-colors p-1 rounded-full hover:bg-error-container flex-shrink-0">
-                                    <span class="material-symbols-outlined text-[20px]">favorite</span>
-                                </button>
-                            </div>
-                            <div class="flex items-center gap-1 text-sm text-on-surface-variant mb-4">
-                                <span class="material-symbols-outlined text-orange-400 text-[16px] filled">star</span>
-                                <span class="font-medium">4.8</span>
-                                <span class="text-surface-dim mx-1">|</span>
-                                <span>Đã bán 89</span>
-                            </div>
-                            <div class="mt-auto"></div>
-                            <div class="flex flex-col gap-1 mb-4">
-                                <div class="flex items-baseline gap-2">
-                                    <span class="text-xl font-bold font-price text-primary">1.850.000 ₫</span>
-                                    <span class="text-sm text-on-surface-variant">/kg</span>
-                                </div>
-                            </div>
-                            <form action="/cart/add" method="post" class="mt-2">
-                                <input type="hidden" name="productId" value="2">
-                                <input type="hidden" name="quantity" value="1">
-                                <button type="submit" class="w-full flex items-center justify-center gap-2 bg-surface-container text-on-surface font-semibold py-3 rounded-xl hover:bg-primary hover:text-white transition-colors duration-300 group/btn">
-                                    <span class="material-symbols-outlined text-lg group-hover/btn:-translate-y-1 transition-transform">add_shopping_cart</span>
-                                    Thêm vào giỏ
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-
-                    <!-- Product Card 3 -->
-                    <div class="group bg-white rounded-2xl shadow-sm border border-surface-variant overflow-hidden hover:shadow-xl hover:border-primary-fixed transition-all duration-300 flex flex-col h-full">
-                        <div class="relative aspect-square overflow-hidden bg-surface-container-high flex items-center justify-center p-4">
-                            <span class="material-symbols-outlined text-8xl text-surface-dim group-hover:scale-110 transition-transform duration-500">water</span>
-                            <span class="absolute top-4 left-4 bg-error-container text-on-error-container text-xs font-bold px-2 py-1 rounded-md shadow-sm">-15%</span>
-                        </div>
-                        <div class="p-6 flex flex-col flex-grow">
-                            <div class="flex justify-between items-start mb-2 gap-2">
-                                <h3 class="text-lg font-bold text-on-surface line-clamp-2 title-font hover:text-primary transition-colors cursor-pointer">
-                                    Cá Hồi Na Uy Tươi Fillet
-                                </h3>
-                                <button class="text-surface-dim hover:text-error transition-colors p-1 rounded-full hover:bg-error-container flex-shrink-0">
-                                    <span class="material-symbols-outlined text-[20px]">favorite</span>
-                                </button>
-                            </div>
-                            <div class="flex items-center gap-1 text-sm text-on-surface-variant mb-4">
-                                <span class="material-symbols-outlined text-orange-400 text-[16px] filled">star</span>
-                                <span class="font-medium">4.7</span>
-                                <span class="text-surface-dim mx-1">|</span>
-                                <span>Đã bán 512</span>
-                            </div>
-                            <div class="mt-auto"></div>
-                            <div class="flex flex-col gap-1 mb-4">
-                                <div class="flex items-baseline gap-2">
-                                    <span class="text-xl font-bold font-price text-primary">550.000 ₫</span>
-                                    <span class="text-sm line-through text-surface-dim font-price">650.000 ₫</span>
-                                </div>
-                            </div>
-                            <form action="/cart/add" method="post" class="mt-2">
-                                <input type="hidden" name="productId" value="3">
-                                <input type="hidden" name="quantity" value="1">
-                                <button type="submit" class="w-full flex items-center justify-center gap-2 bg-surface-container text-on-surface font-semibold py-3 rounded-xl hover:bg-primary hover:text-white transition-colors duration-300 group/btn">
-                                    <span class="material-symbols-outlined text-lg group-hover/btn:-translate-y-1 transition-transform">add_shopping_cart</span>
-                                    Thêm vào giỏ
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-
-                    <!-- Product Card 4 -->
-                    <div class="group bg-white rounded-2xl shadow-sm border border-surface-variant overflow-hidden hover:shadow-xl hover:border-primary-fixed transition-all duration-300 flex flex-col h-full">
-                        <div class="relative aspect-square overflow-hidden bg-surface-container-high flex items-center justify-center p-4">
-                            <span class="material-symbols-outlined text-8xl text-surface-dim group-hover:scale-110 transition-transform duration-500">waves</span>
-                        </div>
-                        <div class="p-6 flex flex-col flex-grow">
-                            <div class="flex justify-between items-start mb-2 gap-2">
-                                <h3 class="text-lg font-bold text-on-surface line-clamp-2 title-font hover:text-primary transition-colors cursor-pointer">
-                                    Hàu Sữa Nhật Bản
-                                </h3>
-                                <button class="text-surface-dim hover:text-error transition-colors p-1 rounded-full hover:bg-error-container flex-shrink-0">
-                                    <span class="material-symbols-outlined text-[20px]">favorite</span>
-                                </button>
-                            </div>
-                            <div class="flex items-center gap-1 text-sm text-on-surface-variant mb-4">
-                                <span class="material-symbols-outlined text-orange-400 text-[16px] filled">star</span>
-                                <span class="font-medium">4.9</span>
-                                <span class="text-surface-dim mx-1">|</span>
-                                <span>Đã bán 340</span>
-                            </div>
-                            <div class="mt-auto"></div>
-                            <div class="flex flex-col gap-1 mb-4">
-                                <div class="flex items-baseline gap-2">
-                                    <span class="text-xl font-bold font-price text-primary">320.000 ₫</span>
-                                    <span class="text-sm text-on-surface-variant">/thùng 10 con</span>
-                                </div>
-                            </div>
-                            <form action="/cart/add" method="post" class="mt-2">
-                                <input type="hidden" name="productId" value="4">
-                                <input type="hidden" name="quantity" value="1">
-                                <button type="submit" class="w-full flex items-center justify-center gap-2 bg-surface-container text-on-surface font-semibold py-3 rounded-xl hover:bg-primary hover:text-white transition-colors duration-300 group/btn">
-                                    <span class="material-symbols-outlined text-lg group-hover/btn:-translate-y-1 transition-transform">add_shopping_cart</span>
-                                    Thêm vào giỏ
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-
                 </div>
-                
-                <!-- View All Button -->
-                <div class="mt-12 text-center">
-                    <a href="/products" class="inline-flex items-center justify-center rounded-full bg-white text-on-surface border-2 border-surface-variant px-8 py-3 text-base font-semibold shadow-sm hover:border-primary hover:text-primary transition-all duration-300">
-                        Xem tất cả sản phẩm
-                        <span class="material-symbols-outlined ml-2 text-sm">trending_flat</span>
-                    </a>
+                <div class="col-md-4">
+                    <div class="p-4 rounded-4 hover-lift">
+                        <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width:72px;height:72px;">
+                            <i class="bi bi-shield-check text-primary fs-2"></i>
+                        </div>
+                        <h5 class="fw-bold text-brand-secondary">An Toàn Vệ Sinh</h5>
+                        <p class="text-muted small">Quy trình bảo quản đạt chuẩn quốc tế, an tâm cho mọi bữa ăn gia đình.</p>
+                    </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- Newsletter / Value Proposition -->
-        <section class="border-t border-surface-variant bg-surface-container-low py-16">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="bg-gradient-to-br from-primary to-primary-container rounded-3xl overflow-hidden shadow-2xl relative">
-                    <!-- Decorative blobs -->
-                    <div class="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 rounded-full bg-white/10 blur-2xl"></div>
-                    <div class="absolute bottom-0 left-0 -ml-16 -mb-16 w-64 h-64 rounded-full bg-black/10 blur-2xl"></div>
-                    
-                    <div class="relative p-8 sm:p-12 md:p-16 text-center lg:text-left lg:flex flex-row items-center justify-between gap-12">
-                        <div class="lg:w-1/2 mb-8 lg:mb-0">
-                            <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-4 drop-shadow-sm">
-                                Ưu Đãi Độc Quyền Cho Thành Viên
-                            </h2>
-                            <p class="text-primary-fixed mb-0 text-lg">
-                                Đăng ký nhận bản tin để nhận ngay voucher giảm 10% cho đơn hàng đầu tiên và cập nhật sớm nhất về các lô hải sản đặc biệt.
-                            </p>
+    <!-- Featured Products -->
+    <section id="featured" class="container py-5">
+        <div class="d-flex justify-content-between align-items-end mb-5">
+            <div>
+                <span class="text-primary fw-bold text-uppercase small" style="letter-spacing: 2px;">LỰA CHỌN TỐT NHẤT</span>
+                <h2 class="font-serif fw-bold text-brand-secondary display-5 mt-1">Sản Phẩm Nổi Bật</h2>
+            </div>
+            <a href="/products" class="btn btn-outline-primary rounded-pill px-4">Khám phá tất cả <i class="bi bi-arrow-right"></i></a>
+        </div>
+
+        <div class="row g-4">
+            <div th:each="product : ${products}" class="col-6 col-md-4 col-lg-3">
+                <div class="card product-card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+                    <div class="position-relative overflow-hidden">
+                        <img th:if="${product.images != null and !product.images.isEmpty()}"
+                             th:with="primaryImg=${product.images.^[isPrimary != null and isPrimary]}"
+                             th:src="@{${primaryImg != null ? primaryImg.imageUrl : product.images[0].imageUrl}}"
+                             class="card-img-top" th:alt="${product.name}" style="aspect-ratio: 1/1; object-fit: cover; transition: transform 0.5s;"/>
+                        <img th:unless="${product.images != null and !product.images.isEmpty()}"
+                             src="https://via.placeholder.com/400x300?text=Seafood" class="card-img-top" alt="Seafood" style="aspect-ratio: 1/1; object-fit: cover;"/>
+                        
+                        <!-- Quick Add -->
+                        <form th:action="@{/cart/add}" method="post" class="position-absolute bottom-0 end-0 m-3 opacity-0 group-hover-visible transition-all">
+                             <input type="hidden" name="productId" th:value="${product.id}"/>
+                             <input type="hidden" name="name" th:value="${product.name}"/>
+                             <input type="hidden" name="price" th:value="${product.price}"/>
+                             <button type="submit" class="btn btn-primary rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width:40px;height:40px;">
+                                 <i class="bi bi-cart-plus"></i>
+                             </button>
+                        </form>
+                    </div>
+                    <div class="card-body p-3 d-flex flex-column">
+                        <div class="mb-2">
+                             <span class="badge bg-light text-primary border border-primary border-opacity-10 fw-bold" style="font-size:.6rem;" th:text="${product.category.name}">DANH MỤC</span>
                         </div>
-                        <div class="lg:w-1/2 w-full max-w-md mx-auto lg:mx-0">
-                            <form class="flex flex-col sm:flex-row gap-3">
-                                <input type="email" placeholder="Nhập email của bạn..." 
-                                       class="flex-1 bg-white/10 border border-white/20 text-white placeholder-white/60 focus:bg-white focus:text-on-surface focus:ring-2 focus:ring-white rounded-xl py-3 px-4 outline-none transition-all duration-300 backdrop-blur-md">
-                                <button type="submit" class="bg-white text-primary font-bold py-3 px-6 rounded-xl hover:bg-surface-container-low transition-colors shadow-lg whitespace-nowrap">
-                                    Đăng ký ngay
-                                </button>
-                            </form>
-                            <p class="text-white/60 text-xs mt-3 lg:text-left text-center">Chúng tôi cam kết không gửi spam.</p>
+                        <a th:href="@{'/products/' + ${product.id}}" class="text-decoration-none">
+                            <h6 class="card-title fw-bold mb-2 text-brand-secondary text-truncate" th:text="${product.name}">Tên SP</h6>
+                        </a>
+                        <div class="mt-auto d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="fw-bold text-primary fs-5" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + '₫'">0₫</span>
+                            </div>
+                            <div class="text-warning small" style="font-size: .7rem;">
+                                <i class="bi bi-star-fill"></i> 5.0
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-    </div>
+    <!-- Testimonials -->
+    <section class="bg-light py-5 mt-5">
+        <div class="container py-4">
+            <div class="text-center mb-5">
+                <span class="text-primary fw-bold text-uppercase small" style="letter-spacing: 2px;">CẢM NHẬN KHÁCH HÀNG</span>
+                <h2 class="font-serif fw-bold text-brand-secondary display-5 mt-1">Hơn 5000+ Tín Đồ Tin Tưởng</h2>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
+                        <div class="text-primary-container mb-3">
+                            <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                        </div>
+                        <p class="text-muted fst-italic mb-4">"Chất lượng tôm hùm ở đây thực sự khác biệt, rất chắc thịt và ngọt. Dịch vụ giao hàng nhanh và đóng gói chuyên nghiệp."</p>
+                        <div class="d-flex align-items-center gap-3">
+                            <img src="https://ui-avatars.com/api/?name=Hoang+Nam&background=0D4A7A&color=fff" class="rounded-circle" width="48" height="48" alt="User"/>
+                            <div>
+                                <h6 class="fw-bold mb-0">Anh Hoàng Nam</h6>
+                                <small class="text-muted text-uppercase" style="font-size: .6rem;">Giám đốc Điều hành</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
+                        <div class="text-primary-container mb-3">
+                            <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                        </div>
+                        <p class="text-muted fst-italic mb-4">"Tôi đã đặt hộp quà hải sản cho đối tác và họ rất ấn tượng. Sự tinh tế trong cách bài trí thực sự xứng tầm cao cấp."</p>
+                        <div class="d-flex align-items-center gap-3">
+                            <img src="https://ui-avatars.com/api/?name=Minh+Thu&background=F26522&color=fff" class="rounded-circle" width="48" height="48" alt="User"/>
+                            <div>
+                                <h6 class="fw-bold mb-0">Chị Minh Thư</h6>
+                                <small class="text-muted text-uppercase" style="font-size: .6rem;">Food Blogger</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
+                        <div class="text-primary-container mb-3">
+                            <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                        </div>
+                        <p class="text-muted fst-italic mb-4">"Cách The Culinary Curator kể chuyện về nguồn gốc từng loài hải sản làm tôi cảm thấy yên tâm và trân trọng hơn."</p>
+                        <div class="d-flex align-items-center gap-3">
+                            <img src="https://ui-avatars.com/api/?name=Quoc+Bao&background=0D4A7A&color=fff" class="rounded-circle" width="48" height="48" alt="User"/>
+                            <div>
+                                <h6 class="fw-bold mb-0">Anh Quốc Bảo</h6>
+                                <small class="text-muted text-uppercase" style="font-size: .6rem;">Chủ nhà hàng</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blog Section -->
+    <section class="container py-5 mt-5">
+        <div class="text-center mb-5">
+            <span class="text-primary fw-bold text-uppercase small" style="letter-spacing: 2px;">GÓC CHUYÊN GIA</span>
+            <h2 class="font-serif fw-bold text-brand-secondary display-5 mt-1 uppercase">Câu Chuyện Từ Đại Dương</h2>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-8">
+                <article class="card border-0 rounded-4 overflow-hidden h-100 shadow-sm">
+                    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDTzyKH94J3QJV-0vcdQl7Zd7dPYTGj4Sy-kUZjayhsFx0nnDvCk-4S0tCd0Zo6IpTGr3uDPdsprEhbelARvBCRiBf0XORZ6gOadD8eoGQEA9pM96uSWQeo0MCkMV4K4poJB7wZrCicbCxEic-fSasHxIHt01XSr6L1PwixuRqeFZvLYpp8BXrMge_qEHm4Rq496GmHfC95Y0E9lZChZbvzNos0hlXOmXv4uehgezMLtExVv1yqR-P8pApJ6RJd8pQrwNsPqKDhmKM" class="card-img-top" style="height: 350px; object-fit: cover;" alt="Cá Hồi"/>
+                    <div class="card-body p-4">
+                        <small class="text-muted text-uppercase fw-bold mb-2 d-block" style="font-size: .65rem; letter-spacing: 1px;">12 Tháng 10, 2024 • Hải Sản</small>
+                        <h3 class="font-serif fw-bold text-brand-secondary mb-3">Bí quyết chọn Cá Hồi King Salmon thượng hạng cho món Sashimi</h3>
+                        <p class="text-muted">Khám phá cách phân biệt độ tươi ngon qua vân mỡ và màu sắc của loài cá hồi đắt giá nhất thế giới...</p>
+                        <a href="#" class="btn btn-link text-primary p-0 fw-bold text-decoration-none">Đọc tiếp <i class="bi bi-arrow-right"></i></a>
+                    </div>
+                </article>
+            </div>
+            <div class="col-md-4">
+                <div class="d-flex flex-column gap-3">
+                    <div class="card border-0 shadow-sm rounded-4 p-3 d-flex flex-row gap-3">
+                        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBZr0eFws4ep-6VnHmz_c-iYNW-ek9pzE-2gH-rA5tVSllffhbpuvfgcRhKp_yuwdqbJony0qx4fK5nS1ki5sGVF3P9pIaxt_r_I-d6gVAeAZxpDPyDv8t934M2hZW_4_ORKlhPx_21ijpHX7YL_6TwQWCyV1zAmwfinZZSVwVFMt6EW4Z3DHM5VecFO3S1EEk_oshTQHd0n4e_AnXqy1_tM1NvffAfT64R3EDLdVIfzBXYxxqwvg_yrxr62ZXVnqZao_jVU5RzCk8" class="rounded-3" style="width: 80px; height: 80px; object-fit: cover;" alt="Sò điệp"/>
+                        <div>
+                            <small class="text-primary fw-bold text-uppercase" style="font-size: .6rem;">Công thức</small>
+                            <h6 class="fw-bold mb-1 mt-1">Sò Điệp áp chảo bơ tỏi</h6>
+                            <a href="#" class="small text-decoration-none">Chi tiết <i class="bi bi-chevron-right" style="font-size: .6rem;"></i></a>
+                        </div>
+                    </div>
+                    <div class="card border-0 shadow-sm rounded-4 p-3 d-flex flex-row gap-3">
+                        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCKYdHb4Zm6TlRILroQW5RjKE2yafWw_7dCtZ95ConLc3Ih5QprxSwJiAZ1N7_dpIEfzjx4fzwq9tKhfHt4Nb6yI3BxnbJcc02ePhFCcXKWnIxC35Nv_aPWj_u-xsWhdCx0WXsUE0StWMAXukfePhsQC_lb9xUijoM77xFf2Pq1GQjfUdhxgpKEn-2jWHgBpob5qGpPJ7mIU6rIsmGLhx1_RnYoyHhlxw8-ms-SszesuhB7f-ePy4bwxXSHW1ZgDIiqffK-tPRVR1M" class="rounded-3" style="width: 80px; height: 80px; object-fit: cover;" alt="Bền vững"/>
+                        <div>
+                            <small class="text-primary fw-bold text-uppercase" style="font-size: .6rem;">Bền vững</small>
+                            <h6 class="fw-bold mb-1 mt-1">Đánh bắt bền vững tại vùng biển Bắc</h6>
+                            <a href="#" class="small text-decoration-none">Chi tiết <i class="bi bi-chevron-right" style="font-size: .6rem;"></i></a>
+                        </div>
+                    </div>
+                    <div class="card border-0 shadow-sm rounded-4 p-3 d-flex flex-row gap-3">
+                        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCpq6YA8unB_IiEVC4kD_-3Vl11_hYSXMehaidmfpb23MKCkJIwjfsTtk5zEItK2hmfNcXFW2f16OB4RdDBZT8fZYWCOSh-liXRhxMMhgQYu40x_4B4QGG3NX-E20RTFNivlX4SvlO8YV6SSVwTENyPUtAlYxT2U8w5OVTRezJE95f-5_yYDNDrjz3tzvXhvFm1fT1xaAQiaijNdW6XTnche8_wdyITaypACzezujreS9-2CI810oh38gAJTGOrRnuC9L3GOjn3dpo" class="rounded-3" style="width: 80px; height: 80px; object-fit: cover;" alt="Vang"/>
+                        <div>
+                            <small class="text-primary fw-bold text-uppercase" style="font-size: .6rem;">Kiến thức</small>
+                            <h6 class="fw-bold mb-1 mt-1">Rượu vang trắng &amp; Hải sản tươi</h6>
+                            <a href="#" class="small text-decoration-none">Chi tiết <i class="bi bi-chevron-right" style="font-size: .6rem;"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>
 </body>
 </html>

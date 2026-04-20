@@ -1,0 +1,289 @@
+/* ============================================
+   The Culinary Curator — Custom Bootstrap Theme
+   ============================================ */
+
+:root {
+    /* Brand Colors */
+    --bs-primary: #F26522;
+    --bs-primary-rgb: 242, 101, 34;
+    --bs-secondary: #0D4A7A;
+    --bs-secondary-rgb: 13, 74, 122;
+    --bs-success: #198754;
+    --bs-warning: #E8C872;
+    --bs-danger: #ba1a1a;
+    --bs-light: #F4F7F5;
+    --bs-dark: #1B1C17;
+
+    /* Custom tokens */
+    --brand-primary: #F26522;
+    --brand-secondary: #0D4A7A;
+    --brand-gold: #E8C872;
+    --brand-bg: #F4F7F5;
+    --brand-surface: #FDFBF7;
+    --brand-on-surface: #1B1C17;
+    --brand-muted: #6c757d;
+}
+
+/* Override Bootstrap primary */
+.btn-primary {
+    --bs-btn-bg: var(--brand-primary);
+    --bs-btn-border-color: var(--brand-primary);
+    --bs-btn-hover-bg: #d95a1e;
+    --bs-btn-hover-border-color: #c4511a;
+    --bs-btn-active-bg: #c4511a;
+    --bs-btn-active-border-color: #b04917;
+}
+
+.btn-outline-primary {
+    --bs-btn-color: var(--brand-primary);
+    --bs-btn-border-color: var(--brand-primary);
+    --bs-btn-hover-bg: var(--brand-primary);
+    --bs-btn-hover-border-color: var(--brand-primary);
+}
+
+.bg-primary { background-color: var(--brand-primary) !important; }
+.text-primary { color: var(--brand-primary) !important; }
+.border-primary { border-color: var(--brand-primary) !important; }
+
+/* Secondary = Deep Blue */
+.bg-brand-secondary { background-color: var(--brand-secondary) !important; }
+.text-brand-secondary { color: var(--brand-secondary) !important; }
+
+/* Fonts */
+body {
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    background-color: var(--brand-bg);
+    color: var(--brand-on-surface);
+}
+
+.font-serif {
+    font-family: 'Playfair Display', serif;
+}
+
+/* ============================================
+   ADMIN SIDEBAR
+   ============================================ */
+.admin-sidebar {
+    background-color: var(--brand-secondary);
+    width: 260px;
+    min-height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1040;
+    transition: all 0.3s;
+}
+
+.admin-sidebar .nav-link {
+    color: rgba(255, 255, 255, 0.7);
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.admin-sidebar .nav-link:hover {
+    color: #fff;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.admin-sidebar .nav-link.active {
+    color: #fff;
+    background-color: var(--brand-primary);
+    box-shadow: 0 4px 12px rgba(242, 101, 34, 0.3);
+}
+
+.admin-sidebar .nav-link i {
+    font-size: 1.25rem;
+    width: 1.5rem;
+    text-align: center;
+}
+
+/* Admin content offset */
+.admin-content {
+    margin-left: 260px;
+    min-height: 100vh;
+}
+
+/* ============================================
+   CARDS & STATS
+   ============================================ */
+.stat-card {
+    border: none;
+    border-radius: 1rem;
+    transition: all 0.3s;
+    overflow: hidden;
+}
+
+.stat-card:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
+}
+
+.stat-card .stat-icon {
+    font-size: 2.5rem;
+    opacity: 0.15;
+    position: absolute;
+    right: 1rem;
+    bottom: 0.5rem;
+}
+
+.stat-card .stat-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--brand-secondary);
+}
+
+.stat-card-accent {
+    background-color: var(--brand-secondary);
+    color: #fff;
+}
+
+.stat-card-accent .stat-value {
+    color: #fff;
+}
+
+/* ============================================
+   TABLE
+   ============================================ */
+.table-modern thead th {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--brand-muted);
+    border-bottom: 2px solid #e9ecef;
+    padding: 1rem 1.25rem;
+}
+
+.table-modern tbody td {
+    padding: 1rem 1.25rem;
+    vertical-align: middle;
+}
+
+.table-modern tbody tr {
+    transition: background-color 0.2s;
+}
+
+.table-modern tbody tr:hover {
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+/* ============================================
+   MODAL ENHANCEMENTS
+   ============================================ */
+.modal-header-brand {
+    background-color: var(--brand-secondary);
+    color: #fff;
+    border-bottom: none;
+}
+
+.modal-header-brand .btn-close {
+    filter: invert(1);
+}
+
+/* ============================================
+   BADGES
+   ============================================ */
+.badge-active {
+    background-color: #d1fae5;
+    color: #065f46;
+    font-weight: 600;
+    font-size: 0.7rem;
+}
+
+.badge-inactive {
+    background-color: #fee2e2;
+    color: #991b1b;
+    font-weight: 600;
+    font-size: 0.7rem;
+}
+
+/* ============================================
+   AUTH PAGES
+   ============================================ */
+.auth-hero {
+    background: linear-gradient(to right, rgba(10, 25, 41, 0.5), rgba(10, 25, 41, 0.8));
+}
+
+/* ============================================
+   CUSTOMER HEADER
+   ============================================ */
+.customer-navbar {
+    background-color: #fff !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.customer-navbar .navbar-brand {
+    color: var(--brand-primary);
+    font-weight: 700;
+    font-size: 1.25rem;
+}
+
+/* ============================================
+   PRODUCT CARDS (Customer)
+   ============================================ */
+.product-card {
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: 1rem;
+    overflow: hidden;
+    transition: all 0.3s;
+}
+
+.product-card:hover {
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+    transform: translateY(-4px);
+}
+
+.product-card .card-img-top {
+    height: 220px;
+    object-fit: cover;
+    transition: transform 0.5s;
+}
+
+.product-card:hover .card-img-top {
+    transform: scale(1.05);
+}
+
+/* ============================================
+   MISC
+   ============================================ */
+
+/* Ocean Spray Gradient */
+.bg-ocean-spray {
+    background: linear-gradient(135deg, #a63b00 0%, #F26522 100%);
+}
+
+/* Breadcrumb custom */
+.breadcrumb-custom {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--brand-muted);
+}
+
+.breadcrumb-custom .active {
+    color: var(--brand-primary);
+}
+
+/* Image preview grid */
+.img-preview-card {
+    position: relative;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    border: 2px solid #dee2e6;
+}
+
+.img-preview-card.is-primary {
+    border-color: var(--brand-primary);
+    box-shadow: 0 4px 12px rgba(242, 101, 34, 0.2);
+}
+
+.img-preview-card img {
+    height: 120px;
+    width: 100%;
+    object-fit: cover;
+}

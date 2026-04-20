@@ -18,6 +18,6 @@ public class HomeController {
     @GetMapping("/")
     public String index(Model model) {
         model.addAttribute("products", productService.search(null, null, true, null, "id", "desc"));
-        return "user/home";
+        return "index";
     }
 }

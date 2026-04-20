@@ -1,225 +1,113 @@
 <!DOCTYPE html>
-<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+<html xmlns:th="http://www.thymeleaf.org" lang="vi"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/customer-layout}">
-<head>
-    <title>Giỏ Hàng Của Bạn</title>
-</head>
+<head><title>Giỏ Hàng</title></head>
 <body>
-    <div layout:fragment="content" class="flex-grow pt-10 pb-20 px-4 md:px-12 max-w-7xl mx-auto w-full">
+<div layout:fragment="content" class="container py-5">
 
-        <style>
-            .no-spinners::-webkit-inner-spin-button, 
-            .no-spinners::-webkit-outer-spin-button { 
-                -webkit-appearance: none; 
-                margin: 0; 
-            }
-            .no-spinners {
-                -moz-appearance: textfield;
-            }
-            .glass-effect {
-                backdrop-filter: blur(20px);
-                -webkit-backdrop-filter: blur(20px);
-            }
-            .no-scrollbar::-webkit-scrollbar { display: none; }
-            .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        </style>
+    <h1 class="font-serif fw-bold text-brand-secondary mb-1" style="font-size:2rem;">
+        Giỏ Hàng Của Bạn <span class="text-muted fw-normal fs-5" th:text="'(' + ${#lists.size(cartItems)} + ' sản phẩm)'"></span>
+    </h1>
+    <hr class="mb-4"/>
 
-        <h1 class="text-4xl font-extrabold tracking-tight mb-10 text-on-background">
-            Giỏ Hàng Của Bạn <span class="text-on-surface-variant font-normal text-2xl" th:text="'(' + ${#lists.size(cartItems)} + ' sản phẩm)'"></span>
-        </h1>
-
-        <!-- Messages -->
-        <div th:if="${error}" class="bg-error-container text-error p-4 rounded-xl text-sm relative mb-6 flex justify-between items-center shadow-sm">
-            <span th:text="${error}"></span>
-            <button onclick="this.parentElement.style.display='none'" class="text-error hover:opacity-80 transition-opacity">
-                <span class="material-symbols-outlined text-sm">close</span>
-            </button>
-        </div>
-        <div th:if="${success}" class="bg-green-100 text-green-800 p-4 rounded-xl text-sm relative mb-6 flex justify-between items-center shadow-sm">
-            <span th:text="${success}"></span>
-            <button onclick="this.parentElement.style.display='none'" class="text-green-800 hover:opacity-80 transition-opacity">
-                <span class="material-symbols-outlined text-sm">close</span>
-            </button>
-        </div>
-        <div th:if="${param.empty}" class="bg-primary-container text-on-primary-container p-4 rounded-xl text-sm relative mb-6 flex justify-between items-center shadow-sm">
-            <span>Giỏ hàng đang trống, hãy thêm sản phẩm trước khi thanh toán.</span>
-            <button onclick="this.parentElement.style.display='none'" class="text-on-primary-container hover:opacity-80 transition-opacity">
-                <span class="material-symbols-outlined text-sm">close</span>
-            </button>
-        </div>
-
-        <!-- Empty state -->
-        <div th:if="${#lists.isEmpty(cartItems)}" class="text-center py-20 bg-surface-container-lowest rounded-2xl shadow-sm border border-outline-variant/15 mt-8">
-            <span class="material-symbols-outlined text-7xl text-surface-dim mb-6">shopping_bag</span>
-            <h2 class="text-3xl font-black text-on-surface mb-3">Giỏ hàng trống</h2>
-            <p class="text-on-surface-variant mb-8 mx-auto max-w-md">Bạn chưa có sản phẩm nào trong giỏ hàng. Hãy lướt qua gian hàng Hải Sản tuyệt hảo của chúng tôi!</p>
-            <a href="/" class="inline-flex items-center gap-2 bg-primary text-white font-bold px-8 py-4 rounded-full hover:bg-orange-600 hover:scale-[1.01] transition-all shadow-lg shadow-primary/20">
-                <span class="material-symbols-outlined text-lg">store</span>
-                Mua Sắm Ngay
-            </a>
-        </div>
-
-        <!-- Cart View -->
-        <div th:unless="${#lists.isEmpty(cartItems)}" class="grid grid-cols-1 lg:grid-cols-10 gap-12">
-            <!-- LEFT COLUMN: Cart Items -->
-            <div class="lg:col-span-7 space-y-6">
-                <!-- Iterating through Cart Items -->
-                <div th:each="item : ${cartItems}" class="group flex flex-col md:flex-row gap-6 p-6 rounded-xl bg-surface-container-lowest hover:shadow-md transition-all duration-300 border border-transparent hover:border-outline-variant/20">
-                    
-                    <div class="w-full md:w-40 h-40 rounded-lg overflow-hidden shrink-0 relative bg-surface-variant flex items-center justify-center">
-                        <img th:if="${!#strings.isEmpty(item.imageUrl)}" th:src="${item.imageUrl}" th:alt="${item.name}" class="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-105"/>
-                        <span th:if="${#strings.isEmpty(item.imageUrl)}" class="material-symbols-outlined text-4xl text-outline-variant opacity-50">image</span>
-                        
-                        <span th:if="${item.itemType == 'COMBO'}" class="absolute top-2 left-2 bg-tertiary text-on-tertiary text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider">Combo</span>
-                    </div>
-
-                    <div class="flex flex-col justify-between flex-grow py-1">
-                        <div class="flex justify-between items-start">
-                            <div class="pr-4">
-                                <h3 class="text-xl font-bold text-on-surface line-clamp-2" th:text="${item.name}">Sản Phẩm</h3>
-                                <p class="text-sm text-on-surface-variant mt-1 font-price">
-                                    <span th:text="${#numbers.formatDecimal(item.unitPrice, 0, 'COMMA', 0, 'POINT')} + ' ₫'">0 ₫</span> / đơn vị
-                                </p>
-                            </div>
-                            
-                            <!-- Remove Button -->
-                            <form th:action="@{/cart/remove/{key}(key=${item.itemKey})}" method="post">
-                                <button type="submit" class="material-symbols-outlined text-outline hover:text-error transition-colors" title="Xoá khỏi giỏ">delete</button>
-                            </form>
-                        </div>
-                        
-                        <div class="flex justify-between items-end mt-4">
-                            <!-- Update Quantity Form -->
-                            <form th:action="@{/cart/update/{key}(key=${item.itemKey})}" method="post" class="flex items-center gap-2 bg-surface-container rounded-full px-3 py-1 border border-outline-variant/10">
-                                <button type="button" onclick="this.nextElementSibling.stepDown(); this.form.submit()" class="material-symbols-outlined py-1 text-sm text-on-surface-variant hover:text-primary transition-colors">remove</button>
-                                <input type="number" name="quantity" th:value="${item.quantity}" min="1" max="99" 
-                                       class="no-spinners w-10 text-center bg-transparent font-bold text-sm outline-none border-none p-0 focus:ring-0 text-on-surface"
-                                       onchange="this.form.submit()">
-                                <button type="button" onclick="this.previousElementSibling.stepUp(); this.form.submit()" class="material-symbols-outlined py-1 text-sm text-on-surface-variant hover:text-primary transition-colors">add</button>
-                            </form>
-
-                            <span class="font-price text-2xl font-bold text-on-background" th:text="${#numbers.formatDecimal(item.subtotal, 0, 'COMMA', 0, 'POINT')} + ' ₫'">0 ₫</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- RIGHT COLUMN: Order Summary -->
-            <div class="lg:col-span-3">
-                <div class="sticky top-28 space-y-6">
-                    <div class="bg-white p-8 rounded-2xl shadow-sm border border-outline-variant/15">
-                        <h2 class="text-xl font-bold mb-6 border-b border-surface-variant pb-4">Tóm tắt đơn hàng</h2>
-                        
-                        <div class="space-y-4 mb-8">
-                            <div class="flex justify-between text-on-surface-variant">
-                                <span>Tạm tính</span>
-                                <span class="font-price font-medium" th:text="${#numbers.formatDecimal(totalPrice, 0, 'COMMA', 0, 'POINT')} + ' ₫'">0 ₫</span>
-                            </div>
-                            <div class="flex justify-between text-on-surface-variant italic">
-                                <span>Phí vận chuyển</span>
-                                <span class="text-sm">Tính khi thanh toán</span>
-                            </div>
-                        </div>
-
-                        <div class="flex justify-between items-end mb-8 pt-4 border-t border-surface-variant">
-                            <span class="text-lg font-bold">Tổng cộng</span>
-                            <span class="font-price text-3xl font-extrabold text-primary" th:text="${#numbers.formatDecimal(totalPrice, 0, 'COMMA', 0, 'POINT')} + ' ₫'">0 ₫</span>
-                        </div>
-
-                        <div class="space-y-4">
-                            <!-- Currently Coupon is applied only in Checkout page, so we leave it as an informational or we can link directly to checkout -->
-                            <a href="/checkout" class="w-full flex justify-center items-center bg-primary text-white py-4 rounded-xl font-bold text-lg shadow-lg shadow-primary/20 hover:bg-primary/90 hover:scale-[1.01] active:scale-95 transition-all text-center">
-                                Tiến Hành Thanh Toán
-                            </a>
-                        </div>
-                    </div>
-                    
-                    <div class="p-6 bg-secondary-container/10 rounded-2xl flex gap-4 items-start border border-secondary-container/20">
-                        <span class="material-symbols-outlined text-secondary" data-icon="local_shipping">local_shipping</span>
-                        <p class="text-sm text-secondary font-medium">Miễn phí giao hàng cho đơn hàng hải sản trên 5,000,000₫ tại nội thành.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- CROSS-SELL Section -->
-        <section class="mt-24" th:unless="${#lists.isEmpty(cartItems)}">
-            <div class="flex justify-between items-end mb-8">
-                <div>
-                    <h2 class="text-3xl font-extrabold text-on-background">Bạn có thể thích</h2>
-                    <p class="text-on-surface-variant mt-2">Phụ kiện và đồ uống đi kèm hoàn hảo cho bữa tiệc của bạn</p>
-                </div>
-                <div class="flex gap-2">
-                    <button class="w-10 h-10 rounded-full border border-outline-variant flex items-center justify-center hover:bg-surface-container transition-colors" onclick="document.getElementById('cross-sell-container').scrollBy({left: -300, behavior: 'smooth'})">
-                        <span class="material-symbols-outlined">chevron_left</span>
-                    </button>
-                    <button class="w-10 h-10 rounded-full border border-outline-variant flex items-center justify-center hover:bg-surface-container transition-colors" onclick="document.getElementById('cross-sell-container').scrollBy({left: 300, behavior: 'smooth'})">
-                        <span class="material-symbols-outlined">chevron_right</span>
-                    </button>
-                </div>
-            </div>
-
-            <div id="cross-sell-container" class="flex gap-6 overflow-x-auto pb-8 snap-x no-scrollbar">
-                <!-- Static Cross-sell Items as presented in UI -->
-                <div class="min-w-[280px] group snap-start bg-surface-container-lowest rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-500 border border-outline-variant/10 cursor-pointer">
-                    <div class="h-48 overflow-hidden relative">
-                        <img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCud9nTZ-WPkM_NPz8ju6cnNOFoV61wGMx7pYJnFJMz0GkHU3zAtye6W4aMI0o7x-drV8-FVwuEp9etNi8pstbwI2MG1IEQSi3lfzG3uJYUYJHfBs_N6DhGOC-e5j6mgq_TjbcDEcLNfk8HN_mwLkCBCepL7q9foLq8g0RRioW4QLo0UsQfX5IUM_xZADfY27hI_f-2f61iLtDh_jtAcqdNOZUraD94v-QJC_Fui91OSBYzcp5JYTwCj8n-supllp_IEZN0UdW2d2k" alt="Vang"/>
-                        <button class="absolute bottom-3 right-3 w-10 h-10 rounded-full glass-effect bg-white/80 flex items-center justify-center hover:bg-primary transition-all group/btn">
-                            <span class="material-symbols-outlined text-on-background group-hover/btn:text-white">add_shopping_cart</span>
-                        </button>
-                    </div>
-                    <div class="p-5">
-                        <p class="text-[10px] font-bold text-secondary uppercase tracking-widest mb-1">Đồ uống</p>
-                        <h4 class="font-bold text-on-surface truncate">Vang trắng Sauvignon Blanc</h4>
-                        <p class="font-price text-lg font-bold text-primary mt-2">850,000₫</p>
-                    </div>
-                </div>
-
-                <div class="min-w-[280px] group snap-start bg-surface-container-lowest rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-500 border border-outline-variant/10 cursor-pointer">
-                    <div class="h-48 overflow-hidden relative">
-                        <img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBisg-v79fffq9-fC7cSR-ve8Bs1Tgqfe2feP3-zqQ0ssG31kox8RCQ8H60G1WL5F_tlWdnKNU304jZQ9Th0V7A44J82WlCIUUkqxk6y7ojB7d5RF5HJpo75GOe01FYwJm1v24Zv-82q-_tzT7jQAVQC2O1FSl0p1BkYgcRrmemOtsZvKNuw7o5lF7tlWdwN0hC7X3qF-Oml6YOn5Q7m7UsRfFZbWB3oxC0mzGC1HYbf6-OTHmxQ6W_xhzd_IhXJezIhzjQ2d0CsZI" alt="Sốt"/>
-                        <button class="absolute bottom-3 right-3 w-10 h-10 rounded-full glass-effect bg-white/80 flex items-center justify-center hover:bg-primary transition-all group/btn">
-                            <span class="material-symbols-outlined text-on-background group-hover/btn:text-white">add_shopping_cart</span>
-                        </button>
-                    </div>
-                    <div class="p-5">
-                        <p class="text-[10px] font-bold text-secondary uppercase tracking-widest mb-1">Gia vị</p>
-                        <h4 class="font-bold text-on-surface truncate">Sốt Chanh Dây Mù Tạt</h4>
-                        <p class="font-price text-lg font-bold text-primary mt-2">120,000₫</p>
-                    </div>
-                </div>
-
-                <div class="min-w-[280px] group snap-start bg-surface-container-lowest rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-500 border border-outline-variant/10 cursor-pointer">
-                    <div class="h-48 overflow-hidden relative">
-                        <img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAWhlk1a-y78O8BSMDkp57zEw9dsFIK6A6omloNgmqfPbIdmSpVeL5kDsjk6GCpHXnWORswT9LEylbeBjvVnx3C66I4pvDp_zB50KZ5uc4CFfe38sx6gkuMOgqM_mQB0eXC7YbZhBYt7a8WP8rspoRXRsjFLj1SOI9ScGOnaeTF7mAOHIRH01e5ZJjzpyoqvLeICtEpaoVk7mer97Z0CoI0VyORIqJAswvJhH1nuYpbRuzf3Re2HOaBYCS3Blmha-QK82sZcvVWStg" alt="Rau củ"/>
-                        <button class="absolute bottom-3 right-3 w-10 h-10 rounded-full glass-effect bg-white/80 flex items-center justify-center hover:bg-primary transition-all group/btn">
-                            <span class="material-symbols-outlined text-on-background group-hover/btn:text-white">add_shopping_cart</span>
-                        </button>
-                    </div>
-                    <div class="p-5">
-                        <p class="text-[10px] font-bold text-secondary uppercase tracking-widest mb-1">Kèm theo</p>
-                        <h4 class="font-bold text-on-surface truncate">Rau Củ Nướng Thảo Mộc</h4>
-                        <p class="font-price text-lg font-bold text-primary mt-2">150,000₫</p>
-                    </div>
-                </div>
-
-                <div class="min-w-[280px] group snap-start bg-surface-container-lowest rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-500 border border-outline-variant/10 cursor-pointer">
-                    <div class="h-48 overflow-hidden relative">
-                        <img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB3ZEMTNTKVzThzXd4d7XHXYdcK8ExeQrMoOrg4qujddH6HRilzoj-GEx2KzAna3JrtISySC8UbiwgBemnru8qgM_VsbnjBxaPGVyMfyNBTiy2nbC-Ki8kps6eT4oIIatMed-nZMPKKYA1ZuV6s5eJ64QdWOsBJP-k-2tKrIv9abvVqAm4RZdM1MLEwegua1C3nbWndWh30x5NXF_j9228a-8MlPQd6KWdmLIXZdeByKvgmnerru9OfKCzCKML4n0UUZCcRc71a_qc" alt="Bia"/>
-                        <button class="absolute bottom-3 right-3 w-10 h-10 rounded-full glass-effect bg-white/80 flex items-center justify-center hover:bg-primary transition-all group/btn">
-                            <span class="material-symbols-outlined text-on-background group-hover/btn:text-white">add_shopping_cart</span>
-                        </button>
-                    </div>
-                    <div class="p-5">
-                        <p class="text-[10px] font-bold text-secondary uppercase tracking-widest mb-1">Đồ uống</p>
-                        <h4 class="font-bold text-on-surface truncate">Bia Thủ Công Stout</h4>
-                        <p class="font-price text-lg font-bold text-primary mt-2">95,000₫</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
+    <!-- Messages -->
+    <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <span th:text="${error}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
+    <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <span th:text="${success}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    <div th:if="${param.empty}" class="alert alert-warning alert-dismissible fade show" role="alert">
+        Giỏ hàng đang trống, hãy thêm sản phẩm trước khi thanh toán.
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <!-- Empty State -->
+    <div th:if="${#lists.isEmpty(cartItems)}" class="text-center py-5">
+        <i class="bi bi-bag display-1 text-muted opacity-25"></i>
+        <h3 class="fw-bold mt-3">Giỏ hàng trống</h3>
+        <p class="text-muted mb-4">Bạn chưa có sản phẩm nào trong giỏ hàng.</p>
+        <a href="/" class="btn btn-primary btn-lg rounded-pill fw-bold px-5"><i class="bi bi-shop me-2"></i>Mua Sắm Ngay</a>
+    </div>
+
+    <!-- Cart Content -->
+    <div th:unless="${#lists.isEmpty(cartItems)}" class="row g-4">
+        <!-- Items -->
+        <div class="col-lg-8">
+            <div th:each="item : ${cartItems}" class="card border-0 shadow-sm rounded-3 mb-3">
+                <div class="card-body d-flex gap-3 align-items-center">
+                    <!-- Image -->
+                    <div class="rounded-3 overflow-hidden bg-light flex-shrink-0" style="width:100px;height:100px;">
+                        <img th:if="${!#strings.isEmpty(item.imageUrl)}" th:src="${item.imageUrl}" th:alt="${item.name}" class="w-100 h-100" style="object-fit:cover;"/>
+                        <div th:if="${#strings.isEmpty(item.imageUrl)}" class="w-100 h-100 d-flex align-items-center justify-content-center text-muted">
+                            <i class="bi bi-image fs-3"></i>
+                        </div>
+                    </div>
+                    <!-- Info -->
+                    <div class="flex-grow-1">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h6 class="fw-bold mb-1" th:text="${item.name}">SP</h6>
+                                <small class="text-muted" th:text="${#numbers.formatDecimal(item.unitPrice, 0, 'COMMA', 0, 'POINT')} + ' ₫ / đơn vị'">0₫</small>
+                                <span th:if="${item.itemType == 'COMBO'}" class="badge bg-info ms-2">Combo</span>
+                            </div>
+                            <form th:action="@{/cart/remove}" method="post">
+                                <input type="hidden" name="itemKey" th:value="${item.itemKey}"/>
+                                <button type="submit" class="btn btn-sm btn-outline-danger rounded-circle" style="width:32px;height:32px;" title="Xóa">
+                                    <i class="bi bi-trash" style="font-size:.75rem;"></i>
+                                </button>
+                            </form>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <!-- Quantity -->
+                            <form th:action="@{/cart/update}" method="post" class="d-flex align-items-center gap-2">
+                                <input type="hidden" name="itemKey" th:value="${item.itemKey}"/>
+                                <div class="input-group input-group-sm" style="width:120px;">
+                                    <button type="submit" class="btn btn-outline-secondary" onclick="this.parentNode.querySelector('input[name=quantity]').stepDown()">−</button>
+                                    <input type="number" name="quantity" th:value="${item.quantity}" min="1" max="99" class="form-control text-center" onchange="this.form.submit()"/>
+                                    <button type="submit" class="btn btn-outline-secondary" onclick="this.parentNode.querySelector('input[name=quantity]').stepUp()">+</button>
+                                </div>
+                            </form>
+                            <span class="fw-bold fs-5" th:text="${#numbers.formatDecimal(item.subtotal, 0, 'COMMA', 0, 'POINT')} + ' ₫'">0₫</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm rounded-3 sticky-top" style="top:5rem;">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold border-bottom pb-3 mb-3">Tóm tắt đơn hàng</h5>
+                    <div class="d-flex justify-content-between mb-2 text-muted">
+                        <span>Tạm tính</span>
+                        <span class="fw-medium" th:text="${#numbers.formatDecimal(totalPrice, 0, 'COMMA', 0, 'POINT')} + ' ₫'">0₫</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3 text-muted fst-italic">
+                        <span>Phí vận chuyển</span>
+                        <span class="small">Tính khi thanh toán</span>
+                    </div>
+                    <hr/>
+                    <div class="d-flex justify-content-between align-items-end mb-4">
+                        <span class="fw-bold fs-6">Tổng cộng</span>
+                        <span class="fw-bold text-primary" style="font-size:1.5rem;" th:text="${#numbers.formatDecimal(totalPrice, 0, 'COMMA', 0, 'POINT')} + ' ₫'">0₫</span>
+                    </div>
+                    <a href="/checkout" class="btn btn-primary btn-lg w-100 fw-bold rounded-3">Tiến Hành Thanh Toán</a>
+                </div>
+            </div>
+            <div class="card border-0 bg-light rounded-3 mt-3">
+                <div class="card-body d-flex gap-3 align-items-start small">
+                    <i class="bi bi-truck text-brand-secondary fs-5"></i>
+                    <p class="mb-0 text-brand-secondary fw-medium">Miễn phí giao hàng cho đơn hải sản trên 5,000,000₫ nội thành.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
 </body>
 </html>
