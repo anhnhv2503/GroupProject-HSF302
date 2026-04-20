@@ -1,23 +1,17 @@
-<div class="w-full lg:w-64 flex-shrink-0" th:fragment="sidebar">
+<div class="w-full lg:w-64 flex-shrink-0" th:fragment="sidebar(active)">
     <div class="bg-white rounded-2xl shadow-sm border border-outline-variant/10 overflow-hidden">
-        <!-- User Info -->
         <div class="p-6 text-center border-b border-outline-variant/10">
             <h3 class="font-bold text-on-surface" th:text="${user?.fullName ?: 'Khách hàng'}">Khách hàng</h3>
             <p class="text-xs text-on-surface-variant mt-1" th:text="${user?.email}">email@example.com</p>
         </div>
-        <!-- Navigation -->
         <nav class="p-2">
-            <a href="/profile" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-primary bg-primary-fixed/30">
+            <a href="/profile" th:class="${active == 'profile'} ? 'flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-primary bg-primary-fixed/30' : 'flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-on-surface-variant hover:bg-surface-container transition-colors'">
                 <span class="material-symbols-outlined text-sm">person</span>
                 Thông tin cá nhân
             </a>
-            <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-on-surface-variant hover:bg-surface-container transition-colors">
-                <span class="material-symbols-outlined text-sm">receipt_long</span>
-                Lịch sử đơn hàng
-            </a>
-            <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-on-surface-variant hover:bg-surface-container transition-colors">
-                <span class="material-symbols-outlined text-sm">notifications</span>
-                Thông báo
+            <a href="/profile/address" th:class="${active == 'address'} ? 'flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-primary bg-primary-fixed/30' : 'flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-on-surface-variant hover:bg-surface-container transition-colors'">
+                <span class="material-symbols-outlined text-sm">location_on</span>
+                Địa chỉ
             </a>
         </nav>
     </div>

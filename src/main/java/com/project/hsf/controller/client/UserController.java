@@ -1,17 +1,17 @@
 package com.project.hsf.controller.client;
 
 import com.project.hsf.entity.User;
+import com.project.hsf.entity.UserAddress;
+import com.project.hsf.service.AddressService;
 import com.project.hsf.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/profile")
@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class UserController {
 
     private final UserService userService;
+    private final AddressService addressService;
     private final PasswordEncoder passwordEncoder;
 
     @GetMapping
@@ -27,6 +28,16 @@ public class UserController {
         User user = userService.findByUsername(username);
         model.addAttribute("user", user);
         return "user/profile";
+    }
+
+    @GetMapping("/address")
+    public String viewAddresses(Authentication authentication, Model model) {
+        String username = authentication.getName();
+        User user = userService.findByUsername(username);
+        List<UserAddress> addresses = addressService.getAddressesByUser(user);
+        model.addAttribute("user", user);
+        model.addAttribute("addresses", addresses);
+        return "user/address";
     }
 
     @PostMapping("/update")
@@ -105,5 +116,78 @@ public class UserController {
         model.addAttribute("success", "Đổi mật khẩu thành công!");
         model.addAttribute("user", userService.findByUsername(username));
         return "user/profile";
+    }
+
+    @PostMapping("/address/create")
+    public String createAddress(
+            Authentication authentication,
+            @RequestParam String phone,
+            @RequestParam String addressLine,
+            @RequestParam(required = false) String ward,
+            @RequestParam(required = false) String city,
+            @RequestParam(required = false, defaultValue = "false") Boolean isDefault,
+            Model model) {
+        String username = authentication.getName();
+        User user = userService.findByUsername(username);
+
+        addressService.createAddress(user, phone, addressLine, ward, city, isDefault);
+        
+        model.addAttribute("user", user);
+        model.addAttribute("success", "Thêm địa chỉ thành công!");
+        model.addAttribute("addresses", addressService.getAddressesByUser(user));
+        return "user/address";
+    }
+
+    @PostMapping("/address/update")
+    public String updateAddress(
+            Authentication authentication,
+            @RequestParam Long addressId,
+            @RequestParam String phone,
+            @RequestParam String addressLine,
+            @RequestParam(required = false) String ward,
+            @RequestParam(required = false) String city,
+            @RequestParam(required = false, defaultValue = "false") Boolean isDefault,
+            Model model) {
+        String username = authentication.getName();
+        User user = userService.findByUsername(username);
+
+        addressService.updateAddress(addressId, user, phone, addressLine, ward, city, isDefault);
+        
+        model.addAttribute("user", user);
+        model.addAttribute("success", "Cập nhật địa chỉ thành công!");
+        model.addAttribute("addresses", addressService.getAddressesByUser(user));
+        return "user/address";
+    }
+
+    @PostMapping("/address/delete")
+    public String deleteAddress(
+            Authentication authentication,
+            @RequestParam Long addressId,
+            Model model) {
+        String username = authentication.getName();
+        User user = userService.findByUsername(username);
+
+        addressService.deleteAddress(addressId, user);
+        
+        model.addAttribute("user", user);
+        model.addAttribute("success", "Xóa địa chỉ thành công!");
+        model.addAttribute("addresses", addressService.getAddressesByUser(user));
+        return "user/address";
+    }
+
+    @PostMapping("/address/set-default")
+    public String setDefaultAddress(
+            Authentication authentication,
+            @RequestParam Long addressId,
+            Model model) {
+        String username = authentication.getName();
+        User user = userService.findByUsername(username);
+
+        addressService.setDefaultAddress(addressId, user);
+        
+        model.addAttribute("user", user);
+        model.addAttribute("success", "Đặt địa chỉ mặc định thành công!");
+        model.addAttribute("addresses", addressService.getAddressesByUser(user));
+        return "user/address";
     }
 }
