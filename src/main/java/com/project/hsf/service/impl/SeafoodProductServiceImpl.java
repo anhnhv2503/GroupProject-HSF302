@@ -38,9 +38,11 @@ public class SeafoodProductServiceImpl implements SeafoodProductService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<SeafoodProduct> search(String keyword, Long categoryId, Boolean active, Boolean lowStock, String sortBy, String sortDir) {
+    public List<SeafoodProduct> search(String keyword, Long categoryId, Boolean active, Boolean lowStock, String sortBy,
+            String sortDir) {
         Sort sort = Sort.by(sortDir.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
-        return seafoodProductRepository.findAll(SeafoodProductSpecification.filter(keyword, categoryId, active, lowStock), sort);
+        return seafoodProductRepository
+                .findAll(SeafoodProductSpecification.filter(keyword, categoryId, active, lowStock), sort);
     }
 
     @Override
@@ -52,10 +54,12 @@ public class SeafoodProductServiceImpl implements SeafoodProductService {
 
     @Override
     @Transactional
-    public SeafoodProduct save(SeafoodProduct seafoodProduct, Long categoryId, List<MultipartFile> imageFiles, Integer primaryImageIndex) {
+    public SeafoodProduct save(SeafoodProduct seafoodProduct, Long categoryId, List<MultipartFile> imageFiles,
+            Integer primaryImageIndex) {
         SeafoodProduct productToSave = seafoodProduct;
 
-        // If it's an update, handle image replacement and property copying to managed entity
+        // If it's an update, handle image replacement and property copying to managed
+        // entity
         if (seafoodProduct.getId() != null) {
             SeafoodProduct existing = seafoodProductRepository.findById(seafoodProduct.getId()).orElse(null);
             if (existing != null) {
