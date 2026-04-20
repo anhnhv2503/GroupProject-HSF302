@@ -20,4 +20,10 @@ public class HomeController {
         model.addAttribute("products", productService.search(null, null, true, null, "id", "desc"));
         return "index";
     }
+
+    @GetMapping("/home")
+    public String home(Model model) {
+        model.addAttribute("products", productService.search(null, null, true, null, "id", "desc"));
+        return "redirect:/";
+    }
 }

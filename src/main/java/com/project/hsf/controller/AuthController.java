@@ -3,6 +3,7 @@ package com.project.hsf.controller;
 import com.project.hsf.dto.RegisterDTO;
 import com.project.hsf.service.impl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -67,4 +68,15 @@ public class AuthController {
             return "auth/register";
         }
     }
+<<<<<<< HEAD
 }
+=======
+
+    @GetMapping("/profile")
+    public String showProfileForm(Authentication  authentication, Model model) {
+        String username = authentication.getName();
+        model.addAttribute("username", username);
+        return "user/profile";
+    }
+}
+>>>>>>> 128b6766143db09ce36969c9be0c165d1fdf5cc7
