@@ -7,12 +7,14 @@ import java.util.List;
 
 public interface SeafoodProductService {
     List<SeafoodProduct> findAll();
-    
-    List<SeafoodProduct> search(String keyword, Long categoryId, Boolean active, Boolean lowStock, String sortBy, String sortDir);
-    
+
+    List<SeafoodProduct> search(String keyword, Long categoryId, Boolean active, Boolean lowStock, String sortBy,
+            String sortDir);
+
     SeafoodProduct findById(Long id);
 
-    SeafoodProduct save(SeafoodProduct seafoodProduct, Long categoryId, List<MultipartFile> imageFiles, Integer primaryImageIndex);
+    SeafoodProduct save(SeafoodProduct seafoodProduct, Long categoryId, List<MultipartFile> imageFiles,
+            Integer primaryImageIndex);
 
     void deleteById(Long id);
 }

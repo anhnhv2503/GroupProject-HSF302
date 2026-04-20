@@ -21,11 +21,13 @@ public class OrderService {
     // private final CouponUsageRepository couponUsageRepository;
 
     @Transactional(rollbackFor = Exception.class)
-    public void placeOrder(List<CartItemDTO> cartItems, String couponCode, /*Order order, Payment payment*/ Object orderTmp) throws RuntimeException {
+    public void placeOrder(List<CartItemDTO> cartItems, String couponCode,
+            /* Order order, Payment payment */ Object orderTmp) throws RuntimeException {
         // Atomic Stock Deduct
         for (CartItemDTO item : cartItems) {
             if (item.getProductId() != null) {
-                int affected = seafoodProductRepository.deductStock(item.getProductId(), item.getQuantity());
+                int affected = seafoodProductRepository.deductStock(Long.valueOf(item.getProductId()),
+                        Integer.valueOf(item.getQuantity()));
                 if (affected == 0) {
                     throw new RuntimeException("Hết hàng hoặc sản phẩm không khả dụng: " + item.getName());
                 }
@@ -48,7 +50,7 @@ public class OrderService {
 
         // Insert OrderItems
         // for (CartItemDTO item : cartItems) {
-        //     orderItemRepository.save(new OrderItem(...));
+        // orderItemRepository.save(new OrderItem(...));
         // }
 
         // Insert Payment
