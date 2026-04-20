@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head></head>
+<body>
+
+    <header th:fragment="header"
+        class="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-sm dark:shadow-none">
+        <div class="flex justify-between items-center w-full px-8 py-4 max-w-7xl mx-auto">
+            <div class="text-2xl font-bold tracking-tighter text-slate-900 dark:text-white">The Culinary Curator</div>
+            <nav class="hidden md:flex gap-8 items-center font-sans tracking-tight text-sm font-medium">
+                <a class="text-primary border-b-2 border-primary pb-1" href="/">Trang chủ</a>
+                <a class="text-slate-600 dark:text-slate-400 hover:text-primary transition-colors" href="/products">Sản phẩm</a>
+                <a class="text-slate-600 dark:text-slate-400 hover:text-primary transition-colors" href="#">Công
+                    thức</a>
+                <a class="text-slate-600 dark:text-slate-400 hover:text-primary transition-colors" href="#">Câu
+                    chuyện</a>
+            </nav>
+            <div class="flex items-center gap-6">
+                <div class="hidden lg:flex items-center bg-surface-container-low px-3 py-1.5 rounded-full">
+                    <span class="material-symbols-outlined text-sm text-on-surface-variant">search</span>
+                    <input class="bg-transparent border-none focus:ring-0 text-xs w-48 ml-2"
+                        placeholder="Tìm hải sản..." type="text" />
+                </div>
+                <div class="flex items-center gap-4 text-slate-900">
+                    <!-- Wishlist -->
+                    <a href="/wishlist" class="hover:opacity-80 transition-all scale-95 duration-200 ease-in-out relative">
+                        <span class="material-symbols-outlined">heart_plus</span>
+                        <span class="absolute -top-2 -right-2 bg-primary text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full"
+                              th:text="${session.wishlistCount ?: 0}">0</span>
+                    </a>
+                    <!-- Cart -->
+                    <a href="/cart" class="hover:opacity-80 transition-all scale-95 duration-200 ease-in-out relative">
+                        <span class="material-symbols-outlined">shopping_cart</span>
+                        <span class="absolute -top-2 -right-2 bg-primary text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full"
+                              th:text="${session.cartCount ?: 0}">0</span>
+                    </a>
+
+                    <!-- Auth Section -->
+                    <div class="flex items-center gap-3">
+                        <!-- Not Authenticated -->
+                        <div sec:authorize="!isAuthenticated()" class="flex items-center gap-2">
+                            <a th:href="@{/login}"
+                                class="text-[10px] font-black uppercase tracking-widest text-on-surface-variant hover:text-primary transition-colors">Đăng
+                                nhập</a>
+                            <span class="text-outline-variant/30 text-[10px]">|</span>
+                            <a th:href="@{/register}"
+                                class="bg-primary text-white px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest hover:opacity-90 shadow-md shadow-primary/20 transition-all">Đăng
+                                ký</a>
+                        </div>
+
+                        <!-- Authenticated -->
+                        <div sec:authorize="isAuthenticated()" class="flex items-center gap-4">
+                            <div class="flex items-center gap-2 group cursor-pointer relative py-2">
+                                <span class="material-symbols-outlined text-secondary">account_circle</span>
+                                <div class="flex flex-col">
+                                    <span class="text-[10px] font-black uppercase tracking-tighter text-on-surface">Xin
+                                        chào, <span sec:authentication="name">User</span></span>
+                                    <span class="text-[8px] text-on-surface-variant leading-none">Thành viên thân
+                                        thiết</span>
+                                </div>
+
+                                <!-- Mini Dropdown -->
+                                <div
+                                    class="absolute top-full right-0 mt-1 w-48 bg-white rounded-xl shadow-xl border border-outline-variant/10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 p-2">
+                                    <a href="/profile"
+                                        class="flex items-center gap-2 p-2 hover:bg-surface-container-low rounded-lg text-xs font-medium transition-colors text-slate-700">
+                                        <span class="material-symbols-outlined text-sm">person</span> Hồ sơ cá nhân
+                                    </a>
+                                    <hr class="my-1 border-outline-variant/10">
+                                    <form th:action="@{/logout}" method="post">
+                                        <button type="submit"
+                                            class="w-full flex items-center gap-2 p-2 hover:bg-error/10 text-error rounded-lg text-xs font-bold transition-colors">
+                                            <span class="material-symbols-outlined text-sm">logout</span> Đăng xuất
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+</body>
+</html>
