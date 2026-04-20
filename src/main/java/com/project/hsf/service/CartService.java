@@ -8,58 +8,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class CartService {
-
-    private static final String CART_SESSION_KEY = "CART";
+public interface CartService {
 
     @SuppressWarnings("unchecked")
-    public Map<String, CartItemDTO> getCart(HttpSession session) {
-        Map<String, CartItemDTO> cart = (Map<String, CartItemDTO>) session.getAttribute(CART_SESSION_KEY);
-        if (cart == null) {
-            cart = new HashMap<>();
-            session.setAttribute(CART_SESSION_KEY, cart);
-        }
-        return cart;
-    }
+    Map<String, CartItemDTO> getCart(HttpSession session);
 
-    public void addToCart(HttpSession session, CartItemDTO item) {
-        Map<String, CartItemDTO> cart = getCart(session);
-        String key = item.getItemKey();
-        
-        if (cart.containsKey(key)) {
-            CartItemDTO existingItem = cart.get(key);
-            existingItem.setQuantity(existingItem.getQuantity() + item.getQuantity());
-        } else {
-            cart.put(key, item);
-        }
-        session.setAttribute(CART_SESSION_KEY, cart);
-    }
-
-    public void updateQuantity(HttpSession session, String itemKey, int quantity) {
-        Map<String, CartItemDTO> cart = getCart(session);
-        if (cart.containsKey(itemKey)) {
-            if (quantity <= 0) {
-                cart.remove(itemKey);
-            } else {
-                cart.get(itemKey).setQuantity(quantity);
-            }
-        }
-        session.setAttribute(CART_SESSION_KEY, cart);
-    }
-
-    public void removeItem(HttpSession session, String itemKey) {
-        Map<String, CartItemDTO> cart = getCart(session);
-        cart.remove(itemKey);
-        session.setAttribute(CART_SESSION_KEY, cart);
-    }
-    
-    public void clearCart(HttpSession session) {
-        session.removeAttribute(CART_SESSION_KEY);
-    }
-
-    public Double calculateTotal(HttpSession session) {
-        return getCart(session).values().stream()
-                .mapToDouble(CartItemDTO::getSubtotal)
-                .sum();
-    }
+    public void addToCart(HttpSession session, CartItemDTO item);
+   public void updateQuantity(HttpSession session, String itemKey, int quantity);
+   public void removeItem(HttpSession session, String itemKey);
+   public void clearCart(HttpSession session);
+   public Double calculateTotal(HttpSession session);
 }
