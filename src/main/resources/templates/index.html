@@ -14,6 +14,9 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
         rel="stylesheet" />
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+        rel="stylesheet" />
     <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
@@ -603,6 +606,8 @@
             </div>
         </div>
     </footer>
+    <!-- Chatbot Widget -->
+    <div th:replace="chatbot/chatbot :: widget"></div>
 </body>
 
 </html>
