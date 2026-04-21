@@ -10,4 +10,6 @@ import java.util.List;
 @Repository
 public interface UserAddressRepository extends JpaRepository<UserAddress, Long> {
     List<UserAddress> findByUser(User user);
+    List<UserAddress> findByUserId(Long userId);
+    void deleteByIdAndUserId(Long id, Long userId);
 }

@@ -1,0 +1,133 @@
+<div class="flex-1" th:fragment="content">
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 mb-6">
+        <div class="flex justify-between items-center mb-6 pb-4 border-b border-slate-200">
+            <div>
+                <h3 class="font-bold text-lg text-slate-900">Địa chỉ của tôi</h3>
+                <p class="text-sm text-slate-500">Quản lý địa chỉ giao hàng</p>
+            </div>
+            <button type="button" onclick="document.getElementById('addAddressModal').showModal()" class="bg-[#D35400] text-white px-4 py-2 rounded-xl font-bold text-sm hover:bg-[#b34700] transition-all">
+                <span class="flex items-center gap-1">
+                    <span class="material-symbols-outlined text-sm">add</span>
+                    Thêm địa chỉ
+                </span>
+            </button>
+        </div>
+
+        <div th:if="${#lists.isEmpty(addresses)}" class="text-center py-8">
+            <span class="material-symbols-outlined text-5xl text-slate-300">location_off</span>
+            <p class="text-slate-500 mt-2">Chưa có địa chỉ nào</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div th:each="addr : ${addresses}" class="relative p-4 rounded-xl border border-slate-200 hover:border-[#D35400]/50 transition-colors"
+                 th:classappend="${addr.isDefault} ? 'border-[#D35400] bg-orange-50' : ''">
+                <div th:if="${addr.isDefault}" class="absolute top-2 right-2">
+                    <span class="text-xs font-medium text-[#D35400] bg-orange-100 px-2 py-1 rounded-full">Mặc định</span>
+                </div>
+                <p class="font-medium text-slate-900" th:text="${addr.addressLine}">Địa chỉ</p>
+                <p class="text-sm text-slate-500" th:if="${addr.ward}" th:text="${addr.ward} + ', ' + ${addr.city}">Phường, Quận</p>
+                <p class="text-sm text-slate-500" th:text="${addr.phone}">Số điện thoại</p>
+
+                <div class="flex gap-3 mt-3 pt-3 border-t border-slate-100 items-center">
+                    <form th:if="${!addr.isDefault}" th:action="@{/profile/address/set-default}" method="post">
+                        <input type="hidden" name="addressId" th:value="${addr.id}"/>
+                        <button type="submit" class="text-xs text-[#D35400] hover:underline bg-transparent border-none p-0">Đặt làm mặc định</button>
+                    </form>
+                    <div>
+                        <button type="button" th:attr="data-id=${addr.id}" class="edit-btn text-xs text-[#D35400] hover:underline bg-transparent border-none p-0">Sửa</button>
+                    </div>
+                    <form th:action="@{/profile/address/delete}" method="post">
+                        <input type="hidden" name="addressId" th:value="${addr.id}"/>
+                        <button type="submit" class="text-xs text-red-600 hover:underline bg-transparent border-none p-0">Xóa</button>
+                    </form>
+                </div>
+
+                <dialog th:id="${'edit-' + addr.id}" class="modal p-6 rounded-2xl">
+                    <h3 class="font-bold text-lg mb-4">Sửa địa chỉ</h3>
+                    <form th:action="@{/profile/address/update}" method="post">
+                        <input type="hidden" name="addressId" th:value="${addr.id}"/>
+                        <div class="mb-3">
+                            <label class="block text-sm font-medium mb-1">Số điện thoại</label>
+                            <input type="text" name="phone" th:value="${addr.phone}" class="w-full px-3 py-2 rounded-xl border border-slate-300" required/>
+                        </div>
+                        <div class="mb-3">
+                            <label class="block text-sm font-medium mb-1">Địa chỉ</label>
+                            <input type="text" name="addressLine" th:value="${addr.addressLine}" class="w-full px-3 py-2 rounded-xl border border-slate-300" required/>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3 mb-3">
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Phường/Xã</label>
+                                <input type="text" name="ward" th:value="${addr.ward}" class="w-full px-3 py-2 rounded-xl border border-slate-300"/>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Quận/Huyện</label>
+                                <input type="text" name="city" th:value="${addr.city}" class="w-full px-3 py-2 rounded-xl border border-slate-300"/>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="checkbox" name="isDefault" th:checked="${addr.isDefault}" class="w-4 h-4"/>
+                                <span class="text-sm">Đặt làm địa chỉ mặc định</span>
+                            </label>
+                        </div>
+                        <div class="flex justify-end gap-2">
+                            <button type="button" th:attr="data-id=${addr.id}" class="close-btn px-4 py-2 rounded-xl border border-slate-300">Hủy</button>
+                            <button type="submit" class="px-4 py-2 rounded-xl bg-[#D35400] text-white">Lưu</button>
+                        </div>
+                    </form>
+                </dialog>
+            </div>
+        </div>
+    </div>
+
+    <dialog id="addAddressModal" class="modal p-6 rounded-2xl">
+        <h3 class="font-bold text-lg mb-4">Thêm địa chỉ mới</h3>
+        <form th:action="@{/profile/address/create}" method="post">
+            <div class="mb-3">
+                <label class="block text-sm font-medium mb-1">Số điện thoại *</label>
+                <input type="text" name="phone" class="w-full px-3 py-2 rounded-xl border border-slate-300" required/>
+            </div>
+            <div class="mb-3">
+                <label class="block text-sm font-medium mb-1">Địa chỉ *</label>
+                <input type="text" name="addressLine" class="w-full px-3 py-2 rounded-xl border border-slate-300" placeholder="Số nhà, đường..." required/>
+            </div>
+            <div class="grid grid-cols-2 gap-3 mb-3">
+                <div>
+                    <label class="block text-sm font-medium mb-1">Phường/Xã</label>
+                    <input type="text" name="ward" class="w-full px-3 py-2 rounded-xl border border-slate-300"/>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Quận/Huyện</label>
+                    <input type="text" name="city" class="w-full px-3 py-2 rounded-xl border border-slate-300"/>
+                </div>
+            </div>
+            <div class="mb-4">
+                <label class="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" name="isDefault" class="w-4 h-4"/>
+                    <span class="text-sm">Đặt làm địa chỉ mặc định</span>
+                </label>
+            </div>
+            <div class="flex justify-end gap-2">
+                <button type="button" onclick="document.getElementById('addAddressModal').close()" class="px-4 py-2 rounded-xl border border-slate-300">Hủy</button>
+                <button type="submit" class="px-4 py-2 rounded-xl bg-[#D35400] text-white">Thêm</button>
+            </div>
+        </form>
+    </dialog>
+
+    <script>
+        document.querySelectorAll('.edit-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                var id = this.getAttribute('data-id');
+                var modal = document.getElementById('edit-' + id);
+                if (modal) modal.showModal();
+            });
+        });
+        document.querySelectorAll('.close-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                var id = this.getAttribute('data-id');
+                var modal = document.getElementById('edit-' + id);
+                if (modal) modal.close();
+            });
+        });
+    </script>
+</div>

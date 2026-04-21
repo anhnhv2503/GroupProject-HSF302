@@ -8,7 +8,11 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
-public interface CouponRepository extends JpaRepository<Coupon, Integer> {
+public interface CouponRepository extends JpaRepository<Coupon, Long> {
+
+    boolean existsByCodeIgnoreCase(String code);
+
+    boolean existsByCodeIgnoreCaseAndIdNot(String code, Long id);
 
     Optional<Coupon> findByCode(String code);
 

@@ -1,454 +1,466 @@
 <!DOCTYPE html>
+<html class="light" lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-<html class="light" lang="vi" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title th:text="${product.name} + ' | The Culinary Curator'"></title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;family=Roboto:wght@300;400;500;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
-          rel="stylesheet"/>
-    <script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    "colors": {
-                        "on-primary-fixed-variant": "#7f2b00",
-                        "surface-container-low": "#f3f4f5",
-                        "on-background": "#191c1d",
-                        "surface-container-highest": "#e1e3e4",
-                        "error": "#ba1a1a",
-                        "surface-container-high": "#e7e8e9",
-                        "surface-variant": "#e1e3e4",
-                        "primary": "#a63b00",
-                        "on-tertiary-fixed": "#001e2f",
-                        "on-secondary": "#ffffff",
-                        "secondary-fixed": "#d1e4ff",
-                        "on-secondary-fixed": "#001d35",
-                        "surface-dim": "#d9dadb",
-                        "outline": "#8d7166",
-                        "on-surface-variant": "#594138",
-                        "inverse-on-surface": "#f0f1f2",
-                        "surface-container": "#edeeef",
-                        "on-primary-container": "#4f1800",
-                        "surface-bright": "#f8f9fa",
-                        "secondary": "#2e6192",
-                        "error-container": "#ffdad6",
-                        "on-primary-fixed": "#370e00",
-                        "surface-container-lowest": "#ffffff",
-                        "secondary-fixed-dim": "#9dcaff",
-                        "on-primary": "#ffffff",
-                        "on-tertiary-fixed-variant": "#004b6f",
-                        "primary-fixed-dim": "#ffb599",
-                        "surface": "#f8f9fa",
-                        "secondary-container": "#98c7ff",
-                        "on-tertiary-container": "#002d45",
-                        "background": "#f8f9fa",
-                        "tertiary-fixed-dim": "#8cceff",
-                        "on-secondary-container": "#1c5384",
-                        "surface-tint": "#a63b00",
-                        "outline-variant": "#e1bfb3",
-                        "on-error": "#ffffff",
-                        "primary-fixed": "#ffdbce",
-                        "inverse-primary": "#ffb599",
-                        "on-tertiary": "#ffffff",
-                        "on-surface": "#191c1d",
-                        "inverse-surface": "#2e3132",
-                        "tertiary-container": "#009ade",
-                        "on-secondary-fixed-variant": "#0b4979",
-                        "tertiary": "#006492",
-                        "primary-container": "#f26522",
-                        "on-error-container": "#93000a",
-                        "tertiary-fixed": "#cae6ff"
-                    },
-                    "borderRadius": {
-                        "DEFAULT": "0.25rem",
-                        "lg": "0.5rem",
-                        "xl": "0.75rem",
-                        "full": "9999px"
-                    },
-                    "fontFamily": {
-                        "headline": ["Inter"],
-                        "body": ["Inter"],
-                        "label": ["Inter"],
-                        "value": ["Roboto"]
-                    }
-                },
-            },
-        }
-    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&amp;family=Inter:wght@300;400;500;600;700;800;900&amp;family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+    <script id="tailwind-config" th:replace="~{index :: #tailwind-config}"></script>
     <style>
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-
-        .editorial-shadow {
-            box-shadow: 0 24px 48px -12px rgba(0, 29, 53, 0.04);
-        }
-
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(20px);
-        }
+        body { font-family: 'Be Vietnam Pro', 'Inter', sans-serif; }
+        .glass-effect { backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .fill-1 { font-variation-settings: 'FILL' 1 !important; }
+        .quantity-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+        .tab-btn.active { color: #f26522; border-bottom-color: #f26522; }
+        .ocean-spray { background-color: #0D4A7A; }
     </style>
 </head>
-<body class="bg-background text-on-background font-body antialiased">
-<!-- TopNavBar -->
-<header
-        class="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-sm dark:shadow-none">
-    <div class="flex justify-between items-center w-full px-8 py-4 max-w-7xl mx-auto">
-        <div class="text-2xl font-bold tracking-tighter text-slate-900 dark:text-white">The Culinary Curator</div>
-        <nav class="hidden md:flex gap-8 items-center font-sans tracking-tight text-sm font-medium">
-            <a class="text-primary border-b-2 border-primary pb-1" th:href="@{/}">Trang chủ</a>
-            <a class="text-slate-600 dark:text-slate-400 hover:text-primary transition-colors" th:href="@{/products}">Sản phẩm</a>
-            <a class="text-slate-600 dark:text-slate-400 hover:text-primary transition-colors" href="#">Công
-                thức</a>
-            <a class="text-slate-600 dark:text-slate-400 hover:text-primary transition-colors" href="#">Câu
-                chuyện</a>
-        </nav>
-        <div class="flex items-center gap-6">
-            <div class="hidden lg:flex items-center bg-surface-container-low px-3 py-1.5 rounded-full">
-                <span class="material-symbols-outlined text-sm text-on-surface-variant">search</span>
-                <input class="bg-transparent border-none focus:ring-0 text-xs w-48 ml-2"
-                       placeholder="Tìm hải sản..." type="text"/>
+
+<body class="bg-surface text-on-surface">
+    <!-- TopNavBar -->
+    <header th:replace="~{fragments/index-header :: header}"></header>
+
+    <main class="pt-32">
+        <div class="bg-surface pb-32">
+        <!-- Breadcrumb Section -->
+        <nav class="max-w-7xl mx-auto px-6 py-6 overflow-x-auto whitespace-nowrap">
+            <div
+                class="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-on-surface-variant">
+                <a href="/" class="hover:text-primary-container transition-colors">TRANG CHỦ</a>
+                <span class="material-symbols-outlined text-sm">chevron_right</span>
+                <a href="/products" class="hover:text-primary-container transition-colors">SẢN PHẨM</a>
+                <span class="material-symbols-outlined text-sm">chevron_right</span>
+                <span class="text-on-surface" th:text="${product.name}">Tên sản phẩm</span>
             </div>
-            <div class="flex items-center gap-4 text-slate-900">
-                <!-- Auth Section -->
-                <div class="flex items-center gap-3">
-                    <!-- Not Authenticated -->
-                    <div sec:authorize="!isAuthenticated()" class="flex items-center gap-2">
-                        <a th:href="@{/login}"
-                           class="text-[10px] font-black uppercase tracking-widest text-on-surface-variant hover:text-primary transition-colors">Đăng
-                            nhập</a>
-                        <span class="text-outline-variant/30 text-[10px]">|</span>
-                        <a th:href="@{/register}"
-                           class="bg-primary text-white px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest hover:opacity-90 shadow-md shadow-primary/20 transition-all">Đăng
-                            ký</a>
+        </nav>
+
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
+
+                <!-- Image Gallery Section -->
+                <div class="lg:col-span-7 space-y-6">
+                    <!-- Main Image -->
+                    <div
+                        class="relative aspect-square rounded-3xl overflow-hidden bg-white border border-outline-variant/10 shadow-sm">
+                        <img id="mainDetailImage" th:if="${product.images != null and !product.images.isEmpty()}"
+                            th:with="primaryImg=${product.images.^[isPrimary != null and isPrimary]}"
+                            th:src="@{${primaryImg != null ? primaryImg.imageUrl : product.images[0].imageUrl}}"
+                            class="w-full h-full object-cover" th:alt="${product.name}" />
+                        <img id="mainDetailImage" th:unless="${product.images != null and !product.images.isEmpty()}"
+                            src="https://via.placeholder.com/800x800?text=Premium+Seafood"
+                            class="w-full h-full object-cover" alt="Seafood" />
+
+                        <!-- Floating Badge -->
+                        <div class="absolute top-6 left-6 z-10 flex flex-col gap-3">
+                            <span th:if="${product.freshnessStatus == 'FRESH'}"
+                                class="bg-green-600/90 backdrop-blur text-white text-xs font-black px-4 py-2 rounded-xl uppercase tracking-[0.2em] shadow-lg">Daily
+                                Fresh</span>
+                            <span th:if="${product.freshnessStatus == 'FROZEN'}"
+                                class="bg-cyan-600/90 backdrop-blur text-white text-xs font-black px-4 py-2 rounded-xl uppercase tracking-[0.2em] shadow-lg">Premium
+                                Frozen</span>
+                            <span th:if="${product.freshnessStatus == 'LIVE'}"
+                                class="bg-orange-600/90 backdrop-blur text-white text-xs font-black px-4 py-2 rounded-xl uppercase tracking-[0.2em] shadow-lg">Wild
+                                Caught</span>
+                        </div>
                     </div>
 
-                    <!-- Authenticated -->
-                    <div sec:authorize="isAuthenticated()" class="flex items-center gap-4">
-                        <a th:href="@{/cart}" class="hover:opacity-80 transition-all scale-95 duration-200 ease-in-out relative">
-                            <span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
-                        </a>
-                        <div class="flex items-center gap-2 group cursor-pointer relative py-2">
-                                <span class="material-symbols-outlined text-secondary"
-                                      data-icon="account_circle">account_circle</span>
+                    <!-- Thumbnails -->
+                    <div class="flex gap-4 overflow-x-auto pb-2 scrollbar-hide"
+                        th:if="${product.images != null and product.images.size() > 1}">
+                        <div th:each="img, stat : ${product.images}"
+                            class="flex-shrink-0 w-24 h-24 rounded-2xl overflow-hidden cursor-pointer border-2 transition-all hover:scale-105"
+                            th:classappend="${img.isPrimary} ? 'border-primary-container shadow-lg' : 'border-outline-variant/20 shadow-sm opacity-60 hover:opacity-100'"
+                            onclick="changeMainImage(this);">
+                            <img th:src="@{${img.imageUrl}}" class="w-full h-full object-cover" alt="Thumbnail" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Purchase Info Section -->
+                <div class="lg:col-span-5 space-y-8">
+                    <div class="space-y-4">
+                        <div class="space-y-1">
+                            <div
+                                class="flex items-center gap-2 text-primary-container font-black text-xs uppercase tracking-[0.2em] mb-2">
+                                <span class="material-symbols-outlined text-lg">workspace_premium</span>
+                                <span th:text="${product.category.name}">Collection</span>
+                            </div>
+                            <h1 class="text-4xl md:text-5xl font-black tracking-tighter text-on-surface leading-[0.95] uppercase"
+                                th:text="${product.name}">Tên Sản Phẩm</h1>
+                        </div>
+
+                        <div class="flex items-center gap-6 pt-2">
+                            <div class="flex items-center gap-1.5">
+                                <div class="flex text-amber-500">
+                                    <span class="material-symbols-outlined text-lg"
+                                        style="font-variation-settings: 'FILL' 1;">star</span>
+                                    <span class="material-symbols-outlined text-lg"
+                                        style="font-variation-settings: 'FILL' 1;">star</span>
+                                    <span class="material-symbols-outlined text-lg"
+                                        style="font-variation-settings: 'FILL' 1;">star</span>
+                                    <span class="material-symbols-outlined text-lg"
+                                        style="font-variation-settings: 'FILL' 1;">star</span>
+                                    <span class="material-symbols-outlined text-lg"
+                                        style="font-variation-settings: 'FILL' 1;">star</span>
+                                </div>
+                                <span class="text-xs font-black uppercase tracking-tighter text-on-surface-variant">(128
+                                    Reviews)</span>
+                            </div>
+                            <div class="h-4 w-px bg-outline-variant/30"></div>
+                            <div class="flex items-center gap-2 text-on-surface-variant">
+                                <span class="material-symbols-outlined text-lg">location_on</span>
+                                <span class="text-[10px] font-bold uppercase tracking-wider"
+                                    th:text="${product.importedFrom ?: 'Biển Việt Nam'}">Nhật Bản</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Price Block -->
+                    <div class="p-8 rounded-3xl bg-surface-container-low border border-outline-variant/10 space-y-6">
+                        <div class="flex items-end gap-3">
+                            <span class="text-5xl font-black text-primary-container tracking-tighter leading-none"
+                                th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + '₫'">0₫</span>
+                            <span class="text-lg text-on-surface-variant font-bold pb-1 lowercase">/ kg</span>
+                            <span class="text-sm text-outline-variant line-through font-medium pb-1 ml-2"
+                                th:text="${#numbers.formatDecimal(product.price * 1.2, 0, 'COMMA', 0, 'POINT')} + '₫'">0₫</span>
+                        </div>
+
+                        <p class="text-xs text-on-surface-variant/70 leading-relaxed font-medium">
+                            Giá đã bao gồm thuế tiêu thụ đặc biệt & phí vận hành kho lạnh chuyên dụng. Cam kết hoàn tiền
+                            200% nếu phát hiện hàng giả, kém chất lượng.
+                        </p>
+                    </div>
+
+                    <!-- Add to Cart Form -->
+                    <form th:action="@{/cart/add}" method="post" class="space-y-6">
+                        <div class="space-y-3">
+                            <label
+                                class="text-[10px] font-black uppercase tracking-[0.27em] text-on-surface-variant ml-1">Số
+                                lượng đặt hàng</label>
+                            <div class="flex items-center gap-4">
+                                <div
+                                    class="flex items-center bg-white border border-outline-variant/20 rounded-2xl p-1.5 shadow-sm">
+                                    <button type="button"
+                                        class="quantity-btn w-12 h-12 rounded-xl hover:bg-surface-container-low flex items-center justify-center transition-colors"
+                                        onclick="updateQuantity(-1);">
+                                        <span class="material-symbols-outlined">remove</span>
+                                    </button>
+                                    <input type="number" id="purchaseQuantity" name="quantity" value="1" min="1"
+                                        class="w-16 text-center border-none focus:ring-0 font-black text-lg bg-transparent"
+                                        readonly />
+                                    <button type="button"
+                                        class="quantity-btn w-12 h-12 rounded-xl hover:bg-surface-container-low flex items-center justify-center transition-colors"
+                                        onclick="updateQuantity(1);">
+                                        <span class="material-symbols-outlined">add</span>
+                                    </button>
+                                </div>
+                                <span class="text-xs font-bold text-on-surface-variant uppercase">Còn hàng (In
+                                    Stock)</span>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-5 gap-4">
+                            <button type="submit"
+                                class="col-span-4 bg-brand-primary text-white h-16 rounded-2xl font-black text-sm uppercase tracking-widest flex items-center justify-center gap-3 hover:shadow-2xl hover:brightness-110 active:scale-[0.98] transition-all">
+                                <span class="material-symbols-outlined">shopping_cart</span>
+                                THÊM VÀO GIỎ HÀNG
+                            </button>
+                            <button type="button"
+                                th:data-product-id="${product.id}"
+                                class="wishlist-btn col-span-1 border border-outline-variant/20 rounded-2xl flex items-center justify-center text-on-surface-variant hover:border-red-500 hover:text-red-500 transition-all active:scale-95">
+                                <span class="material-symbols-outlined text-2xl"
+                                    th:classappend="${session.wishlistProductIds != null and session.wishlistProductIds.contains(product.id)} ? 'text-red-500 fill-1' : ''">favorite</span>
+                            </button>
+                        </div>
+
+                        <input type="hidden" name="productId" th:value="${product.id}" />
+                        <input type="hidden" name="name" th:value="${product.name}" />
+                        <input type="hidden" name="price" th:value="${product.price}" />
+                    </form>
+
+                    <!-- Value Props -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="flex items-center gap-3 p-4 rounded-2xl border border-outline-variant/10 bg-white">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-orange-100 flex items-center justify-center text-orange-600">
+                                <span class="material-symbols-outlined text-xl">speed</span>
+                            </div>
                             <div class="flex flex-col">
-                                    <span class="text-[10px] font-black uppercase tracking-tighter text-on-surface">Xin
-                                        chào, <span sec:authentication="name">User</span></span>
-                                <span class="text-[8px] text-on-surface-variant leading-none">Thành viên thân
-                                        thiết</span>
+                                <span class="font-black text-[10px] uppercase tracking-widest text-on-surface">Giao
+                                    2h</span>
+                                <span class="text-[9px] font-bold text-on-surface-variant">Nội thành Hà Nội</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 p-4 rounded-2xl border border-outline-variant/10 bg-white">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center text-blue-600">
+                                <span class="material-symbols-outlined text-xl">verified_user</span>
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="font-black text-[10px] uppercase tracking-widest text-on-surface">Kiểm
+                                    định</span>
+                                <span class="text-[9px] font-bold text-on-surface-variant">Tiêu chuẩn Nhật JAS</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabs & Editorial Content -->
+            <div class="mt-32">
+                <div class="flex flex-wrap gap-12 border-b border-outline-variant/10 pb-4">
+                    <button onclick="switchTab('desc');" id="btn-desc"
+                        class="tab-btn active text-xs font-black uppercase tracking-[0.2em] pb-4 border-b-2 border-transparent transition-all">Thông
+                        tin chi tiết</button>
+
+                    <button onclick="switchTab('reviews');" id="btn-reviews"
+                        class="tab-btn text-xs font-black uppercase tracking-[0.2em] pb-4 border-b-2 border-transparent transition-all">Đánh
+                        giá khách hàng (28)</button>
+                </div>
+
+                <div class="mt-12">
+                    <!-- Description Tab -->
+                    <div id="tab-desc" class="tab-content transition-opacity duration-500">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                            <div class="space-y-8">
+                                <div class="space-y-4">
+                                    <h2 class="text-3xl font-black tracking-tighter uppercase leading-none">Vị Ngon
+                                        <br /> Từ Đại Dương Sâu</h2>
+                                    <p class="text-on-surface-variant leading-relaxed font-medium"
+                                        th:text="${product.description}">
+                                        Từng sản phẩm được tuyển chọn tại vùng biển sạch nhất thế giới.
+                                    </p>
+                                </div>
+                                <div class="grid grid-cols-2 gap-6 pb-8 border-b border-outline-variant/10">
+                                    <div>
+                                        <h4
+                                            class="font-black text-[10px] uppercase tracking-widest text-on-surface-variant mb-2">
+                                            Xuất xứ</h4>
+                                        <p class="font-bold text-sm" th:text="${product.importedFrom}">Alaska, USA</p>
+                                    </div>
+                                    <div>
+                                        <h4
+                                            class="font-black text-[10px] uppercase tracking-widest text-on-surface-variant mb-2">
+                                            Trạng thái</h4>
+                                        <p class="font-bold text-sm"
+                                            th:text="${product.freshnessStatus == 'FRESH' ? 'Tươi sống (Hàng ngày)' : 'Nguyên con đông lạnh'}">
+                                            Tươi sống</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div
+                                class="relative rounded-3xl overflow-hidden aspect-[4/3] bg-surface-container-low group">
+                                <img th:if="${product.images != null and product.images.size() > 1}"
+                                    th:src="@{${product.images[1].imageUrl}}"
+                                    class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
+                                <div
+                                    class="absolute inset-x-0 bottom-0 p-8 bg-gradient-to-t from-black/60 to-transparent">
+                                    <p
+                                        class="text-white text-xs font-bold leading-relaxed italic opacity-80 uppercase tracking-widest">
+                                        "Chất lượng tinh hoa trong từng thớ hải sản."</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <!-- Reviews Tab (Requested Editorial Section) -->
+                    <div id="tab-reviews" class="tab-content hidden">
+                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+                            <!-- Summary -->
+                            <div class="lg:col-span-4 space-y-8">
+                                <div
+                                    class="p-8 rounded-3xl bg-surface-container-low border border-outline-variant/10 text-center space-y-4">
+                                    <h1 class="text-6xl font-black text-primary-container leading-none">5.0</h1>
+                                    <div class="flex justify-center text-amber-500">
+                                        <span class="material-symbols-outlined text-2xl"
+                                            th:each="i : ${#numbers.sequence(1, 5)}"
+                                            style="font-variation-settings: 'FILL' 1;">star</span>
+                                    </div>
+                                    <p class="text-xs font-black uppercase tracking-widest text-on-surface-variant">Dựa
+                                        trên 28 lượt đánh giá</p>
+                                </div>
+                                <div class="space-y-4 px-4">
+                                    <button
+                                        class="w-full bg-brand-secondary text-white h-14 rounded-2xl font-black text-xs uppercase tracking-widest hover:brightness-110 shadow-lg transition-all">GỬI
+                                        ĐÁNH GIÁ CỦA BẠN</button>
+                                    <p
+                                        class="text-[9px] text-center font-bold text-on-surface-variant uppercase tracking-wider">
+                                        Mỗi đánh giá nhận ngay voucher 50K</p>
+                                </div>
                             </div>
 
-                            <!-- Mini Dropdown -->
-                            <div
-                                    class="absolute top-full right-0 mt-1 w-48 bg-white rounded-xl shadow-xl border border-outline-variant/10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 p-2">
-                                <a href="/profile"
-                                   class="flex items-center gap-2 p-2 hover:bg-surface-container-low rounded-lg text-xs font-medium transition-colors text-slate-700">
-                                    <span class="material-symbols-outlined text-sm">person</span> Hồ sơ cá nhân
-                                </a>
-                                <hr class="my-1 border-outline-variant/10">
-                                <form th:action="@{/logout}" method="post">
-                                    <button type="submit"
-                                            class="w-full flex items-center gap-2 p-2 hover:bg-error/10 text-error rounded-lg text-xs font-bold transition-colors">
-                                        <span class="material-symbols-outlined text-sm">logout</span> Đăng xuất
-                                    </button>
-                                </form>
+                            <!-- Review List -->
+                            <div class="lg:col-span-8 space-y-8">
+                                <!-- Review Item -->
+                                <div class="space-y-6 pb-8 border-b border-outline-variant/10">
+                                    <div class="flex justify-between items-start">
+                                        <div class="flex items-center gap-4">
+                                            <div
+                                                class="w-12 h-12 rounded-full overflow-hidden bg-surface-container-high flex items-center justify-center font-black text-lg text-primary-container">
+                                                K</div>
+                                            <div>
+                                                <h4 class="font-black text-sm uppercase tracking-widest">Khánh Nguyên
+                                                </h4>
+                                                <p class="text-[10px] font-bold text-on-surface-variant">Verified
+                                                    Purchase • 2 ngày trước</p>
+                                            </div>
+                                        </div>
+                                        <div class="flex text-amber-500">
+                                            <span class="material-symbols-outlined text-sm fill-1">star</span>
+                                        </div>
+                                    </div>
+                                    <p class="text-sm font-medium leading-relaxed text-on-surface">"Thật sự bất ngờ về
+                                        độ tươi của hàu khi giao đến. Hải sản đóng gói rất chuyên nghiệp, còn nguyên hơi
+                                        lạnh. Sẽ ủng hộ shop dài dài."</p>
+                                    <div class="flex gap-4">
+                                        <div
+                                            class="w-20 h-20 rounded-xl bg-surface-container-low overflow-hidden cursor-zoom-in">
+                                            <img src="https://via.placeholder.com/200x200?text=Customer+Photo"
+                                                class="w-full h-full object-cover" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Review Item -->
+                                <div class="space-y-6 pb-8">
+                                    <div class="flex justify-between items-start">
+                                        <div class="flex items-center gap-4">
+                                            <div
+                                                class="w-12 h-12 rounded-full overflow-hidden bg-surface-container-high flex items-center justify-center font-black text-lg text-primary-container">
+                                                A</div>
+                                            <div>
+                                                <h4 class="font-black text-sm uppercase tracking-widest">Anh Tuấn</h4>
+                                                <p class="text-[10px] font-bold text-on-surface-variant">Verified
+                                                    Purchase • 1 tuần trước</p>
+                                            </div>
+                                        </div>
+                                        <div class="flex text-amber-500">
+                                            <span class="material-symbols-outlined text-sm fill-1">star</span>
+                                        </div>
+                                    </div>
+                                    <p class="text-sm font-medium leading-relaxed text-on-surface">"Chất lượng chuẩn JAS
+                                        Nhật Bản, ăn khác hẳn các loại hải sản thông thường ngoài chợ. Đáng đồng tiền
+                                        bát gạo."</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</header>
-<main class="pt-28 pb-20 px-6 max-w-7xl mx-auto">
-    <!-- Breadcrumbs -->
-    <nav class="mb-8 flex items-center space-x-2 text-xs uppercase tracking-widest text-on-surface-variant/60">
-        <a class="hover:text-secondary transition-colors" href="#">Trang chủ</a>
-        <span class="material-symbols-outlined text-[10px]">chevron_right</span>
-        <a class="hover:text-secondary transition-colors" href="#">Hải sản tươi</a>
-        <span class="material-symbols-outlined text-[10px]">chevron_right</span>
-        <span class="text-on-surface-variant font-semibold">Combo Lẩu</span>
-    </nav>
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
-        <!-- Image Gallery Section -->
-        <div class="lg:col-span-7 space-y-6">
-            <div class="relative aspect-square rounded-lg overflow-hidden editorial-shadow group">
-                <img alt="Ảnh chụp từ trên cao khay hải sản cao cấp"
-                     class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                     th:src="${product.images.get(0).imageUrl}"/>
-                <!-- Premium Badge -->
-                <div class="absolute top-4 left-4 z-10 w-12 h-12 rounded-full bg-[#009ade] flex items-center justify-center text-white text-[10px] font-bold shadow-lg text-center leading-tight">
-                    ★<br/>Cao cấp
-                </div>
-            </div>
-            <div class="grid grid-cols-4 gap-4">
-                <div class="aspect-square rounded-lg bg-surface-container overflow-hidden cursor-pointer ring-2 ring-secondary"
-                     th:each="img : ${product.images}">
-                    <img alt="Cận cảnh tôm hùm" class="w-full h-full object-cover"
-                         th:src="${img.imageUrl}"/>
-                </div>
-            </div>
         </div>
-        <!-- Product Info Section -->
-        <div class="lg:col-span-5 flex flex-col">
-            <div class="mb-4">
-                <span class="material-symbols-outlined text-sm mr-1"
-                      style="font-variation-settings: 'FILL' 1;">eco</span>
-                <span class="inline-flex items-center px-3 py-1 rounded-lg bg-secondary-fixed text-on-secondary-fixed text-xs font-bold uppercase tracking-tighter"
-                      th:text="${product.freshnessStatus}">
+    </main>
 
-                        Tươi Sống
-                    </span>
-            </div>
-            <h1 class="text-4xl lg:text-5xl font-black text-secondary leading-tight mb-4 tracking-tighter"
-                th:text="${product.name}">
-                Combo Lẩu Hải Sản 4 Người - Tươi Sống
-            </h1>
-            <div class="flex items-center space-x-4 mb-8">
-                <div class="flex text-secondary">
-                    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
-                    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
-                    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
-                    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
-                    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
-                </div>
-                <span class="text-on-surface-variant/70 text-sm font-medium">(120 đánh giá)</span>
-            </div>
-            <div class="mb-10 p-6 rounded-xl bg-surface-container-lowest editorial-shadow">
-                <div class="flex items-baseline space-x-3">
-                    <span class="text-4xl font-black text-primary font-value tracking-tight" th:text="${product.price}">2.450.000đ</span>
-                    <!--                    <span class="text-lg text-on-surface-variant/40 line-through font-value">2.950.000đ</span>-->
-                </div>
-                <p class="text-xs text-on-surface-variant mt-2 italic">* Giá đã bao gồm thuế và phí vận chuyển đặc
-                    biệt.</p>
-            </div>
-            <div class="space-y-6 mb-10">
-                <div class="flex items-center space-x-4">
-                    <span class="text-sm font-bold uppercase tracking-widest text-secondary">Số lượng</span>
-                    <div class="flex items-center bg-surface-container rounded-lg overflow-hidden">
-                        <button class="w-11 h-11 flex items-center justify-center hover:bg-surface-container-high transition-colors">
-                            <span class="material-symbols-outlined text-sm">remove</span>
-                        </button>
-                        <span class="w-12 h-11 flex items-center justify-center font-bold font-value bg-white">1</span>
-                        <button class="w-11 h-11 flex items-center justify-center hover:bg-surface-container-high transition-colors">
-                            <span class="material-symbols-outlined text-sm">add</span>
-                        </button>
-                    </div>
-                </div>
-                <form th:action="@{/cart/add}" method="post">
-                    <input type="hidden" name="productId" th:value="${product.id}"/>
-                    <input type="hidden" name="name" th:value="${product.name}"/>
-                    <input type="hidden" name="price" th:value="${product.price}"/>
-                    <input type="hidden" name="imageUrl" th:value="${product.images.get(0).imageUrl}"/>
-<!--                    <button type="submit" class="btn btn-outline-primary btn-sm rounded-circle" style="width:36px;height:36px;">-->
-<!--                        <i class="bi bi-cart-plus"></i>-->
-<!--                    </button>-->
-                    <button type="submit" class="w-full bg-gradient-to-r from-[#a63b00] to-[#f26522] text-on-primary min-h-[48px] py-4 rounded-lg font-black uppercase tracking-widest text-sm hover:opacity-90 active:scale-[0.98] transition-all shadow-xl shadow-primary/20 flex items-center justify-center space-x-3">
-                        <span class="material-symbols-outlined">shopping_cart</span>
-                        <span>Thêm Vào Giỏ Hàng</span>
-                    </button>
-                </form>
+    <!-- Footer -->
+    <footer th:replace="~{fragments/index-footer :: footer}"></footer>
 
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="flex items-center space-x-3 p-3 rounded-lg bg-surface-container">
-                        <span class="material-symbols-outlined text-secondary">local_shipping</span>
-                        <span class="text-[10px] font-bold uppercase tracking-tight text-secondary">Giao hàng 2h</span>
-                    </div>
-                    <div class="flex items-center space-x-3 p-3 rounded-lg bg-surface-container">
-                        <span class="material-symbols-outlined text-secondary">verified</span>
-                        <span class="text-[10px] font-bold uppercase tracking-tight text-secondary">Kiểm định JAS</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Tabbed Details Section -->
-    <section class="mt-24">
-        <div class="flex bg-surface-container/30 px-4 mb-10 space-x-12 overflow-x-auto">
-            <button class="py-4 border-b-2 border-secondary text-secondary font-bold uppercase tracking-widest text-xs">
-                Mô tả chi tiết
-            </button>
-            <button class="py-4 text-on-surface-variant/50 hover:text-on-background transition-colors uppercase tracking-widest text-xs">
-                Hướng dẫn bảo quản
-            </button>
-            <button class="py-4 text-on-surface-variant/50 hover:text-on-background transition-colors uppercase tracking-widest text-xs">
-                Đánh giá khách hàng (120)
-            </button>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-16">
-            <div class="space-y-6">
-                <h3 class="text-2xl font-black text-secondary tracking-tight">Tinh Hoa Đại Dương Trong Từng Sợi
-                    Khói</h3>
-                <p class="text-on-surface-variant leading-relaxed">
-                    Combo Lẩu Hải Sản Thượng Hạng là sự kết tinh của những gì tinh túy nhất từ đại dương. Được lựa chọn
-                    thủ công vào mỗi sớm bình minh, từng con Tôm Sú, Cua Hoàng Đế và Mực Lá đều phải đạt chuẩn tươi ngon
-                    nhất để đảm bảo chất lượng tuyệt đối.
-                </p>
-                <ul class="space-y-4">
-                    <li class="flex items-start space-x-3">
-                        <span class="material-symbols-outlined text-secondary text-lg"
-                              style="font-variation-settings: 'FILL' 1;">check_circle</span>
-                        <span class="text-sm font-medium">1x Tôm Sú Cọp kích thước lớn (khoảng 500g)</span>
-                    </li>
-                    <li class="flex items-start space-x-3">
-                        <span class="material-symbols-outlined text-secondary text-lg"
-                              style="font-variation-settings: 'FILL' 1;">check_circle</span>
-                        <span class="text-sm font-medium">1x Cua Cà Mau gạch chắc (khoảng 600g)</span>
-                    </li>
-                    <li class="flex items-start space-x-3">
-                        <span class="material-symbols-outlined text-secondary text-lg"
-                              style="font-variation-settings: 'FILL' 1;">check_circle</span>
-                        <span class="text-sm font-medium">Nước dùng cốt cá ngừ đại dương độc quyền theo công thức riêng</span>
-                    </li>
-                </ul>
-            </div>
-            <div class="rounded-2xl overflow-hidden h-[300px] editorial-shadow">
-                <img alt="Ảnh nghệ thuật nồi lẩu hải sản" class="w-full h-full object-cover"
-                     src="https://lh3.googleusercontent.com/aida-public/AB6AXuAMiavGoZI6fKcYNqfcju8X1xJosm4BrcXueeASJzvBfd-pa3jXmFiTW39MIbdchfb1WfFD9N_cTbb3MXKgQwhEmeKyxO_tcrGKNjKjkGOPe7gBoDEj0waPXiR-9Y6ujKlYVNmeMKYqg0SZHgVw_kbSlAx0J0GIyuHTW5gyIH4XscivIpe8FvKWFiGMTy_dw6ZRvuKa1BP-Qv4TA_9AlqVCruDlX2T-q6JsqdE0tb21g-B_leAXUr5RlP-_3a3gGR3LQKccW4gRrKo"/>
-            </div>
-        </div>
-    </section>
-    <!-- Related Products Section -->
-    <section class="mt-32">
-        <div class="flex justify-between items-end mb-12">
-            <div>
-                <span class="text-secondary font-bold uppercase tracking-[0.3em] text-[10px]">Tiếp tục khám phá</span>
-                <h2 class="text-4xl font-black text-secondary tracking-tighter mt-2">Có Thể Bạn Sẽ Thích</h2>
-            </div>
-            <a class="text-sm font-bold uppercase tracking-widest text-on-surface-variant hover:text-secondary transition-colors flex items-center"
-               href="#">
-                Xem tất cả <span class="material-symbols-outlined ml-2">arrow_right_alt</span>
-            </a>
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            <!-- Card 1 -->
-            <div class="group">
-                <div class="relative aspect-[4/5] rounded-lg bg-surface-container overflow-hidden mb-4">
-                    <img alt="Combo hải sản mini"
-                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                         src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmBMNab6Td3yPb39-50CSYw3Nf_lgf1O5xt-Xr7xdyJHdn34-fuuT7L_4r23X9euZxkNsWwg8d7_oo2tyEw32F8OUtiaxFR2BsLfLrFeEKdwz9DPspjRWnrqEtdh4l6Hjdp7kJiDpuDlc4FkYLRI2qJPca5_PncLi6k5hj0TEqqiAk0kmDaR9VFXqPA-FO8hE5eBRcR_i0N4e3urDwhWlxpQCLkwKWsLRPype6Z4gXHZE4vB_eK9gbqOoIVfNmBGPKMHyQjdAyPuA"/>
-                    <div class="absolute bottom-4 right-4 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-                        <button class="glass-panel w-10 h-10 rounded-full flex items-center justify-center text-secondary shadow-lg hover:bg-primary hover:text-white transition-colors">
-                            <span class="material-symbols-outlined text-lg">add_shopping_cart</span>
-                        </button>
-                    </div>
-                </div>
-                <h4 class="text-sm font-bold text-on-background group-hover:text-secondary transition-colors">Combo Hải
-                    Sản Mini</h4>
-                <p class="text-lg font-black text-primary font-value mt-1">850.000đ</p>
-            </div>
-            <!-- Card 2 -->
-            <div class="group">
-                <div class="relative aspect-[4/5] rounded-lg bg-surface-container overflow-hidden mb-4">
-                    <img alt="Cua hoàng đế"
-                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                         src="https://lh3.googleusercontent.com/aida-public/AB6AXuCaM-k8Mm3_e5M7BCRN5H3VbXw4p0WylBShxRdh2w2qStnP3kOyi5nzla84ObKbogdmlwP3rxDkH6W6ONzDAAgfHz0WLbnyXV2CnXktoAwIZRpnvVd-GWd9JCf7VBcbS5cbXxh0vk_K6bft8lMPC3-P_C9YgLNASvY6Oqy4fY-cGVxkeWwPVquq3H5II8A3vLx04DUZx1w6-DBu7YfQ2_ZFNxlttoAs3gMjlYSHYoQahqbsaomPzQ2fyLsuoBd0HDDAJpGFNY5WeYs"/>
-                    <span class="absolute top-4 left-4 bg-secondary text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest">Theo Mùa</span>
-                    <div class="absolute bottom-4 right-4 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-                        <button class="glass-panel w-10 h-10 rounded-full flex items-center justify-center text-secondary shadow-lg hover:bg-primary hover:text-white transition-colors">
-                            <span class="material-symbols-outlined text-lg">add_shopping_cart</span>
-                        </button>
-                    </div>
-                </div>
-                <h4 class="text-sm font-bold text-on-background group-hover:text-secondary transition-colors">Cua Hoàng
-                    Đế King Crab</h4>
-                <p class="text-lg font-black text-primary font-value mt-1">5.200.000đ</p>
-            </div>
-            <!-- Card 3 -->
-            <div class="group">
-                <div class="relative aspect-[4/5] rounded-lg bg-surface-container overflow-hidden mb-4">
-                    <img alt="Cá hồi Na Uy"
-                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                         src="https://lh3.googleusercontent.com/aida-public/AB6AXuAtkxZY3TSMJiPKRSnDU2k2DCwvtOGhA6pzPBDDVlS5HNjKWulz2eb7-BwzoXsks6u91ReBeFw7XZFbifuKgus1uzVAubA1pTf8ZK_kp0R78unvA4La1DzC3NhxAimNZYKCpZyxnk5Xh7bkY0155cPVGs8PhUt4NbpusNR5el3ZxvtDsPgnWAyiysvbCE16v3XKM1NdxzH2fCI9WUDvOlNI7AkzuU6RN028Eq9Xw5HdXbpe_Vaw0BJsL3z8Vu_3HRdCmiGEJTK9PrU"/>
-                    <div class="absolute bottom-4 right-4 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-                        <button class="glass-panel w-10 h-10 rounded-full flex items-center justify-center text-secondary shadow-lg hover:bg-primary hover:text-white transition-colors">
-                            <span class="material-symbols-outlined text-lg">add_shopping_cart</span>
-                        </button>
-                    </div>
-                </div>
-                <h4 class="text-sm font-bold text-on-background group-hover:text-secondary transition-colors">Cá Hồi Na
-                    Uy Cao Cấp</h4>
-                <p class="text-lg font-black text-primary font-value mt-1">1.200.000đ</p>
-            </div>
-            <!-- Card 4 -->
-            <div class="group">
-                <div class="relative aspect-[4/5] rounded-lg bg-surface-container overflow-hidden mb-4">
-                    <img alt="Tôm sú cọp"
-                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                         src="https://lh3.googleusercontent.com/aida-public/AB6AXuB_0RmZe0D9JtiHxMhDHTHR9FHT1ACXgXEKiZXiLizDsFFf9RXVUsLr715gtYKiTz_sIagLjvm-8j9StLY_V3fn-gu7YJd_KpwyKbBIybcx68DtZDMkZThXf5MByKBZ4Q75nqTcieRVSoE7LEo_LC1kG38oOGpViuZx2J3-MsE90YMvkX9lSIi6-6JELujUHgdL7mye77gAC8BNE7gD3t5J2WHpIjDIST9n4GT0SymldJbmESajlL0IEH7L-fWLV3FIz6ZbJKxJlBc"/>
-                    <div class="absolute bottom-4 right-4 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-                        <button class="glass-panel w-10 h-10 rounded-full flex items-center justify-center text-secondary shadow-lg hover:bg-primary hover:text-white transition-colors">
-                            <span class="material-symbols-outlined text-lg">add_shopping_cart</span>
-                        </button>
-                    </div>
-                </div>
-                <h4 class="text-sm font-bold text-on-background group-hover:text-secondary transition-colors">Tôm Sú Cọp
-                    Khổng Lồ</h4>
-                <p class="text-lg font-black text-primary font-value mt-1">980.000đ</p>
-            </div>
-        </div>
-    </section>
-</main>
-<!-- Footer -->
-<footer class="w-full bg-slate-100 dark:bg-slate-950 transition-colors duration-200 ease-in-out">
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-8 px-8 py-12 max-w-7xl mx-auto font-sans text-xs uppercase tracking-widest">
-        <div class="col-span-1 md:col-span-1">
-            <div class="text-lg font-black text-secondary dark:text-blue-200 mb-4">The Culinary Curator</div>
-            <p class="text-slate-500 dark:text-slate-400 normal-case tracking-normal">© 2024 The Culinary Curator. Tinh
-                hoa hải sản từ đại dương.</p>
-            <div class="mt-6 flex space-x-4">
-                <span class="material-symbols-outlined text-slate-400 cursor-pointer hover:text-secondary transition-colors">social_leaderboard</span>
-                <span class="material-symbols-outlined text-slate-400 cursor-pointer hover:text-secondary transition-colors">public</span>
-                <span class="material-symbols-outlined text-slate-400 cursor-pointer hover:text-secondary transition-colors">alternate_email</span>
-            </div>
-        </div>
-        <div>
-            <h5 class="font-bold text-slate-900 dark:text-white mb-6">Về chúng tôi</h5>
-            <ul class="space-y-4">
-                <li>
-                    <a class="text-slate-500 dark:text-slate-400 hover:text-secondary dark:hover:text-blue-400 transition-colors"
-                       href="#">Câu chuyện thương hiệu</a></li>
-                <li>
-                    <a class="text-slate-500 dark:text-slate-400 hover:text-secondary dark:hover:text-blue-400 transition-colors"
-                       href="#">Phát triển bền vững</a></li>
-                <li>
-                    <a class="text-slate-500 dark:text-slate-400 hover:text-secondary dark:hover:text-blue-400 transition-colors"
-                       href="#">Đội ngũ đầu bếp</a></li>
-            </ul>
-        </div>
-        <div>
-            <h5 class="font-bold text-slate-900 dark:text-white mb-6">Hỗ trợ khách hàng</h5>
-            <ul class="space-y-4">
-                <li>
-                    <a class="text-slate-500 dark:text-slate-400 hover:text-secondary dark:hover:text-blue-400 transition-colors"
-                       href="#">Chính sách giao hàng</a></li>
-                <li>
-                    <a class="text-slate-500 dark:text-slate-400 hover:text-secondary dark:hover:text-blue-400 transition-colors"
-                       href="#">Đổi trả &amp; Hoàn tiền</a></li>
-                <li>
-                    <a class="text-slate-500 dark:text-slate-400 hover:text-secondary dark:hover:text-blue-400 transition-colors"
-                       href="#">Câu hỏi thường gặp</a></li>
-            </ul>
-        </div>
-        <div>
-            <h5 class="font-bold text-slate-900 dark:text-white mb-6">Liên hệ</h5>
-            <ul class="space-y-4">
-                <li>
-                    <a class="text-slate-500 dark:text-slate-400 hover:text-secondary dark:hover:text-blue-400 transition-colors"
-                       href="#">Liên hệ</a></li>
-                <li>
-                    <a class="text-slate-500 dark:text-slate-400 hover:text-secondary dark:hover:text-blue-400 transition-colors"
-                       href="#">Điều khoản sử dụng</a></li>
-                <li>
-                    <a class="text-slate-500 dark:text-slate-400 hover:text-secondary dark:hover:text-blue-400 transition-colors"
-                       href="#">Chính sách bảo mật</a></li>
-            </ul>
-        </div>
-    </div>
-</footer>
+    <!-- Chatbot Widget -->
+    <div th:replace="~{chatbot/chatbot :: widget}"></div>
+
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
+
+    <script>
+        function changeMainImage(thumb) {
+            const main = document.getElementById('mainDetailImage');
+            main.src = thumb.querySelector('img').src;
+
+            document.querySelectorAll('.flex-shrink-0.w-24').forEach(el => {
+                el.classList.remove('border-primary-container', 'shadow-lg', 'opacity-100');
+                el.classList.add('border-outline-variant/20', 'shadow-sm', 'opacity-60');
+            });
+            thumb.classList.add('border-primary-container', 'shadow-lg', 'opacity-100');
+            thumb.classList.remove('opacity-60');
+        }
+
+        function updateQuantity(delta) {
+            const input = document.getElementById('purchaseQuantity');
+            let val = parseInt(input.value) + delta;
+            if (val < 1) val = 1;
+            input.value = val;
+        }
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById('tab-' + tabName).classList.remove('hidden');
+
+            document.querySelectorAll('.tab-btn').forEach(el => {
+                el.classList.remove('active');
+            });
+            document.getElementById('btn-' + tabName).classList.add('active');
+        }
+
+        // AJAX for Cart
+        document.querySelector('form[action="/cart/add"]').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const btn = this.querySelector('button');
+            
+            fetch(this.getAttribute('action'), {
+                method: 'POST',
+                body: formData,
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            }).then(response => {
+                if (response.ok) return response.json();
+            }).then(data => {
+                if (data) {
+                    const badge = document.getElementById('cart-badge');
+                    if(badge) {
+                        badge.textContent = data.count;
+                        badge.classList.add('animate-bounce');
+                        setTimeout(() => badge.classList.remove('animate-bounce'), 1000);
+                    }
+                    if (btn) {
+                        btn.classList.add('brightness-110');
+                        setTimeout(() => btn.classList.remove('brightness-110'), 500);
+                    }
+                }
+            });
+        });
+
+        // AJAX for Wishlist
+        document.addEventListener('click', function(e) {
+            const wishBtn = e.target.closest('.wishlist-btn');
+            if (wishBtn) {
+                e.preventDefault();
+                const productId = wishBtn.dataset.productId;
+                
+                fetch('/wishlist/toggle/' + productId, { 
+                    method: 'POST',
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                })
+                .then(response => {
+                    if (response.status === 401) {
+                        window.location.href = '/login';
+                        return;
+                    }
+                    if (response.ok) return response.json();
+                })
+                .then(data => {
+                    if (data) {
+                        const badge = document.getElementById('wishlist-badge');
+                        if(badge) badge.textContent = data.count;
+                        const icon = wishBtn.querySelector('.material-symbols-outlined');
+                        if (data.added) {
+                            icon.classList.add('text-red-500', 'fill-1');
+                        } else {
+                            icon.classList.remove('text-red-500', 'fill-1');
+                        }
+                        if(badge) {
+                            badge.classList.add('animate-bounce');
+                            setTimeout(() => badge.classList.remove('animate-bounce'), 1000);
+                        }
+                    }
+                });
+            }
+        });
+    </script>
 </body>
+
 </html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" class="light" lang="vi">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>The Oceanic - Quản Lý Người Dùng</title>
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#F26522',
+                        secondary: '#E8C872',
+                        accent: '#F26522',
+                        surface: '#FDFBF7',
+                        'on-surface': '#1B1C17',
+                        'on-surface-variant': '#44483D',
+                        'outline-variant': '#C4C8BA',
+                        background: '#F4F7F5',
+                        tertiary: '#0D4A7A',
+                        'primary-container': '#FFEDE5',
+                        'on-primary-container': '#F26522'
+                    },
+                    borderRadius: {
+                        DEFAULT: '0.5rem',
+                        lg: '1rem',
+                        xl: '1.5rem',
+                        full: '9999px'
+                    },
+                    fontFamily: {
+                        headline: ['Playfair Display', 'serif'],
+                        body: ['Plus Jakarta Sans', 'sans-serif']
+                    }
+                }
+            }
+        };
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&amp;family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .font-headline {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .font-numeric {
+            font-family: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
+            font-variant-numeric: tabular-nums lining-nums;
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+    </style>
+</head>
+
+<body class="bg-background text-on-surface flex min-h-screen">
+<div th:replace="~{admin/fragments/sidebar :: sidebar}"></div>
+
+<main class="flex-1 ml-72 min-h-screen relative">
+    <div th:replace="~{admin/fragments/header :: header}"></div>
+
+    <div class="p-10 space-y-6">
+        <div>
+            <h1 class="text-5xl font-headline font-bold text-tertiary tracking-tight">Quản Lý Người Dùng</h1>
+            <p class="mt-2 text-on-surface-variant">Theo dõi danh sách người dùng và kiểm soát trạng thái tài khoản</p>
+        </div>
+
+        <div th:if="${successMessage}" class="rounded-xl border border-green-200 bg-green-50 text-green-700 px-4 py-3 text-sm font-semibold" th:text="${successMessage}"></div>
+        <div th:if="${errorMessage}" class="rounded-xl border border-red-200 bg-red-50 text-red-700 px-4 py-3 text-sm font-semibold" th:text="${errorMessage}"></div>
+
+        <form method="get" th:action="@{/admin/users}" class="max-w-xl">
+            <div class="relative">
+                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant/70 text-lg">search</span>
+                <input name="keyword" th:value="${keyword}" type="text" placeholder="Tìm kiếm theo tên, email hoặc số điện thoại..." class="w-full rounded-xl border border-outline-variant/40 pl-10 pr-4 py-3 text-sm focus:border-primary focus:ring-primary/20"/>
+            </div>
+        </form>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+            <div class="rounded-xl bg-white border border-outline-variant/20 p-4 shadow-sm">
+                <p class="text-sm text-on-surface-variant">Tổng người dùng</p>
+                <p class="text-4xl font-bold text-tertiary font-numeric mt-2" th:text="${totalUsers}">0</p>
+            </div>
+            <div class="rounded-xl bg-white border border-outline-variant/20 p-4 shadow-sm">
+                <p class="text-sm text-on-surface-variant">Khách hàng</p>
+                <p class="text-4xl font-bold text-tertiary font-numeric mt-2" th:text="${customerUsers}">0</p>
+            </div>
+            <div class="rounded-xl bg-white border border-outline-variant/20 p-4 shadow-sm">
+                <p class="text-sm text-on-surface-variant">Đang hoạt động</p>
+                <p class="text-4xl font-bold text-emerald-600 font-numeric mt-2" th:text="${activeUsers}">0</p>
+            </div>
+            <div class="rounded-xl bg-white border border-outline-variant/20 p-4 shadow-sm">
+                <p class="text-sm text-on-surface-variant">Bị khóa</p>
+                <p class="text-4xl font-bold text-rose-600 font-numeric mt-2" th:text="${blockedUsers}">0</p>
+            </div>
+        </div>
+
+        <div class="rounded-2xl bg-white border border-outline-variant/20 shadow-sm overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full min-w-[1000px] text-left border-collapse">
+                    <thead>
+                    <tr class="bg-background/50">
+                        <th class="px-6 py-4 text-xs font-bold uppercase tracking-widest text-on-surface-variant/70">Người dùng</th>
+                        <th class="px-6 py-4 text-xs font-bold uppercase tracking-widest text-on-surface-variant/70">Liên hệ</th>
+                        <th class="px-6 py-4 text-xs font-bold uppercase tracking-widest text-on-surface-variant/70">Vai trò</th>
+                        <th class="px-6 py-4 text-xs font-bold uppercase tracking-widest text-on-surface-variant/70">Ngày tham gia</th>
+                        <th class="px-6 py-4 text-xs font-bold uppercase tracking-widest text-on-surface-variant/70">Đơn hàng</th>
+                        <th class="px-6 py-4 text-xs font-bold uppercase tracking-widest text-on-surface-variant/70">Tổng chi tiêu</th>
+                        <th class="px-6 py-4 text-xs font-bold uppercase tracking-widest text-on-surface-variant/70">Trạng thái</th>
+                        <th class="px-6 py-4 text-xs font-bold uppercase tracking-widest text-on-surface-variant/70 text-right">Hành động</th>
+                    </tr>
+                    </thead>
+                    <tbody class="divide-y divide-outline-variant/10">
+                    <tr th:if="${#lists.isEmpty(users)}">
+                        <td colspan="8" class="px-6 py-12 text-center text-on-surface-variant">Không có người dùng phù hợp.</td>
+                    </tr>
+
+                    <tr th:each="user : ${users}" class="hover:bg-background/40 transition-colors">
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-tertiary text-white flex items-center justify-center font-bold"
+                                     th:text="${#strings.length(user.fullName != null ? user.fullName : user.username) > 0 ? #strings.substring(user.fullName != null ? user.fullName : user.username, 0, 1).toUpperCase() : 'U'}">A</div>
+                                <div>
+                                    <p class="font-bold text-tertiary" th:text="${user.fullName != null ? user.fullName : user.username}">Admin</p>
+                                    <p class="text-xs text-on-surface-variant font-numeric" th:text="'ID: ' + ${user.id}">ID: 1</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <p class="text-sm text-tertiary" th:text="${user.email}">admin@oceanic.vn</p>
+                            <p class="text-sm text-on-surface-variant" th:text="${user.phone != null ? user.phone : '-'}">+84 912 000 000</p>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold uppercase"
+                                  th:classappend="${user.role != null and user.role.equalsIgnoreCase('ADMIN')} ? ' bg-primary text-white' : ' bg-slate-200 text-slate-700'"
+                                  th:text="${user.role != null ? user.role : 'CUSTOMER'}">ADMIN</span>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-on-surface-variant font-numeric" th:text="${user.createdDate != null ? #strings.substring(user.createdDate.toString(), 0, 10) : '-'}">2025-01-01</td>
+                        <td class="px-6 py-4 text-xl font-bold text-tertiary font-numeric" th:text="${orderCountByUser[user.id] != null ? orderCountByUser[user.id] : 0}">0</td>
+                        <td class="px-6 py-4 text-xl font-bold text-primary font-numeric" th:text="'$' + ${#numbers.formatDecimal(spendingByUser[user.id] != null ? spendingByUser[user.id] : 0, 1, 'POINT', 2, 'COMMA')}">$0.00</td>
+                        <td class="px-6 py-4">
+                            <form th:action="@{'/admin/users/' + ${user.id} + '/toggle'}" method="post" class="inline-flex">
+                                <input type="hidden" name="enabled" th:value="${!user.enabled}"/>
+                                <input type="hidden" name="keyword" th:value="${keyword}"/>
+                                <button type="submit" class="w-14 h-8 rounded-full relative transition-colors"
+                                        th:classappend="${user.enabled} ? ' bg-emerald-500' : ' bg-slate-300'">
+                                    <span class="absolute top-1 w-6 h-6 rounded-full bg-white transition-all"
+                                          th:classappend="${user.enabled} ? ' right-1' : ' left-1'"></span>
+                                </button>
+                            </form>
+                        </td>
+                        <td class="px-6 py-4 text-right">
+                            <form th:action="@{'/admin/users/' + ${user.id} + '/toggle'}" method="post" class="inline-flex">
+                                <input type="hidden" name="enabled" th:value="${!user.enabled}"/>
+                                <input type="hidden" name="keyword" th:value="${keyword}"/>
+                                <button type="submit" class="text-sm font-semibold"
+                                        th:classappend="${user.enabled} ? ' text-rose-600 hover:text-rose-700' : ' text-emerald-600 hover:text-emerald-700'"
+                                        th:text="${user.enabled} ? 'Khóa' : 'Mở khóa'">Khóa</button>
+                            </form>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <p class="text-sm text-on-surface-variant" th:text="'Hiển thị ' + ${users.size()} + ' người dùng'">Hiển thị 0 người dùng</p>
+    </div>
+</main>
+</body>
+</html>

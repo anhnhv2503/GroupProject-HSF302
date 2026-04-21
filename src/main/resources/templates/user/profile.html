@@ -1,10 +1,45 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<html class="light" lang="vi" xmlns:th="http://www.thymeleaf.org"
+    xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Profile</title>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Hồ Sơ Cá Nhân - The Culinary Curator</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <style>
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        body { font-family: 'Inter', sans-serif; }
+    </style>
 </head>
-<body>
-    <div th:text="${username}"></div>
+
+<body class="bg-surface text-on-surface">
+    <header th:replace="~{fragments/index-header :: header}"></header>
+
+    <main class="pt-32 pb-16 max-w-7xl mx-auto px-8">
+        <div class="mb-8">
+            <h1 class="text-3xl font-black text-on-surface tracking-tighter">Hồ Sơ Cá Nhân</h1>
+            <p class="text-on-surface-variant mt-1">Quản lý thông tin cá nhân của bạn</p>
+        </div>
+
+        <div th:if="${success}" class="mb-6 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg flex items-center gap-2">
+            <span class="material-symbols-outlined text-sm">check_circle</span>
+            <span th:text="${success}"></span>
+        </div>
+        <div th:if="${error}" class="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2">
+            <span class="material-symbols-outlined text-sm">error</span>
+            <span th:text="${error}"></span>
+        </div>
+
+        <div class="flex flex-col lg:flex-row gap-8">
+            <div th:replace="~{layout/fragments/profile-sidebar :: sidebar(active='profile')}"></div>
+            <div th:replace="~{layout/fragments/profile-content :: content}"></div>
+        </div>
+    </main>
+
+    <footer th:replace="~{fragments/index-footer :: footer}"></footer>
 </body>
 </html>

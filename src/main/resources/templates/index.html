@@ -1,25 +1,29 @@
 <!DOCTYPE html>
 
 <html class="light" lang="vi" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
-    <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>The Culinary Curator - Tinh hoa hải sản từ đại dương</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link
-            href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;family=Roboto:wght@400;500;700&amp;display=swap"
-            rel="stylesheet"/>
+        href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&amp;family=Inter:wght@300;400;500;600;700;800;900&amp;family=Roboto:wght@400;500;700&amp;display=swap"
+        rel="stylesheet" />
     <link
-            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
-            rel="stylesheet"/>
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
     <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
             theme: {
                 extend: {
                     "colors": {
+                        "brand-primary": "#F26522",
+                        "brand-secondary": "#0D4A7A",
+                        "brand-bg": "#F8F9FA",
                         "surface-container-highest": "#e1e3e4",
                         "on-tertiary-fixed-variant": "#004b6f",
                         "on-error": "#ffffff",
@@ -89,7 +93,7 @@
         }
 
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Be Vietnam Pro', 'Inter', sans-serif;
         }
 
         .font-roboto {
@@ -133,513 +137,428 @@
 </head>
 
 <body class="bg-surface text-on-surface">
-<!-- TopNavBar -->
-<header
-        class="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-sm dark:shadow-none">
-    <div class="flex justify-between items-center w-full px-8 py-4 max-w-7xl mx-auto">
-        <div class="text-2xl font-bold tracking-tighter text-slate-900 dark:text-white">The Culinary Curator</div>
-        <nav class="hidden md:flex gap-8 items-center font-sans tracking-tight text-sm font-medium">
-            <a class="text-primary border-b-2 border-primary pb-1" th:href="@{/}">Trang chủ</a>
-            <a class="text-slate-600 dark:text-slate-400 hover:text-primary transition-colors" th:href="@{/products}">Sản phẩm</a>
-            <a class="text-slate-600 dark:text-slate-400 hover:text-primary transition-colors" href="#">Công
-                thức</a>
-            <a class="text-slate-600 dark:text-slate-400 hover:text-primary transition-colors" href="#">Câu
-                chuyện</a>
-        </nav>
-        <div class="flex items-center gap-6">
-            <div class="hidden lg:flex items-center bg-surface-container-low px-3 py-1.5 rounded-full">
-                <span class="material-symbols-outlined text-sm text-on-surface-variant">search</span>
-                <input class="bg-transparent border-none focus:ring-0 text-xs w-48 ml-2"
-                       placeholder="Tìm hải sản..." type="text"/>
+    <!-- TopNavBar -->
+    <header th:replace="~{fragments/index-header :: header}"></header>
+    <main class="pt-32">
+        <!-- Hero Section -->
+        <section class="relative h-[870px] flex items-center overflow-hidden">
+            <div class="absolute inset-0 z-0">
+                <img class="w-full h-full object-cover"
+                    data-alt="Stunning cinematic wide shot of fresh king crab legs and blue lobsters on ice with elegant morning sunlight and dramatic deep blue shadows"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuA74AVyACnfCK_dAxL86PDqpJp-fC5ZndZ4nhkCI7jTckRpUR5XB3BUW8U_JhPozCuOtvlEOmGvM8R9i0OuwbnHLKtUa9sthSn9tXeEyzoVBQ15h-ngvlHzIrgyCUOfVKSFw4l2pZylkIaj0dzFGBTuIwYqnJ3swElVkyY6oO8RI7GxOcPqpLOG86IHqvsEw6Qr-f-QVFOe8Ztbk6Rh0B3yWjPS4HRr7GH2Qb6CeQrmtNG-PPhDor2g_9O3opl0CxZWJ-wuFWeilVc" />
+                <div class="absolute inset-0 bg-gradient-to-r from-on-secondary/60 to-transparent"></div>
             </div>
-            <div class="flex items-center gap-4 text-slate-900">
-                <!-- Auth Section -->
-                <div class="flex items-center gap-3">
-                    <!-- Not Authenticated -->
-                    <div sec:authorize="!isAuthenticated()" class="flex items-center gap-2">
-                        <a th:href="@{/login}"
-                           class="text-[10px] font-black uppercase tracking-widest text-on-surface-variant hover:text-primary transition-colors">Đăng
-                            nhập</a>
-                        <span class="text-outline-variant/30 text-[10px]">|</span>
-                        <a th:href="@{/register}"
-                           class="bg-primary text-white px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest hover:opacity-90 shadow-md shadow-primary/20 transition-all">Đăng
-                            ký</a>
+            <div class="relative z-10 max-w-7xl mx-auto px-8 w-full">
+                <div class="max-w-2xl">
+                    <span class="text-on-surface tracking-widest uppercase text-xs font-bold mb-4 block">Thưởng lãm nghệ
+                        thuật ẩm thực</span>
+                    <h1 class="text-6xl md:text-8xl font-black text-on-surface leading-[1.1] mb-6 tracking-tighter">
+                        Tinh hoa hải sản <br /> <span class="text-primary-container italic">từ đại dương</span>
+                    </h1>
+                    <p class="text-lg text-on-surface-variant mb-8 max-w-lg leading-relaxed">
+                        Trải nghiệm tinh hoa đại dương ngay tại bàn tiệc của bạn với những lựa chọn hải sản quý hiếm
+                        được
+                        tuyển chọn thủ công bởi chuyên gia.
+                    </p>
+                    <div class="flex gap-4">
+                        <button
+                            class="bg-gradient-to-r from-primary-container to-primary text-on-primary px-8 py-4 rounded-lg font-bold hover:opacity-90 transition-all shadow-lg shadow-primary-container/20">
+                            Khám phá Bộ sưu tập
+                        </button>
+                        <button
+                            class="bg-surface-container-highest text-secondary px-8 py-4 rounded-lg font-bold hover:bg-surface-container-high transition-all">
+                            Xem Bảng giá
+                        </button>
                     </div>
-
-                    <!-- Authenticated -->
-                    <div sec:authorize="isAuthenticated()" class="flex items-center gap-4">
-                        <a th:href="@{/cart}" class="hover:opacity-80 transition-all scale-95 duration-200 ease-in-out relative">
-                            <span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
+                </div>
+            </div>
+        </section>
+        <!-- Featured Collections -->
+        <section class="py-24 max-w-7xl mx-auto px-8">
+            <div class="mb-12 flex justify-between items-end">
+                <div>
+                    <h2 class="text-3xl font-black text-on-surface tracking-tighter uppercase">Bộ sưu tập nổi bật</h2>
+                    <div class="w-12 h-1 bg-secondary mt-2"></div>
+                </div>
+                <a class="text-secondary font-bold text-sm uppercase tracking-widest flex items-center gap-2 hover:gap-3 transition-all"
+                    th:href="@{/products}">
+                    Tất cả sản phẩm <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                </a>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div th:each="product, iterStat : ${products}" th:if="${iterStat.index < 8}"
+                     class="group relative overflow-hidden rounded-xl bg-surface-container-low shadow-sm flex flex-col hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                    <a th:href="@{'/products/' + ${product.id}}" class="relative aspect-square overflow-hidden block">
+                        <!-- Badge -->
+                        <div th:if="${product.freshnessStatus == 'FRESH'}" class="absolute top-3 left-3 z-10 bg-green-600 text-white text-[9px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider shadow">Daily</div>
+                        <div th:if="${product.freshnessStatus == 'FROZEN'}" class="absolute top-3 left-3 z-10 bg-blue-600 text-white text-[9px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider shadow">Frozen</div>
+                        <div th:if="${product.freshnessStatus == 'LIVE'}" class="absolute top-3 left-3 z-10 bg-orange-600 text-white text-[9px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider shadow">Live</div>
+                        <!-- Image -->
+                        <img th:if="${product.images != null and !product.images.isEmpty()}"
+                             th:with="primaryImg=${product.images.^[isPrimary != null and isPrimary]}"
+                             th:src="@{${primaryImg != null ? primaryImg.imageUrl : product.images[0].imageUrl}}"
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                             th:alt="${product.name}"/>
+                        <img th:unless="${product.images != null and !product.images.isEmpty()}"
+                             src="https://via.placeholder.com/400x400?text=Seafood"
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                             alt="Seafood"/>
+                    </a>
+                    <div class="p-6 flex flex-col flex-grow">
+                        <a th:href="@{'/products/' + ${product.id}}" class="block">
+                            <h3 class="text-lg font-bold mb-2 tracking-tight text-on-surface hover:text-primary-container transition-colors line-clamp-2" th:text="${product.name}">Tên sản phẩm</h3>
                         </a>
-                        <div class="flex items-center gap-2 group cursor-pointer relative py-2">
-                                <span class="material-symbols-outlined text-secondary"
-                                      data-icon="account_circle">account_circle</span>
-                            <div class="flex flex-col">
-                                    <span class="text-[10px] font-black uppercase tracking-tighter text-on-surface">Xin
-                                        chào, <span sec:authentication="name">User</span></span>
-                                <span class="text-[8px] text-on-surface-variant leading-none">Thành viên thân
-                                        thiết</span>
-                            </div>
-
-                            <!-- Mini Dropdown -->
-                            <div
-                                    class="absolute top-full right-0 mt-1 w-48 bg-white rounded-xl shadow-xl border border-outline-variant/10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 p-2">
-                                <a href="/profile"
-                                   class="flex items-center gap-2 p-2 hover:bg-surface-container-low rounded-lg text-xs font-medium transition-colors text-slate-700">
-                                    <span class="material-symbols-outlined text-sm">person</span> Hồ sơ cá nhân
-                                </a>
-                                <hr class="my-1 border-outline-variant/10">
-                                <form th:action="@{/logout}" method="post">
-                                    <button type="submit"
-                                            class="w-full flex items-center gap-2 p-2 hover:bg-error/10 text-error rounded-lg text-xs font-bold transition-colors">
-                                        <span class="material-symbols-outlined text-sm">logout</span> Đăng xuất
-                                    </button>
-                                </form>
-                            </div>
+                        <div class="mt-auto">
+                            <p class="text-primary-container font-black text-lg" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' ₫'">0 ₫</p>
+                            <form th:action="@{/cart/add}" method="post" class="mt-4">
+                                <input type="hidden" name="productId" th:value="${product.id}"/>
+                                <input type="hidden" name="name" th:value="${product.name}"/>
+                                <input type="hidden" name="price" th:value="${product.price}"/>
+                                <input type="hidden" name="quantity" value="1"/>
+                                <button type="submit"
+                                    class="w-full bg-surface-container-highest text-secondary py-2.5 rounded font-bold text-sm hover:bg-primary-container hover:text-white transition-all uppercase tracking-wide">
+                                    Thêm vào giỏ
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-</header>
-<main class="pt-20">
-    <!-- Hero Section -->
-    <section class="relative h-[870px] flex items-center overflow-hidden">
-        <div class="absolute inset-0 z-0">
-            <img class="w-full h-full object-cover"
-                 data-alt="Stunning cinematic wide shot of fresh king crab legs and blue lobsters on ice with elegant morning sunlight and dramatic deep blue shadows"
-                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuA74AVyACnfCK_dAxL86PDqpJp-fC5ZndZ4nhkCI7jTckRpUR5XB3BUW8U_JhPozCuOtvlEOmGvM8R9i0OuwbnHLKtUa9sthSn9tXeEyzoVBQ15h-ngvlHzIrgyCUOfVKSFw4l2pZylkIaj0dzFGBTuIwYqnJ3swElVkyY6oO8RI7GxOcPqpLOG86IHqvsEw6Qr-f-QVFOe8Ztbk6Rh0B3yWjPS4HRr7GH2Qb6CeQrmtNG-PPhDor2g_9O3opl0CxZWJ-wuFWeilVc"/>
-            <div class="absolute inset-0 bg-gradient-to-r from-on-secondary/60 to-transparent"></div>
-        </div>
-        <div class="relative z-10 max-w-7xl mx-auto px-8 w-full">
-            <div class="max-w-2xl">
-                    <span class="text-on-surface tracking-widest uppercase text-xs font-bold mb-4 block">Thưởng lãm nghệ
-                        thuật ẩm thực</span>
-                <h1 class="text-6xl md:text-8xl font-black text-on-surface leading-[1.1] mb-6 tracking-tighter">
-                    Tinh hoa hải sản <br/> <span class="text-primary-container italic">từ đại dương</span>
-                </h1>
-                <p class="text-lg text-on-surface-variant mb-8 max-w-lg leading-relaxed">
-                    Trải nghiệm tinh hoa đại dương ngay tại bàn tiệc của bạn với những lựa chọn hải sản quý hiếm
-                    được
-                    tuyển chọn thủ công bởi chuyên gia.
-                </p>
-                <div class="flex gap-4">
-                    <button
-                            class="bg-gradient-to-r from-primary-container to-primary text-on-primary px-8 py-4 rounded-lg font-bold hover:opacity-90 transition-all shadow-lg shadow-primary-container/20">
-                        Khám phá Bộ sưu tập
-                    </button>
-                    <button
-                            class="bg-surface-container-highest text-secondary px-8 py-4 rounded-lg font-bold hover:bg-surface-container-high transition-all">
-                        Xem Bảng giá
-                    </button>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- Featured Collections -->
-    <section class="py-24 max-w-7xl mx-auto px-8">
-        <div class="mb-12 flex justify-between items-end">
-            <div>
-                <h2 class="text-3xl font-black text-on-surface tracking-tighter uppercase">Bộ sưu tập nổi bật</h2>
-                <div class="w-12 h-1 bg-secondary mt-2"></div>
-            </div>
-            <a class="text-secondary font-bold text-sm uppercase tracking-widest flex items-center gap-2 hover:gap-3 transition-all"
-               href="#">
-                Tất cả sản phẩm <span class="material-symbols-outlined text-sm">arrow_forward</span>
-            </a>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <!-- Product 1 -->
-            <div class="group relative overflow-hidden rounded-xl bg-surface-container-low shadow-sm flex flex-col">
-                <div class="relative aspect-square overflow-hidden">
-                    <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                         data-alt="Fresh premium seafood hotpot combo"
-                         src="https://lh3.googleusercontent.com/aida-public/AB6AXuA7oQuQTH7lBxjvS6P6aUnhbUDGauAUVVWnv7bGcsEav1wUe7Cm0jTdlIwlFo3CNEBhgMXq0yNVTvEPoDHayBUD-U8Rs1SuXLKql66rHgExe36SJumiTDC-DzD5lJQOxC5K_yUvan9wxhjqvjZKH__XrrqwpuT1Uv05HfimVmzXoy1F2p51xV_W-jzTbVOiptQIW4GLOg_muMCSAzUB3tJCyE1By-FyOXOYY-assOkCD7dQXUyHjUcDyZnA4nNDyvrM5CI5gyNi2ss"/>
-                </div>
-                <div class="p-6 flex flex-col flex-grow">
-                    <h3 class="text-xl font-bold mb-2 tracking-tight text-on-surface">Combo Lẩu Hải Sản 4 Người</h3>
-                    <div class="mt-auto">
-                        <p class="text-primary-container font-black text-lg">499.000 ₫</p>
-                        <button
-                                class="mt-4 w-full bg-surface-container-highest text-secondary py-2 rounded font-bold text-sm hover:bg-primary-container hover:text-white transition-all">
-                            THÊM VÀO GIỎ
-                        </button>
+        </section>
+        <!-- Features -->
+        <section class="bg-surface-container-low py-16">
+            <div class="max-w-7xl mx-auto px-8">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
+                    <div class="flex flex-col items-center">
+                        <span class="material-symbols-outlined text-4xl text-secondary mb-4">tsunami</span>
+                        <h4 class="font-bold text-lg mb-2 text-on-surface">Đánh bắt bền vững</h4>
+                        <p class="text-sm text-on-surface-variant">Cam kết bảo vệ hệ sinh thái đại dương qua từng sản
+                            phẩm.</p>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <span class="material-symbols-outlined text-4xl text-secondary mb-4">local_shipping</span>
+                        <h4 class="font-bold text-lg mb-2 text-on-surface">Giao hàng nhanh</h4>
+                        <p class="text-sm text-on-surface-variant">Vận chuyển siêu tốc, giữ trọn độ tươi ngon trong từng
+                            thớ
+                            thịt.</p>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <span class="material-symbols-outlined text-4xl text-secondary mb-4">verified</span>
+                        <h4 class="font-bold text-lg mb-2 text-on-surface">Tuyển chọn thủ công</h4>
+                        <p class="text-sm text-on-surface-variant">Chỉ những mẫu vật hoàn hảo nhất mới được đưa đến tay
+                            khách hàng.</p>
                     </div>
                 </div>
             </div>
-            <!-- Product 2 -->
-            <div class="group relative overflow-hidden rounded-xl bg-surface-container-low shadow-sm flex flex-col">
-                <div class="relative aspect-square overflow-hidden">
-                    <div class="premium-badge">★<br/>Premium</div>
-                    <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                         data-alt="King Crab Legs Alaska"
-                         src="https://lh3.googleusercontent.com/aida-public/AB6AXuA74AVyACnfCK_dAxL86PDqpJp-fC5ZndZ4nhkCI7jTckRpUR5XB3BUW8U_JhPozCuOtvlEOmGvM8R9i0OuwbnHLKtUa9sthSn9tXeEyzoVBQ15h-ngvlHzIrgyCUOfVKSFw4l2pZylkIaj0dzFGBTuIwYqnJ3swElVkyY6oO8RI7GxOcPqpLOG86IHqvsEw6Qr-f-QVFOe8Ztbk6Rh0B3yWjPS4HRr7GH2Qb6CeQrmtNG-PPhDor2g_9O3opl0CxZWJ-wuFWeilVc"/>
+        </section>
+        <!-- Testimonials -->
+        <section class="py-24 max-w-7xl mx-auto px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-black text-on-surface tracking-tighter uppercase">Khách hàng nói gì về chúng
+                    tôi</h2>
+                <p class="text-on-surface-variant mt-2">Hơn 5000+ tín đồ ẩm thực đã tin dùng</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-surface-container-lowest p-8 rounded-xl shadow-sm border border-outline-variant/10">
+                    <div class="flex gap-1 text-primary-container mb-4">
+                        <span class="material-symbols-outlined text-sm"
+                            style="font-variation-settings: 'FILL' 1;">star</span>
+                        <span class="material-symbols-outlined text-sm"
+                            style="font-variation-settings: 'FILL' 1;">star</span>
+                        <span class="material-symbols-outlined text-sm"
+                            style="font-variation-settings: 'FILL' 1;">star</span>
+                        <span class="material-symbols-outlined text-sm"
+                            style="font-variation-settings: 'FILL' 1;">star</span>
+                        <span class="material-symbols-outlined text-sm"
+                            style="font-variation-settings: 'FILL' 1;">star</span>
+                    </div>
+                    <p class="text-on-surface-variant italic mb-6 leading-relaxed">"Chất lượng tôm hùm ở đây thực sự
+                        khác
+                        biệt, rất chắc thịt và ngọt. Dịch vụ giao hàng nhanh và đóng gói chuyên nghiệp."</p>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full bg-slate-200 overflow-hidden">
+                            <img class="w-full h-full object-cover" data-alt="Portrait of Anh Hoàng Nam"
+                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAp8HAKxZuIp8rMYYIWm9y2IXwOlJVbr1l93AKngWkfAIRBeXa98rFqBeaIOhZrlr78L7ldV3IU9KKhayAcd2U0nONVY1HqnafOhV0Luklkt0cKE-5cuydAmaBF7J7n4lZPzAeHVJeRnn2jydy3QH-NRBcOGTlp_HznR_vGsxn0W1YUxVuZzoJuggcTJwrvDpaIsv19JVme6N30O6H5bqts_5rYY7ik83giywd7NUEfDxkIs-gaa5nWt6lPzU-Y-RP5jKYnpUhjh-k" />
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-sm text-on-surface">Anh Hoàng Nam</h4>
+                            <p class="text-[10px] text-on-surface-variant uppercase">Giám đốc Điều hành</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="p-6 flex flex-col flex-grow">
-                    <h3 class="text-xl font-bold mb-2 tracking-tight text-on-surface">Cua Hoàng Đế Alaska</h3>
-                    <div class="mt-auto">
-                        <p class="text-primary-container font-black text-lg">1.290.000 ₫/con</p>
-                        <button
-                                class="mt-4 w-full bg-surface-container-highest text-secondary py-2 rounded font-bold text-sm hover:bg-primary-container hover:text-white transition-all">
-                            THÊM VÀO GIỎ
-                        </button>
+                <div class="bg-surface-container-lowest p-8 rounded-xl shadow-sm border border-outline-variant/10">
+                    <div class="flex gap-1 text-primary-container mb-4">
+                        <span class="material-symbols-outlined text-sm"
+                            style="font-variation-settings: 'FILL' 1;">star</span>
+                        <span class="material-symbols-outlined text-sm"
+                            style="font-variation-settings: 'FILL' 1;">star</span>
+                        <span class="material-symbols-outlined text-sm"
+                            style="font-variation-settings: 'FILL' 1;">star</span>
+                        <span class="material-symbols-outlined text-sm"
+                            style="font-variation-settings: 'FILL' 1;">star</span>
+                        <span class="material-symbols-outlined text-sm"
+                            style="font-variation-settings: 'FILL' 1;">star</span>
+                    </div>
+                    <p class="text-on-surface-variant italic mb-6 leading-relaxed">"Tôi đã đặt hộp quà hải sản cho đối
+                        tác
+                        và họ rất ấn tượng. Sự tinh tế trong cách bài trí thực sự xứng tầm cao cấp."</p>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full bg-slate-200 overflow-hidden">
+                            <img class="w-full h-full object-cover" data-alt="Portrait of Chị Minh Thư"
+                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDeHRLCKJqYC9QclzscR7owReJnH7_76NX9Tm0Y2UguYfQlfYHqdm6jpOb_JvZAF7rIL6qHaK6JC9YnoQpaXwzUxCGOJsUgZ9abxV1sGFcbI4nFrmtonoI-jQfO5q8-oMFEXKiiUgVfaH80sakCYIqdajRSmd36HiSfKC8xmBaCT_nJ9hiEIqcvkyTlL17Tfg0xxFPtKeoRu6UQuqwhDlKaDmPXo6I8XCv-Y25Tnlc4uQl5MqvmBeZW0raTYFXUNOlMjR70h7Vk7-4" />
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-sm text-on-surface">Chị Minh Thư</h4>
+                            <p class="text-[10px] text-on-surface-variant uppercase">Food Blogger</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-surface-container-lowest p-8 rounded-xl shadow-sm border border-outline-variant/10">
+                    <div class="flex gap-1 text-primary-container mb-4">
+                        <span class="material-symbols-outlined text-sm"
+                            style="font-variation-settings: 'FILL' 1;">star</span>
+                        <span class="material-symbols-outlined text-sm"
+                            style="font-variation-settings: 'FILL' 1;">star</span>
+                        <span class="material-symbols-outlined text-sm"
+                            style="font-variation-settings: 'FILL' 1;">star</span>
+                        <span class="material-symbols-outlined text-sm"
+                            style="font-variation-settings: 'FILL' 1;">star</span>
+                        <span class="material-symbols-outlined text-sm"
+                            style="font-variation-settings: 'FILL' 1;">star</span>
+                    </div>
+                    <p class="text-on-surface-variant italic mb-6 leading-relaxed">"Cách The Culinary Curator kể chuyện
+                        về
+                        nguồn gốc từng loài hải sản làm tôi cảm thấy yên tâm và trân trọng hơn món ăn mình thưởng thức."
+                    </p>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full bg-slate-200 overflow-hidden">
+                            <img class="w-full h-full object-cover" data-alt="Portrait of Anh Quốc Bảo"
+                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSgXcF-DcQC__xr5g6Be1nV0ySLOV0FrwCa7VhE-tm6M_1OUTFsFLTTqzMi8ISiLTqGVOkjGQU1TbHUV_car1rOZWM9d3yWBYvpOHHYEZYc3cyKY68XnV4WTvPFQ6Xy1ezqNxq3RHuLJbRgGCG8PkQ33tVtEiFGakzzduvHB_NPHMEorXYqe7O-KYmHWfYpgSvy6GWNwF_l3XHcmHncx3_7OMdCYnBEN3dke9WBAFRLJul4tGTCfrqTbIqD49YESnmx6YD4M3hPwk" />
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-sm text-on-surface">Anh Quốc Bảo</h4>
+                            <p class="text-[10px] text-on-surface-variant uppercase">Chủ nhà hàng</p>
+                        </div>
                     </div>
                 </div>
             </div>
-            <!-- Product 3 -->
-            <div class="group relative overflow-hidden rounded-xl bg-surface-container-low shadow-sm flex flex-col">
-                <div class="relative aspect-square overflow-hidden">
-                    <div class="premium-badge">★<br/>Premium</div>
-                    <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                         data-alt="Fresh Norway Salmon Fillet"
-                         src="https://lh3.googleusercontent.com/aida-public/AB6AXuDTzyKH94J3QJV-0vcdQl7Zd7dPYTGj4Sy-kUZjayhsFx0nnDvCk-4S0tCd0Zo6IpTGr3uDPdsprEhbelARvBCRiBf0XORZ6gOadD8eoGQEA9pM96uSWQeo0MCkMV4K4poJB7wZrCicbCxEic-fSasHxIHt01XSr6L1PwixuRqeFZvLYpp8BXrMge_qEHm4Rq496GmHfC95Y0E9lZChZbvzNos0hlXOmXv4uehgezMLtExVv1yqR-P8pApJ6RJd8pQrwNsPqKDhmKM"/>
-                </div>
-                <div class="p-6 flex flex-col flex-grow">
-                    <h3 class="text-xl font-bold mb-2 tracking-tight text-on-surface">Cá Hồi Nauy Fillet</h3>
-                    <div class="mt-auto">
-                        <p class="text-primary-container font-black text-lg">389.000 ₫/500g</p>
-                        <button
-                                class="mt-4 w-full bg-surface-container-highest text-secondary py-2 rounded font-bold text-sm hover:bg-primary-container hover:text-white transition-all">
-                            THÊM VÀO GIỎ
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <!-- Product 4 -->
-            <div class="group relative overflow-hidden rounded-xl bg-surface-container-low shadow-sm flex flex-col">
-                <div class="relative aspect-square overflow-hidden">
-                    <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                         data-alt="Giant Black Tiger Shrimp"
-                         src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-ze2qPXtCmXZRIkoxPNSoA5RMum2eEsj8IMxGc9Av0FNm-HU5IBDxHbKkZUvsDSZ1ZnRk-wPOwL8Lx-ZvubaQO80y18BxWbPgmI7tLLtWoWkg3fleMtNdoNVDdbOr7NprJT3Tgm9zsjiim0o3tGG4H4ydiqu82NsMwGKPscyKbCwWDv07HMozyv4PKx9QBayscyCF3OtRAEDjgXk_eWEbgZxDoAPXgaGQVAT-gh54z_nlDtndUwjQ4eWO0IP64BFfODdeEspWB_k"/>
-                </div>
-                <div class="p-6 flex flex-col flex-grow">
-                    <h3 class="text-xl font-bold mb-2 tracking-tight text-on-surface">Tôm Sú Cọp Khổng Lồ</h3>
-                    <div class="mt-auto">
-                        <p class="text-primary-container font-black text-lg">299.000 ₫/kg</p>
-                        <button
-                                class="mt-4 w-full bg-surface-container-highest text-secondary py-2 rounded font-bold text-sm hover:bg-primary-container hover:text-white transition-all">
-                            THÊM VÀO GIỎ
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!--        San pham moi-->
-    <section class="py-24 max-w-7xl mx-auto px-8">
-        <div class="mb-12 flex justify-between items-end">
-            <div>
-                <h2 class="text-3xl font-black text-on-surface tracking-tighter uppercase">Hàng mới về</h2>
-                <div class="w-12 h-1 bg-secondary mt-2"></div>
-            </div>
-            <a class="text-secondary font-bold text-sm uppercase tracking-widest flex items-center gap-2 hover:gap-3 transition-all"
-               href="#">
-                Tất cả sản phẩm <span class="material-symbols-outlined text-sm">arrow_forward</span>
-            </a>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <!-- Product 4 -->
-            <div th:each="product : ${products}">
-                <div class="group relative overflow-hidden rounded-xl bg-surface-container-low shadow-sm flex flex-col">
-                    <div class="relative aspect-square overflow-hidden">
-                        <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                             data-alt="Giant Black Tiger Shrimp"
-                             th:src="${product.images.get(0).imageUrl}"
-                             th:alt="${product.name}">/>
-                    </div>
-                    <div class="p-6 flex flex-col flex-grow">
-                        <h3 class="text-xl font-bold mb-2 tracking-tight text-on-surface"
-                            >
-                            <a th:href="@{/products/{id}(id=${product.id})}" th:text="${product.name}"></a>
-                        </h3>
-                        <div class="mt-auto">
-                            <p class="text-primary-container font-black text-lg" th:text="${product.price} + '/kg'">
-                                299.000 ₫/kg</p>
-                            <button
-                                    class="mt-4 w-full bg-surface-container-highest text-secondary py-2 rounded font-bold text-sm hover:bg-primary-container hover:text-white transition-all">
-                                THÊM VÀO GIỎ
+        </section>
+
+        <!-- About Us Section -->
+        <section id="about-us" class="py-24 bg-white overflow-hidden scroll-mt-20">
+            <style>
+                .luxury-text-gradient {
+                    background: linear-gradient(135deg, #1a1a1a 0%, #4a4a4a 100%);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                }
+
+                @keyframes bounce-slow {
+
+                    0%,
+                    100% {
+                        transform: translateY(-5%);
+                    }
+
+                    50% {
+                        transform: translateY(0);
+                    }
+                }
+
+                .animate-bounce-slow {
+                    animation: bounce-slow 3s infinite ease-in-out;
+                }
+            </style>
+            <div class="px-8 mx-auto" style="max-width: 1440px;">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                    <div class="space-y-8">
+                        <div class="space-y-4">
+                            <span class="text-[#D35400] font-bold text-xs uppercase tracking-[3px]">Câu chuyện thương
+                                hiệu</span>
+                            <h2
+                                class="text-5xl font-black text-slate-900 tracking-tighter leading-tight luxury-text-gradient">
+                                Hành trình tìm kiếm<br />tinh hoa đại dương</h2>
+                        </div>
+                        <div class="space-y-6 text-slate-600 leading-relaxed text-lg font-light">
+                            <p>
+                                <strong
+                                    class="font-bold text-slate-900 underline decoration-[#D35400]/30 underline-offset-4">The
+                                    Culinary Curator</strong> khởi nguồn từ niềm đam mê mãnh liệt với những giá trị
+                                nguyên bản ẩn mình dưới tầng đại dương lạnh giá. Chúng tôi không dừng lại ở việc cung
+                                cấp hải sản, chúng tôi là những người "tuyển chọn" (Curator) tận tâm.
+                            </p>
+                            <p>
+                                Mỗi sản phẩm có mặt tại cửa hàng đều phải vượt qua những tiêu chuẩn khắt khe nhất về độ
+                                tươi ngon, nguồn gốc bền vững và quy trình bảo quản tiêu chuẩn quốc tế. Từ vùng biển Bắc
+                                Âu xa xôi đến những hòn đảo tại Nhật Bản, chúng tôi lặn lội để mang về bàn tiệc của bạn
+                                những báu vật tinh túy nhất.
+                            </p>
+                        </div>
+                        <div class="flex gap-12 pt-4">
+                            <div class="text-center">
+                                <div class="text-4xl font-black text-slate-900">10+</div>
+                                <div class="text-[10px] uppercase tracking-widest text-slate-400 font-bold mt-2">Vùng
+                                    biển quốc tế</div>
+                            </div>
+                            <div class="h-14 w-[1px] bg-slate-100"></div>
+                            <div class="text-center">
+                                <div class="text-4xl font-black text-slate-900">100%</div>
+                                <div class="text-[10px] uppercase tracking-widest text-slate-400 font-bold mt-2">Tươi
+                                    sống mỗi ngày</div>
+                            </div>
+                        </div>
+                        <div class="pt-6">
+                            <button id="philosophy-btn"
+                                class="group relative bg-slate-900 text-white px-10 py-5 rounded-[4px] text-xs font-bold uppercase tracking-widest overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-[#D35400]/20">
+                                <span class="relative z-10">Khám phá triết lý của chúng tôi</span>
+                                <div
+                                    class="absolute inset-0 bg-[#D35400] translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                                </div>
                             </button>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- Features -->
-    <section class="bg-surface-container-low py-16">
-        <div class="max-w-7xl mx-auto px-8">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
-                <div class="flex flex-col items-center">
-                    <span class="material-symbols-outlined text-4xl text-secondary mb-4">tsunami</span>
-                    <h4 class="font-bold text-lg mb-2 text-on-surface">Đánh bắt bền vững</h4>
-                    <p class="text-sm text-on-surface-variant">Cam kết bảo vệ hệ sinh thái đại dương qua từng sản
-                        phẩm.</p>
-                </div>
-                <div class="flex flex-col items-center">
-                    <span class="material-symbols-outlined text-4xl text-secondary mb-4">local_shipping</span>
-                    <h4 class="font-bold text-lg mb-2 text-on-surface">Giao hàng nhanh</h4>
-                    <p class="text-sm text-on-surface-variant">Vận chuyển siêu tốc, giữ trọn độ tươi ngon trong từng
-                        thớ
-                        thịt.</p>
-                </div>
-                <div class="flex flex-col items-center">
-                    <span class="material-symbols-outlined text-4xl text-secondary mb-4">verified</span>
-                    <h4 class="font-bold text-lg mb-2 text-on-surface">Tuyển chọn thủ công</h4>
-                    <p class="text-sm text-on-surface-variant">Chỉ những mẫu vật hoàn hảo nhất mới được đưa đến tay
-                        khách hàng.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- Testimonials -->
-    <section class="py-24 max-w-7xl mx-auto px-8">
-        <div class="text-center mb-16">
-            <h2 class="text-3xl font-black text-on-surface tracking-tighter uppercase">Khách hàng nói gì về chúng
-                tôi</h2>
-            <p class="text-on-surface-variant mt-2">Hơn 5000+ tín đồ ẩm thực đã tin dùng</p>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div class="bg-surface-container-lowest p-8 rounded-xl shadow-sm border border-outline-variant/10">
-                <div class="flex gap-1 text-primary-container mb-4">
-                        <span class="material-symbols-outlined text-sm"
-                              style="font-variation-settings: 'FILL' 1;">star</span>
-                    <span class="material-symbols-outlined text-sm"
-                          style="font-variation-settings: 'FILL' 1;">star</span>
-                    <span class="material-symbols-outlined text-sm"
-                          style="font-variation-settings: 'FILL' 1;">star</span>
-                    <span class="material-symbols-outlined text-sm"
-                          style="font-variation-settings: 'FILL' 1;">star</span>
-                    <span class="material-symbols-outlined text-sm"
-                          style="font-variation-settings: 'FILL' 1;">star</span>
-                </div>
-                <p class="text-on-surface-variant italic mb-6 leading-relaxed">"Chất lượng tôm hùm ở đây thực sự
-                    khác
-                    biệt, rất chắc thịt và ngọt. Dịch vụ giao hàng nhanh và đóng gói chuyên nghiệp."</p>
-                <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-full bg-slate-200 overflow-hidden">
-                        <img class="w-full h-full object-cover" data-alt="Portrait of Anh Hoàng Nam"
-                             src="https://lh3.googleusercontent.com/aida-public/AB6AXuAp8HAKxZuIp8rMYYIWm9y2IXwOlJVbr1l93AKngWkfAIRBeXa98rFqBeaIOhZrlr78L7ldV3IU9KKhayAcd2U0nONVY1HqnafOhV0Luklkt0cKE-5cuydAmaBF7J7n4lZPzAeHVJeRnn2jydy3QH-NRBcOGTlp_HznR_vGsxn0W1YUxVuZzoJuggcTJwrvDpaIsv19JVme6N30O6H5bqts_5rYY7ik83giywd7NUEfDxkIs-gaa5nWt6lPzU-Y-RP5jKYnpUhjh-k"/>
-                    </div>
-                    <div>
-                        <h4 class="font-bold text-sm text-on-surface">Anh Hoàng Nam</h4>
-                        <p class="text-[10px] text-on-surface-variant uppercase">Giám đốc Điều hành</p>
+                    <div class="relative">
+                        <!-- Decorative elements -->
+                        <div
+                            class="absolute -top-12 -right-12 w-64 h-64 bg-[#f5f5f5] rounded-full -z-10 animate-pulse opacity-50">
+                        </div>
+                        <div
+                            class="absolute -bottom-8 -left-8 w-32 h-32 border-2 border-[#D35400]/10 rounded-full -z-10">
+                        </div>
+
+                        <div
+                            class="rounded-2xl overflow-hidden shadow-[0_32px_64px_-16px_rgba(0,0,0,0.15)] transform hover:scale-[1.01] transition-all duration-700">
+                            <img src="https://file.hstatic.net/200000391061/article/bentleys-restaurant-royal-seafood-platter-312bf27_57b2e998e5024e168a68b61480802beb_1024x1024.jpg"
+                                alt="The Culinary Curator Craft" class="w-full h-full object-cover aspect-[4/5]" />
+                        </div>
+
+                        <!-- Floating badge -->
+                        <div
+                            class="absolute bottom-10 -left-12 bg-white p-6 shadow-xl rounded-xl border border-slate-50 hidden xl:block animate-bounce-slow">
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 bg-[#D35400]/10 rounded-full flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-[#D35400]">verified</span>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-slate-900 text-sm">Chứng nhận MSC</h4>
+                                    <p class="text-[10px] text-slate-400 font-medium">Đánh bắt bền vững</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="bg-surface-container-lowest p-8 rounded-xl shadow-sm border border-outline-variant/10">
-                <div class="flex gap-1 text-primary-container mb-4">
-                        <span class="material-symbols-outlined text-sm"
-                              style="font-variation-settings: 'FILL' 1;">star</span>
-                    <span class="material-symbols-outlined text-sm"
-                          style="font-variation-settings: 'FILL' 1;">star</span>
-                    <span class="material-symbols-outlined text-sm"
-                          style="font-variation-settings: 'FILL' 1;">star</span>
-                    <span class="material-symbols-outlined text-sm"
-                          style="font-variation-settings: 'FILL' 1;">star</span>
-                    <span class="material-symbols-outlined text-sm"
-                          style="font-variation-settings: 'FILL' 1;">star</span>
+        </section>
+    </main>
+    <!-- Footer -->
+    <div th:replace="~{fragments/index-footer :: footer}"></div>
+    <!-- Chatbot Widget -->
+    <div th:replace="chatbot/chatbot :: widget"></div>
+    <!-- Philosophy Modal -->
+    <div id="philosophy-modal"
+        class="fixed inset-0 z-[100] flex items-center justify-center hidden opacity-0 transition-all duration-500">
+        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" id="modal-overlay"></div>
+        <div class="relative bg-white/95 w-full max-w-2xl p-12 rounded-2xl shadow-2xl border border-white/20 transform scale-95 transition-all duration-500 overflow-hidden"
+            id="modal-content">
+            <!-- Decorative Background -->
+            <div class="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 bg-[#D35400]/5 rounded-full blur-3xl"></div>
+
+            <div class="flex justify-between items-start mb-10">
+                <div class="space-y-2">
+                    <span class="text-[#D35400] font-bold text-[10px] uppercase tracking-[4px]">Triết lý vận hành</span>
+                    <h3 class="text-3xl font-black text-slate-900 tracking-tighter">Bốn Trụ Cột Tinh Hoa</h3>
                 </div>
-                <p class="text-on-surface-variant italic mb-6 leading-relaxed">"Tôi đã đặt hộp quà hải sản cho đối
-                    tác
-                    và họ rất ấn tượng. Sự tinh tế trong cách bài trí thực sự xứng tầm cao cấp."</p>
-                <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-full bg-slate-200 overflow-hidden">
-                        <img class="w-full h-full object-cover" data-alt="Portrait of Chị Minh Thư"
-                             src="https://lh3.googleusercontent.com/aida-public/AB6AXuDeHRLCKJqYC9QclzscR7owReJnH7_76NX9Tm0Y2UguYfQlfYHqdm6jpOb_JvZAF7rIL6qHaK6JC9YnoQpaXwzUxCGOJsUgZ9abxV1sGFcbI4nFrmtonoI-jQfO5q8-oMFEXKiiUgVfaH80sakCYIqdajRSmd36HiSfKC8xmBaCT_nJ9hiEIqcvkyTlL17Tfg0xxFPtKeoRu6UQuqwhDlKaDmPXo6I8XCv-Y25Tnlc4uQl5MqvmBeZW0raTYFXUNOlMjR70h7Vk7-4"/>
-                    </div>
-                    <div>
-                        <h4 class="font-bold text-sm text-on-surface">Chị Minh Thư</h4>
-                        <p class="text-[10px] text-on-surface-variant uppercase">Food Blogger</p>
-                    </div>
-                </div>
-            </div>
-            <div class="bg-surface-container-lowest p-8 rounded-xl shadow-sm border border-outline-variant/10">
-                <div class="flex gap-1 text-primary-container mb-4">
-                        <span class="material-symbols-outlined text-sm"
-                              style="font-variation-settings: 'FILL' 1;">star</span>
-                    <span class="material-symbols-outlined text-sm"
-                          style="font-variation-settings: 'FILL' 1;">star</span>
-                    <span class="material-symbols-outlined text-sm"
-                          style="font-variation-settings: 'FILL' 1;">star</span>
-                    <span class="material-symbols-outlined text-sm"
-                          style="font-variation-settings: 'FILL' 1;">star</span>
-                    <span class="material-symbols-outlined text-sm"
-                          style="font-variation-settings: 'FILL' 1;">star</span>
-                </div>
-                <p class="text-on-surface-variant italic mb-6 leading-relaxed">"Cách The Culinary Curator kể chuyện
-                    về
-                    nguồn gốc từng loài hải sản làm tôi cảm thấy yên tâm và trân trọng hơn món ăn mình thưởng thức."
-                </p>
-                <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-full bg-slate-200 overflow-hidden">
-                        <img class="w-full h-full object-cover" data-alt="Portrait of Anh Quốc Bảo"
-                             src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSgXcF-DcQC__xr5g6Be1nV0ySLOV0FrwCa7VhE-tm6M_1OUTFsFLTTqzMi8ISiLTqGVOkjGQU1TbHUV_car1rOZWM9d3yWBYvpOHHYEZYc3cyKY68XnV4WTvPFQ6Xy1ezqNxq3RHuLJbRgGCG8PkQ33tVtEiFGakzzduvHB_NPHMEorXYqe7O-KYmHWfYpgSvy6GWNwF_l3XHcmHncx3_7OMdCYnBEN3dke9WBAFRLJul4tGTCfrqTbIqD49YESnmx6YD4M3hPwk"/>
-                    </div>
-                    <div>
-                        <h4 class="font-bold text-sm text-on-surface">Anh Quốc Bảo</h4>
-                        <p class="text-[10px] text-on-surface-variant uppercase">Chủ nhà hàng</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- Blog Section -->
-    <section class="py-24 max-w-7xl mx-auto px-8 border-t border-outline-variant/20">
-        <div class="text-center mb-16">
-            <span class="text-secondary font-bold text-xs uppercase tracking-widest">Góc chuyên gia</span>
-            <h2 class="text-4xl font-black text-on-surface tracking-tighter mt-2 uppercase">Câu chuyện từ đại dương
-            </h2>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-            <article class="group cursor-pointer">
-                <div class="relative overflow-hidden rounded-2xl mb-6 aspect-video">
-                    <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                         data-alt="Bí quyết chọn Cá Hồi"
-                         src="https://lh3.googleusercontent.com/aida-public/AB6AXuDTzyKH94J3QJV-0vcdQl7Zd7dPYTGj4Sy-kUZjayhsFx0nnDvCk-4S0tCd0Zo6IpTGr3uDPdsprEhbelARvBCRiBf0XORZ6gOadD8eoGQEA9pM96uSWQeo0MCkMV4K4poJB7wZrCicbCxEic-fSasHxIHt01XSr6L1PwixuRqeFZvLYpp8BXrMge_qEHm4Rq496GmHfC95Y0E9lZChZbvzNos0hlXOmXv4uehgezMLtExVv1yqR-P8pApJ6RJd8pQrwNsPqKDhmKM"/>
-                </div>
-                <div class="space-y-4">
-                    <span class="text-xs text-on-surface-variant font-medium">12 Tháng 10, 2024 • Hải sản</span>
-                    <h3
-                            class="text-3xl font-bold tracking-tight text-on-surface leading-tight group-hover:text-primary transition-colors">
-                        Bí quyết chọn Cá Hồi King Salmon thượng hạng cho món Sashimi</h3>
-                    <p class="text-on-surface-variant leading-relaxed">Khám phá cách phân biệt độ tươi ngon qua vân
-                        mỡ
-                        và màu sắc của loài cá hồi đắt giá nhất thế giới...</p>
-                    <a class="inline-block text-secondary font-bold text-sm border-b-2 border-secondary/20 pb-1"
-                       href="#">Đọc tiếp</a>
-                </div>
-            </article>
-            <div class="flex flex-col gap-10">
-                <article class="flex gap-6 group cursor-pointer">
-                    <div class="w-32 h-32 flex-shrink-0 overflow-hidden rounded-xl">
-                        <img class="w-full h-full object-cover group-hover:scale-110 transition-transform"
-                             data-alt="Sò điệp áp chảo"
-                             src="https://lh3.googleusercontent.com/aida-public/AB6AXuBZr0eFws4ep-6VnHmz_c-iYNW-ek9pzE-2gH-rA5tVSllffhbpuvfgcRhKp_yuwdqbJony0qx4fK5nS1ki5sGVF3P9pIaxt_r_I-d6gVAeAZxpDPyDv8t934M2hZW_4_ORKlhPx_21ijpHX7YL_6TwQWCyV1zAmwfinZZSVwVFMt6EW4Z3DHM5VecFO3S1EEk_oshTQHd0n4e_AnXqy1_tM1NvffAfT64R3EDLdVIfzBXYxxqwvg_yrxr62ZXVnqZao_jVU5RzCk8"/>
-                    </div>
-                    <div class="flex flex-col justify-center">
-                            <span class="text-[10px] text-secondary font-bold uppercase tracking-widest">Công
-                                thức</span>
-                        <h4
-                                class="text-xl font-bold text-on-surface group-hover:text-primary transition-colors mt-1">
-                            Cồi Sò Điệp áp chảo sốt bơ tỏi</h4>
-                        <p class="text-sm text-on-surface-variant mt-2 line-clamp-2">Hướng dẫn chi tiết để có món
-                            cồi sò
-                            điệp vàng óng, mọng nước như nhà hàng 5 sao.</p>
-                    </div>
-                </article>
-                <article class="flex gap-6 group cursor-pointer">
-                    <div class="w-32 h-32 flex-shrink-0 overflow-hidden rounded-xl">
-                        <img class="w-full h-full object-cover group-hover:scale-110 transition-transform"
-                             data-alt="Đánh bắt bền vững"
-                             src="https://lh3.googleusercontent.com/aida-public/AB6AXuCKYdHb4Zm6TlRILroQW5RjKE2yafWw_7dCtZ95ConLc3Ih5QprxSwJiAZ1N7_dpIEfzjx4fzwq9tKhfHt4Nb6yI3BxnbJcc02ePhFCcXKWnIxC35Nv_aPWj_u-xsWhdCx0WXsUE0StWMAXukfePhsQC_lb9xUijoM77xFf2Pq1GQjfUdhxgpKEn-2jWHgBpob5qGpPJ7mIU6rIsmGLhx1_RnYoyHhlxw8-ms-SszesuhB7f-ePy4bwxXSHW1ZgDIiqffK-tPRVR1M"/>
-                    </div>
-                    <div class="flex flex-col justify-center">
-                        <span class="text-[10px] text-secondary font-bold uppercase tracking-widest">Bền vững</span>
-                        <h4
-                                class="text-xl font-bold text-on-surface group-hover:text-primary transition-colors mt-1">
-                            Hành trình đánh bắt bền vững tại vùng biển Bắc</h4>
-                        <p class="text-sm text-on-surface-variant mt-2 line-clamp-2">The Culinary Curator cam kết
-                            bảo vệ
-                            hệ sinh thái đại dương qua từng sản phẩm.</p>
-                    </div>
-                </article>
-                <article class="flex gap-6 group cursor-pointer">
-                    <div class="w-32 h-32 flex-shrink-0 overflow-hidden rounded-xl">
-                        <img class="w-full h-full object-cover group-hover:scale-110 transition-transform"
-                             data-alt="Rượu vang và hải sản"
-                             src="https://lh3.googleusercontent.com/aida-public/AB6AXuCpq6YA8unB_IiEVC4kD_-3Vl11_hYSXMehaidmfpb23MKCkJIwjfsTtk5zEItK2hmfNcXFW2f16OB4RdDBZT8fZYWCOSh-liXRhxMMhgQYu40x_4B4QGG3NX-E20RTFNivlX4SvlO8YV6SSVwTENyPUtAlYxT2U8w5OVTRezJE95f-5_yYDNDrjz3tzvXhvFm1fT1xaAQiaijNdW6XTnche8_wdyITaypACzezujreS9-2CI810oh38gAJTGOrRnuC9L3GOjn3dpo"/>
-                    </div>
-                    <div class="flex flex-col justify-center">
-                            <span class="text-[10px] text-secondary font-bold uppercase tracking-widest">Kiến
-                                thức</span>
-                        <h4
-                                class="text-xl font-bold text-on-surface group-hover:text-primary transition-colors mt-1">
-                            Kết hợp rượu vang trắng cùng hải sản tươi</h4>
-                        <p class="text-sm text-on-surface-variant mt-2 line-clamp-2">Lựa chọn loại vang nào để làm
-                            dậy
-                            hương vị mặn mòi của biển cả?</p>
-                    </div>
-                </article>
-            </div>
-        </div>
-    </section>
-</main>
-<!-- Footer -->
-<footer class="bg-slate-100 dark:bg-slate-950 w-full border-t border-slate-200 dark:border-slate-800">
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-8 px-8 py-12 max-w-7xl mx-auto">
-        <div class="space-y-4">
-            <div class="text-lg font-black text-secondary dark:text-blue-200 uppercase">The Culinary Curator</div>
-            <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
-                Tinh hoa hải sản từ đại dương. Chúng tôi mang đến những sản phẩm cao cấp nhất cho bàn tiệc của bạn.
-            </p>
-            <div class="flex gap-4">
-                    <span
-                            class="material-symbols-outlined text-slate-400 cursor-pointer hover:text-primary transition-colors">social_leaderboard</span>
-                <span
-                        class="material-symbols-outlined text-slate-400 cursor-pointer hover:text-primary transition-colors">language</span>
-            </div>
-        </div>
-        <div class="flex flex-col gap-4">
-            <h5 class="font-sans text-xs uppercase tracking-widest text-on-surface font-bold">Về chúng tôi</h5>
-            <nav class="flex flex-col gap-2 font-sans text-xs uppercase tracking-widest">
-                <a class="text-slate-500 dark:text-slate-400 hover:text-primary transition-colors" href="#">Câu
-                    chuyện
-                    thương hiệu</a>
-                <a class="text-slate-500 dark:text-slate-400 hover:text-primary transition-colors" href="#">Nguồn
-                    gốc
-                    sản phẩm</a>
-                <a class="text-slate-500 dark:text-slate-400 hover:text-primary transition-colors" href="#">Hệ thống
-                    cửa
-                    hàng</a>
-                <a class="text-slate-500 dark:text-slate-400 hover:text-primary transition-colors" href="#">Liên
-                    hệ</a>
-            </nav>
-        </div>
-        <div class="flex flex-col gap-4">
-            <h5 class="font-sans text-xs uppercase tracking-widest text-on-surface font-bold">Hỗ trợ khách hàng</h5>
-            <nav class="flex flex-col gap-2 font-sans text-xs uppercase tracking-widest">
-                <a class="text-slate-500 dark:text-slate-400 hover:text-primary transition-colors" href="#">Chính
-                    sách
-                    giao nhận</a>
-                <a class="text-slate-500 dark:text-slate-400 hover:text-primary transition-colors" href="#">Điều
-                    khoản
-                    sử dụng</a>
-                <a class="text-slate-500 dark:text-slate-400 hover:text-primary transition-colors" href="#">Bảo mật
-                    thông tin</a>
-                <a class="text-slate-500 dark:text-slate-400 hover:text-primary transition-colors" href="#">Hướng
-                    dẫn
-                    đặt hàng</a>
-            </nav>
-        </div>
-        <div class="flex flex-col gap-4">
-            <h5 class="font-sans text-xs uppercase tracking-widest text-on-surface font-bold">Bản tin đại dương</h5>
-            <p class="text-slate-500 dark:text-slate-400 text-xs italic">Đăng ký nhận ưu đãi đặc quyền hàng tuần.
-            </p>
-            <div
-                    class="flex bg-white dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-800 overflow-hidden">
-                <input class="bg-transparent border-none focus:ring-0 text-xs w-full px-3"
-                       placeholder="Email của bạn" type="email"/>
-                <button
-                        class="bg-primary-container text-white px-4 py-2 text-xs font-bold uppercase tracking-wider hover:opacity-90">
-                    GỬI
+                <button id="close-modal"
+                    class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-slate-100 transition-colors">
+                    <span class="material-symbols-outlined text-slate-400">close</span>
                 </button>
             </div>
+
+            <div class="space-y-8">
+                <div class="flex gap-6 group">
+                    <div
+                        class="w-14 h-14 bg-slate-900 text-white rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-[#D35400] transition-colors duration-300">
+                        <span class="material-symbols-outlined">waves</span>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-slate-900 text-lg mb-1">Chất lượng Tuyệt đối</h4>
+                        <p class="text-sm text-slate-500 leading-relaxed font-light">Mọi sản phẩm đều được kiểm duyệt
+                            thủ công bởi đội ngũ chuyên gia dày dạn kinh nghiệm trước khi lên kệ.</p>
+                    </div>
+                </div>
+
+                <div class="flex gap-6 group">
+                    <div
+                        class="w-14 h-14 bg-slate-900 text-white rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-[#D35400] transition-colors duration-300">
+                        <span class="material-symbols-outlined">eco</span>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-slate-900 text-lg mb-1">Bền vững & Nhân văn</h4>
+                        <p class="text-sm text-slate-500 leading-relaxed font-light">Chúng tôi chỉ hợp tác với các ngư
+                            trường có chứng chỉ đánh bắt bền vững, tôn trọng nhịp sống của đại dương.</p>
+                    </div>
+                </div>
+
+                <div class="flex gap-6 group">
+                    <div
+                        class="w-14 h-14 bg-slate-900 text-white rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-[#D35400] transition-colors duration-300">
+                        <span class="material-symbols-outlined">fingerprint</span>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-slate-900 text-lg mb-1">Minh bạch Nguồn gốc</h4>
+                        <p class="text-sm text-slate-500 leading-relaxed font-light">Mỗi gói hàng đều mang mã định danh
+                            duy nhất, cho phép khách hàng truy xuất hỏa tốc vùng biển và ngày đánh bắt.</p>
+                    </div>
+                </div>
+
+                <div class="flex gap-6 group">
+                    <div
+                        class="w-14 h-14 bg-slate-900 text-white rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-[#D35400] transition-colors duration-300">
+                        <span class="material-symbols-outlined">diamond</span>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-slate-900 text-lg mb-1">Trải nghiệm Thượng lưu</h4>
+                        <p class="text-sm text-slate-500 leading-relaxed font-light">Không chỉ là thực phẩm, chúng tôi
+                            mang đến một nghi thức thưởng thức ẩm thực trọn vẹn dành cho giới mộ điệu.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-12 text-center text-[10px] text-slate-300 uppercase tracking-widest font-bold">
+                The Culinary Curator &copy; Since 2024
+            </div>
         </div>
     </div>
-    <div
-            class="border-t border-slate-200 dark:border-slate-800 py-6 px-8 max-w-7xl mx-auto flex justify-between items-center flex-wrap gap-4">
-        <p class="font-sans text-xs uppercase tracking-widest text-slate-500 dark:text-slate-400">© 2024 The
-            Culinary
-            Curator. Tinh hoa hải sản từ đại dương.</p>
-        <div class="flex gap-4">
-            <img alt="Visa" class="h-3 opacity-30 grayscale"
-                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuCfZYTXZ_9p-IEiS35ldnUX8_Kxw0CMgK-f9gm325EchxENi2H5US0LrInMCMJWTz2-0O1pnRhKf4pl79E82Gv-d8SrKNeUO5dzdTufrG4BspnRzf-VLMec-33GA14jRX_yxwHXIDnBSY8EWFkyS-YXjNVF50XntGj14pjXJANrTBYCa0ABvy1KSvEyZydBhK4auSFJPyUFTK5MCgGswTiB_y4yv31oa3_SVbloPA8ChkFcY5iUSA5xkFjiSV-aiXtsuJhgF3Xn8dM"/>
-            <img alt="Mastercard" class="h-3 opacity-30 grayscale"
-                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuBI7siusAl-FpldhaFCRFaXXHrk-cejrRs1GL5ix_6zV3pKOtV9wq_9LjtWDMs5cpPBQf671LY19DlT6WqNm03cKsv__iwCDTh4xrGhbtb1PdqmM07P9hSpB0WdhOP7yaNbNEOUr1mGXWNcb0rHkvMG-sEwXCJgz9MPqYmcl43kCyAt3harseMQ0P_-zRZMn_1XiRVLHbUfnD-bRjWPW6H6JmPQZ3Hw7KvqMf8TdJaV6Qkfhk6ihXLqsvR784C4khq4XUdEthXi_sk"/>
-        </div>
-    </div>
-</footer>
+
+    <script>
+        const modal = document.getElementById('philosophy-modal');
+        const modalContent = document.getElementById('modal-content');
+        const openBtn = document.getElementById('philosophy-btn');
+        const closeBtn = document.getElementById('close-modal');
+        const overlay = document.getElementById('modal-overlay');
+
+        const openModal = () => {
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.add('opacity-100');
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }, 10);
+        };
+
+        const closeModal = () => {
+            modal.classList.remove('opacity-100');
+            modalContent.classList.remove('scale-100');
+            modalContent.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 500);
+        };
+
+        openBtn.addEventListener('click', openModal);
+        closeBtn.addEventListener('click', closeModal);
+        overlay.addEventListener('click', closeModal);
+    </script>
 </body>
 
 </html>
