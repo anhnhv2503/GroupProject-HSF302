@@ -1,17 +1,22 @@
 package com.project.hsf.controller.client;
 
-import com.project.hsf.entity.User;
-import com.project.hsf.entity.UserAddress;
-import com.project.hsf.service.AddressService;
-import com.project.hsf.service.UserService;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.List;
+import com.project.hsf.entity.User;
+import com.project.hsf.entity.UserAddress;
+import com.project.hsf.service.AddressService;
+import com.project.hsf.service.UserService;
+
+import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequestMapping("/profile")

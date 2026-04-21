@@ -187,9 +187,13 @@
                                 <!-- Mini Dropdown -->
                                 <div
                                     class="absolute top-full right-0 mt-1 w-48 bg-white rounded-xl shadow-xl border border-outline-variant/10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 p-2">
-                                    <a href="/profile"
+<a href="/profile"
                                         class="flex items-center gap-2 p-2 hover:bg-surface-container-low rounded-lg text-xs font-medium transition-colors text-slate-700">
                                         <span class="material-symbols-outlined text-sm">person</span> Hồ sơ cá nhân
+                                    </a>
+                                    <a href="/orders"
+                                        class="flex items-center gap-2 p-2 hover:bg-surface-container-low rounded-lg text-xs font-medium transition-colors text-slate-700">
+                                        <span class="material-symbols-outlined text-sm">receipt_long</span> Lịch sử đơn hàng
                                     </a>
                                     <hr class="my-1 border-outline-variant/10">
                                     <form th:action="@{/logout}" method="post">
