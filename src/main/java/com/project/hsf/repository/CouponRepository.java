@@ -12,6 +12,8 @@ public interface CouponRepository extends JpaRepository<Coupon, Long> {
 
     boolean existsByCodeIgnoreCaseAndIdNot(String code, Long id);
 
+    Coupon findByCode(String code);
+
     @Modifying(clearAutomatically = true)
     @Query("UPDATE Coupon c SET c.usedCount = c.usedCount + 1 WHERE c.code = :code AND c.usedCount < c.maxUses AND c.active = true AND c.validUntil > CURRENT_TIMESTAMP")
     int claimCoupon(@Param("code") String code);

@@ -1,14 +1,33 @@
 package com.project.hsf.entity;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-import lombok.*;
+import java.math.BigDecimal;
+import java.time.Instant;
+import java.util.List;
+
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Nationalized;
 
-import java.math.BigDecimal;
-import java.time.Instant;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 
 @NoArgsConstructor
@@ -43,16 +62,13 @@ public class Order {
     @Column(name = "shipping_fee", nullable = false, precision = 10, scale = 2)
     private BigDecimal shippingFee;
 
-//    @ColumnDefault("([total_price]-[discount_amount])+[shipping_fee]")
     @Column(name = "final_price", precision = 12, scale = 2)
     private BigDecimal finalPrice;
 
-    @Size(max = 20)
     @NotNull
-    @Nationalized
-    @ColumnDefault("'PENDING'")
+    @Enumerated(jakarta.persistence.EnumType.STRING)
     @Column(name = "order_status", nullable = false, length = 20)
-    private String orderStatus;
+    private OrderStatus orderStatus;
 
     @Size(max = 30)
     @NotNull
@@ -61,12 +77,10 @@ public class Order {
     @Column(name = "payment_method", nullable = false, length = 30)
     private String paymentMethod;
 
-    @Size(max = 20)
     @NotNull
-    @Nationalized
-    @ColumnDefault("'UNPAID'")
+    @Enumerated(jakarta.persistence.EnumType.STRING)
     @Column(name = "payment_status", nullable = false, length = 20)
-    private String paymentStatus;
+    private PaymentStatus paymentStatus;
 
     @Size(max = 500)
     @NotNull
@@ -90,5 +104,28 @@ public class Order {
     @ColumnDefault("getdate()")
     @Column(name = "updated_date")
     private Instant updatedDate;
+
+    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
+    private List<OrderItem> orderItems;
+
+    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
+    private List<OrderStatusHistory> statusHistories;
+
+    @PrePersist
+    protected void onCreate() {
+        createdDate = Instant.now();
+        updatedDate = Instant.now();
+        if (orderStatus == null) {
+            orderStatus = OrderStatus.PENDING;
+        }
+        if (paymentStatus == null) {
+            paymentStatus = PaymentStatus.UNPAID;
+        }
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedDate = Instant.now();
+    }
 
 }

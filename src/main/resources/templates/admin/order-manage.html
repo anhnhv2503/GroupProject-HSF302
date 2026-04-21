@@ -161,7 +161,7 @@
                         <div class="space-y-4">
                             <div th:each="history : ${statusHistories}" class="relative pl-6">
                                 <span class="absolute left-0 top-2 w-2.5 h-2.5 rounded-full bg-amber-500"></span>
-                                <p class="font-bold text-tertiary" th:text="${history.status}">Order Placed</p>
+                                <p class="font-bold text-tertiary" th:text="${history.status.label}">Order Placed</p>
                                 <p class="text-sm text-on-surface-variant" th:text="${history.changedAt != null ? #strings.substring(history.changedAt.toString(), 0, 19).replace('T', ' ') : '-'} + ' • ' + ${history.changedBy != null ? history.changedBy : 'System'}">4/12/2026, 10:30:00 AM • System</p>
                                 <p class="text-sm text-on-surface-variant" th:text="${history.note != null ? history.note : ''}">Order received successfully</p>
                             </div>

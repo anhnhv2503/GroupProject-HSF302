@@ -138,7 +138,7 @@
 
 <body class="bg-surface text-on-surface">
     <!-- TopNavBar -->
-    <header th:replace="fragments/index-header :: header"></header>
+    <header th:replace="~{fragments/index-header :: header}"></header>
     <main class="pt-32">
         <!-- Hero Section -->
         <section class="relative h-[870px] flex items-center overflow-hidden">
@@ -451,7 +451,7 @@
         </section>
     </main>
     <!-- Footer -->
-    <footer th:replace="fragments/index-footer :: footer"></footer>
+    <div th:replace="~{fragments/index-footer :: footer}"></div>
     <!-- Chatbot Widget -->
     <div th:replace="chatbot/chatbot :: widget"></div>
     <!-- Philosophy Modal -->
