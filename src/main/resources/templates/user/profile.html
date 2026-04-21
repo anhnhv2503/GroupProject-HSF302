@@ -11,6 +11,8 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;family=Roboto:wght@400;500;700&amp;display=swap"
         rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&amp;display=swap"
+        rel="stylesheet" />
     <link
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
         rel="stylesheet" />
@@ -87,18 +89,74 @@
         .material-symbols-outlined {
             font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         }
-        body { font-family: 'Inter', sans-serif; }
-        .font-roboto { font-family: 'Roboto', sans-serif; }
-        button:focus, a:focus {
+
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .font-display {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .font-roboto {
+            font-family: 'Roboto', sans-serif;
+        }
+
+        button:focus,
+        a:focus {
             outline: 2px solid #a63b00;
             outline-offset: 2px;
+        }
+
+        .profile-backdrop {
+            background:
+                radial-gradient(1200px 400px at 10% -10%, rgba(242, 101, 34, 0.22), transparent 45%),
+                radial-gradient(900px 340px at 95% 0%, rgba(0, 100, 146, 0.20), transparent 42%),
+                #f8f9fa;
+        }
+
+        .glass-card {
+            background: linear-gradient(160deg, rgba(255, 255, 255, 0.96) 0%, rgba(243, 244, 245, 0.95) 100%);
+            border: 1px solid rgba(141, 113, 102, 0.25);
+            box-shadow: 0 18px 45px rgba(25, 28, 29, 0.08);
+        }
+
+        .modal-enter {
+            animation: modalFadeIn 0.28s ease-out;
+        }
+
+        .sheet-enter {
+            animation: sheetUp 0.32s ease-out;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes sheetUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.98);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
     </style>
 </head>
 
-<body class="bg-surface text-on-surface">
+
+<body class="profile-backdrop text-on-surface">
     <!-- TopNavBar -->
-    <header class="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-sm dark:shadow-none">
+    <!-- <header class="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-sm dark:shadow-none">
         <div class="flex justify-between items-center w-full px-8 py-4 max-w-7xl mx-auto">
             <div class="text-2xl font-bold tracking-tighter text-slate-900 dark:text-white">The Culinary Curator</div>
             <nav class="hidden md:flex gap-8 items-center font-sans tracking-tight text-sm font-medium">
@@ -140,33 +198,275 @@
                 </div>
             </div>
         </div>
-    </header>
+    </header> -->
+    <header th:replace="fragments/index-header :: header"></header>
 
-    <main class="pt-24 pb-16 max-w-7xl mx-auto px-8">
-        <!-- Page Title -->
-        <div class="mb-8">
-            <h1 class="text-3xl font-black text-on-surface tracking-tighter">Hồ Sơ Cá Nhân</h1>
-            <p class="text-on-surface-variant mt-1">Quản lý thông tin cá nhân của bạn</p>
+
+    <main class="pt-40 pb-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <div
+            class="mb-6 flex space-x-1 p-1 bg-surface-container-low border border-outline-variant/30 rounded-xl w-full sm:w-fit overflow-x-auto">
+            <button onclick="switchTab('profile')" id="tab-profile"
+                class="px-6 py-2.5 text-sm font-bold rounded-lg bg-white text-primary shadow-sm transition-all focus:outline-none flex items-center gap-2 whitespace-nowrap">
+                <span class="material-symbols-outlined text-[18px]">person</span>
+                Hồ sơ cá nhân
+            </button>
+            <button onclick="switchTab('orders')" id="tab-orders"
+                class="px-6 py-2.5 text-sm font-bold rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-white/50 transition-all focus:outline-none flex items-center gap-2 whitespace-nowrap">
+                <span class="material-symbols-outlined text-[18px]">receipt_long</span>
+                Lịch sử mua hàng
+            </button>
         </div>
 
-        <!-- Success/Error Messages -->
-        <div th:if="${success}" class="mb-6 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg flex items-center gap-2">
-            <span class="material-symbols-outlined text-sm">check_circle</span>
-            <span th:text="${success}"></span>
-        </div>
-        <div th:if="${error}" class="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2">
-            <span class="material-symbols-outlined text-sm">error</span>
-            <span th:text="${error}"></span>
+        <div id="panel-profile" class="tab-panel transition-opacity duration-300">
+            <section class="glass-card rounded-3xl p-6 sm:p-8 lg:p-10">
+                <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
+                    <div>
+                        <p class="font-display text-sm tracking-[0.22em] uppercase text-on-surface-variant">Account
+                            Center</p>
+                        <h1 class="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-on-surface mt-2">Hồ sơ
+                            cá nhân</h1>
+                        <p class="max-w-2xl text-on-surface-variant mt-3 text-sm sm:text-base">Nơi bạn cập nhật thông
+                            tin liên hệ và quản lý bảo mật tài khoản với trải nghiệm nhanh, gọn, tập trung.</p>
+                    </div>
+                    <div class="rounded-2xl border border-outline-variant/60 bg-white px-5 py-4 min-w-[220px]">
+                        <p class="text-xs uppercase tracking-[0.18em] text-on-surface-variant">Xin chào</p>
+                        <p class="font-display text-xl font-bold mt-1"
+                            th:text="${user != null and user.fullName != null and !#strings.isEmpty(user.fullName) ? user.fullName : (user != null ? user.username : 'Member')}">
+                        </p>
+                        <p class="text-sm text-on-surface-variant mt-1" th:text="${user != null ? user.email : ''}"></p>
+                    </div>
+                </div>
+
+                <div class="mt-7 grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="rounded-2xl border border-outline-variant/60 bg-white/90 p-4">
+                        <p class="text-xs uppercase tracking-[0.14em] text-on-surface-variant">Username</p>
+                        <p class="font-semibold mt-1" th:text="${user != null ? user.username : 'N/A'}"></p>
+                    </div>
+                    <div class="rounded-2xl border border-outline-variant/60 bg-white/90 p-4">
+                        <p class="text-xs uppercase tracking-[0.14em] text-on-surface-variant">Phone</p>
+                        <p class="font-semibold mt-1"
+                            th:text="${user != null and user.phone != null and !#strings.isEmpty(user.phone) ? user.phone : 'Chưa cập nhật'}">
+                        </p>
+                    </div>
+                    <div class="rounded-2xl border border-outline-variant/60 bg-white/90 p-4">
+                        <p class="text-xs uppercase tracking-[0.14em] text-on-surface-variant">Role</p>
+                        <span
+                            class="inline-flex mt-1 rounded-full bg-secondary-container px-3 py-1 text-xs font-bold text-on-secondary-container"
+                            th:text="${user != null ? user.role : 'CUSTOMER'}">CUSTOMER</span>
+                    </div>
+                </div>
+
+                <div th:if="${success}"
+                    class="mt-6 rounded-xl bg-green-50 border border-green-200 text-green-700 px-4 py-3 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-sm">check_circle</span>
+                    <span th:text="${success}"></span>
+                </div>
+                <div th:if="${error}"
+                    class="mt-4 rounded-xl bg-red-50 border border-red-200 text-red-700 px-4 py-3 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-sm">error</span>
+                    <span th:text="${error}"></span>
+                </div>
+
+                <div class="mt-8 flex flex-wrap gap-3">
+                    <button type="button" data-open-modal="editProfileModal"
+                        class="inline-flex items-center gap-2 rounded-xl bg-primary text-on-primary px-5 py-3 font-semibold hover:opacity-90 transition-opacity">
+                        <span class="material-symbols-outlined text-[20px]">edit_square</span>
+                        Chỉnh sửa hồ sơ
+                    </button>
+                    <button type="button" data-open-modal="changePasswordModal"
+                        class="inline-flex items-center gap-2 rounded-xl bg-secondary text-on-secondary px-5 py-3 font-semibold hover:opacity-90 transition-opacity">
+                        <span class="material-symbols-outlined text-[20px]">lock_reset</span>
+                        Đổi mật khẩu
+                    </button>
+                </div>
+            </section>
         </div>
 
-        <div class="flex flex-col lg:flex-row gap-8">
-            <!-- Left Sidebar -->
-            <div th:replace="~{layout/fragments/profile-sidebar :: sidebar}"></div>
+        <div id="panel-orders" class="tab-panel hidden transition-opacity duration-300">
+            <section class="glass-card rounded-3xl p-6 sm:p-8 lg:p-10">
+                <div class="flex items-center justify-between gap-4 mb-8">
+                    <div>
+                        <h2 class="font-display text-2xl font-bold text-on-surface">Lịch sử đơn hàng</h2>
+                        <p class="text-sm text-on-surface-variant mt-1">Theo dõi trạng thái và lịch sử mua sắm của bạn.
+                        </p>
+                    </div>
+                </div>
 
-            <!-- Right Content -->
-            <div th:replace="~{layout/fragments/profile-content :: content}"></div>
+                <div th:if="${orders == null || orders.isEmpty()}"
+                    class="flex flex-col items-center justify-center py-12 text-center">
+                    <div class="w-24 h-24 bg-surface-container rounded-full flex items-center justify-center mb-4">
+                        <span class="material-symbols-outlined text-4xl text-on-surface-variant">shopping_bag</span>
+                    </div>
+                    <h3 class="font-display text-xl font-bold mb-2">Chưa có đơn hàng nào</h3>
+                    <p class="text-on-surface-variant text-sm max-w-sm mb-6">Bạn chưa thực hiện giao dịch nào. Hãy khám
+                        phá những món hải sản tươi ngon nhất của chúng tôi!</p>
+                    <a href="/"
+                        class="rounded-xl bg-primary text-on-primary px-6 py-3 font-semibold hover:opacity-90 inline-flex items-center gap-2">
+                        <span class="material-symbols-outlined text-[20px]">storefront</span>
+                        Bắt đầu mua sắm
+                    </a>
+                </div>
+
+                <div th:if="${orders != null && !orders.isEmpty()}" class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b border-outline-variant/40">
+                                <th
+                                    class="pb-3 pt-4 px-4 font-semibold text-sm text-on-surface-variant uppercase tracking-wider">
+                                    Mã đơn</th>
+                                <th
+                                    class="pb-3 pt-4 px-4 font-semibold text-sm text-on-surface-variant uppercase tracking-wider">
+                                    Ngày đặt</th>
+                                <th
+                                    class="pb-3 pt-4 px-4 font-semibold text-sm text-on-surface-variant uppercase tracking-wider">
+                                    Tổng tiền / C.Nợ</th>
+                                <th
+                                    class="pb-3 pt-4 px-4 font-semibold text-sm text-on-surface-variant uppercase tracking-wider">
+                                    Trạng thái</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-outline-variant/20">
+                            <tr th:each="order : ${orders}"
+                                class="hover:bg-surface-container-lowest/50 transition-colors group">
+                                <td class="py-4 px-4">
+                                    <span
+                                        class="font-display font-bold text-primary group-hover:text-primary-fixed-dim transition-colors"
+                                        th:text="'#' + ${order.id}"></span>
+                                </td>
+                                <td class="py-4 px-4 text-sm text-on-surface-variant"
+                                    th:text="${order.createdDate != null ? #strings.substring(order.createdDate.toString(), 0, 10) : 'N/A'}">
+                                </td>
+                                <td class="py-4 px-4">
+                                    <div class="font-semibold text-on-surface"
+                                        th:text="${#numbers.formatDecimal(order.finalPrice != null ? order.finalPrice : order.totalPrice, 0, 'COMMA', 0, 'POINT')} + ' ₫'">
+                                    </div>
+                                    <div class="text-[10px] mt-1 inline-flex rounded-md px-1.5 py-0.5 font-bold uppercase tracking-wider"
+                                        th:classappend="${order.paymentStatus == 'PAID' ? 'bg-green-100 text-green-800' : 'bg-orange-100 text-orange-800'}"
+                                        th:text="${order.paymentStatus}">
+                                    </div>
+                                </td>
+                                <td class="py-4 px-4">
+                                    <span
+                                        class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold"
+                                        th:classappend="${
+                                            order.orderStatus == 'PENDING' ? 'bg-yellow-100 text-yellow-800 border border-yellow-200' :
+                                            order.orderStatus == 'PROCESSING' ? 'bg-blue-100 text-blue-800 border border-blue-200' :
+                                            order.orderStatus == 'SHIPPED' ? 'bg-purple-100 text-purple-800 border border-purple-200' :
+                                            order.orderStatus == 'DELIVERED' ? 'bg-green-100 text-green-800 border border-green-200' :
+                                            order.orderStatus == 'CANCELLED' ? 'bg-red-100 text-red-800 border border-red-200' :
+                                            'bg-gray-100 text-gray-800 border border-gray-200'
+                                        }">
+                                        <span class="w-1.5 h-1.5 rounded-full" th:classappend="${
+                                            order.orderStatus == 'PENDING' ? 'bg-yellow-500' :
+                                            order.orderStatus == 'PROCESSING' ? 'bg-blue-500' :
+                                            order.orderStatus == 'SHIPPED' ? 'bg-purple-500' :
+                                            order.orderStatus == 'DELIVERED' ? 'bg-green-500' :
+                                            order.orderStatus == 'CANCELLED' ? 'bg-red-500' : 'bg-gray-500'
+                                        }"></span>
+                                        <span th:text="${order.orderStatus}"></span>
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
         </div>
     </main>
+
+    <div id="editProfileModal" class="fixed inset-0 z-[70] hidden items-center justify-center p-4 sm:p-6">
+        <div class="absolute inset-0 bg-black/45 modal-enter" data-close-modal="editProfileModal"></div>
+        <div
+            class="relative w-full max-w-2xl rounded-2xl bg-white shadow-2xl border border-outline-variant/40 p-6 sm:p-7 sheet-enter">
+            <div class="flex items-start justify-between gap-4">
+                <div>
+                    <h2 class="font-display text-2xl font-bold">Chỉnh sửa hồ sơ</h2>
+                    <p class="text-sm text-on-surface-variant mt-1">Cập nhật thông tin dùng cho đơn hàng và liên hệ.</p>
+                </div>
+                <button type="button" data-close-modal="editProfileModal"
+                    class="w-9 h-9 rounded-lg border border-outline-variant/60 inline-flex items-center justify-center hover:bg-surface-container-low">
+                    <span class="material-symbols-outlined text-[20px]">close</span>
+                </button>
+            </div>
+
+            <form class="mt-6 space-y-4" method="post" th:action="@{/profile/update}">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label for="username" class="block text-sm font-semibold mb-1">Tên đăng nhập</label>
+                        <input id="username" name="username" type="text" required
+                            th:value="${user != null ? user.username : ''}"
+                            class="w-full rounded-xl border-outline-variant/70 bg-surface-container-low focus:border-primary focus:ring-primary" />
+                    </div>
+                    <div>
+                        <label for="email" class="block text-sm font-semibold mb-1">Email</label>
+                        <input id="email" name="email" type="email" required
+                            th:value="${user != null ? user.email : ''}"
+                            class="w-full rounded-xl border-outline-variant/70 bg-surface-container-low focus:border-primary focus:ring-primary" />
+                    </div>
+                    <div>
+                        <label for="fullName" class="block text-sm font-semibold mb-1">Họ và tên</label>
+                        <input id="fullName" name="fullName" type="text" th:value="${user != null ? user.fullName : ''}"
+                            class="w-full rounded-xl border-outline-variant/70 bg-surface-container-low focus:border-primary focus:ring-primary" />
+                    </div>
+                    <div>
+                        <label for="phone" class="block text-sm font-semibold mb-1">Số điện thoại</label>
+                        <input id="phone" name="phone" type="text" th:value="${user != null ? user.phone : ''}"
+                            class="w-full rounded-xl border-outline-variant/70 bg-surface-container-low focus:border-primary focus:ring-primary" />
+                    </div>
+                </div>
+                <div class="pt-2 flex justify-end gap-3">
+                    <button type="button" data-close-modal="editProfileModal"
+                        class="rounded-xl border border-outline-variant/70 px-4 py-2.5 font-medium hover:bg-surface-container-low">Hủy</button>
+                    <button type="submit"
+                        class="rounded-xl bg-primary text-on-primary px-5 py-2.5 font-semibold hover:opacity-90">Lưu
+                        thay đổi</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="changePasswordModal" class="fixed inset-0 z-[70] hidden items-center justify-center p-4 sm:p-6">
+        <div class="absolute inset-0 bg-black/45 modal-enter" data-close-modal="changePasswordModal"></div>
+        <div
+            class="relative w-full max-w-xl rounded-2xl bg-white shadow-2xl border border-outline-variant/40 p-6 sm:p-7 sheet-enter">
+            <div class="flex items-start justify-between gap-4">
+                <div>
+                    <h2 class="font-display text-2xl font-bold">Đổi mật khẩu</h2>
+                    <p class="text-sm text-on-surface-variant mt-1">Mật khẩu mới cần có ít nhất 6 ký tự.</p>
+                </div>
+                <button type="button" data-close-modal="changePasswordModal"
+                    class="w-9 h-9 rounded-lg border border-outline-variant/60 inline-flex items-center justify-center hover:bg-surface-container-low">
+                    <span class="material-symbols-outlined text-[20px]">close</span>
+                </button>
+            </div>
+
+            <form class="mt-6 space-y-4" method="post" th:action="@{/profile/change-password}">
+                <div>
+                    <label for="currentPassword" class="block text-sm font-semibold mb-1">Mật khẩu hiện tại</label>
+                    <input id="currentPassword" name="currentPassword" type="password" required
+                        class="w-full rounded-xl border-outline-variant/70 bg-surface-container-low focus:border-primary focus:ring-primary" />
+                </div>
+                <div>
+                    <label for="newPassword" class="block text-sm font-semibold mb-1">Mật khẩu mới</label>
+                    <input id="newPassword" name="newPassword" type="password" minlength="6" required
+                        class="w-full rounded-xl border-outline-variant/70 bg-surface-container-low focus:border-primary focus:ring-primary" />
+                </div>
+                <div>
+                    <label for="confirmPassword" class="block text-sm font-semibold mb-1">Xác nhận mật khẩu mới</label>
+                    <input id="confirmPassword" name="confirmPassword" type="password" minlength="6" required
+                        class="w-full rounded-xl border-outline-variant/70 bg-surface-container-low focus:border-primary focus:ring-primary" />
+                </div>
+                <div class="pt-2 flex justify-end gap-3">
+                    <button type="button" data-close-modal="changePasswordModal"
+                        class="rounded-xl border border-outline-variant/70 px-4 py-2.5 font-medium hover:bg-surface-container-low">Hủy</button>
+                    <button type="submit"
+                        class="rounded-xl bg-secondary text-on-secondary px-5 py-2.5 font-semibold hover:opacity-90">Cập
+                        nhật mật khẩu</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <!-- Footer -->
     <footer class="bg-slate-100 dark:bg-slate-950 w-full border-t border-slate-200 dark:border-slate-800">
@@ -187,9 +487,85 @@
                 <h5 class="font-sans text-xs uppercase tracking-widest text-on-surface font-bold">Bản tin đại dương</h5>
             </div>
         </div>
-        <div class="border-t border-slate-200 dark:border-slate-800 py-6 px-8 max-w-7xl mx-auto flex justify-between items-center flex-wrap gap-4">
-            <p class="font-sans text-xs uppercase tracking-widest text-slate-500 dark:text-slate-400">&copy; 2026 The Culinary Curator.</p>
+        <div
+            class="border-t border-slate-200 dark:border-slate-800 py-6 px-8 max-w-7xl mx-auto flex justify-between items-center flex-wrap gap-4">
+            <p class="font-sans text-xs uppercase tracking-widest text-slate-500 dark:text-slate-400">&copy; 2026 The
+                Culinary Curator.</p>
         </div>
     </footer>
+
+    <script th:inline="javascript">
+            (function () {
+                const openButtons = document.querySelectorAll('[data-open-modal]');
+                const closeButtons = document.querySelectorAll('[data-close-modal]');
+
+                function openModal(id) {
+                    const modal = document.getElementById(id);
+                    if (!modal) return;
+                    modal.classList.remove('hidden');
+                    modal.classList.add('flex');
+                    document.body.style.overflow = 'hidden';
+                }
+
+                function closeModal(id) {
+                    const modal = document.getElementById(id);
+                    if (!modal) return;
+                    modal.classList.add('hidden');
+                    modal.classList.remove('flex');
+                    document.body.style.overflow = '';
+                }
+
+                openButtons.forEach((button) => {
+                    button.addEventListener('click', () => openModal(button.getAttribute('data-open-modal')));
+                });
+
+                closeButtons.forEach((button) => {
+                    button.addEventListener('click', () => closeModal(button.getAttribute('data-close-modal')));
+                });
+
+                document.addEventListener('keydown', (event) => {
+                    if (event.key === 'Escape') {
+                        document.querySelectorAll('[id$="Modal"]').forEach((modal) => {
+                            if (!modal.classList.contains('hidden')) {
+                                closeModal(modal.id);
+                            }
+                        });
+                    }
+                });
+
+                const message = /*[[${error}]]*/ null;
+                const success = /*[[${success}]]*/ null;
+                if (message && String(message).toLowerCase().includes('mật khẩu')) {
+                    openModal('changePasswordModal');
+                } else if (success && String(success).toLowerCase().includes('mật khẩu')) {
+                    openModal('changePasswordModal');
+                }
+
+                // Tabs Logic
+                window.switchTab = function (tabId) {
+                    const tabs = ['profile', 'orders'];
+                    tabs.forEach(id => {
+                        const panel = document.getElementById('panel-' + id);
+                        const btn = document.getElementById('tab-' + id);
+                        if (id === tabId) {
+                            panel.classList.remove('hidden');
+                            btn.classList.add('bg-white', 'text-primary', 'shadow-sm');
+                            btn.classList.remove('text-on-surface-variant', 'hover:text-on-surface', 'hover:bg-white/50');
+                            window.location.hash = '#' + id;
+                        } else {
+                            panel.classList.add('hidden');
+                            btn.classList.remove('bg-white', 'text-primary', 'shadow-sm');
+                            btn.classList.add('text-on-surface-variant', 'hover:text-on-surface', 'hover:bg-white/50');
+                        }
+                    });
+                };
+
+                // Check URL Hash to restore state
+                if (window.location.hash === '#orders') {
+                    switchTab('orders');
+                }
+            })();
+    </script>
 </body>
+
 </html>

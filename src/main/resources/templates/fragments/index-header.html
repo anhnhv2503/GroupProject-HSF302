@@ -103,11 +103,11 @@
                     <!-- Icons -->
                     <div class="flex items-center gap-5 text-slate-800 dark:text-slate-200">
                         <!-- Wishlist -->
-                        <a href="/wishlist" class="relative group transition-transform hover:scale-110">
+                        <!-- <a href="/wishlist" class="relative group transition-transform hover:scale-110">
                             <span class="material-symbols-outlined line-art-icon">heart_plus</span>
                             <span class="absolute -top-1.5 -right-1.5 bg-[#D35400] text-white text-[9px] font-black w-4 h-4 flex items-center justify-center rounded-full shadow-sm"
                                   th:text="${session.wishlistCount ?: 0}">0</span>
-                        </a>
+                        </a> -->
                         <!-- Cart -->
                         <a href="/cart" class="relative group transition-transform hover:scale-110">
                             <span class="material-symbols-outlined line-art-icon">shopping_cart</span>
@@ -143,6 +143,11 @@
                                         <a href="/profile" class="flex items-center gap-2 p-2.5 hover:bg-slate-50 rounded-md text-xs font-semibold transition-colors text-slate-700">
                                             <span class="material-symbols-outlined text-sm">person</span> Profile
                                         </a>
+                                        <th:if test="${#authorization.expression('hasRole(''ADMIN'')')}">
+                                            <a href="/admin/dashboard" class="flex items-center gap-2 p-2.5 hover:bg-slate-50 rounded-md text-xs font-semibold transition-colors text-slate-700">
+                                                <span class="material-symbols-outlined text-sm">admin_panel_settings</span> Admin Dashboard
+                                            </a>
+                                        </th:if>
                                         <hr class="my-1 border-slate-50">
                                         <form th:action="@{/logout}" method="post">
                                             <button type="submit" class="w-full flex items-center gap-2 p-2.5 hover:bg-red-50 text-red-600 rounded-md text-xs font-bold transition-colors">

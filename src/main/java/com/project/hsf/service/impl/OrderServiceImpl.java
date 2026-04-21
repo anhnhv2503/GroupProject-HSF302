@@ -18,12 +18,15 @@ public class OrderServiceImpl implements OrderService {
 
     private final SeafoodProductRepository seafoodProductRepository;
     private final CouponRepository couponRepository;
-    // Assuming these repositories exist
-    // private final OrderRepository orderRepository;
+    private final com.project.hsf.repository.OrderRepository orderRepository;
     // private final OrderItemRepository orderItemRepository;
     // private final PaymentRepository paymentRepository;
     // private final CouponUsageRepository couponUsageRepository;
 
+    @Override
+    public List<com.project.hsf.entity.Order> getOrdersByCustomer(com.project.hsf.entity.User customer) {
+        return orderRepository.findByCustomerOrderByCreatedDateDesc(customer);
+    }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
