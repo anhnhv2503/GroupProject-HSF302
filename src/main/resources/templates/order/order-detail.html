@@ -53,6 +53,13 @@
                                 </p>
                                 <p class="font-medium text-[#D35400] mt-1"
                                    th:text="${#numbers.formatDecimal(item.subtotal, 0, 'COMMA', 0, 'POINT')} + ' ₫'">100.000 ₫</p>
+                                <div th:if="${order.orderStatus.name() == 'DELIVERED' and item.product != null}" class="mt-2">
+                                    <a th:href="@{/reviews/product/{id}(id=${item.product.id})}"
+                                       class="inline-flex items-center gap-1 text-xs text-[#D35400] hover:underline">
+                                        <span class="material-symbols-outlined text-sm">star</span>
+                                        Đánh giá sản phẩm
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>

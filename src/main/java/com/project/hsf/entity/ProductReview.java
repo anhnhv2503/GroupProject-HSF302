@@ -8,6 +8,8 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Nationalized;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.PrePersist;
+import org.hibernate.annotations.PreUpdate;
 
 import java.time.Instant;
 
@@ -35,6 +37,10 @@ public class ProductReview {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id")
+    private Order order;
+
     @Column(name = "rating", columnDefinition = "tinyint not null")
     private Short rating;
 
@@ -55,5 +61,16 @@ public class ProductReview {
     @ColumnDefault("getdate()")
     @Column(name = "updated_date")
     private Instant updatedDate;
+
+    @PrePersist
+    protected void onCreate() {
+        createdDate = Instant.now();
+        updatedDate = Instant.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedDate = Instant.now();
+    }
 
 }
