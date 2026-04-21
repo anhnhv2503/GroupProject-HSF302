@@ -6,37 +6,80 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>Danh Sách Hải Sản | The Culinary Curator</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&amp;family=Inter:wght@300;400;500;600;700;800;900&amp;family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&amp;family=Cormorant+Garamond:wght@500;600;700&amp;family=Manrope:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
     <script id="tailwind-config" th:replace="~{index :: #tailwind-config}"></script>
     <style>
-        body { font-family: 'Be Vietnam Pro', 'Inter', sans-serif; }
+        :root {
+            --ocean-950: #0b1b2a;
+            --ocean-900: #0e2c3f;
+            --ocean-800: #123b52;
+            --ocean-700: #18506f;
+            --ocean-100: #e7f0f7;
+            --sand-100: #f7f3ee;
+            --coral-500: #e86b3a;
+            --coral-600: #d35b2c;
+            --seafoam-100: #e8f6f3;
+        }
+
+        body { font-family: 'Manrope', 'Be Vietnam Pro', sans-serif; }
+        .display-serif { font-family: 'Cormorant Garamond', serif; }
         .glass-effect { backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
         .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
         .fill-1 { font-variation-settings: 'FILL' 1 !important; }
-        .category-link.active { background-color: var(--primary-container); color: white; box-shadow: 0 4px 12px rgba(242, 101, 34, 0.2); }
+        .ocean-bg {
+            background:
+                radial-gradient(1000px 500px at 10% -10%, rgba(232, 246, 243, 0.9), transparent 60%),
+                radial-gradient(900px 600px at 90% -20%, rgba(247, 243, 238, 0.9), transparent 60%),
+                linear-gradient(180deg, #f8fbff 0%, #f3f7fb 40%, #f1f5f9 100%);
+        }
+        .panel {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(15, 23, 42, 0.06);
+            box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+        }
+        .panel-muted { background: rgba(255, 255, 255, 0.7); }
+        .nav-link-luxury { letter-spacing: 0.12em; }
+        .category-link.active {
+            background: rgba(232, 111, 58, 0.95);
+            color: white;
+            box-shadow: 0 12px 24px rgba(232, 107, 58, 0.25);
+        }
+        .category-link:hover { background: rgba(255, 255, 255, 0.06); }
         .product-card-hover:hover .wishlist-icon { opacity: 1; transform: scale(1); }
+        .product-card-hover { border-radius: 28px; }
+        .product-card-hover:hover { box-shadow: 0 28px 50px rgba(14, 44, 63, 0.18); }
+        .price-chip {
+            background: rgba(255, 255, 255, 0.85);
+            border: 1px solid rgba(15, 23, 42, 0.08);
+        }
+        .filter-chip input:focus-visible,
+        .filter-chip input:focus {
+            outline: 2px solid rgba(232, 107, 58, 0.4);
+            outline-offset: 3px;
+        }
     </style>
 </head>
 
-<body class="bg-surface text-on-surface">
+<body class="bg-surface text-on-surface ocean-bg">
     <!-- TopNavBar -->
     <header th:replace="~{fragments/index-header :: header}"></header>
 
     <main class="pt-32">
-        <div class="bg-surface pb-20">
+        <div class="pb-20">
         <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-8 pt-8">
 
             <!-- Sidebar Navigation -->
-            <aside class="lg:col-span-3 space-y-6">
-                <div class="bg-[#0D4A7A] rounded-3xl shadow-2xl overflow-hidden border border-white/10">
+            <aside class="lg:col-span-3 space-y-6 lg:sticky lg:top-28 h-fit">
+                <div class="rounded-3xl overflow-hidden border border-white/10"
+                    style="background: linear-gradient(165deg, var(--ocean-900), var(--ocean-700)); box-shadow: 0 20px 40px rgba(11, 27, 42, 0.35);">
                     <!-- Sidebar Brand Header -->
                     <div class="p-8 pb-4 text-center">
                         <div class="inline-flex bg-white/10 p-3 rounded-2xl mb-4">
                             <i class="bi bi-tsunami text-brand-primary fs-3"></i>
                         </div>
-                        <h2 class="font-black text-xl tracking-tight leading-none text-white uppercase">The
+                        <h2 class="font-black text-xl tracking-tight leading-none text-white uppercase display-serif">The
                             Culinary<br />Curator</h2>
                         <div class="h-1 w-12 bg-brand-primary mx-auto mt-4 rounded-full"></div>
                     </div>
@@ -95,14 +138,14 @@
                 </div>
 
                 <!-- Quick Filter -->
-                <div class="bg-white rounded-3xl shadow-sm border border-outline-variant/10 p-8 space-y-6">
+                <div class="panel rounded-3xl p-8 space-y-6">
                     <h3
                         class="font-black text-xs uppercase tracking-widest text-on-surface-variant flex items-center gap-2">
                         <span class="w-1.5 h-1.5 rounded-full bg-brand-primary"></span>
                         Lọc trạng thái
                     </h3>
                     <div class="space-y-4">
-                        <label class="flex items-center gap-4 cursor-pointer group">
+                        <label class="filter-chip flex items-center gap-4 cursor-pointer group">
                             <div class="relative flex items-center">
                                 <input type="checkbox"
                                     class="peer w-6 h-6 rounded-lg border-2 border-outline-variant text-brand-secondary focus:ring-brand-secondary transition-all cursor-pointer" />
@@ -111,7 +154,7 @@
                                 class="text-sm font-bold text-on-surface group-hover:text-brand-secondary transition-colors">Tươi
                                 sống (Daily)</span>
                         </label>
-                        <label class="flex items-center gap-4 cursor-pointer group">
+                        <label class="filter-chip flex items-center gap-4 cursor-pointer group">
                             <div class="relative flex items-center">
                                 <input type="checkbox"
                                     class="peer w-6 h-6 rounded-lg border-2 border-outline-variant text-brand-secondary focus:ring-brand-secondary transition-all cursor-pointer" />
@@ -128,7 +171,7 @@
             <main class="lg:col-span-9 space-y-10">
                 <!-- Header Section -->
                 <div
-                    class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 bg-white p-8 rounded-3xl border border-outline-variant/10 shadow-sm relative overflow-hidden">
+                    class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 panel rounded-3xl p-8 relative overflow-hidden">
                     <div class="absolute top-0 right-0 p-2 opacity-5">
                         <i class="bi bi-tsunami text-brand-secondary" style="font-size: 120px;"></i>
                     </div>
@@ -140,11 +183,14 @@
                                 th:text="${selectedCategory != null ? 'DANH MỤC: ' + products[0].category.name : 'TẤT CẢ SẢN PHẨM'}">BÁN
                                 CHẠY NHẤT</span>
                         </div>
-                        <h1 class="text-4xl font-black tracking-tighter text-brand-secondary uppercase leading-none mb-3"
+                        <h1 class="text-4xl font-black tracking-tight text-brand-secondary uppercase leading-none mb-3 display-serif"
                             th:text="${selectedCategory != null ? products[0].category.name : 'Thực Đơn Oceanic'}">Thực
                             Đơn Oceanic</h1>
                         <p class="text-sm text-on-surface-variant font-medium max-w-md">Sản phẩm hải sản cao cấp nhất
                             được tuyển chọn và bảo quản theo tiêu chuẩn 5 sao.</p>
+                        <p class="text-xs text-on-surface-variant font-semibold mt-3">
+                            <span th:text="${#lists.size(products)}">0</span> sản phẩm đang hiển thị
+                        </p>
                     </div>
 
                     <div class="flex items-center gap-4 relative z-10">
@@ -153,7 +199,7 @@
                                 class="text-[9px] font-black uppercase text-on-surface-variant tracking-widest mb-2">Sắp
                                 xếp theo</span>
                             <select
-                                class="bg-brand-bg border-0 rounded-2xl px-6 py-3 text-xs font-black uppercase tracking-widest text-brand-secondary focus:ring-2 focus:ring-brand-primary outline-none transition-all cursor-pointer shadow-sm">
+                                class="bg-white border border-outline-variant/10 rounded-2xl px-6 py-3 text-xs font-black uppercase tracking-widest text-brand-secondary focus:ring-2 focus:ring-brand-primary outline-none transition-all cursor-pointer shadow-sm">
                                 <option>Mới nhất</option>
                                 <option>Giá: Thấp đến Cao</option>
                                 <option>Giá: Cao đến Thấp</option>
@@ -185,7 +231,7 @@
 
                     <!-- Product Card -->
                     <div th:each="product : ${products}"
-                        class="product-card-hover group bg-white rounded-[2rem] shadow-sm border border-outline-variant/10 overflow-hidden flex flex-col transition-all hover:shadow-2xl hover:-translate-y-2">
+                        class="product-card-hover group bg-white overflow-hidden flex flex-col transition-all hover:-translate-y-2">
                         <!-- Image Wrapper -->
                         <div class="relative aspect-[4/5] overflow-hidden bg-brand-bg">
                             <a th:href="@{'/products/' + ${product.id}}">
@@ -222,7 +268,7 @@
 
                             <!-- Wishlist Heart -->
                             <button type="button"
-                                class="wishlist-btn absolute bottom-6 right-6 z-20 w-12 h-12 rounded-full bg-white/80 backdrop-blur shadow-2xl flex items-center justify-center text-on-surface-variant hover:text-red-500 hover:scale-110 active:scale-90 transition-all border border-white/50"
+                                class="wishlist-btn absolute bottom-6 right-6 z-20 w-12 h-12 rounded-full bg-white/90 backdrop-blur shadow-2xl flex items-center justify-center text-on-surface-variant hover:text-red-500 hover:scale-110 active:scale-90 transition-all border border-white/70"
                                 th:data-product-id="${product.id}">
                                 <span class="material-symbols-outlined text-2xl"
                                     th:classappend="${session.wishlistProductIds != null and session.wishlistProductIds.contains(product.id)} ? 'text-red-500 fill-1' : ''">favorite</span>
