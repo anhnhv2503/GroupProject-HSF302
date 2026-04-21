@@ -17,4 +17,6 @@ public interface SeafoodProductService {
             Integer primaryImageIndex);
 
     void deleteById(Long id);
+
+    List<SeafoodProduct> getNewestProducts();
 }

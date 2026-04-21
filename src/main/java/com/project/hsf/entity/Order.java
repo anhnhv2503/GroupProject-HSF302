@@ -91,4 +91,6 @@ public class Order {
     @Column(name = "updated_date")
     private Instant updatedDate;
 
+    private Long orderCode;
+
 }

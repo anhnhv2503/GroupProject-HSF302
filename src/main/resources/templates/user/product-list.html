@@ -1,9 +1,177 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="vi"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       layout:decorate="~{layout/customer-layout}">
-<head><title>Danh Sách Hải Sản - The Culinary Curator</title></head>
+<head><title>Danh Sách Hải Sản - The Culinary Curator</title>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;family=Roboto:wght@300;400;500;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+          rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-fixed-variant": "#7f2b00",
+                        "surface-container-low": "#f3f4f5",
+                        "on-background": "#191c1d",
+                        "surface-container-highest": "#e1e3e4",
+                        "error": "#ba1a1a",
+                        "surface-container-high": "#e7e8e9",
+                        "surface-variant": "#e1e3e4",
+                        "primary": "#a63b00",
+                        "on-tertiary-fixed": "#001e2f",
+                        "on-secondary": "#ffffff",
+                        "secondary-fixed": "#d1e4ff",
+                        "on-secondary-fixed": "#001d35",
+                        "surface-dim": "#d9dadb",
+                        "outline": "#8d7166",
+                        "on-surface-variant": "#594138",
+                        "inverse-on-surface": "#f0f1f2",
+                        "surface-container": "#edeeef",
+                        "on-primary-container": "#4f1800",
+                        "surface-bright": "#f8f9fa",
+                        "secondary": "#2e6192",
+                        "error-container": "#ffdad6",
+                        "on-primary-fixed": "#370e00",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-fixed-dim": "#9dcaff",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-fixed-variant": "#004b6f",
+                        "primary-fixed-dim": "#ffb599",
+                        "surface": "#f8f9fa",
+                        "secondary-container": "#98c7ff",
+                        "on-tertiary-container": "#002d45",
+                        "background": "#f8f9fa",
+                        "tertiary-fixed-dim": "#8cceff",
+                        "on-secondary-container": "#1c5384",
+                        "surface-tint": "#a63b00",
+                        "outline-variant": "#e1bfb3",
+                        "on-error": "#ffffff",
+                        "primary-fixed": "#ffdbce",
+                        "inverse-primary": "#ffb599",
+                        "on-tertiary": "#ffffff",
+                        "on-surface": "#191c1d",
+                        "inverse-surface": "#2e3132",
+                        "tertiary-container": "#009ade",
+                        "on-secondary-fixed-variant": "#0b4979",
+                        "tertiary": "#006492",
+                        "primary-container": "#f26522",
+                        "on-error-container": "#93000a",
+                        "tertiary-fixed": "#cae6ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"],
+                        "value": ["Roboto"]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+         .hover-primary:hover {
+            color: theme('colors.primary');
+        }
+         .text-brand-secondary {
+            color: theme('colors.secondary');
+        }
+         .hover-primary:hover {
+            color: theme('colors.primary');
+        }
+         .product-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+         .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
 <body>
+
+<header
+        class="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-sm dark:shadow-none">
+    <div class="flex justify-between items-center w-full px-8 py-4 max-w-7xl mx-auto">
+        <div class="text-2xl font-bold tracking-tighter text-slate-900 dark:text-white">The Culinary Curator</div>
+        <nav class="hidden md:flex gap-8 items-center font-sans tracking-tight text-sm font-medium">
+            <a class="text-primary border-b-2 border-primary pb-1" th:href="@{/}">Trang chủ</a>
+            <a class="text-slate-600 dark:text-slate-400 hover:text-primary transition-colors" th:href="@{/products}">Sản phẩm</a>
+            <a class="text-slate-600 dark:text-slate-400 hover:text-primary transition-colors" href="#">Công
+                thức</a>
+            <a class="text-slate-600 dark:text-slate-400 hover:text-primary transition-colors" href="#">Câu
+                chuyện</a>
+        </nav>
+        <div class="flex items-center gap-6">
+            <div class="hidden lg:flex items-center bg-surface-container-low px-3 py-1.5 rounded-full">
+                <span class="material-symbols-outlined text-sm text-on-surface-variant">search</span>
+                <input class="bg-transparent border-none focus:ring-0 text-xs w-48 ml-2"
+                       placeholder="Tìm hải sản..." type="text"/>
+            </div>
+            <div class="flex items-center gap-4 text-slate-900">
+                <!-- Auth Section -->
+                <div class="flex items-center gap-3">
+                    <!-- Not Authenticated -->
+                    <div sec:authorize="!isAuthenticated()" class="flex items-center gap-2">
+                        <a th:href="@{/login}"
+                           class="text-[10px] font-black uppercase tracking-widest text-on-surface-variant hover:text-primary transition-colors">Đăng
+                            nhập</a>
+                        <span class="text-outline-variant/30 text-[10px]">|</span>
+                        <a th:href="@{/register}"
+                           class="bg-primary text-white px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest hover:opacity-90 shadow-md shadow-primary/20 transition-all">Đăng
+                            ký</a>
+                    </div>
+
+                    <!-- Authenticated -->
+                    <div sec:authorize="isAuthenticated()" class="flex items-center gap-4">
+                        <a th:href="@{/cart}" class="hover:opacity-80 transition-all scale-95 duration-200 ease-in-out relative">
+                            <span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
+                        </a>
+                        <div class="flex items-center gap-2 group cursor-pointer relative py-2">
+                                <span class="material-symbols-outlined text-secondary"
+                                      data-icon="account_circle">account_circle</span>
+                            <div class="flex flex-col">
+                                    <span class="text-[10px] font-black uppercase tracking-tighter text-on-surface">Xin
+                                        chào, <span sec:authentication="name">User</span></span>
+                                <span class="text-[8px] text-on-surface-variant leading-none">Thành viên thân
+                                        thiết</span>
+                            </div>
+
+                            <!-- Mini Dropdown -->
+                            <div
+                                    class="absolute top-full right-0 mt-1 w-48 bg-white rounded-xl shadow-xl border border-outline-variant/10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 p-2">
+                                <a href="/profile"
+                                   class="flex items-center gap-2 p-2 hover:bg-surface-container-low rounded-lg text-xs font-medium transition-colors text-slate-700">
+                                    <span class="material-symbols-outlined text-sm">person</span> Hồ sơ cá nhân
+                                </a>
+                                <hr class="my-1 border-outline-variant/10">
+                                <form th:action="@{/logout}" method="post">
+                                    <button type="submit"
+                                            class="w-full flex items-center gap-2 p-2 hover:bg-error/10 text-error rounded-lg text-xs font-bold transition-colors">
+                                        <span class="material-symbols-outlined text-sm">logout</span> Đăng xuất
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
 <div layout:fragment="content" class="container py-5">
 
     <div class="row g-4">
@@ -78,7 +246,7 @@
                                  class="card-img-top" th:alt="${product.name}" style="aspect-ratio: 1/1; object-fit: cover;"/>
                             <img th:unless="${product.images != null and !product.images.isEmpty()}"
                                  src="https://via.placeholder.com/400x300?text=Seafood" class="card-img-top" alt="Seafood" style="aspect-ratio: 1/1; object-fit: cover;"/>
-                            
+
                             <!-- Badge -->
                             <div class="position-absolute top-0 start-0 m-2">
                                 <span th:if="${product.freshnessStatus == 'FRESH'}" class="badge bg-success rounded-pill px-2 py-1" style="font-size: .6rem;">TƯƠI</span>
@@ -96,6 +264,7 @@
                                     <input type="hidden" name="productId" th:value="${product.id}"/>
                                     <input type="hidden" name="name" th:value="${product.name}"/>
                                     <input type="hidden" name="price" th:value="${product.price}"/>
+                                    <input type="hidden" name="imageUrl" th:value="${product.images.get(0).imageUrl}"/>
                                     <button type="submit" class="btn btn-outline-primary btn-sm rounded-circle" style="width:36px;height:36px;">
                                         <i class="bi bi-cart-plus"></i>
                                     </button>
