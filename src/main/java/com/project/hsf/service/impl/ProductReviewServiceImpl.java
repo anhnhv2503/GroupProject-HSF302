@@ -1,5 +1,10 @@
 package com.project.hsf.service.impl;
 
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.project.hsf.entity.Order;
 import com.project.hsf.entity.OrderStatus;
 import com.project.hsf.entity.ProductReview;
@@ -7,14 +12,10 @@ import com.project.hsf.entity.SeafoodProduct;
 import com.project.hsf.entity.User;
 import com.project.hsf.repository.OrderRepository;
 import com.project.hsf.repository.ProductReviewRepository;
-import com.project.hsf.repository.SeafoodProductRepository;
 import com.project.hsf.repository.UserRepository;
 import com.project.hsf.service.ProductReviewService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -23,11 +24,16 @@ public class ProductReviewServiceImpl implements ProductReviewService {
     private final ProductReviewRepository reviewRepository;
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
-    private final SeafoodProductRepository productRepository;
 
     @Override
     @Transactional(readOnly = true)
     public List<ProductReview> getReviewsByProduct(Long productId) {
+        return reviewRepository.findByProductId(productId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<ProductReview> getVisibleReviewsByProduct(Long productId) {
         return reviewRepository.findByProductIdAndIsVisibleTrue(productId);
     }
 
@@ -46,7 +52,7 @@ public class ProductReviewServiceImpl implements ProductReviewService {
                 .order(order)
                 .rating(rating)
                 .comment(comment)
-                .isVisible(true)
+                .isVisible(false)
                 .build();
         return reviewRepository.save(review);
     }
@@ -94,5 +100,14 @@ public class ProductReviewServiceImpl implements ProductReviewService {
         return reviewRepository.findAll().stream()
                 .filter(r -> r.getUser().getId().equals(userId))
                 .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ProductReview getUserReviewForProduct(Long productId, Long userId) {
+        return reviewRepository.findAll().stream()
+                .filter(r -> r.getProduct().getId().equals(productId) && r.getUser().getId().equals(userId))
+                .findFirst()
+                .orElse(null);
     }
 }

@@ -10,6 +10,8 @@ import java.util.List;
 public interface ProductReviewService {
     List<ProductReview> getReviewsByProduct(Long productId);
 
+    List<ProductReview> getVisibleReviewsByProduct(Long productId);
+
     ProductReview getReviewById(Long id);
 
     ProductReview createReview(SeafoodProduct product, User user, Order order, Short rating, String comment);
@@ -23,4 +25,6 @@ public interface ProductReviewService {
     boolean canUserReviewProduct(Long productId, Long userId);
 
     List<ProductReview> getUserReviews(Long userId);
+
+    ProductReview getUserReviewForProduct(Long productId, Long userId);
 }

@@ -108,8 +108,7 @@
                                     <span class="material-symbols-outlined text-lg"
                                         style="font-variation-settings: 'FILL' 1;">star</span>
                                 </div>
-                                <span class="text-xs font-black uppercase tracking-tighter text-on-surface-variant">(128
-                                    Reviews)</span>
+                                <span class="text-xs font-black uppercase tracking-tighter text-on-surface-variant">(<span th:text="${#lists.size(reviews)}">0</span> Reviews)</span>
                             </div>
                             <div class="h-4 w-px bg-outline-variant/30"></div>
                             <div class="flex items-center gap-2 text-on-surface-variant">
@@ -220,7 +219,7 @@
 
                     <button onclick="switchTab('reviews');" id="btn-reviews"
                         class="tab-btn text-xs font-black uppercase tracking-[0.2em] pb-4 border-b-2 border-transparent transition-all">Đánh
-                        giá khách hàng (28)</button>
+                        giá khách hàng (<span th:text="${#lists.size(reviews)}">0</span>)</button>
                 </div>
 
                 <div class="mt-12">
@@ -277,77 +276,81 @@
                             <div class="lg:col-span-4 space-y-8">
                                 <div
                                     class="p-8 rounded-3xl bg-surface-container-low border border-outline-variant/10 text-center space-y-4">
-                                    <h1 class="text-6xl font-black text-primary-container leading-none">5.0</h1>
+                                    <h1 class="text-6xl font-black text-primary-container leading-none"
+                                        th:text="${#numbers.formatDecimal(#aggregates.avg(reviews.![rating]) ?: 0, 1, 1, 'POINT')}">0.0</h1>
                                     <div class="flex justify-center text-amber-500">
-                                        <span class="material-symbols-outlined text-2xl"
-                                            th:each="i : ${#numbers.sequence(1, 5)}"
-                                            style="font-variation-settings: 'FILL' 1;">star</span>
+                                        <span th:each="i : ${#numbers.sequence(1, 5)}" class="material-symbols-outlined text-2xl"
+                                            th:style="${i <= (#aggregates.avg(reviews.![rating]) ?: 0)} ? 'font-variation-settings: \&#39;FILL\&#39; 1' : ''">star</span>
                                     </div>
                                     <p class="text-xs font-black uppercase tracking-widest text-on-surface-variant">Dựa
-                                        trên 28 lượt đánh giá</p>
+                                        trên <span th:text="${#lists.size(reviews) ?: 0}">0</span> lượt đánh giá</p>
                                 </div>
+
                                 <div class="space-y-4 px-4">
-                                    <button
-                                        class="w-full bg-brand-secondary text-white h-14 rounded-2xl font-black text-xs uppercase tracking-widest hover:brightness-110 shadow-lg transition-all">GỬI
-                                        ĐÁNH GIÁ CỦA BẠN</button>
-                                    <p
-                                        class="text-[9px] text-center font-bold text-on-surface-variant uppercase tracking-wider">
-                                        Mỗi đánh giá nhận ngay voucher 50K</p>
+                                    <div th:if="${hasReviewed}" class="bg-yellow-50 border border-yellow-200 rounded-2xl p-4 text-center">
+                                        <th:block th:if="${userReviewVisible}">
+                                            <p class="text-green-700 font-bold text-sm">Cảm ơn bạn đã đánh giá!</p>
+                                            <p class="text-green-600 text-xs mt-1">Đánh giá của bạn đã được duyệt</p>
+                                        </th:block>
+                                        <th:block th:unless="${userReviewVisible}">
+                                            <p class="text-yellow-700 font-bold text-sm">Bạn đã đánh giá sản phẩm này rồi</p>
+                                            <p class="text-yellow-600 text-xs mt-1">Chờ quản trị viên duyệt</p>
+                                        </th:block>
+                                    </div>
+                                    <div th:unless="${hasReviewed}">
+                                        <div th:if="${canReview}">
+                                            <form th:action="@{/products/{id}/review(id=${product.id})}" method="post" class="space-y-4">
+                                                <div>
+                                                    <label class="text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant block mb-2">Đánh giá của bạn</label>
+                                                    <div class="flex gap-2 flex-row-reverse">
+                                                        <input type="radio" name="rating" value="5" id="star5" class="peer hidden" />
+                                                        <label for="star5" class="text-3xl cursor-pointer text-amber-500 peer-checked:text-amber-500 text-slate-300">★</label>
+                                                        <input type="radio" name="rating" value="4" id="star4" class="peer hidden" />
+                                                        <label for="star4" class="text-3xl cursor-pointer text-amber-500 peer-checked:text-amber-500 text-slate-300">★</label>
+                                                        <input type="radio" name="rating" value="3" id="star3" class="peer hidden" />
+                                                        <label for="star3" class="text-3xl cursor-pointer text-amber-500 peer-checked:text-amber-500 text-slate-300">★</label>
+                                                        <input type="radio" name="rating" value="2" id="star2" class="peer hidden" />
+                                                        <label for="star2" class="text-3xl cursor-pointer text-amber-500 peer-checked:text-amber-500 text-slate-300">★</label>
+                                                        <input type="radio" name="rating" value="1" id="star1" class="peer hidden" />
+                                                        <label for="star1" class="text-3xl cursor-pointer text-amber-500 peer-checked:text-amber-500 text-slate-300">★</label>
+                                                    </div>
+                                                </div>
+                                                <textarea name="comment" rows="3" required class="w-full px-4 py-3 rounded-xl border border-outline-variant/20 bg-white focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none" placeholder="Chia sẻ trải nghiệm của bạn..."></textarea>
+                                                <button type="submit" class="w-full bg-brand-secondary text-white h-14 rounded-2xl font-black text-xs uppercase tracking-widest hover:brightness-110 shadow-lg transition-all">GỬI ĐÁNH GIÁ</button>
+                                            </form>
+                                        </div>
+                                        <div th:unless="${canReview}" class="bg-red-50 border border-red-200 rounded-2xl p-4 text-center">
+                                            <p class="text-red-700 font-bold text-sm">Bạn cần mua sản phẩm này</p>
+                                            <p class="text-red-600 text-xs mt-1">và đơn hàng phải được giao thành công để đánh giá</p>
+                                        </div>
+                                    </div>
+                                    <p th:if="${session.reviewSuccess}" th:text="${session.reviewSuccess}" class="text-green-600 text-sm text-center font-medium"></p>
+                                    <p th:if="${session.reviewError}" th:text="${session.reviewError}" class="text-red-600 text-sm text-center font-medium"></p>
                                 </div>
                             </div>
 
                             <!-- Review List -->
                             <div class="lg:col-span-8 space-y-8">
-                                <!-- Review Item -->
-                                <div class="space-y-6 pb-8 border-b border-outline-variant/10">
-                                    <div class="flex justify-between items-start">
-                                        <div class="flex items-center gap-4">
-                                            <div
-                                                class="w-12 h-12 rounded-full overflow-hidden bg-surface-container-high flex items-center justify-center font-black text-lg text-primary-container">
-                                                K</div>
-                                            <div>
-                                                <h4 class="font-black text-sm uppercase tracking-widest">Khánh Nguyên
-                                                </h4>
-                                                <p class="text-[10px] font-bold text-on-surface-variant">Verified
-                                                    Purchase • 2 ngày trước</p>
-                                            </div>
-                                        </div>
-                                        <div class="flex text-amber-500">
-                                            <span class="material-symbols-outlined text-sm fill-1">star</span>
-                                        </div>
-                                    </div>
-                                    <p class="text-sm font-medium leading-relaxed text-on-surface">"Thật sự bất ngờ về
-                                        độ tươi của hàu khi giao đến. Hải sản đóng gói rất chuyên nghiệp, còn nguyên hơi
-                                        lạnh. Sẽ ủng hộ shop dài dài."</p>
-                                    <div class="flex gap-4">
-                                        <div
-                                            class="w-20 h-20 rounded-xl bg-surface-container-low overflow-hidden cursor-zoom-in">
-                                            <img src="https://via.placeholder.com/200x200?text=Customer+Photo"
-                                                class="w-full h-full object-cover" />
-                                        </div>
-                                    </div>
+                                <div th:if="${#lists.isEmpty(reviews)}" class="text-center py-8 text-on-surface-variant">
+                                    Chưa có đánh giá nào
                                 </div>
-
-                                <!-- Review Item -->
-                                <div class="space-y-6 pb-8">
+                                <div th:each="review : ${reviews}" class="space-y-6 pb-8 border-b border-outline-variant/10">
                                     <div class="flex justify-between items-start">
                                         <div class="flex items-center gap-4">
-                                            <div
-                                                class="w-12 h-12 rounded-full overflow-hidden bg-surface-container-high flex items-center justify-center font-black text-lg text-primary-container">
-                                                A</div>
+                                            <div class="w-12 h-12 rounded-full overflow-hidden bg-surface-container-high flex items-center justify-center font-black text-lg text-primary-container">
+                                                <span th:text="${#strings.substring(review.user.fullName, 0, 1)}">U</span>
+                                            </div>
                                             <div>
-                                                <h4 class="font-black text-sm uppercase tracking-widest">Anh Tuấn</h4>
-                                                <p class="text-[10px] font-bold text-on-surface-variant">Verified
-                                                    Purchase • 1 tuần trước</p>
+                                                <h4 class="font-black text-sm uppercase tracking-widest" th:text="${review.user.fullName}">User</h4>
+                                                <p class="text-[10px] font-bold text-on-surface-variant" th:text="${review.createdDate != null ? #temporals.format(review.createdDate, 'dd/MM/yyyy') : ''}">Date</p>
                                             </div>
                                         </div>
                                         <div class="flex text-amber-500">
-                                            <span class="material-symbols-outlined text-sm fill-1">star</span>
+                                            <span th:each="i : ${#numbers.sequence(1, 5)}" class="material-symbols-outlined text-sm"
+                                                th:style="${i <= review.rating} ? 'font-variation-settings: \&#39;FILL\&#39; 1' : 'color: #d1d5db'">star</span>
                                         </div>
                                     </div>
-                                    <p class="text-sm font-medium leading-relaxed text-on-surface">"Chất lượng chuẩn JAS
-                                        Nhật Bản, ăn khác hẳn các loại hải sản thông thường ngoài chợ. Đáng đồng tiền
-                                        bát gạo."</p>
+                                    <p class="text-sm font-medium leading-relaxed text-on-surface" th:text="${review.comment}">Comment</p>
                                 </div>
                             </div>
                         </div>
@@ -394,6 +397,14 @@
                 el.classList.remove('active');
             });
             document.getElementById('btn-' + tabName).classList.add('active');
+        }
+
+        // Handle hash navigation for reviews
+        if (window.location.hash === '#reviews') {
+            switchTab('reviews');
+            setTimeout(() => {
+                document.getElementById('tab-reviews').scrollIntoView({ behavior: 'smooth' });
+            }, 100);
         }
 
         // AJAX for Cart

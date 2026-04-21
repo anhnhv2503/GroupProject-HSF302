@@ -50,7 +50,7 @@ public class ProductReview {
     private String comment;
 
     @NotNull
-    @ColumnDefault("1")
+    @ColumnDefault("0")
     @Column(name = "is_visible", nullable = false)
     private Boolean isVisible = false;
 
