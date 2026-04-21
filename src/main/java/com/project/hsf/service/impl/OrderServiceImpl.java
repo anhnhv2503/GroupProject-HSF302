@@ -1,26 +1,27 @@
 package com.project.hsf.service.impl;
 
-import com.project.hsf.dto.CartItemDTO;
-import com.project.hsf.entity.Coupon;
-import com.project.hsf.entity.Order;
-import com.project.hsf.entity.OrderStatus;
-import com.project.hsf.entity.OrderStatusHistory;
-import com.project.hsf.entity.OrderItem;
-import com.project.hsf.entity.PaymentStatus;
-import com.project.hsf.entity.User;
-import com.project.hsf.repository.CouponRepository;
-import com.project.hsf.repository.OrderRepository;
-import com.project.hsf.repository.OrderItemRepository;
-import com.project.hsf.repository.OrderStatusHistoryRepository;
-import com.project.hsf.repository.UserRepository;
-import com.project.hsf.service.OrderService;
-import lombok.RequiredArgsConstructor;
+import java.math.BigDecimal;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
-import java.util.Collections;
-import java.util.List;
+import com.project.hsf.dto.CartItemDTO;
+import com.project.hsf.entity.Coupon;
+import com.project.hsf.entity.Order;
+import com.project.hsf.entity.OrderItem;
+import com.project.hsf.entity.OrderStatus;
+import com.project.hsf.entity.OrderStatusHistory;
+import com.project.hsf.entity.PaymentStatus;
+import com.project.hsf.entity.User;
+import com.project.hsf.repository.CouponRepository;
+import com.project.hsf.repository.OrderItemRepository;
+import com.project.hsf.repository.OrderRepository;
+import com.project.hsf.repository.OrderStatusHistoryRepository;
+import com.project.hsf.repository.UserRepository;
+import com.project.hsf.service.OrderService;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +32,14 @@ public class OrderServiceImpl implements OrderService {
     private final OrderStatusHistoryRepository orderStatusHistoryRepository;
     private final CouponRepository couponRepository;
     private final UserRepository userRepository;
+    // private final OrderItemRepository orderItemRepository;
+    // private final PaymentRepository paymentRepository;
+    // private final CouponUsageRepository couponUsageRepository;
+
+    @Override
+    public List<com.project.hsf.entity.Order> getOrdersByCustomer(com.project.hsf.entity.User customer) {
+        return orderRepository.findByCustomerOrderByCreatedDateDesc(customer);
+    }
 
     @Override
     @Transactional(readOnly = true)

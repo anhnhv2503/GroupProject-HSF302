@@ -1,7 +1,16 @@
 package com.project.hsf.controller.client;
 
+
 import java.util.List;
 
+import com.project.hsf.entity.User;
+import com.project.hsf.entity.Order;
+import com.project.hsf.service.UserService;
+import com.project.hsf.service.OrderService;
+
+import lombok.RequiredArgsConstructor;
+
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -11,12 +20,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.project.hsf.entity.User;
 import com.project.hsf.entity.UserAddress;
 import com.project.hsf.service.AddressService;
-import com.project.hsf.service.UserService;
-
-import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequestMapping("/profile")
@@ -26,12 +31,17 @@ public class UserController {
     private final UserService userService;
     private final AddressService addressService;
     private final PasswordEncoder passwordEncoder;
+    private final OrderService orderService;
 
     @GetMapping
     public String viewProfile(Authentication authentication, Model model) {
         String username = authentication.getName();
         User user = userService.findByUsername(username);
         model.addAttribute("user", user);
+        
+        List<Order> orders = orderService.getOrdersByCustomer(user);
+        model.addAttribute("orders", orders);
+        
         return "user/profile";
     }
 

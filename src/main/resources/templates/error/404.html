@@ -1,21 +1,242 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8"/>
-    <title>404 - Không Tìm Thấy</title>
-    <link th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"/>
-    <link th:href="@{/css/custom.css}" rel="stylesheet"/>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>404 - Khong Tim Thay Trang</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Syne:wght@600;700&display=swap" rel="stylesheet">
+	<style>
+		:root {
+			--bg-top: #021126;
+			--bg-mid: #06376f;
+			--bg-low: #0a5e8a;
+			--foam: #d9f3ff;
+			--cyan: #7ee0ff;
+			--white: #ffffff;
+			--muted: #b4d8ee;
+			--cta: #ffcf56;
+			--ink: #1a2a36;
+		}
+
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+		}
+
+		body {
+			min-height: 100vh;
+			font-family: 'Sora', sans-serif;
+			color: var(--white);
+			background:
+				radial-gradient(650px 200px at 18% 8%, rgba(126, 224, 255, 0.3), transparent 60%),
+				linear-gradient(180deg, var(--bg-top) 0%, var(--bg-mid) 52%, var(--bg-low) 100%);
+			display: grid;
+			place-items: center;
+			overflow: hidden;
+			padding: 24px;
+		}
+
+		.wrap {
+			position: relative;
+			width: min(1080px, 100%);
+			border-radius: 30px;
+			background: linear-gradient(150deg, rgba(5, 27, 53, 0.85) 0%, rgba(7, 61, 103, 0.78) 100%);
+			border: 1px solid rgba(140, 205, 233, 0.24);
+			box-shadow: 0 22px 60px rgba(3, 16, 33, 0.45);
+			overflow: hidden;
+			isolation: isolate;
+		}
+
+		.glow,
+		.glow-two {
+			position: absolute;
+			border-radius: 999px;
+			filter: blur(36px);
+			z-index: -1;
+		}
+
+		.glow {
+			width: 280px;
+			height: 280px;
+			background: rgba(126, 224, 255, 0.42);
+			top: -110px;
+			right: -70px;
+		}
+
+		.glow-two {
+			width: 240px;
+			height: 240px;
+			background: rgba(255, 207, 86, 0.26);
+			left: -90px;
+			bottom: -95px;
+		}
+
+		.content {
+			padding: 52px clamp(20px, 5vw, 56px) 88px;
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 24px;
+			align-items: center;
+		}
+
+		.code {
+			font-family: 'Syne', sans-serif;
+			font-size: clamp(5rem, 14vw, 9rem);
+			line-height: 0.9;
+			letter-spacing: 0.04em;
+			color: var(--foam);
+			text-shadow: 0 10px 40px rgba(126, 224, 255, 0.35);
+			transform: translateY(0);
+			animation: drift 4.8s ease-in-out infinite;
+		}
+
+		h1 {
+			font-family: 'Syne', sans-serif;
+			margin-top: 8px;
+			font-size: clamp(1.7rem, 4vw, 2.8rem);
+			line-height: 1.15;
+		}
+
+		p {
+			margin-top: 14px;
+			color: var(--muted);
+			line-height: 1.7;
+			max-width: 50ch;
+		}
+
+		.pill {
+			display: inline-block;
+			background: rgba(126, 224, 255, 0.14);
+			border: 1px solid rgba(126, 224, 255, 0.36);
+			color: var(--foam);
+			border-radius: 999px;
+			padding: 8px 14px;
+			font-size: 0.78rem;
+			letter-spacing: 0.16em;
+			text-transform: uppercase;
+			font-weight: 700;
+		}
+
+		.actions {
+			margin-top: 22px;
+			display: flex;
+			flex-wrap: wrap;
+			gap: 12px;
+		}
+
+		.btn {
+			text-decoration: none;
+			border-radius: 12px;
+			padding: 12px 20px;
+			font-weight: 700;
+			font-size: 0.95rem;
+			transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+		}
+
+		.btn-main {
+			background: var(--cta);
+			color: var(--ink);
+			box-shadow: 0 12px 24px rgba(255, 207, 86, 0.28);
+		}
+
+		.btn-main:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 16px 28px rgba(255, 207, 86, 0.36);
+			background: #ffbf2e;
+		}
+
+		.btn-alt {
+			background: rgba(217, 243, 255, 0.1);
+			color: var(--foam);
+			border: 1px solid rgba(217, 243, 255, 0.34);
+		}
+
+		.btn-alt:hover {
+			transform: translateY(-2px);
+			background: rgba(217, 243, 255, 0.18);
+		}
+
+		.waves {
+			position: absolute;
+			left: 0;
+			right: 0;
+			bottom: -2px;
+			height: 120px;
+			overflow: hidden;
+		}
+
+		.wave {
+			position: absolute;
+			width: 180%;
+			left: -40%;
+			border-radius: 44%;
+			animation: sway 11s linear infinite;
+		}
+
+		.wave.one {
+			bottom: -75px;
+			height: 190px;
+			background: rgba(217, 243, 255, 0.24);
+		}
+
+		.wave.two {
+			bottom: -88px;
+			height: 210px;
+			background: rgba(217, 243, 255, 0.17);
+			animation-duration: 15s;
+			animation-direction: reverse;
+		}
+
+		@keyframes sway {
+			from { transform: translateX(0) rotate(0deg); }
+			to { transform: translateX(16%) rotate(360deg); }
+		}
+
+		@keyframes drift {
+			0%, 100% { transform: translateY(0px); }
+			50% { transform: translateY(-8px); }
+		}
+
+		@media (max-width: 900px) {
+			.content {
+				grid-template-columns: 1fr;
+				padding-top: 38px;
+				padding-bottom: 96px;
+			}
+		}
+	</style>
 </head>
-<body class="d-flex align-items-center justify-content-center min-vh-100 bg-light">
-    <div class="text-center">
-        <div class="bg-warning bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-4" style="width:80px;height:80px;">
-            <i class="bi bi-search text-warning" style="font-size:2rem;"></i>
-        </div>
-        <h1 class="font-serif fw-bold text-brand-secondary display-1 mb-2">404</h1>
-        <h4 class="fw-bold mb-3">Không Tìm Thấy Trang</h4>
-        <p class="text-muted mb-4">Trang bạn đang tìm kiếm có thể đã bị xóa hoặc di chuyển.</p>
-        <a href="/" class="btn btn-primary fw-bold rounded-pill px-4">Về Trang Chủ</a>
-    </div>
+<body>
+	<main class="wrap" role="main">
+		<span class="glow" aria-hidden="true"></span>
+		<span class="glow-two" aria-hidden="true"></span>
+
+		<section class="content">
+			<div>
+				<span class="pill">page not found</span>
+				<div class="code">404</div>
+			</div>
+
+			<div>
+				<h1>Trang bạn tìm đã trôi ra khỏi bản đồ</h1>
+				<p>
+					Có thể liên kết đã thay đổi, nội dung đã được di chuyển, hoặc URL không còn tồn tại.
+					ừng lo, bạn có thể quay về trang chủ hoặc tiếp tục khám phá các mặt hàng của chúng tôi.
+				</p>
+				<div class="actions">
+					<a class="btn btn-main" th:href="@{/home}">Về trang chủ</a>
+					<a class="btn btn-alt" th:href="@{/products}">Đến trang sản phẩm</a>
+				</div>
+			</div>
+		</section>
+
+		<div class="waves" aria-hidden="true">
+			<div class="wave one"></div>
+			<div class="wave two"></div>
+		</div>
+	</main>
 </body>
 </html>

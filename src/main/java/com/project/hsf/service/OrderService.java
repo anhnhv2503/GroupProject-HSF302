@@ -1,14 +1,14 @@
 package com.project.hsf.service;
 
+import java.util.List;
+
 import com.project.hsf.dto.CartItemDTO;
 import com.project.hsf.entity.Order;
+import com.project.hsf.entity.OrderItem;
 import com.project.hsf.entity.OrderStatus;
 import com.project.hsf.entity.OrderStatusHistory;
-import com.project.hsf.entity.OrderItem;
 import com.project.hsf.entity.PaymentStatus;
 import com.project.hsf.entity.User;
-
-import java.util.List;
 
 public interface OrderService {
     List<Order> getOrdersByUser(User user);
@@ -22,4 +22,6 @@ public interface OrderService {
     List<OrderStatusHistory> getOrderStatusHistory(Long orderId);
 
     Order placeOrder(List<CartItemDTO> items, String couponCode, String notes) throws RuntimeException;
+    
+    public List<Order> getOrdersByCustomer(User customer);
 }
