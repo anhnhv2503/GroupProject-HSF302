@@ -5,7 +5,9 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Nationalized;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -78,10 +80,12 @@ public class SeafoodProduct {
     @Column(name = "active", nullable = false)
     private Boolean active = false;
 
+    @CreationTimestamp
     @ColumnDefault("getdate()")
     @Column(name = "created_date")
     private Instant createdDate;
 
+    @UpdateTimestamp
     @ColumnDefault("getdate()")
     @Column(name = "updated_date")
     private Instant updatedDate;

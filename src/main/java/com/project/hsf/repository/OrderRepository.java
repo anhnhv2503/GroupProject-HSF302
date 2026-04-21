@@ -16,6 +16,8 @@ import com.project.hsf.entity.User;
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
+    Optional<Order> findByOrderCode(Long orderCode);
+
     @Query("SELECT o FROM Order o WHERE o.customer.id = :customerId ORDER BY o.createdDate DESC")
     List<Order> findByCustomerIdOrderByCreatedDateDesc(@Param("customerId") Long customerId);
 

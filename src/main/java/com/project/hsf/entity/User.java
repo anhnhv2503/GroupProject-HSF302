@@ -10,10 +10,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Nationalized;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
 
@@ -77,10 +79,12 @@ public class User {
     @Column(name = "enabled", nullable = false)
     private Boolean enabled = false;
 
+    @CreationTimestamp
     @ColumnDefault("getdate()")
     @Column(name = "created_date")
     private Instant createdDate;
 
+    @UpdateTimestamp
     @ColumnDefault("getdate()")
     @Column(name = "updated_date")
     private Instant updatedDate;

@@ -17,13 +17,15 @@ public class HomeController {
 
     @GetMapping("/")
     public String index(Model model) {
+
         model.addAttribute("products", productService.search(null, null, true, null, "id", "desc"));
+        model.addAttribute("newestProducts", productService.getNewestProducts());
+
         return "index";
     }
 
     @GetMapping("/home")
-    public String home(Model model) {
-        model.addAttribute("products", productService.search(null, null, true, null, "id", "desc"));
+    public String home() {
         return "redirect:/";
     }
 }
