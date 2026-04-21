@@ -2,11 +2,16 @@ package com.project.hsf.controller;
 
 import com.project.hsf.dto.CartItemDTO;
 import com.project.hsf.service.CartService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
+
 
 @Controller
 @RequestMapping("/cart")
@@ -27,7 +32,8 @@ public class CartController {
      * Either productId or comboId must be provided (not both).
      */
     @PostMapping("/add")
-    public String addToCart(
+    public Object addToCart(
+            HttpServletRequest request,
             HttpSession session,
             @RequestParam(required = false) Integer productId,
             @RequestParam(required = false) Integer comboId,
@@ -38,7 +44,11 @@ public class CartController {
 
         // Validate: must have either productId or comboId
         if (productId == null && comboId == null) {
-            return "redirect:/cart?error=invalid";
+            String errorMsg = "invalid";
+            if ("XMLHttpRequest".equals(request.getHeader("X-Requested-With"))) {
+                return ResponseEntity.badRequest().body(Map.of("error", errorMsg));
+            }
+            return "redirect:/cart?error=" + errorMsg;
         }
 
         String key = (productId != null) ? "P_" + productId : "C_" + comboId;
@@ -58,11 +68,17 @@ public class CartController {
         cartService.addToCart(session, item);
 
         // Update session cart count for navbar badge
-        session.setAttribute("cartCount", cartService.getCart(session).values()
-                .stream().mapToInt(CartItemDTO::getQuantity).sum());
+        int count = cartService.getCart(session).values()
+                .stream().mapToInt(CartItemDTO::getQuantity).sum();
+        session.setAttribute("cartCount", count);
+
+        if ("XMLHttpRequest".equals(request.getHeader("X-Requested-With"))) {
+            return ResponseEntity.ok(Map.of("success", true, "count", count));
+        }
 
         return "redirect:/cart?added=true";
     }
+
 
     @PostMapping("/update")
     public String updateQuantity(

@@ -105,13 +105,13 @@
                         <!-- Wishlist -->
                         <a href="/wishlist" class="relative group transition-transform hover:scale-110">
                             <span class="material-symbols-outlined line-art-icon">heart_plus</span>
-                            <span class="absolute -top-1.5 -right-1.5 bg-[#D35400] text-white text-[9px] font-black w-4 h-4 flex items-center justify-center rounded-full shadow-sm"
+                            <span id="wishlist-badge" class="absolute -top-1.5 -right-1.5 bg-[#D35400] text-white text-[9px] font-black w-4 h-4 flex items-center justify-center rounded-full shadow-sm"
                                   th:text="${session.wishlistCount ?: 0}">0</span>
                         </a>
                         <!-- Cart -->
                         <a href="/cart" class="relative group transition-transform hover:scale-110">
                             <span class="material-symbols-outlined line-art-icon">shopping_cart</span>
-                            <span class="absolute -top-1.5 -right-1.5 bg-[#D35400] text-white text-[9px] font-black w-4 h-4 flex items-center justify-center rounded-full shadow-sm"
+                            <span id="cart-badge" class="absolute -top-1.5 -right-1.5 bg-[#D35400] text-white text-[9px] font-black w-4 h-4 flex items-center justify-center rounded-full shadow-sm"
                                   th:text="${session.cartCount ?: 0}">0</span>
                         </a>
 
