@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" class="light" lang="vi">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>The Oceanic - Quản Lý Đơn Hàng</title>
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#F26522',
+                        secondary: '#E8C872',
+                        accent: '#F26522',
+                        surface: '#FDFBF7',
+                        'on-surface': '#1B1C17',
+                        'on-surface-variant': '#44483D',
+                        'outline-variant': '#C4C8BA',
+                        background: '#F4F7F5',
+                        tertiary: '#0D4A7A',
+                        'primary-container': '#FFEDE5',
+                        'on-primary-container': '#F26522'
+                    },
+                    borderRadius: {
+                        DEFAULT: '0.5rem',
+                        lg: '1rem',
+                        xl: '1.5rem',
+                        full: '9999px'
+                    },
+                    fontFamily: {
+                        headline: ['Playfair Display', 'serif'],
+                        body: ['Plus Jakarta Sans', 'sans-serif']
+                    }
+                }
+            }
+        };
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&amp;family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .font-headline {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .font-numeric {
+            font-family: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
+            font-variant-numeric: tabular-nums lining-nums;
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+    </style>
+</head>
+
+<body class="bg-background text-on-surface flex min-h-screen">
+<div th:replace="~{admin/fragments/sidebar :: sidebar}"></div>
+
+<main class="flex-1 ml-72 min-h-screen relative">
+    <div th:replace="~{admin/fragments/header :: header}"></div>
+
+    <div class="p-10 space-y-6">
+        <div>
+            <h1 class="text-5xl font-headline font-bold text-tertiary tracking-tight">Xử Lý Đơn Hàng</h1>
+            <p class="mt-2 text-on-surface-variant">Quản lý và cập nhật trạng thái đơn hàng</p>
+        </div>
+
+        <div th:if="${successMessage}" class="rounded-xl border border-green-200 bg-green-50 text-green-700 px-4 py-3 text-sm font-semibold" th:text="${successMessage}"></div>
+        <div th:if="${errorMessage}" class="rounded-xl border border-red-200 bg-red-50 text-red-700 px-4 py-3 text-sm font-semibold" th:text="${errorMessage}"></div>
+
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+            <aside class="xl:col-span-1 rounded-2xl bg-white border border-outline-variant/20 p-6 shadow-sm h-fit">
+                <h2 class="text-2xl font-headline font-bold text-tertiary mb-4">Tất Cả Đơn Hàng</h2>
+
+                <div th:if="${#lists.isEmpty(orders)}" class="rounded-xl border border-dashed border-outline-variant/40 p-6 text-center text-sm text-on-surface-variant">
+                    Chưa có đơn hàng nào.
+                </div>
+
+                <div class="space-y-3 max-h-[65vh] overflow-auto pr-1">
+                    <a th:each="order : ${orders}"
+                       th:href="@{/admin/orders(orderId=${order.id})}"
+                       th:classappend="${selectedOrder != null and selectedOrder.id == order.id} ? ' border-tertiary/40 bg-blue-50/50' : ' border-outline-variant/20 hover:bg-background/60'"
+                       class="block rounded-xl border p-4 transition-colors">
+                        <div class="flex items-center justify-between gap-2">
+                            <p class="font-bold text-tertiary font-numeric" th:text="'ORD-' + ${#numbers.formatInteger(order.id, 6)}">ORD-000001</p>
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-bold uppercase"
+                                  th:classappend="${order.orderStatus == 'SHIPPING'} ? ' bg-amber-100 text-amber-700' : (${order.orderStatus == 'CONFIRMED'} ? ' bg-blue-100 text-blue-700' : (${order.orderStatus == 'DELIVERED'} ? ' bg-emerald-100 text-emerald-700' : (${order.orderStatus == 'CANCELLED'} ? ' bg-rose-100 text-rose-700' : ' bg-slate-100 text-slate-600')))"
+                                  th:text="${order.orderStatus}">PENDING</span>
+                        </div>
+                        <p class="text-sm text-on-surface-variant mt-2" th:text="${order.customer != null ? (order.customer.fullName != null ? order.customer.fullName : order.customer.username) : 'Không rõ khách hàng'}">Nguyễn Văn A</p>
+                        <div class="mt-1 flex items-center justify-between text-xs text-on-surface-variant">
+                            <span th:text="${order.createdDate != null ? #strings.substring(order.createdDate.toString(), 0, 10) : '-'}">2026-04-12</span>
+                            <span class="font-bold text-primary font-numeric" th:text="${#numbers.formatDecimal(order.finalPrice != null ? order.finalPrice : order.totalPrice, 1, 'POINT', 2, 'COMMA')} + '$'">$189.97</span>
+                        </div>
+                    </a>
+                </div>
+            </aside>
+
+            <section class="xl:col-span-2 space-y-4">
+                <div th:if="${selectedOrder == null}" class="rounded-2xl bg-white border border-outline-variant/20 p-10 text-center text-on-surface-variant">
+                    Vui lòng chọn một đơn hàng để xem chi tiết.
+                </div>
+
+                <div th:if="${selectedOrder != null}" class="rounded-2xl bg-white border border-outline-variant/20 p-6 shadow-sm space-y-4">
+                    <div class="flex items-center justify-between gap-4">
+                        <h2 class="text-4xl font-headline font-bold text-tertiary font-numeric" th:text="'ORD-' + ${#numbers.formatInteger(selectedOrder.id, 6)}">ORD-000001</h2>
+                        <span class="inline-flex items-center px-4 py-1.5 rounded-full text-xs font-bold uppercase"
+                              th:classappend="${selectedOrder.orderStatus == 'SHIPPING'} ? ' bg-amber-100 text-amber-700' : (${selectedOrder.orderStatus == 'CONFIRMED'} ? ' bg-blue-100 text-blue-700' : (${selectedOrder.orderStatus == 'DELIVERED'} ? ' bg-emerald-100 text-emerald-700' : (${selectedOrder.orderStatus == 'CANCELLED'} ? ' bg-rose-100 text-rose-700' : ' bg-slate-100 text-slate-600')))"
+                              th:text="${selectedOrder.orderStatus}">SHIPPING</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="rounded-xl border border-outline-variant/20 p-4 bg-background/40">
+                            <p class="text-xs font-bold uppercase tracking-wider text-on-surface-variant">Khách hàng</p>
+                            <p class="mt-2 text-2xl font-bold text-tertiary" th:text="${selectedOrder.customer != null ? (selectedOrder.customer.fullName != null ? selectedOrder.customer.fullName : selectedOrder.customer.username) : 'Không rõ'}">Nguyễn Văn A</p>
+                            <p class="text-sm text-on-surface-variant mt-1" th:text="${selectedOrder.customer != null ? selectedOrder.customer.email : ''}">a.nguyen@email.com</p>
+                            <p class="text-sm text-on-surface-variant" th:text="${selectedOrder.customer != null ? selectedOrder.customer.phone : ''}">+84 912 345 678</p>
+                        </div>
+
+                        <div class="rounded-xl border border-outline-variant/20 p-4 bg-background/40">
+                            <p class="text-xs font-bold uppercase tracking-wider text-on-surface-variant">Thanh toán</p>
+                            <p class="mt-2 text-xl font-bold text-tertiary" th:text="${selectedOrder.paymentMethod}">COD</p>
+                            <p class="text-4xl font-bold text-primary font-numeric mt-1" th:text="'$' + ${#numbers.formatDecimal(selectedOrder.finalPrice != null ? selectedOrder.finalPrice : selectedOrder.totalPrice, 1, 'POINT', 2, 'COMMA')}">$189.97</p>
+                        </div>
+                    </div>
+
+                    <div class="rounded-xl border border-outline-variant/20 p-4">
+                        <p class="text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-3">Sản phẩm</p>
+                        <div th:if="${#lists.isEmpty(selectedItems)}" class="text-sm text-on-surface-variant">Không có sản phẩm trong đơn hàng này.</div>
+                        <div class="space-y-3">
+                            <div th:each="item : ${selectedItems}" class="flex items-center justify-between gap-4">
+                                <div class="flex items-center gap-3 min-w-0">
+                                    <img th:src="${item.productImageUrl != null ? item.productImageUrl : 'https://placehold.co/56x56'}" alt="Product" class="w-14 h-14 rounded-lg object-cover border border-outline-variant/20"/>
+                                    <div class="min-w-0">
+                                        <p class="font-bold text-tertiary truncate" th:text="${item.productName != null ? item.productName : (item.comboName != null ? item.comboName : 'Sản phẩm')}">Tôm Hùm Alaska</p>
+                                        <p class="text-sm text-on-surface-variant font-numeric" th:text="${item.quantity} + ' x $' + ${#numbers.formatDecimal(item.unitPrice, 1, 'POINT', 2, 'COMMA')}">2 x $79.99</p>
+                                    </div>
+                                </div>
+                                <p class="font-bold text-primary font-numeric" th:text="'$' + ${#numbers.formatDecimal(item.subtotal != null ? item.subtotal : item.unitPrice, 1, 'POINT', 2, 'COMMA')}">$199.97</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="rounded-xl border border-outline-variant/20 p-4">
+                        <p class="text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-3">Lịch sử đơn hàng</p>
+                        <div th:if="${#lists.isEmpty(statusHistories)}" class="text-sm text-on-surface-variant">Chưa có lịch sử trạng thái.</div>
+                        <div class="space-y-4">
+                            <div th:each="history : ${statusHistories}" class="relative pl-6">
+                                <span class="absolute left-0 top-2 w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+                                <p class="font-bold text-tertiary" th:text="${history.status}">Order Placed</p>
+                                <p class="text-sm text-on-surface-variant" th:text="${history.changedAt != null ? #strings.substring(history.changedAt.toString(), 0, 19).replace('T', ' ') : '-'} + ' • ' + ${history.changedBy != null ? history.changedBy : 'System'}">4/12/2026, 10:30:00 AM • System</p>
+                                <p class="text-sm text-on-surface-variant" th:text="${history.note != null ? history.note : ''}">Order received successfully</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+                        <form th:action="@{'/admin/orders/' + ${selectedOrder.id} + '/status'}" method="post" class="md:col-span-1">
+                            <input type="hidden" name="status" value="CONFIRMED"/>
+                            <input type="hidden" name="note" value="Payment verified, preparing items"/>
+                            <button type="submit" class="w-full inline-flex justify-center items-center gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3">
+                                <span class="material-symbols-outlined text-base">check_circle</span>
+                                Xác Nhận
+                            </button>
+                        </form>
+                        <form th:action="@{'/admin/orders/' + ${selectedOrder.id} + '/status'}" method="post" class="md:col-span-2">
+                            <input type="hidden" name="status" value="SHIPPING"/>
+                            <input type="hidden" name="note" value="Order handed over to delivery partner"/>
+                            <button type="submit" class="w-full inline-flex justify-center items-center gap-2 rounded-xl bg-tertiary hover:bg-tertiary/90 text-white font-bold py-3">
+                                <span class="material-symbols-outlined text-base">local_shipping</span>
+                                Đang Giao
+                            </button>
+                        </form>
+                        <form th:action="@{'/admin/orders/' + ${selectedOrder.id} + '/status'}" method="post" class="md:col-span-1">
+                            <input type="hidden" name="status" value="CANCELLED"/>
+                            <input type="hidden" name="note" value="Order cancelled by admin"/>
+                            <button type="submit" class="w-full inline-flex justify-center items-center gap-2 rounded-xl border border-rose-300 hover:bg-rose-50 text-rose-600 font-bold py-3">
+                                <span class="material-symbols-outlined text-base">close</span>
+                                Hủy
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</main>
+</body>
+</html>
