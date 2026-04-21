@@ -1,0 +1,118 @@
+package com.project.hsf.controller.admin;
+
+import com.project.hsf.entity.Order;
+import com.project.hsf.entity.User;
+import com.project.hsf.repository.OrderRepository;
+import com.project.hsf.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.math.BigDecimal;
+import java.text.Normalizer;
+import java.time.Instant;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+@Controller
+@RequestMapping("/admin/users")
+@RequiredArgsConstructor
+public class UserAdminController {
+
+    private final UserRepository userRepository;
+    private final OrderRepository orderRepository;
+
+    @GetMapping
+    public String list(@RequestParam(required = false) String keyword, Model model) {
+        List<User> users = userRepository.findAll(Sort.by(Sort.Direction.DESC, "createdDate"));
+
+        if (StringUtils.hasText(keyword)) {
+            String normalizedKeyword = normalize(keyword);
+            users = users.stream()
+                    .filter(u -> containsNormalized(u.getFullName(), normalizedKeyword)
+                            || containsNormalized(u.getUsername(), normalizedKeyword)
+                            || containsNormalized(u.getEmail(), normalizedKeyword)
+                            || containsNormalized(u.getPhone(), normalizedKeyword))
+                    .toList();
+        }
+
+        List<Order> orders = orderRepository.findAll();
+
+        Map<Long, Long> orderCountByUser = orders.stream()
+                .filter(o -> o.getCustomer() != null && o.getCustomer().getId() != null)
+                .collect(Collectors.groupingBy(o -> o.getCustomer().getId(), Collectors.counting()));
+
+        Map<Long, BigDecimal> spendingByUser = orders.stream()
+                .filter(o -> o.getCustomer() != null && o.getCustomer().getId() != null)
+                .collect(Collectors.groupingBy(
+                        o -> o.getCustomer().getId(),
+                        Collectors.mapping(
+                                o -> o.getFinalPrice() != null ? o.getFinalPrice() : (o.getTotalPrice() != null ? o.getTotalPrice() : BigDecimal.ZERO),
+                                Collectors.reducing(BigDecimal.ZERO, Function.identity(), BigDecimal::add)
+                        )
+                ));
+
+        long activeUsers = users.stream().filter(u -> Boolean.TRUE.equals(u.getEnabled())).count();
+        long customerUsers = users.stream().filter(u -> "CUSTOMER".equalsIgnoreCase(u.getRole())).count();
+
+        model.addAttribute("users", users);
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("orderCountByUser", orderCountByUser);
+        model.addAttribute("spendingByUser", spendingByUser);
+        model.addAttribute("totalUsers", users.size());
+        model.addAttribute("customerUsers", customerUsers);
+        model.addAttribute("activeUsers", activeUsers);
+        model.addAttribute("blockedUsers", users.size() - activeUsers);
+        model.addAttribute("page", "users");
+        return "admin/user-manage";
+    }
+
+    @PostMapping("/{id}/toggle")
+    public String toggleStatus(@PathVariable Long id,
+                               @RequestParam boolean enabled,
+                               @RequestParam(required = false) String keyword,
+                               RedirectAttributes redirectAttributes) {
+        try {
+            User user = userRepository.findById(id)
+                    .orElseThrow(() -> new IllegalArgumentException("Khong tim thay nguoi dung voi id: " + id));
+
+            user.setEnabled(enabled);
+            user.setUpdatedDate(Instant.now());
+            userRepository.save(user);
+
+            redirectAttributes.addFlashAttribute("successMessage", enabled ? "Da mo khoa tai khoan." : "Da khoa tai khoan.");
+        } catch (Exception ex) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Cap nhat trang thai that bai: " + ex.getMessage());
+        }
+
+        if (StringUtils.hasText(keyword)) {
+            redirectAttributes.addAttribute("keyword", keyword);
+        }
+        return "redirect:/admin/users";
+    }
+
+    private boolean containsNormalized(String value, String normalizedKeyword) {
+        return value != null && normalize(value).contains(normalizedKeyword);
+    }
+
+    private String normalize(String value) {
+        return Normalizer.normalize(value, Normalizer.Form.NFD)
+                .replaceAll("\\p{M}", "")
+                .replace('đ', 'd')
+                .replace('Đ', 'D')
+                .toLowerCase(Locale.ROOT)
+                .trim();
+    }
+}

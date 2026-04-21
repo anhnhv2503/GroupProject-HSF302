@@ -31,7 +31,8 @@ public class SecurityConfig {
                     "/images/**",
                     "/webjars/**",
                     "/register-user",
-                    "/cart"
+                    "/cart",
+                    "/chatbot/**"
             );
 //    private final List<String> privateUrl = new ArrayList<>();
 
