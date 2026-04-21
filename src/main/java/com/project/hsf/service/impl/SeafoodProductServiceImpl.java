@@ -145,4 +145,9 @@ public class SeafoodProductServiceImpl implements SeafoodProductService {
 
         seafoodProductRepository.delete(seafoodProduct);
     }
+
+    @Override
+    public List<SeafoodProduct> getNewestProducts() {
+        return seafoodProductRepository.findTop4ByOrderByImportedDateDesc();
+    }
 }

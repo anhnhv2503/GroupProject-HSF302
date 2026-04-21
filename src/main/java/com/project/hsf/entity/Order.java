@@ -105,6 +105,8 @@ public class Order {
     @Column(name = "updated_date")
     private Instant updatedDate;
 
+    private Long orderCode;
+
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
     private List<OrderItem> orderItems;
 

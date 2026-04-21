@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thanh toán | SeaFood Shop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+<div th:if="${status.equals('PAID')}">
+    <div class="min-h-screen flex items-center justify-center p-4">
+        <div class="bg-white p-8 md:p-10 rounded-2xl shadow-lg w-full max-w-md text-center">
+
+            <!-- Success Icon -->
+            <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg class="w-10 h-10 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                     xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+                </svg>
+            </div>
+            <h2 class="text-3xl font-extrabold text-gray-900 mb-2">Thanh toán thành công
+            </h2>
+            <p class="text-gray-500 mb-8">Cảm ơn đã mua hàng của chúng tôi, đơn hàng của bạn sẽ được nhanh chóng đến tay
+                bạn.</p>
+
+            <!-- Order Details -->
+            <div class="bg-gray-50 rounded-xl p-5 mb-8 text-left border border-gray-100">
+                <div class="flex justify-between mb-3">
+                    <span class="text-gray-500 text-sm font-medium">Mã Đơn Hàng</span>
+                    <span class="text-gray-900 font-semibold text-sm" th:text="${order.orderCode}">#TRX-8273645</span>
+                </div>
+                <div class="flex justify-between mb-3">
+                    <span class="text-gray-500 text-sm font-medium">Ngày</span>
+                    <span class="text-gray-900 font-semibold text-sm" th:text="${order.createdDate}">April 21, 2026</span>
+                </div>
+                <div class="w-full h-px bg-gray-200 my-3"></div>
+                <div class="flex justify-between">
+                    <span class="text-gray-700 font-bold text-base">Số Tiền</span>
+                    <span class="text-green-600 font-bold text-base" th:text="${order.finalPrice}">$129.00</span>
+                </div>
+            </div>
+            <a th:href="@{/}"
+               class="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-6 rounded-xl transition duration-200 shadow-sm">
+                Quay lại trang chủ
+            </a>
+        </div>
+
+    </div>
+</div>
+<div th:if="${status.equals('CANCELLED')}">
+
+    <div class="min-h-screen flex items-center justify-center p-4">
+        <div class="bg-white p-8 md:p-10 rounded-2xl shadow-lg w-full max-w-md text-center">
+
+            <!-- Cancelled Icon -->
+            <div class="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg class="w-10 h-10 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                     xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                          d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </div>
+
+            <h2 class="text-3xl font-extrabold text-gray-900 mb-2">Thanh toán không thành công</h2>
+            <p class="text-gray-500 mb-8">
+                Thanh toán không thành công, nhưng đừng lo đơn hàng của bạn vẫn được lưu. Tiếp tục mua sắm?
+            </p>
+            <div class="flex flex-col space-y-3">
+                <a th:href="@{/}" class="w-full bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 font-semibold py-3 px-6 rounded-xl transition duration-200">
+                    Quay lại trang chủ
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:if="${error}">
+    <div class="min-h-screen flex items-center justify-center p-4">
+        <div class="bg-white p-8 md:p-10 rounded-2xl shadow-lg w-full max-w-md text-center">
+
+            <!-- Cancelled Icon -->
+            <div class="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg class="w-10 h-10 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                     xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                          d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </div>
+
+            <h2 class="text-3xl font-extrabold text-gray-900 mb-2" th:text="${error}"></h2>
+            <p class="text-gray-500 mb-8">
+                Thanh toán không thành công, nhưng đừng lo đơn hàng của bạn vẫn được lưu. Tiếp tục mua sắm?
+            </p>
+            <div class="flex flex-col space-y-3">
+                <a th:href="@{/}" class="w-full bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 font-semibold py-3 px-6 rounded-xl transition duration-200">
+                    Quay lại trang chủ
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

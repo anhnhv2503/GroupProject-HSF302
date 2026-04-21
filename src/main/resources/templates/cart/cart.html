@@ -1,13 +1,185 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="vi"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       layout:decorate="~{layout/customer-layout}">
-<head><title>Giỏ Hàng</title></head>
+<head><title>Giỏ Hàng</title>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;family=Roboto:wght@300;400;500;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+          rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-fixed-variant": "#7f2b00",
+                        "surface-container-low": "#f3f4f5",
+                        "on-background": "#191c1d",
+                        "surface-container-highest": "#e1e3e4",
+                        "error": "#ba1a1a",
+                        "surface-container-high": "#e7e8e9",
+                        "surface-variant": "#e1e3e4",
+                        "primary": "#a63b00",
+                        "on-tertiary-fixed": "#001e2f",
+                        "on-secondary": "#ffffff",
+                        "secondary-fixed": "#d1e4ff",
+                        "on-secondary-fixed": "#001d35",
+                        "surface-dim": "#d9dadb",
+                        "outline": "#8d7166",
+                        "on-surface-variant": "#594138",
+                        "inverse-on-surface": "#f0f1f2",
+                        "surface-container": "#edeeef",
+                        "on-primary-container": "#4f1800",
+                        "surface-bright": "#f8f9fa",
+                        "secondary": "#2e6192",
+                        "error-container": "#ffdad6",
+                        "on-primary-fixed": "#370e00",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-fixed-dim": "#9dcaff",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-fixed-variant": "#004b6f",
+                        "primary-fixed-dim": "#ffb599",
+                        "surface": "#f8f9fa",
+                        "secondary-container": "#98c7ff",
+                        "on-tertiary-container": "#002d45",
+                        "background": "#f8f9fa",
+                        "tertiary-fixed-dim": "#8cceff",
+                        "on-secondary-container": "#1c5384",
+                        "surface-tint": "#a63b00",
+                        "outline-variant": "#e1bfb3",
+                        "on-error": "#ffffff",
+                        "primary-fixed": "#ffdbce",
+                        "inverse-primary": "#ffb599",
+                        "on-tertiary": "#ffffff",
+                        "on-surface": "#191c1d",
+                        "inverse-surface": "#2e3132",
+                        "tertiary-container": "#009ade",
+                        "on-secondary-fixed-variant": "#0b4979",
+                        "tertiary": "#006492",
+                        "primary-container": "#f26522",
+                        "on-error-container": "#93000a",
+                        "tertiary-fixed": "#cae6ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"],
+                        "value": ["Roboto"]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .text-brand-secondary {
+            color: theme('colors.secondary');
+        }
+        .sticky-top {
+            position: sticky;
+        }
+        .text-brand-secondary {
+            color: theme('colors.secondary');
+        }
+        .text-on-surface {
+            color: theme('colors.on-surface');
+        }
+        .text-on-surface-variant {
+            color: theme('colors.on-surface-variant');
+        }
+        .bg-surface-container-low {
+            background-color: theme('colors.surface-container-low');
+        }
+    </style>
+</head>
 <body>
+<header
+        class="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-sm dark:shadow-none">
+    <div class="flex justify-between items-center w-full px-8 py-4 max-w-7xl mx-auto">
+        <div class="text-2xl font-bold tracking-tighter text-slate-900 dark:text-white">The Culinary Curator</div>
+        <nav class="hidden md:flex gap-8 items-center font-sans tracking-tight text-sm font-medium">
+            <a class="text-primary border-b-2 border-primary pb-1" th:href="@{/}">Trang chủ</a>
+            <a class="text-slate-600 dark:text-slate-400 hover:text-primary transition-colors" th:href="@{/products}">Sản
+                phẩm</a>
+            <a class="text-slate-600 dark:text-slate-400 hover:text-primary transition-colors" href="#">Công
+                thức</a>
+            <a class="text-slate-600 dark:text-slate-400 hover:text-primary transition-colors" href="#">Câu
+                chuyện</a>
+        </nav>
+        <div class="flex items-center gap-6">
+            <div class="hidden lg:flex items-center bg-surface-container-low px-3 py-1.5 rounded-full">
+                <span class="material-symbols-outlined text-sm text-on-surface-variant">search</span>
+                <input class="bg-transparent border-none focus:ring-0 text-xs w-48 ml-2"
+                       placeholder="Tìm hải sản..." type="text"/>
+            </div>
+            <div class="flex items-center gap-4 text-slate-900">
+                <!-- Auth Section -->
+                <div class="flex items-center gap-3">
+                    <!-- Not Authenticated -->
+                    <div sec:authorize="!isAuthenticated()" class="flex items-center gap-2">
+                        <a th:href="@{/login}"
+                           class="text-[10px] font-black uppercase tracking-widest text-on-surface-variant hover:text-primary transition-colors">Đăng
+                            nhập</a>
+                        <span class="text-outline-variant/30 text-[10px]">|</span>
+                        <a th:href="@{/register}"
+                           class="bg-primary text-white px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest hover:opacity-90 shadow-md shadow-primary/20 transition-all">Đăng
+                            ký</a>
+                    </div>
+
+                    <!-- Authenticated -->
+                    <div sec:authorize="isAuthenticated()" class="flex items-center gap-4">
+                        <a th:href="@{/cart}"
+                           class="hover:opacity-80 transition-all scale-95 duration-200 ease-in-out relative">
+                            <span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
+                        </a>
+                        <div class="flex items-center gap-2 group cursor-pointer relative py-2">
+                                <span class="material-symbols-outlined text-secondary"
+                                      data-icon="account_circle">account_circle</span>
+                            <div class="flex flex-col">
+                                    <span class="text-[10px] font-black uppercase tracking-tighter text-on-surface">Xin
+                                        chào, <span sec:authentication="name">User</span></span>
+                                <span class="text-[8px] text-on-surface-variant leading-none">Thành viên thân
+                                        thiết</span>
+                            </div>
+
+                            <!-- Mini Dropdown -->
+                            <div
+                                    class="absolute top-full right-0 mt-1 w-48 bg-white rounded-xl shadow-xl border border-outline-variant/10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 p-2">
+                                <a href="/profile"
+                                   class="flex items-center gap-2 p-2 hover:bg-surface-container-low rounded-lg text-xs font-medium transition-colors text-slate-700">
+                                    <span class="material-symbols-outlined text-sm">person</span> Hồ sơ cá nhân
+                                </a>
+                                <hr class="my-1 border-outline-variant/10">
+                                <form th:action="@{/logout}" method="post">
+                                    <button type="submit"
+                                            class="w-full flex items-center gap-2 p-2 hover:bg-error/10 text-error rounded-lg text-xs font-bold transition-colors">
+                                        <span class="material-symbols-outlined text-sm">logout</span> Đăng xuất
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
 <div layout:fragment="content" class="container py-5">
 
     <h1 class="font-serif fw-bold text-brand-secondary mb-1" style="font-size:2rem;">
-        Giỏ Hàng Của Bạn <span class="text-muted fw-normal fs-5" th:text="'(' + ${#lists.size(cartItems)} + ' sản phẩm)'"></span>
+        Giỏ Hàng Của Bạn <span class="text-muted fw-normal fs-5"
+                               th:text="'(' + ${#lists.size(cartItems)} + ' sản phẩm)'"></span>
     </h1>
     <hr class="mb-4"/>
 
@@ -20,7 +192,7 @@
         <span th:text="${success}"></span>
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
-    <div th:if="${param.empty}" class="alert alert-warning alert-dismissible fade show" role="alert">
+    <div th:if="${param.isEmpty()}" class="alert alert-warning alert-dismissible fade show" role="alert">
         Giỏ hàng đang trống, hãy thêm sản phẩm trước khi thanh toán.
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
@@ -41,8 +213,10 @@
                 <div class="card-body d-flex gap-3 align-items-center">
                     <!-- Image -->
                     <div class="rounded-3 overflow-hidden bg-light flex-shrink-0" style="width:100px;height:100px;">
-                        <img th:if="${!#strings.isEmpty(item.imageUrl)}" th:src="${item.imageUrl}" th:alt="${item.name}" class="w-100 h-100" style="object-fit:cover;"/>
-                        <div th:if="${#strings.isEmpty(item.imageUrl)}" class="w-100 h-100 d-flex align-items-center justify-content-center text-muted">
+                        <img th:if="${!#strings.isEmpty(item.imageUrl)}" th:src="${item.imageUrl}" th:alt="${item.name}"
+                             class="w-100 h-100" style="object-fit:cover;"/>
+                        <div th:if="${#strings.isEmpty(item.imageUrl)}"
+                             class="w-100 h-100 d-flex align-items-center justify-content-center text-muted">
                             <i class="bi bi-image fs-3"></i>
                         </div>
                     </div>
@@ -51,12 +225,14 @@
                         <div class="d-flex justify-content-between align-items-start">
                             <div>
                                 <h6 class="fw-bold mb-1" th:text="${item.name}">SP</h6>
-                                <small class="text-muted" th:text="${#numbers.formatDecimal(item.unitPrice, 0, 'COMMA', 0, 'POINT')} + ' ₫ / đơn vị'">0₫</small>
+                                <small class="text-muted"
+                                       th:text="${#numbers.formatDecimal(item.unitPrice, 0, 'COMMA', 0, 'POINT')} + ' ₫ / đơn vị'">0₫</small>
                                 <span th:if="${item.itemType == 'COMBO'}" class="badge bg-info ms-2">Combo</span>
                             </div>
                             <form th:action="@{/cart/remove}" method="post">
                                 <input type="hidden" name="itemKey" th:value="${item.itemKey}"/>
-                                <button type="submit" class="btn btn-sm btn-outline-danger rounded-circle" style="width:32px;height:32px;" title="Xóa">
+                                <button type="submit" class="btn btn-sm btn-outline-danger rounded-circle"
+                                        style="width:32px;height:32px;" title="Xóa">
                                     <i class="bi bi-trash" style="font-size:.75rem;"></i>
                                 </button>
                             </form>
@@ -66,12 +242,18 @@
                             <form th:action="@{/cart/update}" method="post" class="d-flex align-items-center gap-2">
                                 <input type="hidden" name="itemKey" th:value="${item.itemKey}"/>
                                 <div class="input-group input-group-sm" style="width:120px;">
-                                    <button type="submit" class="btn btn-outline-secondary" onclick="this.parentNode.querySelector('input[name=quantity]').stepDown()">−</button>
-                                    <input type="number" name="quantity" th:value="${item.quantity}" min="1" max="99" class="form-control text-center" onchange="this.form.submit()"/>
-                                    <button type="submit" class="btn btn-outline-secondary" onclick="this.parentNode.querySelector('input[name=quantity]').stepUp()">+</button>
+                                    <button type="submit" class="btn btn-outline-secondary"
+                                            onclick="this.parentNode.querySelector('input[name=quantity]').stepDown()">−
+                                    </button>
+                                    <input type="number" name="quantity" th:value="${item.quantity}" min="1" max="99"
+                                           class="form-control text-center" onchange="this.form.submit()"/>
+                                    <button type="submit" class="btn btn-outline-secondary"
+                                            onclick="this.parentNode.querySelector('input[name=quantity]').stepUp()">+
+                                    </button>
                                 </div>
                             </form>
-                            <span class="fw-bold fs-5" th:text="${#numbers.formatDecimal(item.subtotal, 0, 'COMMA', 0, 'POINT')} + ' ₫'">0₫</span>
+                            <span class="fw-bold fs-5"
+                                  th:text="${#numbers.formatDecimal(item.subtotal, 0, 'COMMA', 0, 'POINT')} + ' ₫'">0₫</span>
                         </div>
                     </div>
                 </div>
@@ -85,7 +267,8 @@
                     <h5 class="fw-bold border-bottom pb-3 mb-3">Tóm tắt đơn hàng</h5>
                     <div class="d-flex justify-content-between mb-2 text-muted">
                         <span>Tạm tính</span>
-                        <span class="fw-medium" th:text="${#numbers.formatDecimal(totalPrice, 0, 'COMMA', 0, 'POINT')} + ' ₫'">0₫</span>
+                        <span class="fw-medium"
+                              th:text="${#numbers.formatDecimal(totalPrice, 0, 'COMMA', 0, 'POINT')} + ' ₫'">0₫</span>
                     </div>
                     <div class="d-flex justify-content-between mb-3 text-muted fst-italic">
                         <span>Phí vận chuyển</span>
@@ -94,7 +277,8 @@
                     <hr/>
                     <div class="d-flex justify-content-between align-items-end mb-4">
                         <span class="fw-bold fs-6">Tổng cộng</span>
-                        <span class="fw-bold text-primary" style="font-size:1.5rem;" th:text="${#numbers.formatDecimal(totalPrice, 0, 'COMMA', 0, 'POINT')} + ' ₫'">0₫</span>
+                        <span class="fw-bold text-primary" style="font-size:1.5rem;"
+                              th:text="${#numbers.formatDecimal(totalPrice, 0, 'COMMA', 0, 'POINT')} + ' ₫'">0₫</span>
                     </div>
                     <a href="/checkout" class="btn btn-primary btn-lg w-100 fw-bold rounded-3">Tiến Hành Thanh Toán</a>
                 </div>
@@ -102,7 +286,8 @@
             <div class="card border-0 bg-light rounded-3 mt-3">
                 <div class="card-body d-flex gap-3 align-items-start small">
                     <i class="bi bi-truck text-brand-secondary fs-5"></i>
-                    <p class="mb-0 text-brand-secondary fw-medium">Miễn phí giao hàng cho đơn hải sản trên 5,000,000₫ nội thành.</p>
+                    <p class="mb-0 text-brand-secondary fw-medium">Miễn phí giao hàng cho đơn hải sản trên 5,000,000₫
+                        nội thành.</p>
                 </div>
             </div>
         </div>
