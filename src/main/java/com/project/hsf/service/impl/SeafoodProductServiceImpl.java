@@ -4,6 +4,7 @@ import com.project.hsf.entity.Category;
 import com.project.hsf.entity.SeafoodProduct;
 import com.project.hsf.repository.CategoryRepository;
 import com.project.hsf.repository.SeafoodProductRepository;
+import com.project.hsf.service.CloudinaryService;
 import com.project.hsf.service.SeafoodProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +31,7 @@ public class SeafoodProductServiceImpl implements SeafoodProductService {
 
     private final SeafoodProductRepository seafoodProductRepository;
     private final CategoryRepository categoryRepository;
+    private final CloudinaryService cloudinaryService;
 
     @Override
     @Transactional(readOnly = true)
@@ -107,13 +110,17 @@ public class SeafoodProductServiceImpl implements SeafoodProductService {
                 productToSave.setImages(new ArrayList<>());
             }
             int index = 0;
-            String uploadDir = "uploads";
+//            String uploadDir = "uploads";
             for (MultipartFile file : imageFiles) {
                 if (!file.isEmpty()) {
                     try {
-                        String fileName = FileUploadUtil.saveFile(uploadDir, file);
+//
+                        Map upload = cloudinaryService.upload(file);
+                        String url = (String) upload.get("url");
+//                        String fileName = FileUploadUtil.saveFile(uploadDir, file);
                         ProductImage productImage = new ProductImage();
-                        productImage.setImageUrl("/" + uploadDir + "/" + fileName);
+//                        productImage.setImageUrl("/" + uploadDir + "/" + fileName);
+                        productImage.setImageUrl(url);
                         productImage.setProduct(productToSave);
                         productImage.setIsPrimary(primaryImageIndex != null && index == primaryImageIndex);
                         productImage.setCreatedDate(Instant.now());

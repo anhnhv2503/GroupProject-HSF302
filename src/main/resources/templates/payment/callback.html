@@ -1,99 +1,288 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thanh toán | SeaFood Shop</title>
+    <title>Thanh toán | The Culinary Curator</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"/>
+    <style>
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(34, 197, 94, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 40px rgba(34, 197, 94, 0.6);
+            }
+        }
+
+        @keyframes pulse-glow-error {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 40px rgba(239, 68, 68, 0.6);
+            }
+        }
+
+        @keyframes slide-in {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .animate-pulse-glow {
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+
+        .animate-pulse-glow-error {
+            animation: pulse-glow-error 2s ease-in-out infinite;
+        }
+
+        .animate-slide-in {
+            animation: slide-in 0.8s ease-out;
+        }
+
+        .gradient-bg-success {
+            background: linear-gradient(135deg, #22C55E 0%, #0D4A7A 100%);
+        }
+
+        .gradient-bg-error {
+            background: linear-gradient(135deg, #EF4444 0%, #7C2D12 100%);
+        }
+
+        .gradient-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 249, 250, 0.95) 100%);
+            backdrop-filter: blur(20px);
+        }
+    </style>
 </head>
 <body>
-<div th:if="${status.equals('PAID')}">
-    <div class="min-h-screen flex items-center justify-center p-4">
-        <div class="bg-white p-8 md:p-10 rounded-2xl shadow-lg w-full max-w-md text-center">
+<!-- Decorative Elements for Success -->
+<div th:if="${status.equals('PAID')}" class="gradient-bg-success min-h-screen overflow-hidden">
+    <div class="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl -mr-48 -mt-48"></div>
+    <div class="absolute bottom-0 left-0 w-80 h-80 bg-white/5 rounded-full blur-3xl -ml-40 -mb-40"></div>
 
-            <!-- Success Icon -->
-            <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <svg class="w-10 h-10 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                     xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
-                </svg>
-            </div>
-            <h2 class="text-3xl font-extrabold text-gray-900 mb-2">Thanh toán thành công
-            </h2>
-            <p class="text-gray-500 mb-8">Cảm ơn đã mua hàng của chúng tôi, đơn hàng của bạn sẽ được nhanh chóng đến tay
-                bạn.</p>
+    <div class="min-h-screen flex items-center justify-center p-4 relative z-10">
+        <div class="w-full max-w-sm animate-slide-in">
+            <div class="gradient-card rounded-2xl shadow-2xl overflow-hidden border border-white/20">
+                <div class="p-5 md:p-6">
 
-            <!-- Order Details -->
-            <div class="bg-gray-50 rounded-xl p-5 mb-8 text-left border border-gray-100">
-                <div class="flex justify-between mb-3">
-                    <span class="text-gray-500 text-sm font-medium">Mã Đơn Hàng</span>
-                    <span class="text-gray-900 font-semibold text-sm" th:text="${order.orderCode}">#TRX-8273645</span>
-                </div>
-                <div class="flex justify-between mb-3">
-                    <span class="text-gray-500 text-sm font-medium">Ngày</span>
-                    <span class="text-gray-900 font-semibold text-sm" th:text="${order.createdDate}">April 21, 2026</span>
-                </div>
-                <div class="w-full h-px bg-gray-200 my-3"></div>
-                <div class="flex justify-between">
-                    <span class="text-gray-700 font-bold text-base">Số Tiền</span>
-                    <span class="text-green-600 font-bold text-base" th:text="${order.finalPrice}">$129.00</span>
+                    <!-- Success Icon with Animation -->
+                    <div class="flex justify-center mb-5">
+                        <div class="relative">
+                            <div class="absolute inset-0 bg-gradient-to-br from-green-300 to-green-500 rounded-full blur-lg opacity-50"></div>
+                            <div class="relative w-16 h-16 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center shadow-xl animate-pulse-glow">
+                                <svg class="w-8 h-8 text-white animate-float" fill="none" stroke="currentColor"
+                                     viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                                          d="M5 13l4 4L19 7"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Status Badge -->
+                    <div class="text-center mb-2">
+                        <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-gradient-to-r from-green-100 to-emerald-100 text-green-700 font-bold text-xs uppercase tracking-wide">
+                            <i class="bi bi-check-circle-fill text-sm"></i> Thành công
+                        </span>
+                    </div>
+
+                    <!-- Heading -->
+                    <h2 class="text-2xl font-black text-transparent bg-gradient-to-r from-gray-900 to-green-900 bg-clip-text text-center mb-2">
+                        Thanh toán thành công
+                    </h2>
+
+                    <p class="text-gray-600 text-center mb-5 text-sm leading-relaxed">
+                        🎉 Cảm ơn đã mua hàng. Đơn hàng sẽ sớm đến tay bạn.
+                    </p>
+
+                    <!-- Order Details -->
+                    <div class="bg-gradient-to-br from-green-50 via-green-50 to-emerald-50 rounded-xl p-4 mb-5 border border-green-100/50 space-y-2">
+                        <div class="flex items-center justify-between p-2 bg-white/50 rounded-lg hover:bg-white/80 transition-all">
+                            <div class="flex items-center gap-2">
+                                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center text-white text-xs">
+                                    <i class="bi bi-box2"></i>
+                                </div>
+                                <span class="text-gray-600 font-semibold text-sm">Mã đơn</span>
+                            </div>
+                            <span class="text-gray-900 font-bold text-sm" th:text="${order.orderCode}">#ORD</span>
+                        </div>
+                        <div class="flex items-center justify-between p-2 bg-white/50 rounded-lg hover:bg-white/80 transition-all">
+                            <div class="flex items-center gap-2">
+                                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center text-white text-xs">
+                                    <i class="bi bi-calendar-event"></i>
+                                </div>
+                                <span class="text-gray-600 font-semibold text-sm">Ngày</span>
+                            </div>
+                            <span class="text-gray-900 font-bold text-sm" th:text="${order.createdDate}">21/04</span>
+                        </div>
+                        <div class="flex items-center justify-between p-2 bg-gradient-to-r from-green-100 to-emerald-100 rounded-lg border border-green-200">
+                            <div class="flex items-center gap-2">
+                                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center text-white text-xs">
+                                    <i class="bi bi-currency-dollar"></i>
+                                </div>
+                                <span class="text-gray-700 font-bold text-sm">Số tiền</span>
+                            </div>
+                            <span class="text-green-700 font-black" th:text="${order.finalPrice}">0₫</span>
+                        </div>
+                    </div>
+
+                    <!-- Action Button -->
+                    <a th:href="@{/}"
+                       class="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold py-2 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg flex items-center justify-center gap-2 text-sm">
+                        <i class="bi bi-house-fill text-sm"></i> Trang chủ
+                    </a>
+
                 </div>
             </div>
-            <a th:href="@{/}"
-               class="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-6 rounded-xl transition duration-200 shadow-sm">
-                Quay lại trang chủ
-            </a>
+
+            <div class="text-center mt-4">
+                <p class="text-white/60 text-xs font-medium">The Culinary Curator © 2026</p>
+            </div>
         </div>
 
     </div>
 </div>
-<div th:if="${status.equals('CANCELLED')}">
+<!-- Decorative Elements for Error -->
+<div th:if="${status.equals('CANCELLED')}" class="gradient-bg-error min-h-screen overflow-hidden">
+    <div class="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl -mr-48 -mt-48"></div>
+    <div class="absolute bottom-0 left-0 w-80 h-80 bg-white/5 rounded-full blur-3xl -ml-40 -mb-40"></div>
 
-    <div class="min-h-screen flex items-center justify-center p-4">
-        <div class="bg-white p-8 md:p-10 rounded-2xl shadow-lg w-full max-w-md text-center">
+    <div class="min-h-screen flex items-center justify-center p-4 relative z-10">
+        <div class="w-full max-w-sm animate-slide-in">
+            <div class="gradient-card rounded-2xl shadow-2xl overflow-hidden border border-white/20">
+                <div class="p-5 md:p-6">
 
-            <!-- Cancelled Icon -->
-            <div class="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-6">
-                <svg class="w-10 h-10 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                     xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
-                          d="M6 18L18 6M6 6l12 12"></path>
-                </svg>
+                    <!-- Error Icon -->
+                    <div class="flex justify-center mb-5">
+                        <div class="relative">
+                            <div class="absolute inset-0 bg-gradient-to-br from-red-300 to-red-500 rounded-full blur-lg opacity-50"></div>
+                            <div class="relative w-16 h-16 bg-gradient-to-br from-red-400 to-red-600 rounded-full flex items-center justify-center shadow-xl animate-pulse-glow-error">
+                                <svg class="w-8 h-8 text-white animate-float" fill="none" stroke="currentColor"
+                                     viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                                          d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Status Badge -->
+                    <div class="text-center mb-2">
+                        <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-gradient-to-r from-red-100 to-orange-100 text-red-700 font-bold text-xs uppercase tracking-wide">
+                            <i class="bi bi-x-circle-fill text-sm"></i> Thất bại
+                        </span>
+                    </div>
+
+                    <!-- Heading -->
+                    <h2 class="text-2xl font-black text-transparent bg-gradient-to-r from-gray-900 to-red-900 bg-clip-text text-center mb-2">
+                        Thanh toán không thành công
+                    </h2>
+
+                    <p class="text-gray-600 text-center mb-5 text-sm leading-relaxed">
+                        ⚠️ Thanh toán bị hủy nhưng đơn hàng vẫn được lưu. Thử lại?
+                    </p>
+
+                    <!-- Action Buttons -->
+                    <div class="flex flex-col gap-2">
+                        <a th:href="@{/}"
+                           class="w-full bg-gradient-to-r from-red-500 to-orange-600 hover:from-red-600 hover:to-orange-700 text-white font-bold py-2 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg flex items-center justify-center gap-2 text-sm">
+                            <i class="bi bi-house-fill text-sm"></i> Trang chủ
+                        </a>
+
+                        <a th:href="@{/checkout}"
+                           class="w-full border-2 border-gray-300 hover:border-red-500 text-gray-700 hover:text-red-600 font-bold py-2 px-4 rounded-lg transition-all duration-300 flex items-center justify-center gap-2 text-sm">
+                            <i class="bi bi-arrow-clockwise text-sm"></i> Thử lại
+                        </a>
+                    </div>
+
+                </div>
             </div>
 
-            <h2 class="text-3xl font-extrabold text-gray-900 mb-2">Thanh toán không thành công</h2>
-            <p class="text-gray-500 mb-8">
-                Thanh toán không thành công, nhưng đừng lo đơn hàng của bạn vẫn được lưu. Tiếp tục mua sắm?
-            </p>
-            <div class="flex flex-col space-y-3">
-                <a th:href="@{/}" class="w-full bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 font-semibold py-3 px-6 rounded-xl transition duration-200">
-                    Quay lại trang chủ
-                </a>
+            <div class="text-center mt-4">
+                <p class="text-white/60 text-xs font-medium">The Culinary Curator © 2026</p>
             </div>
         </div>
     </div>
 </div>
-<div th:if="${error}">
-    <div class="min-h-screen flex items-center justify-center p-4">
-        <div class="bg-white p-8 md:p-10 rounded-2xl shadow-lg w-full max-w-md text-center">
+<!-- Decorative Elements for Error (Generic) -->
+<div th:if="${error}" class="gradient-bg-error min-h-screen overflow-hidden">
+    <div class="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl -mr-48 -mt-48"></div>
+    <div class="absolute bottom-0 left-0 w-80 h-80 bg-white/5 rounded-full blur-3xl -ml-40 -mb-40"></div>
 
-            <!-- Cancelled Icon -->
-            <div class="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-6">
-                <svg class="w-10 h-10 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                     xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
-                          d="M6 18L18 6M6 6l12 12"></path>
-                </svg>
+    <div class="min-h-screen flex items-center justify-center p-4 relative z-10">
+        <div class="w-full max-w-sm animate-slide-in">
+            <div class="gradient-card rounded-2xl shadow-2xl overflow-hidden border border-white/20">
+                <div class="p-5 md:p-6">
+
+                    <!-- Error Icon -->
+                    <div class="flex justify-center mb-5">
+                        <div class="relative">
+                            <div class="absolute inset-0 bg-gradient-to-br from-red-300 to-red-500 rounded-full blur-lg opacity-50"></div>
+                            <div class="relative w-16 h-16 bg-gradient-to-br from-red-400 to-red-600 rounded-full flex items-center justify-center shadow-xl animate-pulse-glow-error">
+                                <svg class="w-8 h-8 text-white animate-float" fill="none" stroke="currentColor"
+                                     viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                                          d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Status Badge -->
+                    <div class="text-center mb-2">
+                        <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-gradient-to-r from-red-100 to-orange-100 text-red-700 font-bold text-xs uppercase tracking-wide">
+                            <i class="bi bi-exclamation-circle-fill text-sm"></i> Lỗi
+                        </span>
+                    </div>
+
+                    <!-- Heading / Error Message -->
+                    <h2 class="text-2xl font-black text-transparent bg-gradient-to-r from-gray-900 to-red-900 bg-clip-text text-center mb-2">
+                        <span th:text="${error}"></span>
+                    </h2>
+
+                    <p class="text-gray-600 text-center mb-5 text-sm leading-relaxed">
+                        ⚠️ Có lỗi xảy ra. Vui lòng thử lại hoặc liên hệ hỗ trợ.
+                    </p>
+
+                    <!-- Action Buttons -->
+                    <div class="flex flex-col gap-2">
+                        <a th:href="@{/}"
+                           class="w-full bg-gradient-to-r from-red-500 to-orange-600 hover:from-red-600 hover:to-orange-700 text-white font-bold py-2 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg flex items-center justify-center gap-2 text-sm">
+                            <i class="bi bi-house-fill text-sm"></i> Trang chủ
+                        </a>
+
+                        <a th:href="@{/checkout}"
+                           class="w-full border-2 border-gray-300 hover:border-red-500 text-gray-700 hover:text-red-600 font-bold py-2 px-4 rounded-lg transition-all duration-300 flex items-center justify-center gap-2 text-sm">
+                            <i class="bi bi-arrow-clockwise text-sm"></i> Thử lại
+                        </a>
+                    </div>
+
+                </div>
             </div>
 
-            <h2 class="text-3xl font-extrabold text-gray-900 mb-2" th:text="${error}"></h2>
-            <p class="text-gray-500 mb-8">
-                Thanh toán không thành công, nhưng đừng lo đơn hàng của bạn vẫn được lưu. Tiếp tục mua sắm?
-            </p>
-            <div class="flex flex-col space-y-3">
-                <a th:href="@{/}" class="w-full bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 font-semibold py-3 px-6 rounded-xl transition duration-200">
-                    Quay lại trang chủ
-                </a>
+            <div class="text-center mt-4">
+                <p class="text-white/60 text-xs font-medium">The Culinary Curator © 2026</p>
             </div>
         </div>
     </div>

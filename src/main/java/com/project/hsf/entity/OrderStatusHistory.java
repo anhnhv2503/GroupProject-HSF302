@@ -2,6 +2,7 @@ package com.project.hsf.entity;
 
 import java.time.Instant;
 
+import com.project.hsf.enums.OrderStatus;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Nationalized;
 import org.hibernate.annotations.OnDelete;

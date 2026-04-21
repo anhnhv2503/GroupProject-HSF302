@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.project.hsf.entity.Order;
-import com.project.hsf.entity.OrderStatus;
+import com.project.hsf.enums.OrderStatus;
 import com.project.hsf.entity.OrderStatusHistory;
 import com.project.hsf.entity.OrderItem;
-import com.project.hsf.entity.PaymentStatus;
+import com.project.hsf.enums.PaymentStatus;
 import com.project.hsf.entity.User;
 import com.project.hsf.service.OrderService;
 import com.project.hsf.service.UserService;

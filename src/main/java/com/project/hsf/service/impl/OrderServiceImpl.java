@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
 
+import com.project.hsf.service.CartService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vn.payos.PayOS;
@@ -15,10 +17,10 @@ import com.project.hsf.dto.CartItemDTO;
 import com.project.hsf.entity.Coupon;
 import com.project.hsf.entity.Order;
 import com.project.hsf.entity.OrderItem;
-import com.project.hsf.entity.OrderStatus;
+import com.project.hsf.enums.OrderStatus;
 import com.project.hsf.entity.OrderStatusHistory;
 import com.project.hsf.entity.Payment;
-import com.project.hsf.entity.PaymentStatus;
+import com.project.hsf.enums.PaymentStatus;
 import com.project.hsf.entity.SeafoodProduct;
 import com.project.hsf.entity.User;
 import com.project.hsf.enums.PaymentMethod;
@@ -45,6 +47,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderStatusHistoryRepository orderStatusHistoryRepository;
     private final PaymentRepository paymentRepository;
     private final PayOS payOS;
+    private final CartService cartService;
 
     private final String CALLBACK_URL = "http://localhost:8080/checkout/callback";
 
@@ -249,7 +252,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order processOrder(Long orderCode, String status, boolean cancel) {
+    public Order processOrder(Long orderCode, String status, boolean cancel, HttpSession session) {
         Order order = orderRepository.findByOrderCode(orderCode).orElse(null);
 
         if (order != null) {
@@ -268,13 +271,15 @@ public class OrderServiceImpl implements OrderService {
                 if (payment != null) payment.setStatus("CANCELLED");
             }
             if (payment != null) paymentRepository.save(payment);
-            return orderRepository.save(order);
+            Order savedOrder = orderRepository.save(order);
+            cartService.clearCart(session);
+            return savedOrder;
         }
         return null;
     }
 
     @Override
-    public Order orderCallback(Long orderCode, boolean success) {
+    public Order orderCallback(Long orderCode, boolean success, HttpSession session) {
         Order order = orderRepository.findByOrderCode(orderCode).orElse(null);
 
         if (order != null) {
@@ -289,8 +294,11 @@ public class OrderServiceImpl implements OrderService {
                 if (payment != null) payment.setStatus("CANCELLED");
             }
             if (payment != null) paymentRepository.save(payment);
-            return orderRepository.save(order);
+            Order savedOrder = orderRepository.save(order);
+            cartService.clearCart(session);
+            return savedOrder;
         }
+
         return null;
     }
 }

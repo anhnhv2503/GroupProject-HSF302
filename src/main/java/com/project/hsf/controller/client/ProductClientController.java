@@ -4,7 +4,7 @@ package com.project.hsf.controller.client;
  */
 
 import com.project.hsf.entity.Order;
-import com.project.hsf.entity.OrderStatus;
+import com.project.hsf.enums.OrderStatus;
 import com.project.hsf.entity.ProductReview;
 import com.project.hsf.entity.SeafoodProduct;
 import com.project.hsf.entity.User;

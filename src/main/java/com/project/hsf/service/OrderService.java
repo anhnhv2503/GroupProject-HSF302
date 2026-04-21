@@ -5,10 +5,11 @@ import java.util.List;
 import com.project.hsf.dto.CartItemDTO;
 import com.project.hsf.entity.Order;
 import com.project.hsf.entity.OrderItem;
-import com.project.hsf.entity.OrderStatus;
+import com.project.hsf.enums.OrderStatus;
 import com.project.hsf.entity.OrderStatusHistory;
-import com.project.hsf.entity.PaymentStatus;
+import com.project.hsf.enums.PaymentStatus;
 import com.project.hsf.entity.User;
+import jakarta.servlet.http.HttpSession;
 
 public interface OrderService {
     List<Order> getOrdersByUser(User user);
@@ -33,7 +34,7 @@ public interface OrderService {
 
     String placeOrder(List<CartItemDTO> cartItems, String couponCode, String shippingAddress, String paymentMethod, String notes, User customer) throws RuntimeException;
 
-    Order processOrder(Long orderCode, String status, boolean cancel);
+    Order processOrder(Long orderCode, String status, boolean cancel, HttpSession session);
 
-    Order orderCallback(Long orderCode, boolean success);
+    Order orderCallback(Long orderCode, boolean success, HttpSession session);
 }

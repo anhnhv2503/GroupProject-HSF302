@@ -125,11 +125,12 @@ public class CheckoutController {
             Model model,
             @RequestParam("orderCode") String orderCode,
             @RequestParam("status") String status,
-            @RequestParam("cancel") boolean cancel
+            @RequestParam("cancel") boolean cancel,
+            HttpSession session
     ) {
 
         Long parsedOrderCode = Long.parseLong(orderCode);
-        Order order = orderService.processOrder(parsedOrderCode, status, cancel);
+        Order order = orderService.processOrder(parsedOrderCode, status, cancel, session);
         if (order == null) {
             model.addAttribute("error", "Không tìm thấy đơn hàng hoặc đã xử lý trước đó.");
             return "payment/callback";
@@ -143,9 +144,10 @@ public class CheckoutController {
     public String orderCallback(
             Model model,
             @RequestParam("orderCode") String orderCode,
-            @RequestParam("success") boolean success
+            @RequestParam("success") boolean success,
+            HttpSession session
     ) {
-        Order order = orderService.orderCallback(Long.parseLong(orderCode), success);
+        Order order = orderService.orderCallback(Long.parseLong(orderCode), success, session);
         model.addAttribute("order", order);
         return "payment/order-callback";
     }

@@ -214,6 +214,7 @@
                                 <input type="hidden" name="productId" th:value="${product.id}"/>
                                 <input type="hidden" name="name" th:value="${product.name}"/>
                                 <input type="hidden" name="price" th:value="${product.price}"/>
+                                <input type="hidden" name="imageUrl" th:value="${product.images.get(0).imageUrl}" />
                                 <input type="hidden" name="quantity" value="1"/>
                                 <button type="submit"
                                     class="w-full bg-surface-container-highest text-secondary py-2.5 rounded font-bold text-sm hover:bg-primary-container hover:text-white transition-all uppercase tracking-wide">

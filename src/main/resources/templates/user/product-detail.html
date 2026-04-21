@@ -180,6 +180,7 @@
                         <input type="hidden" name="productId" th:value="${product.id}" />
                         <input type="hidden" name="name" th:value="${product.name}" />
                         <input type="hidden" name="price" th:value="${product.price}" />
+                        <input type="hidden" name="imageUrl" th:value="${product.images.get(0).imageUrl}" />
                     </form>
 
                     <!-- Value Props -->

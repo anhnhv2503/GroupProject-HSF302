@@ -9,8 +9,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.project.hsf.entity.Order;
-import com.project.hsf.entity.OrderStatus;
-import com.project.hsf.entity.PaymentStatus;
+import com.project.hsf.enums.OrderStatus;
+import com.project.hsf.enums.PaymentStatus;
 import com.project.hsf.entity.User;
 
 @Repository
