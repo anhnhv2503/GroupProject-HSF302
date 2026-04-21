@@ -4,10 +4,14 @@ import com.project.hsf.dto.CartItemDTO;
 import com.project.hsf.entity.Coupon;
 import com.project.hsf.entity.Order;
 import com.project.hsf.entity.OrderStatus;
+import com.project.hsf.entity.OrderStatusHistory;
+import com.project.hsf.entity.OrderItem;
 import com.project.hsf.entity.PaymentStatus;
 import com.project.hsf.entity.User;
 import com.project.hsf.repository.CouponRepository;
 import com.project.hsf.repository.OrderRepository;
+import com.project.hsf.repository.OrderItemRepository;
+import com.project.hsf.repository.OrderStatusHistoryRepository;
 import com.project.hsf.repository.UserRepository;
 import com.project.hsf.service.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -22,6 +27,8 @@ import java.util.List;
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
+    private final OrderItemRepository orderItemRepository;
+    private final OrderStatusHistoryRepository orderStatusHistoryRepository;
     private final CouponRepository couponRepository;
     private final UserRepository userRepository;
 
@@ -44,6 +51,20 @@ public class OrderServiceImpl implements OrderService {
     @Transactional(readOnly = true)
     public Order getOrderById(Long id, User user) {
         return orderRepository.findByIdAndCustomerId(id, user.getId()).orElse(null);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<OrderItem> getOrderItems(Long orderId) {
+        return orderItemRepository.findByOrderId(orderId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<OrderStatusHistory> getOrderStatusHistory(Long orderId) {
+        List<OrderStatusHistory> histories = orderStatusHistoryRepository.findByOrderIdOrderByChangedAtAsc(orderId);
+        java.util.Collections.reverse(histories);
+        return histories;
     }
 
     @Override

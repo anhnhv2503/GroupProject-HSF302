@@ -2,6 +2,7 @@ package com.project.hsf.entity;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.List;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Nationalized;
@@ -15,6 +16,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
@@ -102,6 +104,12 @@ public class Order {
     @ColumnDefault("getdate()")
     @Column(name = "updated_date")
     private Instant updatedDate;
+
+    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
+    private List<OrderItem> orderItems;
+
+    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
+    private List<OrderStatusHistory> statusHistories;
 
     @PrePersist
     protected void onCreate() {

@@ -8,6 +8,7 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Nationalized;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.PrePersist;
 
 import java.time.Instant;
 
@@ -30,11 +31,10 @@ public class OrderStatusHistory {
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 
-    @Size(max = 20)
     @NotNull
-    @Nationalized
+    @Enumerated(jakarta.persistence.EnumType.STRING)
     @Column(name = "status", nullable = false, length = 20)
-    private String status;
+    private OrderStatus status;
 
     @Size(max = 500)
     @Nationalized
@@ -49,5 +49,12 @@ public class OrderStatusHistory {
     @ColumnDefault("getdate()")
     @Column(name = "changed_at")
     private Instant changedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        if (changedAt == null) {
+            changedAt = Instant.now();
+        }
+    }
 
 }

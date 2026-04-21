@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+
+<html class="light" lang="vi" xmlns:th="http://www.thymeleaf.org"
+    xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Chi Tiết Đơn Hàng - The Culinary Curator</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <style>
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-slate-900">
+    <header th:replace="~{fragments/index-header :: header}"></header>
+
+    <main class="pt-32 pb-16 max-w-7xl mx-auto px-8">
+        <div class="mb-8 flex items-center gap-4">
+            <a href="/orders" class="flex items-center gap-1 text-slate-500 hover:text-[#D35400]">
+                <span class="material-symbols-outlined">arrow_back</span>
+                <span class="text-sm">Quay lại</span>
+            </a>
+        </div>
+
+        <div class="mb-8">
+            <h1 class="text-3xl font-black tracking-tighter text-slate-900">Chi Tiết Đơn Hàng</h1>
+            <p class="text-slate-500 mt-1">Mã đơn hàng: <span class="font-bold" th:text="'#' + ${order.id}">#1</span></p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="lg:col-span-2 space-y-6">
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                    <h2 class="font-bold text-lg text-slate-900 mb-4">Sản phẩm</h2>
+                    <div th:if="${#lists.isEmpty(orderItems)}" class="text-center py-8 text-slate-500">
+                        Không có sản phẩm
+                    </div>
+                    <div class="space-y-4">
+                        <div th:each="item : ${orderItems}" class="flex gap-4 pb-4 border-b border-slate-100 last:border-0">
+                            <div class="w-20 h-20 rounded-xl bg-slate-100 flex items-center justify-center overflow-hidden">
+                                <img th:if="${item.productImageUrl}" th:src="${item.productImageUrl}" class="w-full h-full object-cover" />
+                                <span th:unless="${item.productImageUrl}" class="material-symbols-outlined text-slate-400">inventory_2</span>
+                            </div>
+                            <div class="flex-1">
+                                <h3 class="font-medium text-slate-900" th:text="${item.productName ?: item.comboName}">Tên sản phẩm</h3>
+                                <p class="text-sm text-slate-500">
+                                    <span th:text="${item.quantity}">1</span> x
+                                    <span th:text="${#numbers.formatDecimal(item.unitPrice, 0, 'COMMA', 0, 'POINT')} + ' ₫'">100.000 ₫</span>
+                                </p>
+                                <p class="font-medium text-[#D35400] mt-1"
+                                   th:text="${#numbers.formatDecimal(item.subtotal, 0, 'COMMA', 0, 'POINT')} + ' ₫'">100.000 ₫</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                    <h2 class="font-bold text-lg text-slate-900 mb-4">Lịch sử trạng thái</h2>
+                    <div th:if="${#lists.isEmpty(statusHistories)}" class="text-center py-8 text-slate-500">
+                        Chưa có lịch sử
+                    </div>
+                    <div class="space-y-4">
+                        <div th:each="history : ${statusHistories}" class="flex gap-4">
+                            <div class="flex flex-col items-center">
+                                <div class="w-3 h-3 rounded-full bg-[#D35400]"></div>
+                            </div>
+                            <div class="pb-4">
+                                <p class="font-medium text-slate-900" th:text="${history.status.label}">PENDING</p>
+                                <p class="text-xs text-slate-500" th:text="${history.note}">Ghi chú</p>
+                                <p class="text-xs text-slate-400 mt-1"
+                                   th:text="${history.changedAt != null ? #temporals.format(history.changedAt, 'dd/MM/yyyy HH:mm') : ''}">01/01/2026</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                    <h2 class="font-bold text-lg text-slate-900 mb-4">Thông tin đơn hàng</h2>
+                    <div class="space-y-3">
+                        <div class="flex justify-between">
+                            <span class="text-slate-500">Trạng thái đơn hàng</span>
+                            <span class="px-2 py-1 rounded-full text-xs font-medium"
+                                  th:classappend="${order.orderStatus.name() == 'DELIVERED'} ? 'bg-green-100 text-green-700' : (${order.orderStatus.name() == 'CANCELLED'} ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700')"
+                                  th:text="${order.orderStatus.label}">PENDING</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-slate-500">Thanh toán</span>
+                            <span class="px-2 py-1 rounded-full text-xs font-medium"
+                                  th:classappend="${order.paymentStatus.name() == 'PAID'} ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'"
+                                  th:text="${order.paymentStatus.label}">UNPAID</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-slate-500">Ngày đặt</span>
+                            <span class="text-slate-900" th:text="${#temporals.format(order.createdDate, 'dd/MM/yyyy HH:mm')}">01/01/2026</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-slate-500">Phương thức</span>
+                            <span class="text-slate-900" th:text="${order.paymentMethod}">COD</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                    <h2 class="font-bold text-lg text-slate-900 mb-4">Địa chỉ giao hàng</h2>
+                    <p class="text-slate-700" th:text="${order.shippingAddress}">123 Đường Nguyễn Trãi, Quận 1, TP.HCM</p>
+                    <div th:if="${order.notes}" class="mt-4 pt-4 border-t border-slate-100">
+                        <p class="text-slate-500 text-sm">Ghi chú:</p>
+                        <p class="text-slate-700" th:text="${order.notes}">Ghi chú đơn hàng</p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                    <h2 class="font-bold text-lg text-slate-900 mb-4">Thanh toán</h2>
+                    <div class="space-y-3">
+                        <div class="flex justify-between">
+                            <span class="text-slate-500">Tổng tiền</span>
+                            <span class="text-slate-900" th:text="${#numbers.formatDecimal(order.totalPrice, 0, 'COMMA', 0, 'POINT')} + ' ₫'">100.000 ₫</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-slate-500">Giảm giá</span>
+                            <span class="text-green-600" th:text="'-' + ${#numbers.formatDecimal(order.discountAmount, 0, 'COMMA', 0, 'POINT')} + ' ₫'">-10.000 ₫</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-slate-500">Phí vận chuyển</span>
+                            <span class="text-slate-900" th:text="${#numbers.formatDecimal(order.shippingFee, 0, 'COMMA', 0, 'POINT')} + ' ₫'">20.000 ₫</span>
+                        </div>
+                        <div class="flex justify-between pt-3 border-t border-slate-100">
+                            <span class="font-bold text-slate-900">Tổng cộng</span>
+                            <span class="font-bold text-[#D35400] text-lg" th:text="${#numbers.formatDecimal(order.finalPrice, 0, 'COMMA', 0, 'POINT')} + ' ₫'">110.000 ₫</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer th:replace="~{fragments/index-footer :: footer}"></footer>
+</body>
+</html>
