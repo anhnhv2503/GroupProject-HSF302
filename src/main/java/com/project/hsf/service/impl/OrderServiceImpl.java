@@ -40,6 +40,43 @@ public class OrderServiceImpl implements OrderService {
     public List<com.project.hsf.entity.Order> getOrdersByCustomer(com.project.hsf.entity.User customer) {
         return orderRepository.findByCustomerOrderByCreatedDateDesc(customer);
     }
+    
+    @Override
+    @Transactional(readOnly = true)
+    public List<Order> getAllOrders() {
+        return orderRepository.findAll();
+    }
+    
+    @Override
+    @Transactional(readOnly = true)
+    public List<Order> getAllOrders(org.springframework.data.domain.Sort sort) {
+        return orderRepository.findAll(sort);
+    }
+    
+    @Override
+    @Transactional(readOnly = true)
+    public Order getOrderById(Long id) {
+        return orderRepository.findById(id).orElse(null);
+    }
+    
+    @Override
+    @Transactional
+    public void updateOrderStatus(Long orderId, OrderStatus status, String note) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Khong tim thay don hang voi id: " + orderId));
+
+        order.setOrderStatus(status);
+        order.setUpdatedDate(java.time.Instant.now());
+        orderRepository.save(order);
+
+        OrderStatusHistory history = new OrderStatusHistory();
+        history.setOrder(order);
+        history.setStatus(status);
+        history.setChangedBy("Admin");
+        history.setChangedAt(java.time.Instant.now());
+        history.setNote(note);
+        orderStatusHistoryRepository.save(history);
+    }
 
     @Override
     @Transactional(readOnly = true)

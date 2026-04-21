@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -15,6 +16,22 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<User> getAllUsers(org.springframework.data.domain.Sort sort) {
+        return userRepository.findAll(sort);
+    }
+
+    @Override
+    @Transactional
+    public void toggleUserStatus(Long id, boolean enabled) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Khong tim thay nguoi dung voi id: " + id));
+        user.setEnabled(enabled);
+        user.setUpdatedDate(java.time.Instant.now());
+        userRepository.save(user);
+    }
 
     @Override
     public void registerUser(RegisterDTO registerDTO) throws IllegalArgumentException {

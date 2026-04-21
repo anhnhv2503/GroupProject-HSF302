@@ -16,6 +16,14 @@ public interface OrderService {
     List<Order> getOrdersByUserWithFilters(User user, OrderStatus orderStatus, PaymentStatus paymentStatus);
 
     Order getOrderById(Long id, User user);
+    
+    Order getOrderById(Long id); // Add this implementation
+    
+    List<Order> getAllOrders();
+    
+    List<Order> getAllOrders(org.springframework.data.domain.Sort sort);
+    
+    void updateOrderStatus(Long orderId, OrderStatus status, String note);
 
     List<OrderItem> getOrderItems(Long orderId);
 
