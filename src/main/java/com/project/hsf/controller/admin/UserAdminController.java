@@ -2,8 +2,9 @@ package com.project.hsf.controller.admin;
 
 import com.project.hsf.entity.Order;
 import com.project.hsf.entity.User;
-import com.project.hsf.repository.OrderRepository;
-import com.project.hsf.repository.UserRepository;
+import com.project.hsf.service.OrderService;
+import com.project.hsf.service.UserService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
@@ -31,12 +32,12 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserAdminController {
 
-    private final UserRepository userRepository;
-    private final OrderRepository orderRepository;
+    private final UserService userService;
+    private final OrderService orderService;
 
     @GetMapping
     public String list(@RequestParam(required = false) String keyword, Model model) {
-        List<User> users = userRepository.findAll(Sort.by(Sort.Direction.DESC, "createdDate"));
+        List<User> users = userService.getAllUsers(Sort.by(Sort.Direction.DESC, "createdDate"));
 
         if (StringUtils.hasText(keyword)) {
             String normalizedKeyword = normalize(keyword);
@@ -48,7 +49,7 @@ public class UserAdminController {
                     .toList();
         }
 
-        List<Order> orders = orderRepository.findAll();
+        List<Order> orders = orderService.getAllOrders();
 
         Map<Long, Long> orderCountByUser = orders.stream()
                 .filter(o -> o.getCustomer() != null && o.getCustomer().getId() != null)
@@ -85,12 +86,7 @@ public class UserAdminController {
                                @RequestParam(required = false) String keyword,
                                RedirectAttributes redirectAttributes) {
         try {
-            User user = userRepository.findById(id)
-                    .orElseThrow(() -> new IllegalArgumentException("Khong tim thay nguoi dung voi id: " + id));
-
-            user.setEnabled(enabled);
-            user.setUpdatedDate(Instant.now());
-            userRepository.save(user);
+            userService.toggleUserStatus(id, enabled);
 
             redirectAttributes.addFlashAttribute("successMessage", enabled ? "Da mo khoa tai khoan." : "Da khoa tai khoan.");
         } catch (Exception ex) {

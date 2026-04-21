@@ -1,33 +1,20 @@
 package com.project.hsf.controller;
 
 import com.project.hsf.dto.RegisterDTO;
-import jakarta.validation.Valid;
 import com.project.hsf.service.impl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.beans.propertyeditors.StringTrimmerEditor;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
 public class AuthController {
 
     private final UserServiceImpl userService;
-
-    @InitBinder
-    public void initBinder(WebDataBinder binder) {
-        binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
-    }
 
     @GetMapping("/login")
     public String showLoginForm() {
@@ -43,34 +30,27 @@ public class AuthController {
 
     @PostMapping("/register-user")
     public String processRegister(
-            @Valid @ModelAttribute("registerDTO") RegisterDTO registerDTO,
-            BindingResult bindingResult,
+            @ModelAttribute("registerDTO") RegisterDTO registerDTO,
             Model model) {
         try {
-            Map<String, String> fieldErrors = new LinkedHashMap<>();
-
-            if (bindingResult.hasErrors()) {
-                for (FieldError fieldError : bindingResult.getFieldErrors()) {
-                    fieldErrors.putIfAbsent(fieldError.getField(), fieldError.getDefaultMessage());
-                }
-
-                // @AssertTrue on DTO creates an object-level error, map it to confirmPassword for UI display.
-                if (bindingResult.hasGlobalErrors() && !fieldErrors.containsKey("confirmPassword")) {
-                    fieldErrors.put("confirmPassword", bindingResult.getGlobalError().getDefaultMessage());
-                }
+            // Basic validation
+            if (registerDTO.getUsername() == null || registerDTO.getUsername().trim().isEmpty()) {
+                model.addAttribute("error", "Tên đăng nhập không được để trống.");
+                model.addAttribute("registerDTO", registerDTO);
+                return "auth/register";
             }
-
-            if (!fieldErrors.containsKey("username") && userService.existsByUsername(registerDTO.getUsername())) {
-                fieldErrors.put("username", "Tên đăng nhập đã tồn tại.");
+            if (registerDTO.getEmail() == null || registerDTO.getEmail().trim().isEmpty()) {
+                model.addAttribute("error", "Email không được để trống.");
+                model.addAttribute("registerDTO", registerDTO);
+                return "auth/register";
             }
-
-            if (!fieldErrors.containsKey("email") && userService.existsByEmail(registerDTO.getEmail())) {
-                fieldErrors.put("email", "Email đã được sử dụng.");
+            if (registerDTO.getPassword() == null || registerDTO.getPassword().length() < 6) {
+                model.addAttribute("error", "Mật khẩu phải có ít nhất 6 ký tự.");
+                model.addAttribute("registerDTO", registerDTO);
+                return "auth/register";
             }
-
-            if (!fieldErrors.isEmpty()) {
-                model.addAttribute("error", "Vui lòng kiểm tra lại thông tin đăng ký.");
-                model.addAttribute("fieldErrors", fieldErrors);
+            if (!registerDTO.getPassword().equals(registerDTO.getConfirmPassword())) {
+                model.addAttribute("error", "Mật khẩu xác nhận không khớp.");
                 model.addAttribute("registerDTO", registerDTO);
                 return "auth/register";
             }
@@ -79,19 +59,7 @@ public class AuthController {
             return "redirect:/login?registerSuccess=true";
 
         } catch (IllegalArgumentException e) {
-            Map<String, String> fieldErrors = new LinkedHashMap<>();
-            String message = e.getMessage() != null ? e.getMessage() : "Dữ liệu không hợp lệ.";
-
-            if (message.toLowerCase().contains("username")) {
-                fieldErrors.put("username", message);
-            } else if (message.toLowerCase().contains("email")) {
-                fieldErrors.put("email", message);
-            }
-
-            model.addAttribute("error", message);
-            if (!fieldErrors.isEmpty()) {
-                model.addAttribute("fieldErrors", fieldErrors);
-            }
+            model.addAttribute("error", e.getMessage());
             model.addAttribute("registerDTO", registerDTO);
             return "auth/register";
         } catch (Exception e) {
@@ -101,4 +69,3 @@ public class AuthController {
         }
     }
 }
-

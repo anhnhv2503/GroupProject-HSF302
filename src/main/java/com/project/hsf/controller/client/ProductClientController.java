@@ -4,22 +4,30 @@ package com.project.hsf.controller.client;
  */
 
 import com.project.hsf.entity.SeafoodProduct;
+import com.project.hsf.service.CategoryService;
 import com.project.hsf.service.SeafoodProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequiredArgsConstructor
 public class ProductClientController {
 
     private final SeafoodProductService productService;
+    private final CategoryService categoryService;
 
     @GetMapping("/products")
-    public String list(Model model) {
-        model.addAttribute("products", productService.search(null, null, true, null, "id", "desc"));
+    public String list(
+            @RequestParam(required = false) String q,
+            @RequestParam(required = false) Long categoryId,
+            Model model) {
+        model.addAttribute("products", productService.search(q, categoryId, true, null, "id", "desc"));
+        model.addAttribute("categories", categoryService.findByActiveTrue());
+        model.addAttribute("selectedCategory", categoryId);
         return "user/product-list";
     }
 
@@ -33,3 +41,4 @@ public class ProductClientController {
         return "user/product-detail";
     }
 }
+
