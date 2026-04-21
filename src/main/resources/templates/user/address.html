@@ -8,142 +8,18 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>Địa Chỉ - The Culinary Curator</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;family=Roboto:wght@400;500;700&amp;display=swap"
-        rel="stylesheet" />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
-        rel="stylesheet" />
-    <script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    "colors": {
-                        "surface-container-highest": "#e1e3e4",
-                        "on-tertiary-fixed-variant": "#004b6f",
-                        "on-error": "#ffffff",
-                        "secondary-fixed-dim": "#9dcaff",
-                        "inverse-surface": "#2e3132",
-                        "error": "#ba1a1a",
-                        "surface-dim": "#d9dadb",
-                        "surface": "#f8f9fa",
-                        "on-primary-fixed-variant": "#7f2b00",
-                        "on-tertiary": "#ffffff",
-                        "tertiary-fixed-dim": "#8cceff",
-                        "surface-container": "#edeeef",
-                        "tertiary": "#006492",
-                        "on-primary-fixed": "#370e00",
-                        "inverse-on-surface": "#f0f1f2",
-                        "surface-tint": "#a63b00",
-                        "on-surface": "#191c1d",
-                        "on-secondary": "#ffffff",
-                        "tertiary-container": "#009ade",
-                        "surface-container-high": "#e7e8e9",
-                        "secondary": "#2e6192",
-                        "background": "#f8f9fa",
-                        "surface-variant": "#e1e3e4",
-                        "on-surface-variant": "#594138",
-                        "on-primary": "#ffffff",
-                        "secondary-container": "#98c7ff",
-                        "primary-fixed": "#ffdbce",
-                        "on-secondary-container": "#1c5384",
-                        "on-secondary-fixed": "#001d35",
-                        "outline-variant": "#e1bfb3",
-                        "outline": "#8d7166",
-                        "on-primary-container": "#4f1800",
-                        "primary": "#a63b00",
-                        "on-tertiary-fixed": "#001e2f",
-                        "tertiary-fixed": "#cae6ff",
-                        "on-error-container": "#93000a",
-                        "inverse-primary": "#ffb599",
-                        "on-tertiary-container": "#002d45",
-                        "on-secondary-fixed-variant": "#0b4979",
-                        "surface-container-low": "#f3f4f5",
-                        "primary-fixed-dim": "#ffb599",
-                        "surface-bright": "#f8f9fa",
-                        "secondary-fixed": "#d1e4ff",
-                        "on-background": "#191c1d",
-                        "surface-container-lowest": "#ffffff",
-                        "primary-container": "#f26522",
-                        "error-container": "#ffdad6"
-                    },
-                    "borderRadius": {
-                        "DEFAULT": "0.25rem",
-                        "lg": "0.5rem",
-                        "xl": "0.75rem",
-                        "full": "9999px"
-                    },
-                    "fontFamily": {
-                        "headline": ["Inter"],
-                        "body": ["Inter"],
-                        "label": ["Inter"]
-                    }
-                },
-            },
-        }
-    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
     <style>
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
         body { font-family: 'Inter', sans-serif; }
-        button:focus, a:focus {
-            outline: 2px solid #a63b00;
-            outline-offset: 2px;
-        }
     </style>
 </head>
 
 <body class="bg-surface text-on-surface">
-    <header class="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-sm dark:shadow-none">
-        <div class="flex justify-between items-center w-full px-8 py-4 max-w-7xl mx-auto">
-            <div class="text-2xl font-bold tracking-tighter text-slate-900 dark:text-white">The Culinary Curator</div>
-            <nav class="hidden md:flex gap-8 items-center font-sans tracking-tight text-sm font-medium">
-                <a class="text-slate-600 dark:text-slate-400 hover:text-primary transition-colors" href="/">Trang chủ</a>
-                <a class="text-slate-600 dark:text-slate-400 hover:text-primary transition-colors" href="/products">Sản phẩm</a>
-                <a class="text-slate-600 dark:text-slate-400 hover:text-primary transition-colors" href="#">Công thức</a>
-                <a class="text-slate-600 dark:text-slate-400 hover:text-primary transition-colors" href="#">Câu chuyện</a>
-            </nav>
-            <div class="flex items-center gap-6">
-                <div class="hidden lg:flex items-center bg-surface-container-low px-3 py-1.5 rounded-full">
-                    <span class="material-symbols-outlined text-sm text-on-surface-variant">search</span>
-                    <input class="bg-transparent border-none focus:ring-0 text-xs w-48 ml-2" placeholder="Tìm hải sản..." type="text" />
-                </div>
-                <div class="flex items-center gap-4 text-slate-900">
-                    <button class="hover:opacity-80 transition-all scale-95 duration-200 ease-in-out relative">
-                        <span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
-                        <span class="absolute -top-2 -right-2 bg-primary text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full">2</span>
-                    </button>
-                    <div sec:authorize="isAuthenticated()" class="flex items-center gap-4">
-                        <div class="flex items-center gap-2 group cursor-pointer relative py-2">
-                            <span class="material-symbols-outlined text-secondary" data-icon="account_circle">account_circle</span>
-                            <div class="flex flex-col">
-                                <span class="text-[10px] font-black uppercase tracking-tighter text-on-surface">Xin chào, <span sec:authentication="name">User</span></span>
-                                <span class="text-[8px] text-on-surface-variant leading-none">Thành viên thân thiết</span>
-                            </div>
-                            <div class="absolute top-full right-0 mt-1 w-48 bg-white rounded-xl shadow-xl border border-outline-variant/10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 p-2">
-<a href="/profile" class="flex items-center gap-2 p-2 hover:bg-surface-container-low rounded-lg text-xs font-medium transition-colors text-slate-700">
-                                    <span class="material-symbols-outlined text-sm">person</span> Hồ sơ cá nhân
-                                </a>
-                                <a href="/orders" class="flex items-center gap-2 p-2 hover:bg-surface-container-low rounded-lg text-xs font-medium transition-colors text-slate-700">
-                                    <span class="material-symbols-outlined text-sm">receipt_long</span> Lịch sử đơn hàng
-                                </a>
-                                <hr class="my-1 border-outline-variant/10">
-                                <form th:action="@{/logout}" method="post">
-                                    <button type="submit" class="w-full flex items-center gap-2 p-2 hover:bg-error/10 text-error rounded-lg text-xs font-bold transition-colors">
-                                        <span class="material-symbols-outlined text-sm">logout</span> Đăng xuất
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </header>
+    <header th:replace="~{fragments/index-header :: header}"></header>
 
-    <main class="pt-24 pb-16 max-w-7xl mx-auto px-8">
+    <main class="pt-32 pb-16 max-w-7xl mx-auto px-8">
         <div class="mb-8">
             <h1 class="text-3xl font-black text-on-surface tracking-tighter">Địa Chỉ Của Tôi</h1>
             <p class="text-on-surface-variant mt-1">Quản lý địa chỉ giao hàng</p>
@@ -160,32 +36,10 @@
 
         <div class="flex flex-col lg:flex-row gap-8">
             <div th:replace="~{layout/fragments/profile-sidebar :: sidebar(active='address')}"></div>
-
             <div th:replace="~{layout/fragments/profile-address :: content}"></div>
         </div>
     </main>
 
-    <footer class="bg-slate-100 dark:bg-slate-950 w-full border-t border-slate-200 dark:border-slate-800">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 px-8 py-12 max-w-7xl mx-auto">
-            <div class="space-y-4">
-                <div class="text-lg font-black text-secondary dark:text-blue-200 uppercase">The Culinary Curator</div>
-                <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
-                    Tinh hoa hải sản từ đại dương. Chúng tôi mang đến những sản phẩm cao cấp nhất cho bàn tiệc của bạn.
-                </p>
-            </div>
-            <div class="flex flex-col gap-4">
-                <h5 class="font-sans text-xs uppercase tracking-widest text-on-surface font-bold">Về chúng tôi</h5>
-            </div>
-            <div class="flex flex-col gap-4">
-                <h5 class="font-sans text-xs uppercase tracking-widest text-on-surface font-bold">Hỗ trợ khách hàng</h5>
-            </div>
-            <div class="flex flex-col gap-4">
-                <h5 class="font-sans text-xs uppercase tracking-widest text-on-surface font-bold">Bản tin đại dương</h5>
-            </div>
-        </div>
-        <div class="border-t border-slate-200 dark:border-slate-800 py-6 px-8 max-w-7xl mx-auto flex justify-between items-center flex-wrap gap-4">
-            <p class="font-sans text-xs uppercase tracking-widest text-slate-500 dark:text-slate-400">&copy; 2026 The Culinary Curator.</p>
-        </div>
-    </footer>
+    <footer th:replace="~{fragments/index-footer :: footer}"></footer>
 </body>
 </html>

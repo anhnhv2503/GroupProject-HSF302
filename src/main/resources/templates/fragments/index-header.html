@@ -1,163 +1,82 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head></head>
-<body>
-
-    <header th:fragment="header" class="fixed top-0 w-full z-50">
-        <style>
-            .luxury-container {
-                max-width: 1440px;
-                margin-left: auto;
-                margin-right: auto;
-            }
-            .nav-link-luxury {
-                position: relative;
-                text-transform: uppercase;
-                letter-spacing: 1.5px;
-                font-weight: 600;
-                font-size: 0.8rem;
-                transition: color 0.3s;
-            }
-            .nav-link-luxury::after {
-                content: '';
-                position: absolute;
-                width: 0;
-                height: 1px;
-                bottom: -4px;
-                left: 50%;
-                background-color: #D35400;
-                transition: all 0.3s ease-in-out;
-                transform: translateX(-50%);
-            }
-            .nav-link-luxury:hover::after {
-                width: 100%;
-            }
-            .nav-link-luxury:hover {
-                color: #D35400 !important;
-            }
-            .search-input-luxury:focus {
-                border-color: #e0e0e0 !important;
-                background-color: white !important;
-                box-shadow: none !important;
-            }
-            .line-art-icon {
-                font-size: 24px !important;
-                font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
-            }
-            .logo-luxury {
-                font-family: 'Playfair Display', serif;
-                transition: all 0.3s;
-                text-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            }
-            .logo-luxury:hover {
-                transform: translateY(-1px);
-                text-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            }
-        </style>
-
-        <!-- Top Bar -->
-        <div class="bg-[#1a1a1a] text-white/90 text-[11px] font-medium py-2">
-            <div class="luxury-container px-8 flex justify-between items-center">
-                <div class="flex items-center gap-2">
-                    <span class="material-symbols-outlined text-[14px]">local_shipping</span>
-                    <span class="tracking-wide">Giao hàng hỏa tốc trong 2h tại nội thành</span>
-                </div>
-                <div class="flex items-center gap-6">
-                    <div class="flex items-center gap-2 hover:text-white transition-colors cursor-pointer">
-                        <span class="material-symbols-outlined text-[14px]">call</span>
-                        <span>Hotline: 1900 8888</span>
-                    </div>
-                    <div class="flex items-center gap-1 hover:text-white transition-colors cursor-pointer">
-                        <span>VN</span>
-                        <span class="text-white/30">|</span>
-                        <span class="text-white/50">EN</span>
-                    </div>
+<header th:fragment="header" class="fixed top-0 w-full z-50">
+    <style>
+        .luxury-container { max-width: 1440px; margin-left: auto; margin-right: auto; }
+        .nav-link-luxury { position: relative; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; font-size: 0.8rem; transition: color 0.3s; }
+        .nav-link-luxury::after { content: ''; position: absolute; width: 0; height: 1px; bottom: -4px; left: 50%; background-color: #D35400; transition: all 0.3s ease-in-out; transform: translateX(-50%); }
+        .nav-link-luxury:hover::after { width: 100%; }
+        .nav-link-luxury:hover { color: #D35400 !important; }
+        .line-art-icon { font-size: 24px !important; font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24; }
+        .logo-luxury { font-family: 'Playfair Display', serif; transition: all 0.3s; text-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .logo-luxury:hover { transform: translateY(-1px); text-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+    </style>
+    <div class="bg-[#1a1a1a] text-white/90 text-[11px] font-medium py-2">
+        <div class="luxury-container px-8 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-[14px]">local_shipping</span>
+                <span class="tracking-wide">Giao hàng hỏa tốc trong 2h tại nội thành</span>
+            </div>
+            <div class="flex items-center gap-6">
+                <div class="flex items-center gap-2 hover:text-white transition-colors cursor-pointer">
+                    <span class="material-symbols-outlined text-[14px]">call</span>
+                    <span>Hotline: 1900 8888</span>
                 </div>
             </div>
         </div>
-
-        <!-- Main Navigation -->
-        <nav class="bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl shadow-sm border-b border-slate-100/50">
-            <div class="luxury-container px-8 py-5 flex justify-between items-center">
-                <!-- Logo -->
-                <a href="/" class="logo-luxury text-3xl font-black tracking-tighter text-slate-900 dark:text-white flex-shrink-0">
-                    The Culinary Curator
-                </a>
-
-                <!-- Navigation Menu -->
-                <div class="hidden xl:flex items-center gap-10 ms-16">
-                    <a class="nav-link-luxury text-slate-900 dark:text-white" href="/">Trang chủ</a>
-                    <a class="nav-link-luxury text-slate-600 dark:text-slate-400" href="/products">Sản phẩm</a>
-                    <a class="nav-link-luxury text-slate-600 dark:text-slate-400" href="#about-us">Về chúng tôi</a>
+    </div>
+    <nav class="bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl shadow-sm border-b border-slate-100/50">
+        <div class="luxury-container px-8 py-5 flex justify-between items-center">
+            <a href="/" class="logo-luxury text-3xl font-black tracking-tighter text-slate-900 dark:text-white flex-shrink-0">The Culinary Curator</a>
+            <div class="hidden xl:flex items-center gap-10 ms-16">
+                <a class="nav-link-luxury text-slate-900 dark:text-white" href="/">Trang chủ</a>
+                <a class="nav-link-luxury text-slate-600 dark:text-slate-400" href="/products">Sản phẩm</a>
+                <a class="nav-link-luxury text-slate-600 dark:text-slate-400" href="#about-us">Về chúng tôi</a>
+            </div>
+            <div class="flex items-center gap-8 flex-grow justify-end ms-12">
+                <div class="hidden lg:flex items-center bg-[#f5f5f5] px-4 py-2 rounded-full border border-transparent w-full max-w-[420px] transition-all focus-within:border-[#e0e0e0] focus-within:bg-white focus-within:shadow-sm">
+                    <span class="material-symbols-outlined text-[20px] text-slate-400">search</span>
+                    <input class="bg-transparent border-none focus:ring-0 text-sm w-full ml-3 text-slate-700 placeholder:text-slate-400 font-medium" placeholder="Tìm kiếm tinh hoa đại dương..." type="text" />
                 </div>
-
-                <!-- Search & Actions -->
-                <div class="flex items-center gap-8 flex-grow justify-end ms-12">
-                    <!-- Search Bar Expanded -->
-                    <div class="hidden lg:flex items-center bg-[#f5f5f5] px-4 py-2 rounded-full border border-transparent w-full max-w-[420px] transition-all focus-within:border-[#e0e0e0] focus-within:bg-white focus-within:shadow-sm">
-                        <span class="material-symbols-outlined text-[20px] text-slate-400">search</span>
-                        <input class="bg-transparent border-none focus:ring-0 text-sm w-full ml-3 text-slate-700 placeholder:text-slate-400 font-medium"
-                            placeholder="Tìm kiếm tinh hoa đại dương (Cua hoàng đế, Tôm hùm...)" type="text" />
-                    </div>
-
-                    <!-- Icons -->
-                    <div class="flex items-center gap-5 text-slate-800 dark:text-slate-200">
-                        <!-- Wishlist -->
-                        <a href="/wishlist" class="relative group transition-transform hover:scale-110">
-                            <span class="material-symbols-outlined line-art-icon">heart_plus</span>
-                            <span class="absolute -top-1.5 -right-1.5 bg-[#D35400] text-white text-[9px] font-black w-4 h-4 flex items-center justify-center rounded-full shadow-sm"
-                                  th:text="${session.wishlistCount ?: 0}">0</span>
-                        </a>
-                        <!-- Cart -->
-                        <a href="/cart" class="relative group transition-transform hover:scale-110">
-                            <span class="material-symbols-outlined line-art-icon">shopping_cart</span>
-                            <span class="absolute -top-1.5 -right-1.5 bg-[#D35400] text-white text-[9px] font-black w-4 h-4 flex items-center justify-center rounded-full shadow-sm"
-                                  th:text="${session.cartCount ?: 0}">0</span>
-                        </a>
-
-                        <div class="h-6 w-[1px] bg-slate-200 mx-1"></div>
-
-                        <!-- Auth -->
-                        <div class="flex items-center gap-4">
-                            <!-- Not Authenticated -->
-                            <div sec:authorize="!isAuthenticated()" class="flex items-center gap-4">
-                                <a th:href="@{/login}"
-                                    class="text-[11px] font-bold uppercase tracking-widest text-slate-500 hover:text-[#D35400] transition-colors">Đăng nhập</a>
-                                <a th:href="@{/register}"
-                                    class="bg-[#D35400] text-white px-5 py-2.5 rounded-[4px] text-[11px] font-bold uppercase tracking-widest hover:bg-[#b34700] hover:shadow-md transition-all">Đăng ký</a>
-                            </div>
-
-                            <!-- Authenticated -->
-                            <div sec:authorize="isAuthenticated()" class="flex items-center gap-4">
-                                <div class="flex items-center gap-2 group cursor-pointer relative py-2">
-                                    <span class="material-symbols-outlined text-slate-700 line-art-icon">account_circle</span>
-                                    <div class="flex flex-col">
-                                        <span class="text-[10px] font-black uppercase tracking-tighter text-slate-900">
-                                            Hi, <span sec:authentication="name">User</span>
-                                        </span>
-                                        <span class="text-[8px] text-slate-400 leading-none">Member</span>
-                                    </div>
-
-                                    <!-- Mini Dropdown -->
-                                    <div class="absolute top-full right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-slate-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 p-2">
-                                        <a href="/profile" class="flex items-center gap-2 p-2.5 hover:bg-slate-50 rounded-md text-xs font-semibold transition-colors text-slate-700">
-                                            <span class="material-symbols-outlined text-sm">person</span> Profile
-                                        </a>
-                                        <hr class="my-1 border-slate-50">
-                                        <form th:action="@{/logout}" method="post">
-                                            <button type="submit" class="w-full flex items-center gap-2 p-2.5 hover:bg-red-50 text-red-600 rounded-md text-xs font-bold transition-colors">
-                                                <span class="material-symbols-outlined text-sm">logout</span> Logout
-                                            </button>
-                                        </form>
-                                    </div>
+                <div class="flex items-center gap-5 text-slate-800 dark:text-slate-200">
+                    <a href="/wishlist" class="relative group transition-transform hover:scale-110">
+                        <span class="material-symbols-outlined line-art-icon">heart_plus</span>
+                        <span class="absolute -top-1.5 -right-1.5 bg-[#D35400] text-white text-[9px] font-black w-4 h-4 flex items-center justify-center rounded-full shadow-sm" th:text="${session.wishlistCount ?: 0}">0</span>
+                    </a>
+                    <a href="/cart" class="relative group transition-transform hover:scale-110">
+                        <span class="material-symbols-outlined line-art-icon">shopping_cart</span>
+                        <span class="absolute -top-1.5 -right-1.5 bg-[#D35400] text-white text-[9px] font-black w-4 h-4 flex items-center justify-center rounded-full shadow-sm" th:text="${session.cartCount ?: 0}">0</span>
+                    </a>
+                    <div class="h-6 w-[1px] bg-slate-200 mx-1"></div>
+                    <div class="flex items-center gap-4">
+                        <div sec:authorize="!isAuthenticated()" class="flex items-center gap-4">
+                            <a th:href="@{/login}" class="text-[11px] font-bold uppercase tracking-widest text-slate-500 hover:text-[#D35400] transition-colors">Đăng nhập</a>
+                            <a th:href="@{/register}" class="bg-[#D35400] text-white px-5 py-2.5 rounded-[4px] text-[11px] font-bold uppercase tracking-widest hover:bg-[#b34700] hover:shadow-md transition-all">Đăng ký</a>
+                        </div>
+                        <div sec:authorize="isAuthenticated()" class="flex items-center gap-4">
+                            <div class="flex items-center gap-2 group cursor-pointer relative py-2">
+                                <span class="material-symbols-outlined text-slate-700 line-art-icon">account_circle</span>
+                                <div class="flex flex-col">
+                                    <span class="text-[10px] font-black uppercase tracking-tighter text-slate-900">Hi, <span sec:authentication="name">User</span></span>
+                                    <span class="text-[8px] text-slate-400 leading-none">Member</span>
+                                </div>
+                                <div class="absolute top-full right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-slate-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 p-2">
+                                    <a href="/profile" class="flex items-center gap-2 p-2.5 hover:bg-slate-50 rounded-md text-xs font-semibold transition-colors text-slate-700">
+                                        <span class="material-symbols-outlined text-sm">person</span> Hồ sơ
+                                    </a>
+                                    <a href="/orders" class="flex items-center gap-2 p-2.5 hover:bg-slate-50 rounded-md text-xs font-semibold transition-colors text-slate-700">
+                                        <span class="material-symbols-outlined text-sm">receipt_long</span> Lịch sử đơn hàng
+                                    </a>
+                                    <hr class="my-1 border-slate-50">
+                                    <form th:action="@{/logout}" method="post">
+                                        <button type="submit" class="w-full flex items-center gap-2 p-2.5 hover:bg-red-50 text-red-600 rounded-md text-xs font-bold transition-colors">
+                                            <span class="material-symbols-outlined text-sm">logout</span> Logout
+                                        </button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </nav>
-    </header>
-
-</body>
-</html>
+        </div>
+    </nav>
+</header>
