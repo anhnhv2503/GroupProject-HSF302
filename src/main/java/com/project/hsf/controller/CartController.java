@@ -1,5 +1,6 @@
 package com.project.hsf.controller;
 
+import com.fasterxml.jackson.annotation.JsonCreator.Mode;
 import com.project.hsf.dto.CartItemDTO;
 import com.project.hsf.entity.User;
 import com.project.hsf.service.CartService;
@@ -15,7 +16,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
-
 
 @Controller
 @RequestMapping("/cart")
@@ -61,7 +61,8 @@ public class CartController {
             if ("XMLHttpRequest".equals(request.getHeader("X-Requested-With"))) {
                 return ResponseEntity.badRequest().body(Map.of("error", errorMsg));
             }
-            return "redirect:/cart?error=" + java.net.URLEncoder.encode(errorMsg, java.nio.charset.StandardCharsets.UTF_8);
+            return "redirect:/cart?error="
+                    + java.net.URLEncoder.encode(errorMsg, java.nio.charset.StandardCharsets.UTF_8);
         }
 
         // Validate: must have either productId or comboId
@@ -101,19 +102,27 @@ public class CartController {
         return "redirect:/cart?added=true";
     }
 
-
     @PostMapping("/update")
     public String updateQuantity(
             HttpSession session,
             @RequestParam String itemKey,
-            @RequestParam Integer quantity) {
-        cartService.updateQuantity(session, itemKey, quantity);
+            @RequestParam Integer quantity,
+            Model model) {
+
+        try {
+            cartService.updateQuantity(session, itemKey, quantity);
+            session.setAttribute("cartCount", cartService.getCart(session).values()
+                    .stream().mapToInt(CartItemDTO::getQuantity).sum());
+
+            return "redirect:/cart";
+
+        } catch (Exception e) {
+            model.addAttribute("error", e.getMessage());
+            return "redirect:/cart?error=" + java.net.URLEncoder.encode(e.getMessage(), java.nio.charset.StandardCharsets.UTF_8);
+        }
 
         // Refresh cart count
-        session.setAttribute("cartCount", cartService.getCart(session).values()
-                .stream().mapToInt(CartItemDTO::getQuantity).sum());
 
-        return "redirect:/cart";
     }
 
     @PostMapping("/remove")

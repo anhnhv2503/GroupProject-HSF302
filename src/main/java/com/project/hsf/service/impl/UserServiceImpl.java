@@ -20,7 +20,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public List<User> getAllUsers(org.springframework.data.domain.Sort sort) {
-        return userRepository.findAll(sort);
+        return userRepository.findByRole("CUSTOMER", sort);
     }
 
     @Override

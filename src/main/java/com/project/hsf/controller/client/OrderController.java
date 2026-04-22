@@ -53,13 +53,15 @@ public class OrderController {
             Model model) {
         String username = authentication.getName();
         User user = userService.findByUsername(username);
-        Order order = orderService.getOrderById(id, user);
-        if(user.getId() != order.getCustomer().getId()) {
-            return "redirect:/orders?error=notfound";
-        }
+        Order order = orderService.getOrderById(id);
+        
         if (order == null) {
-            return "redirect:/orders?error=notfound";
+            return "error/404";
         }
+        if(user.getId() != order.getCustomer().getId()) {
+            return "error/403";
+        }
+        
         List<OrderItem> orderItems = orderService.getOrderItems(id);
         List<OrderStatusHistory> statusHistories = orderService.getOrderStatusHistory(id);
         model.addAttribute("user", user);
