@@ -24,7 +24,7 @@ public interface OrderService {
 
     List<Order> getAllOrders();
 
-    List<Order> getAllOrders(Sort sort, String orderCode);
+    List<Order> getAllOrders(Sort sort, String orderCode, String paymentMethod);
 
     void updateOrderStatus(Long orderId, OrderStatus status, String note);
 

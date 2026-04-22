@@ -67,11 +67,14 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Order> getAllOrders(org.springframework.data.domain.Sort sort, String orderCode) {
-        if (orderCode == null || orderCode.isBlank()) {
+    public List<Order> getAllOrders(org.springframework.data.domain.Sort sort, String orderCode, String paymentMethod) {
+        String code = (orderCode == null || orderCode.isBlank()) ? null : orderCode.trim();
+        String method = (paymentMethod == null || paymentMethod.isBlank()) ? null : paymentMethod.trim();
+        
+        if (code == null && method == null) {
             return orderRepository.findAll(sort);
         }
-        return orderRepository.findAllWithFilters(orderCode.trim());
+        return orderRepository.findAllWithFilters(code, method);
     }
 
     @Override
@@ -82,17 +85,57 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public void updateOrderStatus(Long orderId, OrderStatus status, String note) {
+    public void updateOrderStatus(Long orderId, OrderStatus targetStatus, String note) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("Khong tim thay don hang voi id: " + orderId));
 
-        order.setOrderStatus(status);
+        OrderStatus currentStatus = order.getOrderStatus();
+
+        // 1. Terminal State Check
+        if (currentStatus == OrderStatus.DELIVERED || currentStatus == OrderStatus.CANCELLED) {
+            throw new IllegalStateException("Khong the thay doi trang thai cua don hang da ket thuc (" + currentStatus + ").");
+        }
+
+        // 2. State Transition Validation
+        boolean isValidTransition = switch (currentStatus) {
+            case PENDING -> targetStatus == OrderStatus.CONFIRMED || targetStatus == OrderStatus.CANCELLED;
+            case CONFIRMED -> targetStatus == OrderStatus.PROCESSING || targetStatus == OrderStatus.CANCELLED;
+            case PROCESSING -> targetStatus == OrderStatus.SHIPPING || targetStatus == OrderStatus.CANCELLED;
+            case SHIPPING -> targetStatus == OrderStatus.DELIVERED || targetStatus == OrderStatus.CANCELLED;
+            default -> false;
+        };
+
+        if (!isValidTransition) {
+            throw new IllegalStateException("Khong the chuyen tu trang thai " + currentStatus + " sang " + targetStatus + ".");
+        }
+
+        // 3. Payment Enforcement for Online Orders
+        if (PaymentMethod.BANK_TRANSFER.name().equals(order.getPaymentMethod()) && targetStatus == OrderStatus.CONFIRMED) {
+            if (order.getPaymentStatus() != PaymentStatus.PAID) {
+                throw new IllegalStateException("Don hang chuyen khoan chua thanh toan thanh cong. Khong the xac nhan.");
+            }
+        }
+
+        // 4. Side Effects on DELIVERED
+        if (targetStatus == OrderStatus.DELIVERED) {
+            if (PaymentMethod.COD.name().equals(order.getPaymentMethod())) {
+                order.setPaymentStatus(PaymentStatus.PAID);
+                Payment payment = paymentRepository.findByOrderId(order.getId()).orElse(null);
+                if (payment != null) {
+                    payment.setStatus("PAID");
+                    paymentRepository.save(payment);
+                }
+            }
+        }
+
+        // 5. Update Order & History
+        order.setOrderStatus(targetStatus);
         order.setUpdatedDate(Instant.now());
         orderRepository.save(order);
 
         OrderStatusHistory history = new OrderStatusHistory();
         history.setOrder(order);
-        history.setStatus(status);
+        history.setStatus(targetStatus);
         history.setChangedBy("Admin");
         history.setChangedAt(Instant.now());
         history.setNote(note);

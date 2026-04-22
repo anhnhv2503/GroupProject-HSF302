@@ -34,8 +34,9 @@ public class OrderAdminController {
     @GetMapping
     public String list(@RequestParam(required = false) Long orderId, 
                        @RequestParam(required = false) String orderCode,
+                       @RequestParam(required = false) String paymentMethod,
                        Model model) {
-        List<Order> orders = orderService.getAllOrders(Sort.by(Sort.Direction.DESC, "createdDate"), orderCode);
+        List<Order> orders = orderService.getAllOrders(Sort.by(Sort.Direction.DESC, "createdDate"), orderCode, paymentMethod);
 
         Order selectedOrder = null;
         if (!orders.isEmpty()) {
@@ -83,9 +84,9 @@ public class OrderAdminController {
     private String defaultNoteForStatus(OrderStatus status) {
         return switch (status) {
             case CONFIRMED -> "Don hang da duoc xac nhan.";
-            case PROCESSING -> "Don hang dang duoc xu ly.";
-            case SHIPPING, SHIPPED -> "Don hang dang duoc giao.";
-            case DELIVERED -> "Don hang da giao thanh cong.";
+            case PROCESSING -> "Don hang dang duoc chuan bi hang.";
+            case SHIPPING -> "Don hang da duoc ban giao cho don vi van chuyen.";
+            case DELIVERED -> "Don hang da duoc giao den khach hang va hoan tat.";
             case CANCELLED -> "Don hang da bi huy.";
             default -> "Trang thai don hang da duoc cap nhat.";
         };

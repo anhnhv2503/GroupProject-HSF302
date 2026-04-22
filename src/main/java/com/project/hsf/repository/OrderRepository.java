@@ -38,9 +38,10 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             @Param("orderCode") String orderCode);
 
     @Query("SELECT o FROM Order o WHERE " +
-           "(:orderCode IS NULL OR CAST(o.orderCode AS string) LIKE %:orderCode%) " +
+           "(:orderCode IS NULL OR CAST(o.orderCode AS string) LIKE %:orderCode%) AND " +
+           "(:paymentMethod IS NULL OR o.paymentMethod = :paymentMethod) " +
            "ORDER BY o.createdDate DESC")
-    List<Order> findAllWithFilters(@Param("orderCode") String orderCode);
+    List<Order> findAllWithFilters(@Param("orderCode") String orderCode, @Param("paymentMethod") String paymentMethod);
 
     List<Order> findTop4ByOrderByCreatedDateDesc();
 }

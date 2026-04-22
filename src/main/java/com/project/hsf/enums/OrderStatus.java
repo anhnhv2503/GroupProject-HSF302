@@ -4,9 +4,9 @@ public enum OrderStatus {
     PENDING("Chờ xác nhận"),
     CONFIRMED("Đã xác nhận"),
     PROCESSING("Đang xử lý"),
-    SHIPPED("Đã giao hàng"),
+    SHIPPED("Đã bàn giao"),
     SHIPPING("Đang giao"),
-    DELIVERED("Đã giao"),
+    DELIVERED("Giao thành công"),
     CANCELLED("Đã hủy");
 
     private final String label;
