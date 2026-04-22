@@ -63,6 +63,12 @@
             <span class="material-symbols-outlined text-2xl group-hover:scale-110 transition-transform">analytics</span>
             <span class="text-sm font-semibold">Báo cáo</span>
         </a>
+        <a th:href="@{/admin/banners}"
+            th:classappend="${page == 'banners'} ? ' bg-primary text-white shadow-md font-bold' : ' text-white/70 hover:text-white hover:bg-white/10'"
+            class="flex items-center gap-4 px-4 py-3.5 rounded-lg transition-all group">
+            <span class="material-symbols-outlined text-2xl group-hover:scale-110 transition-transform">view_carousel</span>
+            <span class="text-sm font-semibold">Quản Lý Banner</span>
+        </a>
     </nav>
     <!-- Footer Profile -->
     <div class="mt-auto px-4 space-y-4 pt-6 border-t border-white/10">

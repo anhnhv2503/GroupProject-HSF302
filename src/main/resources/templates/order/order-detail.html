@@ -49,10 +49,10 @@
                                 <h3 class="font-medium text-slate-900" th:text="${item.productName ?: item.comboName}">Tên sản phẩm</h3>
                                 <p class="text-sm text-slate-500">
                                     <span th:text="${item.quantity}">1</span> x
-                                    <span th:text="${#numbers.formatDecimal(item.unitPrice, 0, 'COMMA', 0, 'POINT')} + ' ₫'">100.000 ₫</span>
+                                    <span th:text="${#numbers.formatDecimal(item.unitPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'">100.000 đ</span>
                                 </p>
                                 <p class="font-medium text-[#D35400] mt-1"
-                                   th:text="${#numbers.formatDecimal(item.subtotal, 0, 'COMMA', 0, 'POINT')} + ' ₫'">100.000 ₫</p>
+                                   th:text="${#numbers.formatDecimal(item.subtotal, 0, 'COMMA', 0, 'POINT')} + ' đ'">100.000 đ</p>
                                 <div th:if="${order.orderStatus.name() == 'DELIVERED' and item.product != null}" class="mt-2">
                                     <a th:href="@{/products/{id}(id=${item.product.id})} + '#reviews'"
                                        class="inline-flex items-center gap-1 text-xs text-[#D35400] hover:underline">
@@ -140,19 +140,19 @@
                     <div class="space-y-3">
                         <div class="flex justify-between">
                             <span class="text-slate-500">Tổng tiền</span>
-                            <span class="text-slate-900" th:text="${#numbers.formatDecimal(order.totalPrice, 0, 'COMMA', 0, 'POINT')} + ' ₫'">100.000 ₫</span>
+                            <span class="text-slate-900" th:text="${#numbers.formatDecimal(order.totalPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'">100.000 đ</span>
                         </div>
                         <div class="flex justify-between">
                             <span class="text-slate-500">Giảm giá</span>
-                            <span class="text-green-600" th:text="'-' + ${#numbers.formatDecimal(order.discountAmount, 0, 'COMMA', 0, 'POINT')} + ' ₫'">-10.000 ₫</span>
+                            <span class="text-green-600" th:text="'-' + ${#numbers.formatDecimal(order.discountAmount, 0, 'COMMA', 0, 'POINT')} + ' đ'">-10.000 đ</span>
                         </div>
                         <div class="flex justify-between">
                             <span class="text-slate-500">Phí vận chuyển</span>
-                            <span class="text-slate-900" th:text="${#numbers.formatDecimal(order.shippingFee, 0, 'COMMA', 0, 'POINT')} + ' ₫'">20.000 ₫</span>
+                            <span class="text-slate-900" th:text="${#numbers.formatDecimal(order.shippingFee, 0, 'COMMA', 0, 'POINT')} + ' đ'">20.000 đ</span>
                         </div>
                         <div class="flex justify-between pt-3 border-t border-slate-100">
                             <span class="font-bold text-slate-900">Tổng cộng</span>
-                            <span class="font-bold text-[#D35400] text-lg" th:text="${#numbers.formatDecimal(order.finalPrice, 0, 'COMMA', 0, 'POINT')} + ' ₫'">110.000 ₫</span>
+                            <span class="font-bold text-[#D35400] text-lg" th:text="${#numbers.formatDecimal(order.finalPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'">110.000 đ</span>
                         </div>
                     </div>
                 </div>

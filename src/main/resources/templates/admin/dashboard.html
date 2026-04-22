@@ -146,7 +146,7 @@
                                 <span class="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-bold uppercase"
                                       th:classappend="${order['status'] == 'SHIPPING'} ? ' bg-orange-100 text-orange-700' : (${order['status'] == 'CONFIRMED'} ? ' bg-blue-100 text-blue-700' : (${order['status'] == 'DELIVERED'} ? ' bg-green-100 text-green-700' : ' bg-slate-100 text-slate-600'))"
                                       th:text="${order['status']}">PENDING</span>
-                                <p class="mt-2 font-bold text-primary font-numeric" th:text="'$' + ${#numbers.formatDecimal(order['amount'], 1, 'POINT', 2, 'COMMA')}">$0.00</p>
+                                <p class="mt-2 font-bold text-primary font-numeric" th:text="${#numbers.formatDecimal(order['amount'], 0, 'COMMA', 0, 'POINT')} + ' đ'">0 đ</p>
                             </div>
                         </div>
                     </div>
