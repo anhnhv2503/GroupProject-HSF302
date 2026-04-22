@@ -516,3 +516,147 @@ VALUES
 --     (2, 4, 1),
 --     (3, 1, 1),
 --     (3, 5, 2);
+-- ============================================================
+-- KNOWLEDGE DOCUMENTS — Dữ liệu cho RAG Chatbot
+-- ============================================================
+-- Phân loại (category):
+--   'POLICY'    → Chính sách cửa hàng
+--   'FAQ'       → Câu hỏi thường gặp
+--   'PRODUCT'   → Thông tin sản phẩm / hải sản chung
+--   'GUIDE'     → Hướng dẫn bảo quản, chế biến
+
+INSERT INTO knowledge_documents (title, content, keywords, active, created_date, updated_date)
+VALUES
+
+-- ============================================================
+-- POLICY — Chính sách
+-- ============================================================
+(NULL,
+ N'Chính sách giao hàng',
+ N'Oceanic giao hàng toàn quốc. Miễn phí giao hàng cho đơn từ 500.000đ trở lên. '
+     + N'Đơn dưới 500.000đ áp dụng phí ship 30.000đ (nội thành) hoặc 50.000đ (ngoại thành/tỉnh). '
+     + N'Thời gian giao hàng: 2–4 giờ (nội thành TP.HCM & Hà Nội), 1–3 ngày làm việc (các tỉnh khác). '
+     + N'Hải sản tươi sẽ được đóng gói thùng xốp + đá khô để đảm bảo nhiệt độ trong quá trình vận chuyển.',
+ 'POLICY',
+ N'giao hàng, vận chuyển, phí ship, miễn phí ship, thời gian giao, đóng gói',
+ 1,
+ GETDATE()),
+
+(NULL,
+ N'Chính sách đổi trả và hoàn tiền',
+ N'Oceanic cam kết 100% hoàn tiền hoặc đổi hàng nếu sản phẩm không đạt chất lượng khi nhận. '
+     + N'Khách hàng cần chụp ảnh/video sản phẩm ngay khi nhận và liên hệ hotline trong vòng 2 giờ. '
+     + N'Trường hợp được chấp nhận: sản phẩm không tươi, thiếu số lượng, sai hàng so với đơn đặt. '
+     + N'Hoàn tiền qua chuyển khoản trong vòng 24–48 giờ làm việc sau khi được xác nhận. '
+     + N'Không áp dụng đổi trả với lý do cá nhân (không thích, mua nhầm) sau khi đã giao hàng thành công.',
+ 'POLICY',
+ N'đổi trả, hoàn tiền, khiếu nại, không tươi, sai hàng, chất lượng, refund',
+ 1,
+ GETDATE()),
+
+(NULL,
+ N'Chính sách thanh toán',
+ N'Oceanic hỗ trợ 2 phương thức thanh toán: '
+     + N'1. COD (Thanh toán khi nhận hàng): Khách trả tiền mặt cho shipper khi nhận hàng. '
+     + N'2. Chuyển khoản ngân hàng (BANK_TRANSFER): Chuyển khoản trước, đính kèm ảnh biên lai lên hệ thống. '
+     + N'   Admin xác nhận thanh toán trong vòng 15–30 phút (giờ hành chính). '
+     + N'Số tài khoản: Vietcombank – 1234567890 – Công ty TNHH Oceanic Seafood. '
+     + N'Nội dung chuyển khoản ghi: Mã đơn hàng (ví dụ: DH00123).',
+ 'POLICY',
+ N'thanh toán, COD, chuyển khoản, ngân hàng, tiền mặt, tài khoản, Vietcombank',
+ 1,
+ GETDATE()),
+
+(NULL,
+ N'Chính sách bảo mật thông tin khách hàng',
+ N'Oceanic cam kết bảo mật toàn bộ thông tin cá nhân của khách hàng. '
+     + N'Dữ liệu (họ tên, số điện thoại, địa chỉ) chỉ được dùng để xử lý đơn hàng và liên hệ chăm sóc khách hàng. '
+     + N'Oceanic không bán hoặc chia sẻ thông tin với bên thứ ba dưới bất kỳ hình thức nào. '
+     + N'Khách hàng có thể yêu cầu xóa tài khoản và toàn bộ dữ liệu cá nhân bất cứ lúc nào.',
+ 'POLICY',
+ N'bảo mật, thông tin cá nhân, quyền riêng tư, dữ liệu, tài khoản',
+ 1,
+ GETDATE()),
+
+-- ============================================================
+-- FAQ — Câu hỏi thường gặp
+-- ============================================================
+(NULL,
+ N'Làm sao để đặt hàng?',
+ N'Đặt hàng tại Oceanic rất đơn giản: '
+     + N'Bước 1: Đăng ký tài khoản hoặc đăng nhập. '
+     + N'Bước 2: Chọn sản phẩm, thêm vào giỏ hàng. '
+     + N'Bước 3: Vào giỏ hàng, kiểm tra đơn hàng, nhập mã giảm giá (nếu có). '
+     + N'Bước 4: Chọn địa chỉ giao hàng và phương thức thanh toán. '
+     + N'Bước 5: Xác nhận đặt hàng. Bạn sẽ nhận email/SMS xác nhận ngay sau đó.',
+ 'FAQ',
+ N'đặt hàng, mua hàng, giỏ hàng, hướng dẫn mua, checkout',
+ 1,
+ GETDATE()),
+
+(NULL,
+ N'Mã giảm giá (coupon) sử dụng như thế nào?',
+ N'Mã giảm giá được nhập tại trang thanh toán (checkout) trong ô "Mã giảm giá". '
+     + N'Các mã hiện có: '
+     + N'- WELCOME10: Giảm 10% cho khách mới, đơn tối thiểu 50.000đ. '
+     + N'- BULK15: Giảm 15% cho đơn từ 150.000đ trở lên (mua số lượng lớn). '
+     + N'- LOYAL20: Giảm 20.000đ cố định cho đơn từ 100.000đ (khách thân thiết). '
+     + N'- SUMMER30: Giảm 30% cho đơn từ 80.000đ (flash sale mùa hè, giới hạn 50 lượt). '
+     + N'- TRY5: Giảm 5.000đ, không yêu cầu đơn tối thiểu (dùng thử). '
+     + N'Lưu ý: Mỗi tài khoản chỉ dùng mỗi mã 1 lần duy nhất.',
+ 'FAQ',
+ N'mã giảm giá, coupon, khuyến mãi, discount, WELCOME10, BULK15, LOYAL20, SUMMER30, TRY5',
+ 1,
+ GETDATE()),
+
+(NULL,
+ N'Tôi có thể theo dõi đơn hàng ở đâu?',
+ N'Khách hàng có thể theo dõi trạng thái đơn hàng tại mục "Đơn hàng của tôi" sau khi đăng nhập. '
+     + N'Các trạng thái đơn hàng: '
+     + N'- PENDING (Chờ xác nhận): Đơn vừa đặt, đang chờ admin xử lý. '
+     + N'- CONFIRMED (Đã xác nhận): Admin đã xác nhận đơn hàng. '
+     + N'- PROCESSING (Đang chuẩn bị): Hàng đang được đóng gói và chuẩn bị giao. '
+     + N'- SHIPPED (Đang giao): Shipper đang trên đường giao hàng đến bạn. '
+     + N'- DELIVERED (Đã giao): Đơn hàng giao thành công. '
+     + N'- CANCELLED (Đã hủy): Đơn đã bị hủy.',
+ 'FAQ',
+ N'theo dõi đơn hàng, trạng thái, PENDING, CONFIRMED, SHIPPED, DELIVERED, CANCELLED, đơn của tôi',
+ 1,
+ GETDATE()),
+
+(NULL,
+ N'Làm sao hủy đơn hàng?',
+ N'Khách hàng có thể tự hủy đơn hàng khi đơn còn ở trạng thái PENDING (Chờ xác nhận). '
+     + N'Cách hủy: Vào "Đơn hàng của tôi" → Chọn đơn cần hủy → Nhấn "Hủy đơn". '
+     + N'Khi đơn đã chuyển sang CONFIRMED hoặc các trạng thái sau, không thể tự hủy qua website. '
+     + N'Vui lòng liên hệ hotline để được hỗ trợ hủy thủ công trong trường hợp khẩn cấp.',
+ 'FAQ',
+ N'hủy đơn, cancel order, đổi ý, không muốn mua nữa',
+ 1,
+ GETDATE()),
+
+(NULL,
+ N'Giờ làm việc và thông tin liên hệ',
+ N'Oceanic Seafood hoạt động từ 6:00 sáng đến 10:00 tối, tất cả các ngày trong tuần kể cả lễ tết. '
+     + N'Hotline: 1800-6868 (miễn phí, 6:00–22:00). '
+     + N'Email hỗ trợ: support@oceanic.com. '
+     + N'Địa chỉ cửa hàng: 123 Nguyễn Thị Minh Khai, Quận 1, TP. Hồ Chí Minh. '
+     + N'Fanpage Facebook: facebook.com/OceanicSeafood. '
+     + N'Zalo OA: Oceanic Seafood.',
+ 'FAQ',
+ N'liên hệ, hotline, giờ làm việc, địa chỉ, email, zalo, facebook, hỗ trợ',
+ 1,
+ GETDATE()),
+
+(NULL,
+ N'Combo hải sản là gì? Có những combo nào?',
+ N'Combo là gói nhiều sản phẩm hải sản được đóng sẵn theo chủ đề với mức giá ưu đãi hơn mua lẻ. '
+     + N'Các combo hiện có tại Oceanic: '
+     + N'1. Combo Lẩu Hải Sản 4 người (499.000đ): Bao gồm tôm, mực, cá tươi chế biến sẵn cho nồi lẩu. '
+     + N'2. Combo BBQ Biển (699.000đ): Set hải sản nướng gồm bạch tuộc, hào, nghêu — phù hợp tiệc nướng ngoài trời. '
+     + N'3. Combo Ăn Thử Giảm Giá (199.000đ): Gồm các mặt hàng nhỏ để trải nghiệm nhiều loại hải sản. '
+     + N'Combo có số lượng có hạn — đặt sớm để không hết hàng!',
+ 'FAQ',
+ N'combo, set hải sản, lẩu, BBQ, gói ưu đãi, combo lẩu, combo nướng',
+ 1,
+ GETDATE());
