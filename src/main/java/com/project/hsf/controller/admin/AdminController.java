@@ -1,6 +1,7 @@
 package com.project.hsf.controller.admin;
 
 import com.project.hsf.service.CategoryService;
+import com.project.hsf.service.OrderService;
 import com.project.hsf.service.SeafoodProductService;
 import com.project.hsf.service.ProductReviewService;
 import com.project.hsf.entity.SeafoodProduct;
@@ -21,6 +22,7 @@ public class AdminController {
     private final SeafoodProductService productService;
     private final CategoryService categoryService;
     private final ProductReviewService reviewService;
+    private final OrderService orderService;
 
     @GetMapping("/dashboard")
     public String dashboard(Model model) {
@@ -28,27 +30,22 @@ public class AdminController {
         // Basic stats derived from existing services
         model.addAttribute("totalProducts", productService.findAll().size());
         model.addAttribute("totalCategories", categoryService.findAll().size());
+
+        Map<String, Object> response = orderService.getOrderStatistics();
         
         // Dummy data for metrics expected by the UI
-        int todayOrders = 12;
-        long monthlyRevenue = 125000000L;
         List<SeafoodProduct> lowStockProducts = productService.search(null, null, true, true, "id", "desc");
 
-        model.addAttribute("todayOrders", todayOrders);
-        model.addAttribute("monthlyRevenue", monthlyRevenue);
-        model.addAttribute("avgOrderValue", todayOrders > 0 ? monthlyRevenue / todayOrders : 0);
+        model.addAttribute("totalOrder", response.get("totalOrder"));
+        model.addAttribute("totalRevenue", response.get("totalRevenue"));
+        model.addAttribute("avgOrderValue", 0);
         model.addAttribute("lowStockProducts", lowStockProducts);
         model.addAttribute("lowStockCount", lowStockProducts.size());
         model.addAttribute("expiringProducts", 3);
         
         // Recent orders (Dummy)
         // In a real app, we would fetch these from OrderService
-        model.addAttribute("recentOrders", List.of(
-                Map.of("code", "ORD-2026-001", "customer", "Nguyen Van A", "date", "4/12/2026", "amount", 189.97, "status", "SHIPPING"),
-                Map.of("code", "ORD-2026-002", "customer", "Tran Thi Binh", "date", "4/13/2026", "amount", 198.97, "status", "CONFIRMED"),
-                Map.of("code", "ORD-2026-003", "customer", "Le Minh Chau", "date", "4/10/2026", "amount", 104.00, "status", "DELIVERED"),
-                Map.of("code", "ORD-2026-004", "customer", "Pham Quoc Dung", "date", "4/14/2026", "amount", 188.48, "status", "PENDING")
-        ));
+        model.addAttribute("recentOrders", orderService.getNewestOrders());
         model.addAttribute("page", "dashboard");
         
         return "admin/dashboard";
