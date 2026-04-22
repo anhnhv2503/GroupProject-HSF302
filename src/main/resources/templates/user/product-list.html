@@ -309,7 +309,7 @@
                                     <input type="hidden" name="productId" th:value="${product.id}" />
                                     <input type="hidden" name="name" th:value="${product.name}" />
                                     <input type="hidden" name="price" th:value="${product.price}" />
-                                    <input type="hidden" name="imageUrl" th:value="${product.images.get(0).imageUrl}" />
+                                    <input type="hidden" name="imageUrl" th:value="${not #lists.isEmpty(product.images) ? product.images[0].imageUrl : '/images/no-image.jpg'}" />
                                     <input type="hidden" name="quantity" value="1" />
                                     <button type="submit"
                                         class="w-12 h-12 bg-[#F26522] text-white rounded-2xl flex items-center justify-center hover:shadow-xl hover:shadow-orange-500/40 hover:-translate-y-1 active:scale-95 transition-all">

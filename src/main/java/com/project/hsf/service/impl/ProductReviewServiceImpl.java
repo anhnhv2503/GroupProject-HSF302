@@ -2,6 +2,7 @@ package com.project.hsf.service.impl;
 
 import com.project.hsf.entity.Order;
 import com.project.hsf.entity.ProductReview;
+import com.project.hsf.entity.ProductReviewCount;
 import com.project.hsf.entity.SeafoodProduct;
 import com.project.hsf.entity.User;
 import com.project.hsf.enums.OrderStatus;
@@ -13,7 +14,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -107,5 +110,50 @@ public class ProductReviewServiceImpl implements ProductReviewService {
                 .filter(r -> r.getProduct().getId().equals(productId) && r.getUser().getId().equals(userId))
                 .findFirst()
                 .orElse(null);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<ProductReview> getPendingReviews() {
+        return reviewRepository.findByIsVisibleFalse();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public long getPendingReviewCount() {
+        return reviewRepository.countByIsVisibleFalse();
+    }
+
+    @Override
+    @Transactional
+    public ProductReview approveReview(Long id) {
+        ProductReview review = reviewRepository.findById(id).orElse(null);
+        if (review != null) {
+            review.setIsVisible(true);
+            return reviewRepository.save(review);
+        }
+        return null;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<ProductReview> getAllReviewsForProduct(Long productId) {
+        return reviewRepository.findByProductId(productId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<ProductReviewCount> getPendingReviewCountByProduct() {
+        Map<Long, Long> counts = new HashMap<>();
+        List<ProductReview> allReviews = reviewRepository.findAll();
+        for (ProductReview review : allReviews) {
+            if (!review.getIsVisible()) {
+                Long productId = review.getProduct().getId();
+                counts.put(productId, counts.getOrDefault(productId, 0L) + 1);
+            }
+        }
+        return counts.entrySet().stream()
+                .map(e -> new ProductReviewCount(e.getKey(), e.getValue()))
+                .toList();
     }
 }

@@ -362,6 +362,14 @@
                                             class="w-9 h-9 inline-flex items-center justify-center bg-tertiary/5 hover:bg-tertiary hover:text-white rounded-lg transition-all text-tertiary">
                                             <span class="material-symbols-outlined text-lg">edit</span>
                                         </button>
+                                        <a th:href="@{/admin/seafood-products/{id}/reviews(id=${product.id})}"
+                                            class="relative w-9 h-9 inline-flex items-center justify-center bg-blue-50 hover:bg-blue-100 rounded-lg transition-all text-blue-600"
+                                            title="Xem đánh giá">
+                                            <span class="material-symbols-outlined text-lg">rate_review</span>
+                                            <span th:if="${pendingReviewCounts[product.id] > 0}"
+                                                  th:text="${pendingReviewCounts[product.id]}"
+                                                  class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">0</span>
+                                        </a>
                                         <button type="button" th:data-id="${product.id}" th:data-name="${product.name}"
                                             onclick="openDeleteModal(this)"
                                             class="w-9 h-9 inline-flex items-center justify-center bg-primary/5 hover:bg-primary hover:text-white rounded-lg transition-all text-primary">
