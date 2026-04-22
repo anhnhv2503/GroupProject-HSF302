@@ -41,4 +41,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
            "(:orderCode IS NULL OR CAST(o.orderCode AS string) LIKE %:orderCode%) " +
            "ORDER BY o.createdDate DESC")
     List<Order> findAllWithFilters(@Param("orderCode") String orderCode);
+
+    List<Order> findTop4ByOrderByCreatedDateDesc();
 }

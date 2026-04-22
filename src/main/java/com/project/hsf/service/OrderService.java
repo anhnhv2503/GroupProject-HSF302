@@ -1,6 +1,7 @@
 package com.project.hsf.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.project.hsf.dto.CartItemDTO;
 import com.project.hsf.entity.Order;
@@ -10,6 +11,7 @@ import com.project.hsf.entity.OrderStatusHistory;
 import com.project.hsf.enums.PaymentStatus;
 import com.project.hsf.entity.User;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.data.domain.Sort;
 
 public interface OrderService {
     List<Order> getOrdersByUser(User user);
@@ -22,7 +24,7 @@ public interface OrderService {
 
     List<Order> getAllOrders();
 
-    List<Order> getAllOrders(org.springframework.data.domain.Sort sort, String orderCode);
+    List<Order> getAllOrders(Sort sort, String orderCode);
 
     void updateOrderStatus(Long orderId, OrderStatus status, String note);
 
@@ -37,4 +39,8 @@ public interface OrderService {
     Order processOrder(Long orderCode, String status, boolean cancel, HttpSession session);
 
     Order orderCallback(Long orderCode, boolean success, HttpSession session);
+
+    List<Order> getNewestOrders();
+
+    Map<String, Object> getOrderStatistics();
 }

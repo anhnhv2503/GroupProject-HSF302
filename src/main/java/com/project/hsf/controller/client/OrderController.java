@@ -54,6 +54,9 @@ public class OrderController {
         String username = authentication.getName();
         User user = userService.findByUsername(username);
         Order order = orderService.getOrderById(id, user);
+        if(user.getId() != order.getCustomer().getId()) {
+            return "redirect:/orders?error=notfound";
+        }
         if (order == null) {
             return "redirect:/orders?error=notfound";
         }

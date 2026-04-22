@@ -112,7 +112,7 @@
                         <p class="text-sm text-on-surface-variant mt-2" th:text="${order.customer != null ? (order.customer.fullName != null ? order.customer.fullName : order.customer.username) : 'Không rõ khách hàng'}">Nguyễn Văn A</p>
                         <div class="mt-1 flex items-center justify-between text-xs text-on-surface-variant">
                             <span th:text="${order.createdDate != null ? #temporals.format(order.createdDate, 'yyyy-MM-dd HH:mm') : '-'}">2026-04-12</span>
-                            <span class="font-bold text-primary font-numeric" th:text="${#numbers.formatDecimal(order.finalPrice != null ? order.finalPrice : order.totalPrice, 0, 'COMMA', 0, 'POINT')} + ' ₫'">100.000 ₫</span>
+                            <span class="font-bold text-primary font-numeric" th:text="${#numbers.formatDecimal(order.finalPrice != null ? order.finalPrice : order.totalPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'">100.000 đ</span>
                         </div>
                     </a>
                 </div>
@@ -142,7 +142,16 @@
                         <div class="rounded-xl border border-outline-variant/20 p-4 bg-background/40">
                             <p class="text-xs font-bold uppercase tracking-wider text-on-surface-variant">Thanh toán</p>
                             <p class="mt-2 text-xl font-bold text-tertiary" th:text="${selectedOrder.paymentMethod}">COD</p>
-                            <p class="text-4xl font-bold text-primary font-numeric mt-1" th:text="${#numbers.formatDecimal(selectedOrder.finalPrice != null ? selectedOrder.finalPrice : selectedOrder.totalPrice, 0, 'COMMA', 0, 'POINT')} + ' ₫'">100.000 ₫</p>
+                            <p class="text-4xl font-bold text-primary font-numeric mt-1" th:text="${#numbers.formatDecimal(selectedOrder.finalPrice != null ? selectedOrder.finalPrice : selectedOrder.totalPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'">100.000 đ</p>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="rounded-xl border border-outline-variant/20 p-4 bg-background/40">
+                            <p class="text-xs font-bold uppercase tracking-wider text-on-surface-variant">Người Nhận</p>
+                            <p class="mt-2 text-2xl font-bold text-tertiary" th:text="${selectedOrder.recipientName != null ? (selectedOrder.recipientName != null ? selectedOrder.recipientName : selectedOrder.customer.username) : 'Không rõ'}">Nguyễn Văn A</p>
+                            <p class="text-sm text-on-surface-variant" th:text="${selectedOrder.recipientPhone != null ? selectedOrder.recipientPhone : ''}">+84 912 345 678</p>
+                            <p class="text-sm text-on-surface-variant mt-1" th:text="${selectedOrder.shippingAddress!= null ? selectedOrder.shippingAddress : ''}">a.nguyen@email.com</p>
+
                         </div>
                     </div>
 
@@ -155,10 +164,10 @@
                                     <img th:src="${item.productImageUrl != null ? item.productImageUrl : 'https://placehold.co/56x56'}" alt="Product" class="w-14 h-14 rounded-lg object-cover border border-outline-variant/20"/>
                                     <div class="min-w-0">
                                         <p class="font-bold text-tertiary truncate" th:text="${item.productName != null ? item.productName : (item.comboName != null ? item.comboName : 'Sản phẩm')}">Tôm Hùm Alaska</p>
-                                        <p class="text-sm text-on-surface-variant font-numeric" th:text="${item.quantity} + ' x ' + ${#numbers.formatDecimal(item.unitPrice, 0, 'COMMA', 0, 'POINT')} + ' ₫'">2 x 100.000 ₫</p>
+                                        <p class="text-sm text-on-surface-variant font-numeric" th:text="${item.quantity} + ' x ' + ${#numbers.formatDecimal(item.unitPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'">2 x 100.000 đ</p>
                                     </div>
                                 </div>
-                                <p class="font-bold text-primary font-numeric" th:text="${#numbers.formatDecimal(item.subtotal != null ? item.subtotal : item.unitPrice, 0, 'COMMA', 0, 'POINT')} + ' ₫'">100.000 ₫</p>
+                                <p class="font-bold text-primary font-numeric" th:text="${#numbers.formatDecimal(item.subtotal != null ? item.subtotal : item.unitPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'">100.000 đ</p>
                             </div>
                         </div>
                     </div>
