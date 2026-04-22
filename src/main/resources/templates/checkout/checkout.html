@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      lang="vi"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/customer-layout}">
+    lang="vi">
 <head>
     <title>Thanh Toán</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
-<div layout:fragment="content" class="container mx-auto py-8 px-4 max-w-7xl">
+<header th:replace="~{fragments/index-header :: header}"></header>
+
+<main class="pt-32">
+    <div class="container mx-auto py-8 px-4 max-w-7xl">
 
     <!-- Messages -->
     <div th:if="${error}"
@@ -277,6 +278,9 @@
         </div>
     </div>
 
-</div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/index-footer :: footer}"></footer>
 </body>
 </html>

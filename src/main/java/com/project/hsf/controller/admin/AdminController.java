@@ -3,14 +3,22 @@ package com.project.hsf.controller.admin;
 import com.project.hsf.service.CategoryService;
 import com.project.hsf.service.SeafoodProductService;
 import com.project.hsf.entity.SeafoodProduct;
+import com.project.hsf.repository.OrderRepository;
+import com.project.hsf.entity.Order;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
-import java.util.Map;
+
+import org.springframework.data.domain.PageRequest;
 
 @Controller
 @RequestMapping("/admin")
@@ -19,33 +27,42 @@ public class AdminController {
 
     private final SeafoodProductService productService;
     private final CategoryService categoryService;
+    private final OrderRepository orderRepository;
 
     @GetMapping("/dashboard")
     public String dashboard(Model model) {
         // Basic stats derived from existing services
         model.addAttribute("totalProducts", productService.findAll().size());
         model.addAttribute("totalCategories", categoryService.findAll().size());
-        
-        // Dummy data for metrics expected by the UI
-        int todayOrders = 12;
-        long monthlyRevenue = 125000000L;
+
+        ZoneId zoneId = ZoneId.systemDefault();
+        Instant startOfToday = LocalDate.now(zoneId).atStartOfDay(zoneId).toInstant();
+        Instant startOfTomorrow = LocalDate.now(zoneId).plusDays(1).atStartOfDay(zoneId).toInstant();
+        Instant startOfMonth = LocalDate.now(zoneId).withDayOfMonth(1).atStartOfDay(zoneId).toInstant();
+
+        long todayOrders = orderRepository.countByCreatedDateBetween(startOfToday, startOfTomorrow);
+        long paidMonthOrders = orderRepository.countByCreatedDateBetweenAndPaymentStatus(startOfMonth, startOfTomorrow, com.project.hsf.entity.PaymentStatus.PAID);
+        BigDecimal monthlyRevenue = orderRepository.sumRevenueBetween(startOfMonth, startOfTomorrow);
+        if (monthlyRevenue == null) {
+            monthlyRevenue = BigDecimal.ZERO;
+        }
         List<SeafoodProduct> lowStockProducts = productService.search(null, null, true, true, "id", "desc");
+
+        List<Order> recentOrders = orderRepository.findRecentOrdersWithCustomer(PageRequest.of(0, 5));
 
         model.addAttribute("todayOrders", todayOrders);
         model.addAttribute("monthlyRevenue", monthlyRevenue);
-        model.addAttribute("avgOrderValue", todayOrders > 0 ? monthlyRevenue / todayOrders : 0);
+        model.addAttribute(
+                "avgOrderValue",
+            paidMonthOrders > 0
+                ? monthlyRevenue.divide(BigDecimal.valueOf(paidMonthOrders), 0, RoundingMode.HALF_UP)
+                        : BigDecimal.ZERO
+        );
         model.addAttribute("lowStockProducts", lowStockProducts);
         model.addAttribute("lowStockCount", lowStockProducts.size());
         model.addAttribute("expiringProducts", 3);
-        
-        // Recent orders (Dummy)
-        // In a real app, we would fetch these from OrderService
-        model.addAttribute("recentOrders", List.of(
-                Map.of("code", "ORD-2026-001", "customer", "Nguyen Van A", "date", "4/12/2026", "amount", 189.97, "status", "SHIPPING"),
-                Map.of("code", "ORD-2026-002", "customer", "Tran Thi Binh", "date", "4/13/2026", "amount", 198.97, "status", "CONFIRMED"),
-                Map.of("code", "ORD-2026-003", "customer", "Le Minh Chau", "date", "4/10/2026", "amount", 104.00, "status", "DELIVERED"),
-                Map.of("code", "ORD-2026-004", "customer", "Pham Quoc Dung", "date", "4/14/2026", "amount", 188.48, "status", "PENDING")
-        ));
+
+        model.addAttribute("recentOrders", recentOrders);
         model.addAttribute("page", "dashboard");
         
         return "admin/dashboard";

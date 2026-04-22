@@ -105,7 +105,7 @@ public class CheckoutController {
         try {
             // Clear cart and coupon upon successful transaction
             cartService.clearCart(session);
-            session.removeAttribute("appliedCoupon");
+            session.setAttribute("cartCount", 0);
             session.removeAttribute("appliedCoupon");
 //            session.setAttribute("orderSuccess", true);
 

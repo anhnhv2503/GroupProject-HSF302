@@ -2,6 +2,7 @@ package com.project.hsf.service.impl;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.EnumSet;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -78,17 +79,20 @@ public class OrderServiceImpl implements OrderService {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("Khong tim thay don hang voi id: " + orderId));
 
+        if (!isStatusTransitionAllowed(order.getOrderStatus(), status)) {
+            throw new IllegalStateException("Khong the chuyen trang thai tu " + order.getOrderStatus() + " sang " + status);
+        }
+
+        if (order.getOrderStatus() != OrderStatus.CANCELLED && status == OrderStatus.CANCELLED) {
+            restoreStock(order);
+        }
+
         order.setOrderStatus(status);
+        syncPaymentStatus(order, status);
         order.setUpdatedDate(Instant.now());
         orderRepository.save(order);
 
-        OrderStatusHistory history = new OrderStatusHistory();
-        history.setOrder(order);
-        history.setStatus(status);
-        history.setChangedBy("Admin");
-        history.setChangedAt(Instant.now());
-        history.setNote(note);
-        orderStatusHistoryRepository.save(history);
+        recordStatusHistory(order, status, note, "Admin");
     }
 
     @Override
@@ -121,9 +125,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional(readOnly = true)
     public List<OrderStatusHistory> getOrderStatusHistory(Long orderId) {
-        List<OrderStatusHistory> histories = orderStatusHistoryRepository.findByOrderIdOrderByChangedAtAsc(orderId);
-        java.util.Collections.reverse(histories);
-        return histories;
+        return orderStatusHistoryRepository.findByOrderIdOrderByChangedAtAsc(orderId);
     }
 
     @Override
@@ -255,17 +257,26 @@ public class OrderServiceImpl implements OrderService {
         if (order != null) {
             Payment payment = paymentRepository.findByOrderId(order.getId()).orElse(null);
             if (cancel) {
+                if (order.getOrderStatus() != OrderStatus.CANCELLED) {
+                    restoreStock(order);
+                }
                 order.setOrderStatus(OrderStatus.CANCELLED);
-                order.setPaymentStatus(PaymentStatus.UNPAID);
+                syncPaymentStatus(order, OrderStatus.CANCELLED);
                 if (payment != null) payment.setStatus("CANCELLED");
+                recordStatusHistory(order, OrderStatus.CANCELLED, "Thanh toan bi huy", "System");
             } else if ("PAID".equals(status)) {
                 order.setOrderStatus(OrderStatus.CONFIRMED);
                 order.setPaymentStatus(PaymentStatus.PAID);
                 if (payment != null) payment.setStatus("PAID");
+                recordStatusHistory(order, OrderStatus.CONFIRMED, "Thanh toan thanh cong", "System");
             } else {
+                if (order.getOrderStatus() != OrderStatus.CANCELLED) {
+                    restoreStock(order);
+                }
                 order.setOrderStatus(OrderStatus.CANCELLED);
-                order.setPaymentStatus(PaymentStatus.UNPAID);
+                syncPaymentStatus(order, OrderStatus.CANCELLED);
                 if (payment != null) payment.setStatus("CANCELLED");
+                recordStatusHistory(order, OrderStatus.CANCELLED, "Thanh toan that bai", "System");
             }
             if (payment != null) paymentRepository.save(payment);
             return orderRepository.save(order);
@@ -280,17 +291,72 @@ public class OrderServiceImpl implements OrderService {
         if (order != null) {
             Payment payment = paymentRepository.findByOrderId(order.getId()).orElse(null);
             if (success) {
-                order.setOrderStatus(OrderStatus.PENDING);
-                order.setPaymentStatus(PaymentStatus.UNPAID);
-                if (payment != null) payment.setStatus("PENDING");
+                order.setOrderStatus(OrderStatus.CONFIRMED);
+                order.setPaymentStatus(PaymentStatus.PAID);
+                if (payment != null) payment.setStatus("PAID");
+                recordStatusHistory(order, OrderStatus.CONFIRMED, "Thanh toan thanh cong", "System");
             } else {
+                if (order.getOrderStatus() != OrderStatus.CANCELLED) {
+                    restoreStock(order);
+                }
                 order.setOrderStatus(OrderStatus.CANCELLED);
-                order.setPaymentStatus(PaymentStatus.UNPAID);
+                syncPaymentStatus(order, OrderStatus.CANCELLED);
                 if (payment != null) payment.setStatus("CANCELLED");
+                recordStatusHistory(order, OrderStatus.CANCELLED, "Thanh toan that bai", "System");
             }
             if (payment != null) paymentRepository.save(payment);
             return orderRepository.save(order);
         }
         return null;
+    }
+
+    private void restoreStock(Order order) {
+        List<OrderItem> items = orderItemRepository.findByOrderId(order.getId());
+        for (OrderItem item : items) {
+            if (item.getProduct() != null && item.getQuantity() != null) {
+                seafoodProductRepository.restoreStock(item.getProduct().getId(), item.getQuantity());
+            }
+        }
+    }
+
+    private void recordStatusHistory(Order order, OrderStatus status, String note, String changedBy) {
+        OrderStatusHistory history = new OrderStatusHistory();
+        history.setOrder(order);
+        history.setStatus(status);
+        history.setChangedBy(changedBy);
+        history.setChangedAt(Instant.now());
+        history.setNote(note);
+        orderStatusHistoryRepository.save(history);
+    }
+
+    private void syncPaymentStatus(Order order, OrderStatus status) {
+        if (status == OrderStatus.DELIVERED) {
+            order.setPaymentStatus(PaymentStatus.PAID);
+            return;
+        }
+        if (status == OrderStatus.CANCELLED) {
+            if (order.getPaymentStatus() == PaymentStatus.PAID) {
+                order.setPaymentStatus(PaymentStatus.REFUNDED);
+            } else {
+                order.setPaymentStatus(PaymentStatus.UNPAID);
+            }
+        }
+    }
+
+    private boolean isStatusTransitionAllowed(OrderStatus from, OrderStatus to) {
+        if (from == to) {
+            return true;
+        }
+        if (from == OrderStatus.CANCELLED || from == OrderStatus.DELIVERED) {
+            return false;
+        }
+        return switch (from) {
+            case PENDING -> EnumSet.of(OrderStatus.CONFIRMED, OrderStatus.CANCELLED).contains(to);
+            case CONFIRMED -> EnumSet.of(OrderStatus.PROCESSING, OrderStatus.SHIPPING, OrderStatus.CANCELLED).contains(to);
+            case PROCESSING -> EnumSet.of(OrderStatus.SHIPPING, OrderStatus.CANCELLED).contains(to);
+            case SHIPPING -> EnumSet.of(OrderStatus.SHIPPED, OrderStatus.DELIVERED, OrderStatus.CANCELLED).contains(to);
+            case SHIPPED -> EnumSet.of(OrderStatus.DELIVERED, OrderStatus.CANCELLED).contains(to);
+            default -> false;
+        };
     }
 }
