@@ -56,11 +56,17 @@ public class CheckoutController {
         if (appliedCouponCode != null) {
             Coupon coupon = couponService.findByCode(appliedCouponCode).orElse(null);
             if (coupon != null && Boolean.TRUE.equals(coupon.getActive())) {
-                if ("PERCENT".equalsIgnoreCase(coupon.getDiscountType())
-                        || "PERCENTAGE".equalsIgnoreCase(coupon.getDiscountType())) {
-                    discountAmount = totalPrice * (coupon.getDiscountValue().doubleValue() / 100.0);
+                if (totalPrice >= coupon.getMinOrderValue().doubleValue()) {
+                    if ("PERCENT".equalsIgnoreCase(coupon.getDiscountType())
+                            || "PERCENTAGE".equalsIgnoreCase(coupon.getDiscountType())) {
+                        discountAmount = totalPrice * (coupon.getDiscountValue().doubleValue() / 100.0);
+                    } else {
+                        discountAmount = coupon.getDiscountValue().doubleValue();
+                    }
                 } else {
-                    discountAmount = coupon.getDiscountValue().doubleValue();
+                    model.addAttribute("couponError", "Đơn hàng chưa đạt giá trị tối thiểu " + coupon.getMinOrderValue() + "đ");
+                    session.removeAttribute("appliedCoupon");
+                    appliedCouponCode = null;
                 }
             }
         }
@@ -82,8 +88,6 @@ public class CheckoutController {
 
     @PostMapping("/apply-coupon")
     public String applyCoupon(@RequestParam String code, HttpSession session) {
-        // We just store it in session, validation happens during placeOrder or we could
-        // validate here
         session.setAttribute("appliedCoupon", code.toUpperCase());
         return "redirect:/checkout";
     }
@@ -93,6 +97,8 @@ public class CheckoutController {
             Principal principal,
             @RequestParam String address,
             @RequestParam String paymentMethod,
+            @RequestParam String recipientName,
+            @RequestParam String recipientPhone,
             @RequestParam(required = false) String notes,
             Model model) {
 
@@ -108,13 +114,13 @@ public class CheckoutController {
         }
         User user = userRepository.findByUsername(principal.getName());
         try {
-            // Clear cart and coupon upon successful transaction
+            String redirectUrl = orderService.placeOrder(cartItems, couponCode, address, paymentMethod, notes, recipientName, recipientPhone, user);
+            
+            // Clear cart and coupon upon successful order placement
             cartService.clearCart(session);
             session.removeAttribute("appliedCoupon");
-            session.removeAttribute("appliedCoupon");
-            // session.setAttribute("orderSuccess", true);
-
-            return "redirect:" + orderService.placeOrder(cartItems, couponCode, address, paymentMethod, notes, user);
+            
+            return "redirect:" + redirectUrl;
         } catch (RuntimeException e) {
             model.addAttribute("error", e.getMessage());
             model.addAttribute("cartItems", cartItems);

@@ -77,7 +77,12 @@ public class User {
     @NotNull
     @ColumnDefault("1")
     @Column(name = "enabled", nullable = false)
-    private Boolean enabled = false;
+    private Boolean enabled = true;
+
+    @NotNull
+    @ColumnDefault("0")
+    @Column(name = "is_comment_blocked", nullable = false)
+    private Boolean isCommentBlocked = false;
 
     @CreationTimestamp
     @ColumnDefault("getdate()")

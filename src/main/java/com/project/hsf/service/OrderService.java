@@ -14,7 +14,7 @@ import jakarta.servlet.http.HttpSession;
 public interface OrderService {
     List<Order> getOrdersByUser(User user);
 
-    List<Order> getOrdersByUserWithFilters(User user, OrderStatus orderStatus, PaymentStatus paymentStatus);
+    List<Order> getOrdersByUserWithFilters(User user, OrderStatus orderStatus, PaymentStatus paymentStatus, String orderCode);
 
     Order getOrderById(Long id, User user);
 
@@ -22,7 +22,7 @@ public interface OrderService {
 
     List<Order> getAllOrders();
 
-    List<Order> getAllOrders(org.springframework.data.domain.Sort sort);
+    List<Order> getAllOrders(org.springframework.data.domain.Sort sort, String orderCode);
 
     void updateOrderStatus(Long orderId, OrderStatus status, String note);
 
@@ -32,7 +32,7 @@ public interface OrderService {
 
     List<Order> getOrdersByCustomer(User customer);
 
-    String placeOrder(List<CartItemDTO> cartItems, String couponCode, String shippingAddress, String paymentMethod, String notes, User customer) throws RuntimeException;
+    String placeOrder(List<CartItemDTO> cartItems, String couponCode, String shippingAddress, String paymentMethod, String notes, String recipientName, String recipientPhone, User customer) throws RuntimeException;
 
     Order processOrder(Long orderCode, String status, boolean cancel, HttpSession session);
 

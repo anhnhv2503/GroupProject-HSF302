@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" class="light" lang="vi">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>The Oceanic - Quản Lý Banner</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#F26522',
+                        secondary: '#E8C872',
+                        accent: '#F26522',
+                        surface: '#FDFBF7',
+                        'on-surface': '#1B1C17',
+                        'on-surface-variant': '#44483D',
+                        'outline-variant': '#C4C8BA',
+                        background: '#F4F7F5',
+                        tertiary: '#0D4A7A'
+                    }
+                }
+            }
+        };
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .font-headline { font-family: 'Playfair Display', serif; }
+    </style>
+</head>
+<body class="bg-background text-on-surface flex min-h-screen">
+    <div th:replace="~{admin/fragments/sidebar :: sidebar}"></div>
+
+    <main class="flex-1 ml-72 min-h-screen">
+        <div th:replace="~{admin/fragments/header :: header}"></div>
+
+        <div class="p-10 space-y-8">
+            <div class="flex justify-between items-end">
+                <div>
+                    <h1 class="text-4xl font-headline font-bold text-tertiary">Quản Lý Banner</h1>
+                    <p class="text-on-surface-variant mt-2">Chỉnh sửa banner hiển thị tại trang chủ</p>
+                </div>
+                <button onclick="document.getElementById('bannerModal').classList.remove('hidden')" 
+                        class="bg-primary text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 hover:bg-primary/90 shadow-lg shadow-primary/20 transition-all">
+                    <span class="material-symbols-outlined">add</span>
+                    Thêm Banner Mới
+                </button>
+            </div>
+
+            <div th:if="${successMessage}" class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl" th:text="${successMessage}"></div>
+            <div th:if="${errorMessage}" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl" th:text="${errorMessage}"></div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div th:each="banner : ${banners}" class="bg-white rounded-2xl overflow-hidden shadow-sm border border-outline-variant/20 group">
+                    <div class="relative h-48">
+                        <img th:src="${banner.imageUrl}" class="w-full h-full object-cover" alt="Banner Image">
+                        <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4">
+                            <button th:onclick="'editBanner(' + ${banner.id} + ', \'' + ${banner.title} + '\', \'' + ${banner.subtitle} + '\', \'' + ${banner.imageUrl} + '\', \'' + ${banner.link} + '\', ' + ${banner.displayOrder} + ', ' + ${banner.active} + ')'" 
+                                    class="bg-white text-on-surface p-3 rounded-full hover:bg-primary hover:text-white transition-colors">
+                                <span class="material-symbols-outlined">edit</span>
+                            </button>
+                            <a th:href="@{/admin/banners/delete/{id}(id=${banner.id})}" 
+                               onclick="return confirm('Bạn có chắc chắn muốn xóa banner này?')"
+                               class="bg-white text-on-surface p-3 rounded-full hover:bg-red-600 hover:text-white transition-colors">
+                                <span class="material-symbols-outlined">delete</span>
+                            </a>
+                        </div>
+                        <div class="absolute top-4 left-4">
+                            <form th:action="@{/admin/banners/toggle/{id}(id=${banner.id})}" method="post">
+                                <button type="submit" class="px-3 py-1 rounded-full text-[10px] font-bold uppercase shadow-sm"
+                                        th:classappend="${banner.active} ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-600'"
+                                        th:text="${banner.active} ? 'Active' : 'Hidden'">
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="p-5">
+                        <h3 class="font-bold text-tertiary text-lg truncate" th:text="${banner.title}">Title</h3>
+                        <p class="text-xs text-on-surface-variant mt-1 truncate" th:text="${banner.link}">Link URL</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal -->
+    <div id="bannerModal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center hidden">
+        <div class="bg-white rounded-2xl w-full max-w-lg p-8 shadow-2xl">
+            <div class="flex justify-between items-center mb-6">
+                <h2 id="modalTitle" class="text-2xl font-headline font-bold text-tertiary">Thêm Banner</h2>
+                <button onclick="document.getElementById('bannerModal').classList.add('hidden')" class="text-on-surface-variant hover:text-red-600">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            <form th:action="@{/admin/banners/save}" method="post" class="space-y-4">
+                <input type="hidden" id="bannerId" name="id">
+                <div>
+                    <label class="block text-sm font-bold text-on-surface-variant mb-1">Tiêu đề</label>
+                    <input type="text" id="bannerTitle" name="title" class="w-full rounded-xl border-outline-variant/30 focus:ring-primary focus:border-primary">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-on-surface-variant mb-1">Phụ đề (Subtitle)</label>
+                    <input type="text" id="bannerSubtitle" name="subtitle" class="w-full rounded-xl border-outline-variant/30 focus:ring-primary focus:border-primary">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-on-surface-variant mb-1">URL Hình ảnh</label>
+                    <input type="text" id="bannerImageUrl" name="imageUrl" required class="w-full rounded-xl border-outline-variant/30 focus:ring-primary focus:border-primary">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-on-surface-variant mb-1">Link liên kết</label>
+                    <input type="text" id="bannerLink" name="link" class="w-full rounded-xl border-outline-variant/30 focus:ring-primary focus:border-primary">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-on-surface-variant mb-1">Thứ tự hiển thị</label>
+                    <input type="number" id="bannerDisplayOrder" name="displayOrder" class="w-full rounded-xl border-outline-variant/30 focus:ring-primary focus:border-primary">
+                </div>
+                <div class="flex items-center gap-2">
+                    <input type="checkbox" id="bannerActive" name="active" value="true" checked class="rounded text-primary focus:ring-primary">
+                    <label class="text-sm font-bold text-on-surface-variant">Hiển thị ngay</label>
+                </div>
+                <div class="pt-4 flex gap-3">
+                    <button type="button" onclick="document.getElementById('bannerModal').classList.add('hidden')" 
+                            class="flex-1 px-6 py-3 rounded-xl border border-outline-variant font-bold text-on-surface-variant hover:bg-slate-50 transition-colors">Hủy</button>
+                    <button type="submit" class="flex-1 px-6 py-3 rounded-xl bg-primary text-white font-bold hover:bg-primary/90 transition-all">Lưu Lại</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function editBanner(id, title, subtitle, imageUrl, link, displayOrder, active) {
+            document.getElementById('modalTitle').innerText = 'Chỉnh Sửa Banner';
+            document.getElementById('bannerId').value = id;
+            document.getElementById('bannerTitle').value = title;
+            document.getElementById('bannerSubtitle').value = subtitle;
+            document.getElementById('bannerImageUrl').value = imageUrl;
+            document.getElementById('bannerLink').value = link;
+            document.getElementById('bannerDisplayOrder').value = displayOrder;
+            document.getElementById('bannerActive').checked = active;
+            document.getElementById('bannerModal').classList.remove('hidden');
+        }
+
+        // Reset modal when clicking "Add"
+        document.querySelector('button[onclick*="bannerModal"]').addEventListener('click', () => {
+            document.getElementById('modalTitle').innerText = 'Thêm Banner';
+            document.getElementById('bannerId').value = '';
+            document.getElementById('bannerTitle').value = '';
+            document.getElementById('bannerSubtitle').value = '';
+            document.getElementById('bannerImageUrl').value = '';
+            document.getElementById('bannerLink').value = '';
+            document.getElementById('bannerDisplayOrder').value = '0';
+            document.getElementById('bannerActive').checked = true;
+        });
+    </script>
+</body>
+</html>

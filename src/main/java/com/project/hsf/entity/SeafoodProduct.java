@@ -20,7 +20,9 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table(name = "seafood_products")
+@Table(name = "seafood_products", indexes = {
+    @Index(name = "idx_unit", columnList = "unit")
+})
 public class SeafoodProduct {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -78,7 +80,13 @@ public class SeafoodProduct {
     @NotNull
     @ColumnDefault("1")
     @Column(name = "active", nullable = false)
-    private Boolean active = false;
+    private Boolean active = true;
+
+    @Size(max = 20)
+    @NotNull
+    @Nationalized
+    @Column(name = "unit", nullable = false, length = 20)
+    private String unit;
 
     @CreationTimestamp
     @ColumnDefault("getdate()")

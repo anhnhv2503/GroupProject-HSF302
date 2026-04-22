@@ -1,16 +1,21 @@
 package com.project.hsf.service.impl;
 
 import com.project.hsf.dto.CartItemDTO;
+import com.project.hsf.entity.SeafoodProduct;
 import com.project.hsf.service.CartService;
+import com.project.hsf.service.SeafoodProductService;
 import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 public class CartServiceImpl implements CartService {
 
+    private final SeafoodProductService productService;
     private static final String CART_SESSION_KEY = "CART";
 
     @SuppressWarnings("unchecked")
@@ -26,18 +31,29 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void addToCart(HttpSession session, CartItemDTO item) {
+        SeafoodProduct product = productService.findById(Long.valueOf(item.getProductId()));
+        if (product == null)
+            throw new RuntimeException("Sản phẩm không tồn tại");
+
         Map<String, CartItemDTO> cart = getCart(session);
         String key = item.getItemKey();
 
+        int currentInCart = cart.containsKey(key) ? cart.get(key).getQuantity() : 0;
+        int requestedTotal = currentInCart + item.getQuantity();
+
+        if (product.getStockQuantity() < requestedTotal) {
+            throw new RuntimeException(
+                    "Sản phẩm " + product.getName() + " chỉ còn " + product.getStockQuantity() + " sản phẩm");
+        }
+
         if (cart.containsKey(key)) {
             CartItemDTO existingItem = cart.get(key);
-            existingItem.setQuantity(existingItem.getQuantity() + item.getQuantity());
+            existingItem.setQuantity(requestedTotal);
         } else {
             cart.put(key, item);
         }
         session.setAttribute(CART_SESSION_KEY, cart);
     }
-
 
     @Override
     public void updateQuantity(HttpSession session, String itemKey, int quantity) {
@@ -46,12 +62,17 @@ public class CartServiceImpl implements CartService {
             if (quantity <= 0) {
                 cart.remove(itemKey);
             } else {
-                cart.get(itemKey).setQuantity(quantity);
+                CartItemDTO item = cart.get(itemKey);
+                SeafoodProduct product = productService.findById(Long.valueOf(item.getProductId()));
+                if (product != null && product.getStockQuantity() < quantity) {
+                    throw new RuntimeException(
+                            "Sản phẩm " + product.getName() + " chỉ còn " + product.getStockQuantity() + " sản phẩm");
+                }
+                item.setQuantity(quantity);
             }
         }
         session.setAttribute(CART_SESSION_KEY, cart);
     }
-
 
     @Override
     public void removeItem(HttpSession session, String itemKey) {
@@ -60,12 +81,10 @@ public class CartServiceImpl implements CartService {
         session.setAttribute(CART_SESSION_KEY, cart);
     }
 
-
     @Override
     public void clearCart(HttpSession session) {
         session.removeAttribute(CART_SESSION_KEY);
     }
-
 
     @Override
     public Double calculateTotal(HttpSession session) {

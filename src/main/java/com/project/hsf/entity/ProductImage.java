@@ -36,6 +36,10 @@ public class ProductImage {
     @Column(name = "image_url", nullable = false, length = 500)
     private String imageUrl;
 
+    @Size(max = 200)
+    @Column(name = "public_id", length = 200)
+    private String publicId;
+
     @NotNull
     @ColumnDefault("0")
     @Column(name = "is_primary", nullable = false)

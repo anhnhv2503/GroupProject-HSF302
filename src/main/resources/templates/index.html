@@ -142,33 +142,60 @@
     <main class="pt-32">
         <!-- Hero Section -->
         <section class="relative h-[870px] flex items-center overflow-hidden">
-            <div class="absolute inset-0 z-0">
+            <!-- Dynamic Banners -->
+            <div th:if="${not #lists.isEmpty(banners)}" class="absolute inset-0 z-0">
+                <div th:each="banner, iterStat : ${banners}" 
+                     th:classappend="${iterStat.first} ? 'opacity-100' : 'opacity-0'"
+                     class="absolute inset-0 transition-opacity duration-1000">
+                    <img th:src="${banner.imageUrl}" class="w-full h-full object-cover" th:alt="${banner.title}">
+                    <div class="absolute inset-0 bg-gradient-to-r from-on-secondary/60 to-transparent"></div>
+                    
+                    <div class="absolute inset-0 z-10 flex items-center">
+                        <div class="max-w-7xl mx-auto px-8 w-full">
+                            <div class="max-w-2xl">
+                                <span class="text-on-surface tracking-widest uppercase text-xs font-bold mb-4 block" th:text="${banner.subtitle}">Thưởng lãm nghệ thuật ẩm thực</span>
+                                <h1 class="text-6xl md:text-8xl font-black text-on-surface leading-[1.1] mb-6 tracking-tighter" th:text="${banner.title}">
+                                    Tinh hoa hải sản <br /> <span class="text-primary-container italic">từ đại dương</span>
+                                </h1>
+                                <div class="flex gap-4">
+                                    <a th:href="${banner.link != null ? banner.link : '/products'}"
+                                       class="bg-gradient-to-r from-primary-container to-primary text-on-primary px-8 py-4 rounded-lg font-bold hover:opacity-90 transition-all shadow-lg shadow-primary-container/20">
+                                        Khám phá ngay
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Default Hero if no banners -->
+            <div th:if="${#lists.isEmpty(banners)}" class="absolute inset-0 z-0">
                 <img class="w-full h-full object-cover"
-                    data-alt="Stunning cinematic wide shot of fresh king crab legs and blue lobsters on ice with elegant morning sunlight and dramatic deep blue shadows"
                     src="https://lh3.googleusercontent.com/aida-public/AB6AXuA74AVyACnfCK_dAxL86PDqpJp-fC5ZndZ4nhkCI7jTckRpUR5XB3BUW8U_JhPozCuOtvlEOmGvM8R9i0OuwbnHLKtUa9sthSn9tXeEyzoVBQ15h-ngvlHzIrgyCUOfVKSFw4l2pZylkIaj0dzFGBTuIwYqnJ3swElVkyY6oO8RI7GxOcPqpLOG86IHqvsEw6Qr-f-QVFOe8Ztbk6Rh0B3yWjPS4HRr7GH2Qb6CeQrmtNG-PPhDor2g_9O3opl0CxZWJ-wuFWeilVc" />
                 <div class="absolute inset-0 bg-gradient-to-r from-on-secondary/60 to-transparent"></div>
-            </div>
-            <div class="relative z-10 max-w-7xl mx-auto px-8 w-full">
-                <div class="max-w-2xl">
-                    <span class="text-on-surface tracking-widest uppercase text-xs font-bold mb-4 block">Thưởng lãm nghệ
-                        thuật ẩm thực</span>
-                    <h1 class="text-6xl md:text-8xl font-black text-on-surface leading-[1.1] mb-6 tracking-tighter">
-                        Tinh hoa hải sản <br /> <span class="text-primary-container italic">từ đại dương</span>
-                    </h1>
-                    <p class="text-lg text-on-surface-variant mb-8 max-w-lg leading-relaxed">
-                        Trải nghiệm tinh hoa đại dương ngay tại bàn tiệc của bạn với những lựa chọn hải sản quý hiếm
-                        được
-                        tuyển chọn thủ công bởi chuyên gia.
-                    </p>
-                    <div class="flex gap-4">
-                        <button
-                            class="bg-gradient-to-r from-primary-container to-primary text-on-primary px-8 py-4 rounded-lg font-bold hover:opacity-90 transition-all shadow-lg shadow-primary-container/20">
-                            Khám phá Bộ sưu tập
-                        </button>
-                        <button
-                            class="bg-surface-container-highest text-secondary px-8 py-4 rounded-lg font-bold hover:bg-surface-container-high transition-all">
-                            Xem Bảng giá
-                        </button>
+                <div class="relative z-10 max-w-7xl mx-auto px-8 w-full h-full flex items-center">
+                    <div class="max-w-2xl">
+                        <span class="text-on-surface tracking-widest uppercase text-xs font-bold mb-4 block">Thưởng lãm nghệ
+                            thuật ẩm thực</span>
+                        <h1 class="text-6xl md:text-8xl font-black text-on-surface leading-[1.1] mb-6 tracking-tighter">
+                            Tinh hoa hải sản <br /> <span class="text-primary-container italic">từ đại dương</span>
+                        </h1>
+                        <p class="text-lg text-on-surface-variant mb-8 max-w-lg leading-relaxed">
+                            Trải nghiệm tinh hoa đại dương ngay tại bàn tiệc của bạn với những lựa chọn hải sản quý hiếm
+                            được
+                            tuyển chọn thủ công bởi chuyên gia.
+                        </p>
+                        <div class="flex gap-4">
+                            <a href="/products"
+                                class="bg-gradient-to-r from-primary-container to-primary text-on-primary px-8 py-4 rounded-lg font-bold hover:opacity-90 transition-all shadow-lg shadow-primary-container/20">
+                                Khám phá Bộ sưu tập
+                            </a>
+                            <a href="/products"
+                                class="bg-surface-container-highest text-secondary px-8 py-4 rounded-lg font-bold hover:bg-surface-container-high transition-all flex items-center justify-center">
+                                Xem Bảng giá
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -216,9 +243,9 @@
                                 <input type="hidden" name="price" th:value="${product.price}"/>
                                 <input type="hidden" name="imageUrl" th:value="${not #lists.isEmpty(product.images) ? product.images[0].imageUrl : '/images/no-image.jpg'}" />
                                 <input type="hidden" name="quantity" value="1"/>
-                                <button type="submit"
-                                    class="w-full bg-surface-container-highest text-secondary py-2.5 rounded font-bold text-sm hover:bg-primary-container hover:text-white transition-all uppercase tracking-wide">
-                                    Thêm vào giỏ
+                                <button type="submit" th:disabled="${!(product.stockQuantity > 0)}"
+                                    class="w-full bg-surface-container-highest text-secondary py-2.5 rounded font-bold text-sm hover:bg-primary-container hover:text-white transition-all uppercase tracking-wide disabled:opacity-50 disabled:grayscale disabled:cursor-not-allowed">
+                                    <span th:text="${product.stockQuantity > 0 ? 'Thêm vào giỏ' : 'Hết hàng'}">Thêm vào giỏ</span>
                                 </button>
                             </form>
                         </div>

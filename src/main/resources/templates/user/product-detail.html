@@ -158,16 +158,16 @@
                                         <span class="material-symbols-outlined">add</span>
                                     </button>
                                 </div>
-                                <span class="text-xs font-bold text-on-surface-variant uppercase">Còn hàng (In
-                                    Stock)</span>
+                                <span th:if="${product.stockQuantity > 0}" class="text-xs font-bold text-on-surface-variant uppercase">Còn hàng (In Stock)</span>
+                                <span th:unless="${product.stockQuantity > 0}" class="text-xs font-bold text-red-600 uppercase">Hết hàng (Out of Stock)</span>
                             </div>
                         </div>
 
                         <div class="grid grid-cols-5 gap-4">
-                            <button type="submit"
-                                class="col-span-4 bg-brand-primary text-white h-16 rounded-2xl font-black text-sm uppercase tracking-widest flex items-center justify-center gap-3 hover:shadow-2xl hover:brightness-110 active:scale-[0.98] transition-all">
+                            <button type="submit" th:disabled="${!(product.stockQuantity > 0)}"
+                                class="col-span-4 bg-brand-primary text-white h-16 rounded-2xl font-black text-sm uppercase tracking-widest flex items-center justify-center gap-3 hover:shadow-2xl hover:brightness-110 active:scale-[0.98] transition-all disabled:opacity-50 disabled:grayscale disabled:cursor-not-allowed">
                                 <span class="material-symbols-outlined">shopping_cart</span>
-                                THÊM VÀO GIỎ HÀNG
+                                <span th:text="${product.stockQuantity > 0 ? 'THÊM VÀO GIỎ HÀNG' : 'HẾT HÀNG'}">THÊM VÀO GIỎ HÀNG</span>
                             </button>
                             <button type="button"
                                 th:data-product-id="${product.id}"

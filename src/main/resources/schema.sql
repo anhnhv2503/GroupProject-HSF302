@@ -15,6 +15,7 @@ CREATE TABLE users (
     -- ⚠️ address đã xóa — dùng bảng user_addresses (multi-address) thay thế
     role         NVARCHAR(20)    NOT NULL DEFAULT 'CUSTOMER',
     enabled      BIT             NOT NULL DEFAULT 1,
+    is_comment_blocked BIT       NOT NULL DEFAULT 0,
     created_date DATETIME2                DEFAULT GETDATE(),
     updated_date DATETIME2                DEFAULT GETDATE(),
     CONSTRAINT chk_user_role CHECK (role IN ('CUSTOMER', 'ADMIN'))
@@ -57,6 +58,7 @@ CREATE TABLE seafood_products (
     expiry_date      DATETIME2,
     imported_from    NVARCHAR(200),
     active           BIT             NOT NULL DEFAULT 1,
+    unit             NVARCHAR(20),
     created_date     DATETIME2                DEFAULT GETDATE(),
     updated_date     DATETIME2                DEFAULT GETDATE(),
     CONSTRAINT fk_product_category FOREIGN KEY (category_id) REFERENCES categories(id),
@@ -71,6 +73,7 @@ CREATE TABLE product_images (
     id           BIGINT          IDENTITY(1,1) PRIMARY KEY,
     product_id   BIGINT          NOT NULL,
     image_url    NVARCHAR(500)   NOT NULL,
+    public_id    NVARCHAR(200),
     is_primary   BIT             NOT NULL DEFAULT 0,
     created_date DATETIME2                DEFAULT GETDATE(),
     CONSTRAINT fk_image_product FOREIGN KEY (product_id) REFERENCES seafood_products(id) ON DELETE CASCADE

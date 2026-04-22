@@ -31,14 +31,16 @@ public class OrderController {
             Authentication authentication,
             Model model,
             @RequestParam(required = false) OrderStatus orderStatus,
-            @RequestParam(required = false) PaymentStatus paymentStatus) {
+            @RequestParam(required = false) PaymentStatus paymentStatus,
+            @RequestParam(required = false) String orderCode) {
         String username = authentication.getName();
         User user = userService.findByUsername(username);
-        List<Order> orders = orderService.getOrdersByUserWithFilters(user, orderStatus, paymentStatus);
+        List<Order> orders = orderService.getOrdersByUserWithFilters(user, orderStatus, paymentStatus, orderCode);
         model.addAttribute("user", user);
         model.addAttribute("orders", orders);
         model.addAttribute("orderStatus", orderStatus);
         model.addAttribute("paymentStatus", paymentStatus);
+        model.addAttribute("orderCode", orderCode);
         model.addAttribute("orderStatuses", OrderStatus.values());
         model.addAttribute("paymentStatuses", PaymentStatus.values());
         return "order/orders";

@@ -69,7 +69,7 @@ public class ProductClientController {
                     ProductReview userReview = reviewService.getUserReviewForProduct(id, user.getId());
                     userReviewVisible = userReview != null && userReview.getIsVisible();
                 } else {
-                    canReview = reviewService.canUserReviewProduct(id, user.getId());
+                    canReview = reviewService.canUserReviewProduct(id, user.getId()) && !Boolean.TRUE.equals(user.getIsCommentBlocked());
                 }
 
                 model.addAttribute("hasReviewed", hasReviewed);
@@ -107,6 +107,11 @@ public class ProductClientController {
         SeafoodProduct product = productService.findById(id);
 
         if (product == null || user == null) {
+            return "redirect:/products/" + id + "#reviews";
+        }
+
+        if (Boolean.TRUE.equals(user.getIsCommentBlocked())) {
+            redirectAttributes.addFlashAttribute("reviewError", "Tài khoản của bạn đã bị khóa tính năng đánh giá");
             return "redirect:/products/" + id + "#reviews";
         }
 
