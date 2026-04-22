@@ -24,6 +24,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public User findById(Long id) {
+        return userRepository.findById(id).orElse(null);
+    }
+
+    @Override
     @Transactional
     public void toggleUserStatus(Long id, boolean enabled) {
         User user = userRepository.findById(id)
@@ -84,6 +90,42 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void changePassword(User user, String newPassword) {
         user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean canUserAddToCart(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Khong tim thay nguoi dung voi id: " + userId));
+        return user.getEnabled() && user.getCanAddToCart();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean canUserReview(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Khong tim thay nguoi dung voi id: " + userId));
+        return user.getEnabled() && !user.getIsCommentBlocked();
+    }
+
+    @Override
+    @Transactional
+    public void toggleCartPermission(Long userId, boolean enabled) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Khong tim thay nguoi dung voi id: " + userId));
+        user.setCanAddToCart(enabled);
+        user.setUpdatedDate(java.time.Instant.now());
+        userRepository.save(user);
+    }
+
+    @Override
+    @Transactional
+    public void toggleReviewPermission(Long userId, boolean blocked) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Khong tim thay nguoi dung voi id: " + userId));
+        user.setIsCommentBlocked(blocked);
+        user.setUpdatedDate(java.time.Instant.now());
         userRepository.save(user);
     }
 }

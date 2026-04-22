@@ -13,22 +13,11 @@
                 extend: {
                     colors: {
                         primary: '#F26522',
-                        secondary: '#E8C872',
-                        accent: '#F26522',
-                        surface: '#FDFBF7',
+                        tertiary: '#0D4A7A',
+                        background: '#F4F7F5',
                         'on-surface': '#1B1C17',
                         'on-surface-variant': '#44483D',
-                        'outline-variant': '#C4C8BA',
-                        background: '#F4F7F5',
-                        tertiary: '#0D4A7A',
-                        'primary-container': '#FFEDE5',
-                        'on-primary-container': '#F26522'
-                    },
-                    borderRadius: {
-                        DEFAULT: '0.5rem',
-                        lg: '1rem',
-                        xl: '1.5rem',
-                        full: '9999px'
+                        'outline-variant': '#C4C8BA'
                     },
                     fontFamily: {
                         headline: ['Playfair Display', 'serif'],
@@ -42,28 +31,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
 
     <style>
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-        }
-
-        .font-headline {
-            font-family: 'Playfair Display', serif;
-        }
-
-        .font-numeric {
-            font-family: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
-            font-variant-numeric: tabular-nums lining-nums;
-        }
-
-        .glass-effect {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-        }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .font-headline { font-family: 'Playfair Display', serif; }
+        .font-numeric { font-family: 'Space Grotesk', sans-serif; font-variant-numeric: tabular-nums; }
+        dialog::backdrop { background: rgba(0,0,0,0.5); }
+        dialog[open] { animation: fadeIn 0.2s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 
@@ -76,7 +50,7 @@
     <div class="p-10 space-y-6">
         <div>
             <h1 class="text-5xl font-headline font-bold text-tertiary tracking-tight">Quản Lý Người Dùng</h1>
-            <p class="mt-2 text-on-surface-variant">Theo dõi danh sách người dùng và kiểm soát trạng thái tài khoản</p>
+            <p class="mt-2 text-on-surface-variant">Theo dõi danh sách người dùng và kiểm soát quyền</p>
         </div>
 
         <div th:if="${successMessage}" class="rounded-xl border border-green-200 bg-green-50 text-green-700 px-4 py-3 text-sm font-semibold" th:text="${successMessage}"></div>
@@ -85,13 +59,13 @@
         <form method="get" th:action="@{/admin/users}" class="max-w-xl">
             <div class="relative">
                 <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant/70 text-lg">search</span>
-                <input name="keyword" th:value="${keyword}" type="text" placeholder="Tìm kiếm theo tên, email hoặc số điện thoại..." class="w-full rounded-xl border border-outline-variant/40 pl-10 pr-4 py-3 text-sm focus:border-primary focus:ring-primary/20"/>
+                <input name="keyword" th:value="${keyword}" type="text" placeholder="Tìm kiếm..." class="w-full rounded-xl border border-outline-variant/40 pl-10 pr-4 py-3 text-sm focus:border-primary focus:ring-primary/20"/>
             </div>
         </form>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+        <div class="grid grid-cols-4 gap-4">
             <div class="rounded-xl bg-white border border-outline-variant/20 p-4 shadow-sm">
-                <p class="text-sm text-on-surface-variant">Tổng người dùng</p>
+                <p class="text-sm text-on-surface-variant">Tổng</p>
                 <p class="text-4xl font-bold text-tertiary font-numeric mt-2" th:text="${totalUsers}">0</p>
             </div>
             <div class="rounded-xl bg-white border border-outline-variant/20 p-4 shadow-sm">
@@ -99,7 +73,7 @@
                 <p class="text-4xl font-bold text-tertiary font-numeric mt-2" th:text="${customerUsers}">0</p>
             </div>
             <div class="rounded-xl bg-white border border-outline-variant/20 p-4 shadow-sm">
-                <p class="text-sm text-on-surface-variant">Đang hoạt động</p>
+                <p class="text-sm text-on-surface-variant">Hoạt động</p>
                 <p class="text-4xl font-bold text-emerald-600 font-numeric mt-2" th:text="${activeUsers}">0</p>
             </div>
             <div class="rounded-xl bg-white border border-outline-variant/20 p-4 shadow-sm">
@@ -110,75 +84,143 @@
 
         <div class="rounded-2xl bg-white border border-outline-variant/20 shadow-sm overflow-hidden">
             <div class="overflow-x-auto">
-                <table class="w-full min-w-[1000px] text-left border-collapse">
+                <table class="w-full text-left border-collapse">
                     <thead>
                     <tr class="bg-background/50">
-                        <th class="px-6 py-4 text-xs font-bold uppercase tracking-widest text-on-surface-variant/70">Người dùng</th>
-                        <th class="px-6 py-4 text-xs font-bold uppercase tracking-widest text-on-surface-variant/70">Liên hệ</th>
-                        <th class="px-6 py-4 text-xs font-bold uppercase tracking-widest text-on-surface-variant/70">Vai trò</th>
-                        <th class="px-6 py-4 text-xs font-bold uppercase tracking-widest text-on-surface-variant/70">Ngày tham gia</th>
-                        <th class="px-6 py-4 text-xs font-bold uppercase tracking-widest text-on-surface-variant/70">Đơn hàng</th>
-                        <th class="px-6 py-4 text-xs font-bold uppercase tracking-widest text-on-surface-variant/70">Tổng chi tiêu</th>
-                        <th class="px-6 py-4 text-xs font-bold uppercase tracking-widest text-on-surface-variant/70">Trạng thái</th>
-                        <th class="px-6 py-4 text-xs font-bold uppercase tracking-widest text-on-surface-variant/70 text-right">Hành động</th>
+                        <th class="px-4 py-3 text-xs font-bold uppercase tracking-widest text-on-surface-variant/70">Người dùng</th>
+                        <th class="px-4 py-3 text-xs font-bold uppercase tracking-widest text-on-surface-variant/70">Liên hệ</th>
+                        <th class="px-4 py-3 text-xs font-bold uppercase tracking-widest text-on-surface-variant/70">Vai trò</th>
+                        <th class="px-4 py-3 text-xs font-bold uppercase tracking-widest text-on-surface-variant/70">Đơn</th>
+                        <th class="px-4 py-3 text-xs font-bold uppercase tracking-widest text-on-surface-variant/70">Chi tiêu</th>
+                        <th class="px-4 py-3 text-xs font-bold uppercase tracking-widest text-on-surface-variant/70 text-center">Quyền</th>
                     </tr>
                     </thead>
                     <tbody class="divide-y divide-outline-variant/10">
                     <tr th:if="${#lists.isEmpty(users)}">
-                        <td colspan="8" class="px-6 py-12 text-center text-on-surface-variant">Không có người dùng phù hợp.</td>
+                        <td colspan="6" class="px-4 py-12 text-center text-on-surface-variant">Không có người dùng.</td>
                     </tr>
 
-                    <tr th:each="user : ${users}" class="hover:bg-background/40 transition-colors">
-                        <td class="px-6 py-4">
-                            <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 rounded-full bg-tertiary text-white flex items-center justify-center font-bold"
-                                     th:text="${#strings.length(user.fullName != null ? user.fullName : user.username) > 0 ? #strings.substring(user.fullName != null ? user.fullName : user.username, 0, 1).toUpperCase() : 'U'}">A</div>
+                    <tr th:each="user : ${users}" class="hover:bg-background/40">
+                        <td class="px-4 py-3">
+                            <div class="flex items-center gap-2">
+                                <div class="w-8 h-8 rounded-full bg-tertiary text-white flex items-center justify-center text-sm font-bold"
+                                     th:text="${#strings.substring(user.fullName != null ? user.fullName : user.username, 0, 1).toUpperCase()}">A</div>
                                 <div>
-                                    <p class="font-bold text-tertiary" th:text="${user.fullName != null ? user.fullName : user.username}">Admin</p>
-                                    <p class="text-xs text-on-surface-variant font-numeric" th:text="'ID: ' + ${user.id}">ID: 1</p>
+                                    <p class="font-semibold text-tertiary text-sm" th:text="${user.fullName != null ? user.fullName : user.username}">Admin</p>
+                                    <p class="text-xs text-on-surface-variant" th:text="${user.email}">email@test.com</p>
                                 </div>
                             </div>
                         </td>
-                        <td class="px-6 py-4">
-                            <p class="text-sm text-tertiary" th:text="${user.email}">admin@oceanic.vn</p>
-                            <p class="text-sm text-on-surface-variant" th:text="${user.phone != null ? user.phone : '-'}">+84 912 000 000</p>
+                        <td class="px-4 py-3 text-sm" th:text="${user.phone != null ? user.phone : '-'}">+84 912 000 000</td>
+                        <td class="px-4 py-3">
+                            <span class="px-2 py-0.5 rounded-full text-xs font-bold uppercase"
+                                  th:classappend="${user.role == 'ADMIN'} ? ' bg-primary text-white' : ' bg-slate-200 text-slate-700'"
+                                  th:text="${user.role}">CUSTOMER</span>
                         </td>
-                        <td class="px-6 py-4">
-                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold uppercase"
-                                  th:classappend="${user.role != null and user.role.equalsIgnoreCase('ADMIN')} ? ' bg-primary text-white' : ' bg-slate-200 text-slate-700'"
-                                  th:text="${user.role != null ? user.role : 'CUSTOMER'}">ADMIN</span>
-                        </td>
-                        <td class="px-6 py-4 text-sm text-on-surface-variant font-numeric" th:text="${user.createdDate != null ? #strings.substring(user.createdDate.toString(), 0, 10) : '-'}">2025-01-01</td>
-                        <td class="px-6 py-4 text-xl font-bold text-tertiary font-numeric" th:text="${orderCountByUser[user.id] != null ? orderCountByUser[user.id] : 0}">0</td>
-                        <td class="px-6 py-4 text-xl font-bold text-primary font-numeric" th:text="${#numbers.formatDecimal(spendingByUser[user.id] != null ? spendingByUser[user.id] : 0, 1, 'COMMA', 0, 'POINT')} + ' đ'">0 đ</td>
-                        <td class="px-6 py-4">
-                            <form th:action="@{'/admin/users/' + ${user.id} + '/toggle'}" method="post" class="inline-flex">
-                                <input type="hidden" name="enabled" th:value="${!user.enabled}"/>
-                                <input type="hidden" name="keyword" th:value="${keyword}"/>
-                                <button type="submit" class="w-14 h-8 rounded-full relative transition-colors"
-                                        th:classappend="${user.enabled} ? ' bg-emerald-500' : ' bg-slate-300'">
-                                    <span class="absolute top-1 w-6 h-6 rounded-full bg-white transition-all"
-                                          th:classappend="${user.enabled} ? ' right-1' : ' left-1'"></span>
-                                </button>
-                            </form>
-                        </td>
-                        <td class="px-6 py-4 text-right">
-                            <form th:action="@{'/admin/users/' + ${user.id} + '/toggle'}" method="post" class="inline-flex">
-                                <input type="hidden" name="enabled" th:value="${!user.enabled}"/>
-                                <input type="hidden" name="keyword" th:value="${keyword}"/>
-                                <button type="submit" class="text-sm font-semibold"
-                                        th:classappend="${user.enabled} ? ' text-rose-600 hover:text-rose-700' : ' text-emerald-600 hover:text-emerald-700'"
-                                        th:text="${user.enabled} ? 'Khóa' : 'Mở khóa'">Khóa</button>
-                            </form>
+                        <td class="px-4 py-3 text-lg font-bold text-tertiary font-numeric" th:text="${orderCountByUser[user.id] ?: 0}">0</td>
+                        <td class="px-4 py-3 text-lg font-bold text-primary font-numeric" th:text="${#numbers.formatDecimal(spendingByUser[user.id] ?: 0, 1, 'COMMA', 0, 'POINT')} + 'đ'">0đ</td>
+                        <td class="px-4 py-3 text-center">
+                            <button type="button"
+                                    th:attr="data-id=${user.id}, data-name=${user.fullName ?: user.username}, data-email=${user.email}, data-enabled=${user.enabled}, data-cart=${user.canAddToCart}, data-review=${!user.isCommentBlocked}"
+                                    onclick="openModal(this)"
+                                    class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm font-medium bg-tertiary text-white hover:bg-tertiary/90">
+                                <span class="material-symbols-outlined text-base">settings</span>
+                                <span th:text="${user.enabled && user.canAddToCart && !user.isCommentBlocked} ? 'Đầy đủ' : 'Hạn chế'">Đầy đủ</span>
+                            </button>
                         </td>
                     </tr>
                     </tbody>
                 </table>
             </div>
         </div>
-
-        <p class="text-sm text-on-surface-variant" th:text="'Hiển thị ' + ${users.size()} + ' người dùng'">Hiển thị 0 người dùng</p>
     </div>
 </main>
+
+<!-- One modal -->
+<dialog id="permModal" class="modal p-6 rounded-2xl w-full max-w-md shadow-2xl">
+    <form id="permForm" method="post" class="space-y-4">
+        <input type="hidden" id="permUserId" name="id" value=""/>
+
+        <div class="flex items-center justify-between">
+            <h2 class="text-xl font-bold text-tertiary">Quyền người dùng</h2>
+            <button type="button" onclick="closeModal()" class="p-1 hover:bg-slate-100 rounded">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+
+        <div class="p-3 bg-slate-50 rounded-xl">
+            <p class="font-semibold text-tertiary" id="permUserName">-</p>
+            <p class="text-sm text-on-surface-variant" id="permUserEmail">-</p>
+        </div>
+
+        <hr class="border-slate-200"/>
+
+        <div class="space-y-3">
+            <label class="flex items-center justify-between p-3 border rounded-xl cursor-pointer">
+                <div>
+                    <p class="font-medium">Đăng nhập</p>
+                    <p class="text-xs text-on-surface-variant">Cho phép đăng nhập hệ thống</p>
+                </div>
+                <input type="hidden" name="enabled" id="permEnabledVal" value="true"/>
+                <input type="checkbox" id="permEnabled" class="w-5 h-5 text-emerald-600 rounded" onchange="document.getElementById('permEnabledVal').value = this.checked"/>
+            </label>
+
+            <label class="flex items-center justify-between p-3 border rounded-xl cursor-pointer">
+                <div>
+                    <p class="font-medium">Mua hàng</p>
+                    <p class="text-xs text-on-surface-variant">Cho phép thêm giỏ hàng</p>
+                </div>
+                <input type="hidden" name="canAddToCart" id="permCanAddToCartVal" value="true"/>
+                <input type="checkbox" id="permCanAddToCart" class="w-5 h-5 text-emerald-600 rounded" onchange="document.getElementById('permCanAddToCartVal').value = this.checked"/>
+            </label>
+
+            <label class="flex items-center justify-between p-3 border rounded-xl cursor-pointer">
+                <div>
+                    <p class="font-medium">Đánh giá</p>
+                    <p class="text-xs text-on-surface-variant">Cho phép viết đánh giá</p>
+                </div>
+                <input type="hidden" name="canReview" id="permCanReviewVal" value="true"/>
+                <input type="checkbox" id="permCanReview" class="w-5 h-5 text-emerald-600 rounded" onchange="document.getElementById('permCanReviewVal').value = this.checked"/>
+            </label>
+        </div>
+
+        <div class="flex gap-2 pt-2">
+            <button type="button" onclick="closeModal()"
+                    class="flex-1 px-4 py-2 rounded-xl border border-slate-300 font-medium hover:bg-slate-50">
+                Hủy
+            </button>
+            <button type="submit" class="flex-1 px-4 py-2 rounded-xl bg-primary text-white font-medium hover:bg-primary/90">
+                Lưu
+            </button>
+        </div>
+    </form>
+</dialog>
+
+<script>
+    function openModal(btn) {
+        var id = btn.getAttribute('data-id');
+        document.getElementById('permUserId').value = id;
+        document.getElementById('permUserName').textContent = btn.getAttribute('data-name');
+        document.getElementById('permUserEmail').textContent = btn.getAttribute('data-email');
+
+        var enabled = btn.getAttribute('data-enabled') === 'true';
+        var cart = btn.getAttribute('data-cart') === 'true';
+        var review = btn.getAttribute('data-review') === 'true';
+
+        document.getElementById('permEnabled').checked = enabled;
+        document.getElementById('permEnabledVal').value = enabled;
+        document.getElementById('permCanAddToCart').checked = cart;
+        document.getElementById('permCanAddToCartVal').value = cart;
+        document.getElementById('permCanReview').checked = review;
+        document.getElementById('permCanReviewVal').value = review;
+
+        document.getElementById('permForm').action = '/admin/users/' + id + '/permissions';
+        document.getElementById('permModal').showModal();
+    }
+
+    function closeModal() {
+        document.getElementById('permModal').close();
+    }
+</script>
 </body>
 </html>

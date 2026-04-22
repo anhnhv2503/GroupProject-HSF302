@@ -84,6 +84,11 @@ public class User {
     @Column(name = "is_comment_blocked", nullable = false)
     private Boolean isCommentBlocked = false;
 
+    @NotNull
+    @ColumnDefault("1")
+    @Column(name = "can_add_to_cart", nullable = false)
+    private Boolean canAddToCart = true;
+
     @CreationTimestamp
     @ColumnDefault("getdate()")
     @Column(name = "created_date")

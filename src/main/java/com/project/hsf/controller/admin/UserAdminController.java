@@ -1,11 +1,13 @@
 package com.project.hsf.controller.admin;
 
-import com.project.hsf.entity.Order;
-import com.project.hsf.entity.User;
-import com.project.hsf.service.OrderService;
-import com.project.hsf.service.UserService;
+import java.math.BigDecimal;
+import java.text.Normalizer;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,17 +17,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.math.BigDecimal;
-import java.text.Normalizer;
-import java.time.Instant;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Objects;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import com.project.hsf.entity.Order;
+import com.project.hsf.entity.User;
+import com.project.hsf.service.OrderService;
+import com.project.hsf.service.UserService;
+
+import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequestMapping("/admin/users")
@@ -77,25 +75,28 @@ public class UserAdminController {
         model.addAttribute("activeUsers", activeUsers);
         model.addAttribute("blockedUsers", users.size() - activeUsers);
         model.addAttribute("page", "users");
+
         return "admin/user-manage";
     }
 
-    @PostMapping("/{id}/toggle")
-    public String toggleStatus(@PathVariable Long id,
-                               @RequestParam boolean enabled,
-                               @RequestParam(required = false) String keyword,
-                               RedirectAttributes redirectAttributes) {
+    @PostMapping("/{id}/permissions")
+    public String updatePermissions(@PathVariable Long id,
+                                  @RequestParam(defaultValue = "false") boolean enabled,
+                                  @RequestParam(defaultValue = "false") boolean canAddToCart,
+                                  @RequestParam(defaultValue = "false") boolean canReview) {
         try {
+            User user = userService.findById(id);
+            if (user == null) {
+                return "redirect:/admin/users";
+            }
+
             userService.toggleUserStatus(id, enabled);
-
-            redirectAttributes.addFlashAttribute("successMessage", enabled ? "Da mo khoa tai khoan." : "Da khoa tai khoan.");
-        } catch (Exception ex) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Cap nhat trang thai that bai: " + ex.getMessage());
+            userService.toggleCartPermission(id, canAddToCart);
+            userService.toggleReviewPermission(id, !canReview);
+        } catch (Exception e) {
+            // just reload anyway
         }
 
-        if (StringUtils.hasText(keyword)) {
-            redirectAttributes.addAttribute("keyword", keyword);
-        }
         return "redirect:/admin/users";
     }
 

@@ -23,6 +23,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         User user = userRepository.findByUsername(username);
 
         if (user != null) {
+            if (!Boolean.TRUE.equals(user.getEnabled())) {
+                throw new UsernameNotFoundException("Tai khoan cua ban bi khoa. Vui long lien he admin de duoc ho tro.");
+            }
             return new org.springframework.security.core.userdetails.User(
                     user.getUsername(),
                     user.getPassword(),

@@ -2,18 +2,8 @@
 
 
 <header th:fragment="header"
-    class="sticky top-0 w-full h-20 glass-effect flex justify-between items-center px-10 z-30 border-b border-outline-variant/20">
-    <div class="flex items-center gap-12">
-        <div
-            class="flex items-center gap-3 bg-white px-5 py-2.5 rounded-full border border-outline-variant/30 shadow-sm focus-within:ring-2 ring-primary/20 transition-all">
-            <span class="material-symbols-outlined text-tertiary/60">search</span>
-            <input
-                class="bg-transparent border-none focus:ring-0 text-sm text-on-surface w-72 p-0 placeholder:text-on-surface-variant/40"
-                placeholder="Tìm kiếm danh mục, sản phẩm..." type="text" />
-        </div>
-    </div>
-    <div class="flex items-center gap-6">
-        <div class="h-8 w-px bg-outline-variant/30"></div>
+    class="sticky top-0 w-full h-20 glass-effect flex items-center px-10 z-30 border-b border-outline-variant/20">
+    <div class="flex items-center gap-6 ml-auto">
         <div class="flex items-center gap-3 pl-2">
             <div class="text-right hidden sm:block">
                 <p class="text-sm font-bold text-on-surface" sec:authentication="name">Admin</p>

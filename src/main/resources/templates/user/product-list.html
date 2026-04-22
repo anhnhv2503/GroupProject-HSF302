@@ -404,10 +404,11 @@
                                             th:value="${not #lists.isEmpty(product.images) ? product.images[0].imageUrl : '/images/no-image.jpg'}" />
                                         <input type="hidden" name="quantity" value="1" />
                                         <button type="submit"
-                                            th:disabled="${product.stockQuantity != null and product.stockQuantity <= 0}"
+                                            th:disabled="${(product.stockQuantity != null and product.stockQuantity <= 0) or (canAddToCart != null and !canAddToCart)}"
+                                            th:title="${canAddToCart != null and !canAddToCart} ? 'Quyền mua hàng của bạn đã bị thu hồi. Liên hệ admin.' : (${product.stockQuantity != null and product.stockQuantity <= 0} ? 'Hết hàng' : '')"
                                             class="w-12 h-12 bg-[#F26522] text-white rounded-2xl flex items-center justify-center hover:shadow-xl hover:shadow-orange-500/40 hover:-translate-y-1 active:scale-95 transition-all disabled:bg-slate-300 disabled:shadow-none disabled:cursor-not-allowed disabled:translate-y-0">
                                             <span class="material-symbols-outlined font-black"
-                                                th:text="${product.stockQuantity != null and product.stockQuantity <= 0 ? 'block' : 'add_shopping_cart'}">add_shopping_cart</span>
+                                                th:text="${(product.stockQuantity != null and product.stockQuantity <= 0) or (canAddToCart != null and !canAddToCart)} ? 'block' : 'add_shopping_cart'">add_shopping_cart</span>
                                         </button>
                                     </form>
                                 </div>

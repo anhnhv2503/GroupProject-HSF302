@@ -257,9 +257,12 @@
                                 <input type="hidden" name="price" th:value="${product.price}"/>
                                 <input type="hidden" name="imageUrl" th:value="${not #lists.isEmpty(product.images) ? product.images[0].imageUrl : '/images/no-image.jpg'}" />
                                 <input type="hidden" name="quantity" value="1"/>
-                                <button type="submit" th:disabled="${!(product.stockQuantity > 0)}"
-                                    class="w-full bg-surface-container-highest text-secondary py-2.5 rounded font-bold text-sm hover:bg-primary-container hover:text-white transition-all uppercase tracking-wide disabled:opacity-50 disabled:grayscale disabled:cursor-not-allowed">
-                                    <span th:text="${product.stockQuantity > 0 ? 'Thêm vào giỏ' : 'Hết hàng'}">Thêm vào giỏ</span>
+                                <button type="submit" th:disabled="${!(product.stockQuantity > 0) or (canAddToCart != null and !canAddToCart)}"
+                                    th:title="${canAddToCart != null and !canAddToCart} ? 'Quyền mua hàng của bạn đã bị thu hồi. Liên hệ admin.' : ''"
+                                    class="w-full bg-surface-container-highest text-secondary py-2.5 rounded font-bold hover:bg-primary-container hover:text-white transition-all uppercase tracking-wide disabled:opacity-50 disabled:grayscale disabled:cursor-not-allowed">
+                                    <span th:if="${product.stockQuantity > 0 and (canAddToCart == null or canAddToCart)}" class="text-sm">Thêm vào giỏ</span>
+                                    <span th:if="${product.stockQuantity > 0 and (canAddToCart != null and !canAddToCart)}" class="text-xs">Quyền mua hàng của bạn đã bị thu hồi. LH admin.</span>
+                                    <span th:if="${product.stockQuantity <= 0}" class="text-sm">Hết hàng</span>
                                 </button>
                             </form>
                         </div>

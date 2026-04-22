@@ -41,13 +41,22 @@ public class ProductClientController {
             @RequestParam(required = false) Long categoryId,
             @RequestParam(defaultValue = "id") String sortBy,
             @RequestParam(defaultValue = "desc") String sortDir,
-            Model model) {
+            Model model,
+            Authentication authentication) {
         model.addAttribute("products", productService.search(q, categoryId, true, null, sortBy, sortDir));
         model.addAttribute("categories", categoryService.findByActiveTrue());
         model.addAttribute("selectedCategory", categoryId);
         model.addAttribute("q", q);
         model.addAttribute("sortBy", sortBy);
         model.addAttribute("sortDir", sortDir);
+
+        if (authentication != null && authentication.isAuthenticated()) {
+            User user = userService.findByUsername(authentication.getName());
+            if (user != null) {
+                model.addAttribute("canAddToCart", userService.canUserAddToCart(user.getId()));
+            }
+        }
+
         return "user/product-list";
     }
 
@@ -68,18 +77,22 @@ public class ProductClientController {
             if (user != null) {
                 boolean hasReviewed = reviewService.hasUserReviewedProduct(id, user.getId());
                 boolean canReview = false;
+                boolean isReviewBlocked = Boolean.TRUE.equals(user.getIsCommentBlocked());
                 Boolean userReviewVisible = null;
+                boolean canAddToCart = userService.canUserAddToCart(user.getId());
 
                 if (hasReviewed) {
                     ProductReview userReview = reviewService.getUserReviewForProduct(id, user.getId());
                     userReviewVisible = userReview != null && userReview.getIsVisible();
                 } else {
-                    canReview = reviewService.canUserReviewProduct(id, user.getId()) && !Boolean.TRUE.equals(user.getIsCommentBlocked());
+                    canReview = reviewService.canUserReviewProduct(id, user.getId()) && !isReviewBlocked;
                 }
 
                 model.addAttribute("hasReviewed", hasReviewed);
                 model.addAttribute("canReview", canReview);
+                model.addAttribute("isReviewBlocked", isReviewBlocked);
                 model.addAttribute("userReviewVisible", userReviewVisible);
+                model.addAttribute("canAddToCart", canAddToCart);
             }
         }
 
@@ -116,7 +129,7 @@ public class ProductClientController {
         }
 
         if (Boolean.TRUE.equals(user.getIsCommentBlocked())) {
-            redirectAttributes.addFlashAttribute("reviewError", "Tài khoản của bạn đã bị khóa tính năng đánh giá");
+            redirectAttributes.addFlashAttribute("reviewError", "Tài khoản của bạn bị hạn chế đánh giá. Vui lòng liên hệ admin để được hỗ trợ.");
             return "redirect:/products/" + id + "#reviews";
         }
 
