@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" class="light" lang="vi">
+
 <head>
-	<meta charset="utf-8"/>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>The Oceanic - Quản Lý Mã Giảm Giá</title>
 
 	<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
@@ -38,8 +39,12 @@
 			}
 		};
 	</script>
-	<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&amp;family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap" rel="stylesheet"/>
-	<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+	<link
+		href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&amp;family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap"
+		rel="stylesheet" />
+	<link
+		href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+		rel="stylesheet" />
 
 	<style>
 		.material-symbols-outlined {
@@ -62,267 +67,401 @@
 </head>
 
 <body class="bg-background text-on-surface flex min-h-screen">
-<div th:replace="~{admin/fragments/sidebar :: sidebar}"></div>
+	<div th:replace="~{admin/fragments/sidebar :: sidebar}"></div>
 
-<main class="flex-1 ml-72 min-h-screen relative">
-	<div th:replace="~{admin/fragments/header :: header}"></div>
+	<main class="flex-1 ml-72 min-h-screen relative">
+		<div th:replace="~{admin/fragments/header :: header}"></div>
 
-	<div class="p-10 space-y-8">
-		<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-			<div>
-				<h1 class="text-5xl font-headline font-bold text-tertiary tracking-tight">Quản Lý Mã Giảm Giá</h1>
-				<p class="mt-2 text-on-surface-variant">Tạo và quản lý mã Coupon, thiết lập điều kiện sử dụng</p>
+		<div class="p-10 space-y-8">
+			<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+				<div>
+					<h1 class="text-5xl font-headline font-bold text-tertiary tracking-tight">Quản Lý Mã Giảm Giá</h1>
+					<p class="mt-2 text-on-surface-variant">Tạo và quản lý mã Coupon, thiết lập điều kiện sử dụng</p>
+				</div>
+
+				<button type="button" onclick="openCreateModal()"
+					class="inline-flex items-center gap-2 bg-tertiary hover:bg-tertiary/90 text-white font-bold px-6 py-3 rounded-xl shadow-sm transition-all">
+					<span class="material-symbols-outlined text-lg">add</span>
+					<span>Tạo Mã Mới</span>
+				</button>
 			</div>
 
-			<button type="button" onclick="openCreateModal()" class="inline-flex items-center gap-2 bg-tertiary hover:bg-tertiary/90 text-white font-bold px-6 py-3 rounded-xl shadow-sm transition-all">
-				<span class="material-symbols-outlined text-lg">add</span>
-				<span>Tạo Mã Mới</span>
-			</button>
-		</div>
+			<div th:if="${successMessage}"
+				class="rounded-xl border border-green-200 bg-green-50 text-green-700 px-4 py-3 text-sm font-semibold"
+				th:text="${successMessage}"></div>
+			<div th:if="${errorMessage}"
+				class="rounded-xl border border-red-200 bg-red-50 text-red-700 px-4 py-3 text-sm font-semibold"
+				th:text="${errorMessage}"></div>
 
-		<div th:if="${successMessage}" class="rounded-xl border border-green-200 bg-green-50 text-green-700 px-4 py-3 text-sm font-semibold" th:text="${successMessage}"></div>
-		<div th:if="${errorMessage}" class="rounded-xl border border-red-200 bg-red-50 text-red-700 px-4 py-3 text-sm font-semibold" th:text="${errorMessage}"></div>
+			<section class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+				<article th:each="coupon : ${coupons}"
+					th:with="usagePercent=${coupon.maxUses != null and coupon.maxUses > 0 ? (coupon.usedCount * 100 / coupon.maxUses) : 0}"
+					class="group relative rounded-3xl border border-outline-variant/30 bg-white shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col">
 
-		<section class="grid grid-cols-1 xl:grid-cols-3 gap-6">
-			<article th:each="coupon : ${coupons}" th:with="usagePercent=${coupon.maxUses != null and coupon.maxUses > 0 ? (coupon.usedCount * 100 / coupon.maxUses) : 0}" class="rounded-2xl border border-outline-variant/30 bg-white shadow-sm p-6 hover:shadow-md transition-all">
-				<div class="flex items-center justify-between gap-4">
-					<div class="inline-flex items-center gap-3">
-						<span class="px-4 py-2 rounded-xl bg-primary text-white font-bold text-3xl/none tracking-tight font-numeric" th:text="${coupon.code}">OCEAN50</span>
-						<button type="button" class="text-on-surface-variant hover:text-tertiary transition-colors" title="Copy code" th:data-code="${coupon.code}" onclick="copyCode(this)">
-							<span class="material-symbols-outlined text-lg">content_copy</span>
-						</button>
+					<!-- Top Section: Status & Code -->
+					<div class="p-5 pb-0 flex items-start justify-between">
+						<div class="flex flex-col gap-1">
+							<span
+								class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[12px] font-bold uppercase tracking-wider w-fit"
+								th:classappend="${coupon.active} ? ' bg-green-100 text-green-700' : ' bg-slate-100 text-slate-500'"
+								th:text="${coupon.active} ? '● Active' : '○ Inactive'">● ACTIVE</span>
+							<div class="flex items-center gap-2 mt-2">
+								<span
+									class="px-4 py-1.5 rounded-2xl bg-primary text-white font-black text-2xl tracking-tighter font-numeric shadow-lg shadow-primary/20"
+									th:text="${coupon.code}">OCEAN50</span>
+								<button type="button"
+									class="p-1.5 rounded-full text-on-surface-variant hover:bg-slate-100 transition-colors"
+									title="Copy code" th:data-code="${coupon.code}" onclick="copyCode(this)">
+									<span class="material-symbols-outlined text-sm">content_copy</span>
+								</button>
+							</div>
+						</div>
 					</div>
-					<span class="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold uppercase"
-						  th:classappend="${coupon.active} ? ' bg-green-100 text-green-700' : ' bg-slate-200 text-slate-600'"
-						  th:text="${coupon.active} ? 'ACTIVE' : 'INACTIVE'">ACTIVE</span>
-				</div>
 
-				<p class="mt-4 text-on-surface-variant text-[15px]" th:text="${coupon.discountType == 'PERCENT'} ? (${#numbers.formatDecimal(coupon.discountValue, 0, 'COMMA', 0, 'POINT')} + '% off on all seafood') : (${#numbers.formatDecimal(coupon.discountValue, 0, 'COMMA', 0, 'POINT')} + ' VND off on orders over ' + ${#numbers.formatDecimal(coupon.minOrderValue, 0, 'COMMA', 0, 'POINT')} + ' VND')">50,000 VND off on orders over 500,000 VND</p>
+					<!-- Description Section -->
+					<div class="px-5 py-4">
+						<p class="text-[13px] leading-tight text-on-surface-variant font-medium min-h-[32px]"
+							th:text="${coupon.discountType == 'PERCENT'} ? (${#numbers.formatDecimal(coupon.discountValue, 0, 'COMMA', 0, 'POINT')} + '% off on all seafood') : (${#numbers.formatDecimal(coupon.discountValue, 0, 'COMMA', 0, 'POINT')} + ' VND off on orders over ' + ${#numbers.formatDecimal(coupon.minOrderValue, 0, 'COMMA', 0, 'POINT')} + ' VND')">
+							50,000 VND off on orders over 500,000 VND
+						</p>
+					</div>
 
-				<div class="mt-5 grid grid-cols-2 gap-3">
-					<div class="rounded-xl bg-background/80 p-3">
-						<p class="text-xs text-on-surface-variant">Giảm giá</p>
-						<p class="text-2xl font-bold text-primary mt-1 font-numeric" th:text="${coupon.discountType == 'PERCENT'} ? (${#numbers.formatDecimal(coupon.discountValue, 0, 'COMMA', 0, 'POINT')} + '%') : (${#numbers.formatDecimal(coupon.discountValue, 0, 'COMMA', 0, 'POINT')} + ' đ')">50000 đ</p>
+					<!-- Stats Grid -->
+					<div class="px-5 grid grid-cols-2 gap-2.5">
+						<div
+							class="rounded-2xl bg-background/50 p-3 border border-transparent hover:border-primary/10 transition-colors">
+							<p class="text-[10px] font-bold uppercase text-slate-400 tracking-wider">Giảm giá</p>
+							<p class="text-lg font-black text-primary font-numeric mt-0.5"
+								th:text="${coupon.discountType == 'PERCENT'} ? (${#numbers.formatDecimal(coupon.discountValue, 0, 'COMMA', 0, 'POINT')} + '%') : (${#numbers.formatDecimal(coupon.discountValue, 0, 'COMMA', 0, 'POINT')} + 'đ')">
+								50k</p>
+						</div>
+						<div
+							class="rounded-2xl bg-background/50 p-3 border border-transparent hover:border-tertiary/10 transition-colors">
+							<p class="text-[10px] font-bold uppercase text-slate-400 tracking-wider">Đơn tối thiểu</p>
+							<p class="text-base font-black text-tertiary font-numeric mt-0.5 truncate"
+								th:text="${#numbers.formatDecimal(coupon.minOrderValue, 0, 'COMMA', 0, 'POINT')} + 'đ'">
+								1M</p>
+						</div>
+						<div class="rounded-2xl bg-background/50 p-3">
+							<p class="text-[10px] font-bold uppercase text-slate-400 tracking-wider">Lượt dùng</p>
+							<p class="text-base font-bold text-tertiary font-numeric mt-0.5">
+								<span th:text="${coupon.usedCount}">42</span><span
+									class="text-slate-400 text-xs">/</span><span class="text-slate-400 text-xs"
+									th:text="${coupon.maxUses}">100</span>
+							</p>
+						</div>
+						<div class="rounded-2xl bg-background/50 p-3">
+							<p class="text-[10px] font-bold uppercase text-slate-400 tracking-wider">Hết hạn</p>
+							<p class="text-[13px] font-bold text-tertiary mt-1 font-numeric"
+								th:text="${#strings.substring(coupon.validUntil.toString(), 0, 10)}">2026-04-30</p>
+						</div>
 					</div>
-					<div class="rounded-xl bg-background/80 p-3">
-						<p class="text-xs text-on-surface-variant">Đơn tối thiểu</p>
-						<p class="text-2xl font-bold text-tertiary mt-1 font-numeric" th:text="${#numbers.formatDecimal(coupon.minOrderValue, 0, 'COMMA', 0, 'POINT')} + ' đ'">500000 đ</p>
-					</div>
-					<div class="rounded-xl bg-background/80 p-3">
-						<p class="text-xs text-on-surface-variant">Đã dùng</p>
-						<p class="text-2xl font-bold text-tertiary mt-1 font-numeric"><span th:text="${coupon.usedCount}">42</span>/<span th:text="${coupon.maxUses}">100</span></p>
-					</div>
-					<div class="rounded-xl bg-background/80 p-3">
-						<p class="text-xs text-on-surface-variant">Hết hạn</p>
-						<p class="text-2xl font-bold text-tertiary mt-1 font-numeric" th:text="${#strings.substring(coupon.validUntil.toString(), 0, 10)}">2026-04-30</p>
-					</div>
-				</div>
 
-				<div class="mt-5">
-					<div class="flex items-center justify-between text-xs text-on-surface-variant font-semibold">
-						<span>Tỷ lệ sử dụng</span>
-						<span class="font-numeric" th:text="${usagePercent} + '%'">42%</span>
+					<!-- Progress -->
+					<div class="px-5 mt-5">
+						<div
+							class="flex items-center justify-between text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+							<span>Sử dụng</span>
+							<span class="text-tertiary font-numeric" th:text="${usagePercent} + '%'">42%</span>
+						</div>
+						<div class="mt-1.5 h-1.5 rounded-full bg-slate-100 overflow-hidden">
+							<div class="h-full bg-primary rounded-full transition-all duration-1000"
+								th:style="'width:' + ${usagePercent} + '%'"></div>
+						</div>
 					</div>
-					<div class="mt-2 h-2 rounded-full bg-slate-200 overflow-hidden">
-						<div class="h-full bg-tertiary rounded-full" th:style="'width:' + ${usagePercent} + '%'" style="width: 42%"></div>
-					</div>
-				</div>
 
-				<div class="mt-5 grid grid-cols-2 gap-3">
-					<button type="button"
-							th:data-id="${coupon.id}"
-							th:data-code="${coupon.code}"
+					<!-- Actions -->
+					<div class="p-5 mt-auto grid grid-cols-2 gap-3">
+						<button type="button" th:data-id="${coupon.id}" th:data-code="${coupon.code}"
 							th:data-discount-type="${coupon.discountType}"
 							th:data-discount-value="${coupon.discountValue}"
-							th:data-min-order-value="${coupon.minOrderValue}"
-							th:data-max-uses="${coupon.maxUses}"
+							th:data-min-order-value="${coupon.minOrderValue}" th:data-max-uses="${coupon.maxUses}"
 							th:data-used-count="${coupon.usedCount}"
 							th:data-valid-from="${#strings.substring(coupon.validFrom.toString(), 0, 10)}"
 							th:data-valid-until="${#strings.substring(coupon.validUntil.toString(), 0, 10)}"
-							th:data-active="${coupon.active}"
-							onclick="openEditModal(this)"
-							class="w-full inline-flex justify-center items-center gap-2 px-4 py-2.5 rounded-xl border border-tertiary/30 text-tertiary font-semibold hover:bg-tertiary/5 transition-colors">
-						<span class="material-symbols-outlined text-base">edit_square</span>
-						<span>Sửa</span>
-					</button>
-					<form th:action="@{'/admin/coupon/' + ${coupon.id} + '/delete'}" method="post">
-						<button type="submit" onclick="return confirm('Bạn có chắc muốn xóa coupon này?')" class="w-full inline-flex justify-center items-center gap-2 px-4 py-2.5 rounded-xl border border-red-300 text-red-500 font-semibold hover:bg-red-50 transition-colors">
-							<span class="material-symbols-outlined text-base">delete</span>
-							<span>Xóa</span>
+							th:data-active="${coupon.active}" onclick="openEditModal(this)"
+							class="flex items-center justify-center gap-2 py-2.5 rounded-xl bg-slate-50 text-tertiary font-bold text-sm hover:bg-tertiary hover:text-white transition-all">
+							<span class="material-symbols-outlined text-base">edit</span>
+							<span>Sửa</span>
 						</button>
-					</form>
-				</div>
-			</article>
+						<form th:action="@{'/admin/coupon/' + ${coupon.id} + '/delete'}" method="post" class="contents">
+							<button type="submit" onclick="return confirm('Bạn có chắc muốn xóa coupon này?')"
+								class="flex items-center justify-center gap-2 py-2.5 rounded-xl bg-red-50 text-red-500 font-bold text-sm hover:bg-red-500 hover:text-white transition-all">
+								<span class="material-symbols-outlined text-base">delete</span>
+								<span>Xóa</span>
+							</button>
+						</form>
+					</div>
+				</article>
 
-			<div th:if="${#lists.isEmpty(coupons)}" class="xl:col-span-3 rounded-2xl border border-dashed border-outline-variant/50 bg-white p-10 text-center text-on-surface-variant">
-				Chưa có coupon nào. Hãy tạo mã giảm giá đầu tiên.
-			</div>
-		</section>
+				<div th:if="${#lists.isEmpty(coupons)}"
+					class="xl:col-span-3 rounded-2xl border border-dashed border-outline-variant/50 bg-white p-10 text-center text-on-surface-variant">
+					Chưa có coupon nào. Hãy tạo mã giảm giá đầu tiên.
+				</div>
+			</section>
+		</div>
+	</main>
+
+	<div id="createCouponModal" class="fixed inset-0 z-50 hidden">
+		<div class="absolute inset-0 bg-slate-900/50" onclick="closeCreateModal()"></div>
+		<div class="relative z-10 flex min-h-screen items-center justify-center p-4">
+			<form action="/admin/coupon/save" method="post" onsubmit="return validateCouponForm(this)"
+				class="w-full max-w-3xl rounded-2xl bg-white border border-outline-variant/20 shadow-2xl p-6 space-y-5">
+				<div class="flex items-center justify-between">
+					<h3 class="text-2xl font-headline font-bold text-tertiary">Tạo Coupon Mới</h3>
+					<button type="button" onclick="closeCreateModal()" class="p-2 rounded-full hover:bg-slate-100"><span
+							class="material-symbols-outlined">close</span></button>
+				</div>
+
+				<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+					<div>
+						<label class="text-xs font-bold uppercase tracking-wider text-tertiary">Mã Coupon</label>
+						<input name="code" required
+							class="mt-2 w-full rounded-xl border border-outline-variant/40 px-4 py-3" type="text"
+							placeholder="OCEAN50" />
+						<p class="error-msg text-red-500 text-[10px] mt-1 hidden"></p>
+					</div>
+					<div>
+						<label class="text-xs font-bold uppercase tracking-wider text-tertiary">Loại giảm giá</label>
+						<select name="discountType"
+							class="mt-2 w-full rounded-xl border border-outline-variant/40 px-4 py-3">
+							<option value="PERCENT">PERCENT</option>
+							<option value="FIXED">FIXED</option>
+						</select>
+					</div>
+					<div>
+						<label class="text-xs font-bold uppercase tracking-wider text-tertiary">Giá trị giảm</label>
+						<input name="discountValue" required min="0.01" step="0.01"
+							class="mt-2 w-full rounded-xl border border-outline-variant/40 px-4 py-3 font-numeric"
+							type="number" />
+						<p class="error-msg text-red-500 text-[10px] mt-1 hidden"></p>
+					</div>
+					<div>
+						<label class="text-xs font-bold uppercase tracking-wider text-tertiary">Đơn tối thiểu</label>
+						<input name="minOrderValue" required min="0" step="0.01"
+							class="mt-2 w-full rounded-xl border border-outline-variant/40 px-4 py-3 font-numeric"
+							type="number" />
+					</div>
+					<div>
+						<label class="text-xs font-bold uppercase tracking-wider text-tertiary">Tổng lượt dùng tối
+							đa</label>
+						<input name="maxUses" required min="1"
+							class="mt-2 w-full rounded-xl border border-outline-variant/40 px-4 py-3 font-numeric"
+							type="number" value="100" />
+					</div>
+					<div>
+						<label class="text-xs font-bold uppercase tracking-wider text-tertiary">Đã dùng</label>
+						<input name="usedCount" min="0"
+							class="mt-2 w-full rounded-xl border border-outline-variant/40 px-4 py-3 font-numeric"
+							type="number" value="0" />
+					</div>
+					<div>
+						<label class="text-xs font-bold uppercase tracking-wider text-tertiary">Ngày bắt đầu</label>
+						<input name="validFromDate" required
+							class="mt-2 w-full rounded-xl border border-outline-variant/40 px-4 py-3 font-numeric"
+							type="date" />
+						<p class="error-msg text-red-500 text-[10px] mt-1 hidden"></p>
+					</div>
+					<div>
+						<label class="text-xs font-bold uppercase tracking-wider text-tertiary">Ngày hết hạn</label>
+						<input name="validUntilDate" required
+							class="mt-2 w-full rounded-xl border border-outline-variant/40 px-4 py-3 font-numeric"
+							type="date" />
+						<p class="error-msg text-red-500 text-[10px] mt-1 hidden"></p>
+					</div>
+				</div>
+
+				<label class="inline-flex items-center gap-2 text-sm font-semibold text-tertiary">
+					<input type="checkbox" name="active" value="true" class="rounded border-outline-variant" checked />
+					Kích hoạt coupon
+				</label>
+
+				<div class="flex justify-end gap-3">
+					<button type="button" onclick="closeCreateModal()"
+						class="px-5 py-2.5 rounded-xl border border-outline-variant/50 text-on-surface-variant">Hủy</button>
+					<button type="submit" class="px-5 py-2.5 rounded-xl bg-primary text-white font-bold">Lưu
+						coupon</button>
+				</div>
+			</form>
+		</div>
 	</div>
-</main>
 
-<div id="createCouponModal" class="fixed inset-0 z-50 hidden">
-	<div class="absolute inset-0 bg-slate-900/50" onclick="closeCreateModal()"></div>
-	<div class="relative z-10 flex min-h-screen items-center justify-center p-4">
-		<form action="/admin/coupon/save" method="post" class="w-full max-w-3xl rounded-2xl bg-white border border-outline-variant/20 shadow-2xl p-6 space-y-5">
-			<div class="flex items-center justify-between">
-				<h3 class="text-2xl font-headline font-bold text-tertiary">Tạo Coupon Mới</h3>
-				<button type="button" onclick="closeCreateModal()" class="p-2 rounded-full hover:bg-slate-100"><span class="material-symbols-outlined">close</span></button>
-			</div>
+	<div id="editCouponModal" class="fixed inset-0 z-50 hidden">
+		<div class="absolute inset-0 bg-slate-900/50" onclick="closeEditModal()"></div>
+		<div class="relative z-10 flex min-h-screen items-center justify-center p-4">
+			<form action="/admin/coupon/update" method="post" id="editCouponForm"
+				onsubmit="return validateCouponForm(this)"
+				class="w-full max-w-3xl rounded-2xl bg-white border border-outline-variant/20 shadow-2xl p-6 space-y-5">
+				<input type="hidden" name="id" id="editId" />
 
-			<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-				<div>
-					<label class="text-xs font-bold uppercase tracking-wider text-tertiary">Mã Coupon</label>
-					<input name="code" required class="mt-2 w-full rounded-xl border border-outline-variant/40 px-4 py-3" type="text" placeholder="OCEAN50"/>
+				<div class="flex items-center justify-between">
+					<h3 class="text-2xl font-headline font-bold text-tertiary">Chỉnh Sửa Coupon</h3>
+					<button type="button" onclick="closeEditModal()" class="p-2 rounded-full hover:bg-slate-100"><span
+							class="material-symbols-outlined">close</span></button>
 				</div>
-				<div>
-					<label class="text-xs font-bold uppercase tracking-wider text-tertiary">Loại giảm giá</label>
-					<select name="discountType" class="mt-2 w-full rounded-xl border border-outline-variant/40 px-4 py-3">
-						<option value="PERCENT">PERCENT</option>
-						<option value="FIXED">FIXED</option>
-					</select>
-				</div>
-				<div>
-					<label class="text-xs font-bold uppercase tracking-wider text-tertiary">Giá trị giảm</label>
-					<input name="discountValue" required min="0" step="0.01" class="mt-2 w-full rounded-xl border border-outline-variant/40 px-4 py-3 font-numeric" type="number"/>
-				</div>
-				<div>
-					<label class="text-xs font-bold uppercase tracking-wider text-tertiary">Đơn tối thiểu</label>
-					<input name="minOrderValue" required min="0" step="0.01" class="mt-2 w-full rounded-xl border border-outline-variant/40 px-4 py-3 font-numeric" type="number"/>
-				</div>
-				<div>
-					<label class="text-xs font-bold uppercase tracking-wider text-tertiary">Tổng lượt dùng tối đa</label>
-					<input name="maxUses" required min="1" class="mt-2 w-full rounded-xl border border-outline-variant/40 px-4 py-3 font-numeric" type="number" value="100"/>
-				</div>
-				<div>
-					<label class="text-xs font-bold uppercase tracking-wider text-tertiary">Đã dùng</label>
-					<input name="usedCount" min="0" class="mt-2 w-full rounded-xl border border-outline-variant/40 px-4 py-3 font-numeric" type="number" value="0"/>
-				</div>
-				<div>
-					<label class="text-xs font-bold uppercase tracking-wider text-tertiary">Ngày bắt đầu</label>
-					<input name="validFromDate" required class="mt-2 w-full rounded-xl border border-outline-variant/40 px-4 py-3 font-numeric" type="date"/>
-				</div>
-				<div>
-					<label class="text-xs font-bold uppercase tracking-wider text-tertiary">Ngày hết hạn</label>
-					<input name="validUntilDate" required class="mt-2 w-full rounded-xl border border-outline-variant/40 px-4 py-3 font-numeric" type="date"/>
-				</div>
-			</div>
 
-			<label class="inline-flex items-center gap-2 text-sm font-semibold text-tertiary">
-				<input type="hidden" name="active" value="false"/>
-				<input type="checkbox" name="active" value="true" class="rounded border-outline-variant" checked/>
-				Kích hoạt coupon
-			</label>
+				<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+					<div>
+						<label class="text-xs font-bold uppercase tracking-wider text-tertiary">Mã Coupon</label>
+						<input id="editCode" name="code" required
+							class="mt-2 w-full rounded-xl border border-outline-variant/40 px-4 py-3" type="text" />
+						<p class="error-msg text-red-500 text-[10px] mt-1 hidden"></p>
+					</div>
+					<div>
+						<label class="text-xs font-bold uppercase tracking-wider text-tertiary">Loại giảm giá</label>
+						<select id="editDiscountType" name="discountType"
+							class="mt-2 w-full rounded-xl border border-outline-variant/40 px-4 py-3">
+							<option value="PERCENT">PERCENT</option>
+							<option value="FIXED">FIXED</option>
+						</select>
+					</div>
+					<div>
+						<label class="text-xs font-bold uppercase tracking-wider text-tertiary">Giá trị giảm</label>
+						<input id="editDiscountValue" name="discountValue" required min="0.01" step="0.01"
+							class="mt-2 w-full rounded-xl border border-outline-variant/40 px-4 py-3 font-numeric"
+							type="number" />
+						<p class="error-msg text-red-500 text-[10px] mt-1 hidden"></p>
+					</div>
+					<div>
+						<label class="text-xs font-bold uppercase tracking-wider text-tertiary">Đơn tối thiểu</label>
+						<input id="editMinOrderValue" name="minOrderValue" required min="0" step="0.01"
+							class="mt-2 w-full rounded-xl border border-outline-variant/40 px-4 py-3 font-numeric"
+							type="number" />
+					</div>
+					<div>
+						<label class="text-xs font-bold uppercase tracking-wider text-tertiary">Tổng lượt dùng tối
+							đa</label>
+						<input id="editMaxUses" name="maxUses" required min="1"
+							class="mt-2 w-full rounded-xl border border-outline-variant/40 px-4 py-3 font-numeric"
+							type="number" />
+					</div>
+					<div>
+						<label class="text-xs font-bold uppercase tracking-wider text-tertiary">Đã dùng</label>
+						<input id="editUsedCount" name="usedCount" min="0"
+							class="mt-2 w-full rounded-xl border border-outline-variant/40 px-4 py-3 font-numeric"
+							type="number" />
+					</div>
+					<div>
+						<label class="text-xs font-bold uppercase tracking-wider text-tertiary">Ngày bắt đầu</label>
+						<input id="editValidFrom" name="validFromDate" required
+							class="mt-2 w-full rounded-xl border border-outline-variant/40 px-4 py-3 font-numeric"
+							type="date" />
+					</div>
+					<div>
+						<label class="text-xs font-bold uppercase tracking-wider text-tertiary">Ngày hết hạn</label>
+						<input id="editValidUntil" name="validUntilDate" required
+							class="mt-2 w-full rounded-xl border border-outline-variant/40 px-4 py-3 font-numeric"
+							type="date" />
+						<p class="error-msg text-red-500 text-[10px] mt-1 hidden"></p>
+					</div>
+				</div>
 
-			<div class="flex justify-end gap-3">
-				<button type="button" onclick="closeCreateModal()" class="px-5 py-2.5 rounded-xl border border-outline-variant/50 text-on-surface-variant">Hủy</button>
-				<button type="submit" class="px-5 py-2.5 rounded-xl bg-primary text-white font-bold">Lưu coupon</button>
-			</div>
-		</form>
+				<label class="inline-flex items-center gap-2 text-sm font-semibold text-tertiary">
+					<input type="checkbox" name="active" value="true" id="editActive"
+						class="rounded border-outline-variant" />
+					Kích hoạt coupon
+				</label>
+
+				<div class="flex justify-end gap-3">
+					<button type="button" onclick="closeEditModal()"
+						class="px-5 py-2.5 rounded-xl border border-outline-variant/50 text-on-surface-variant">Hủy</button>
+					<button type="submit" class="px-5 py-2.5 rounded-xl bg-primary text-white font-bold">Cập
+						nhật</button>
+				</div>
+			</form>
+		</div>
 	</div>
-</div>
 
-<div id="editCouponModal" class="fixed inset-0 z-50 hidden">
-	<div class="absolute inset-0 bg-slate-900/50" onclick="closeEditModal()"></div>
-	<div class="relative z-10 flex min-h-screen items-center justify-center p-4">
-		<form action="/admin/coupon/update" method="post" id="editCouponForm" class="w-full max-w-3xl rounded-2xl bg-white border border-outline-variant/20 shadow-2xl p-6 space-y-5">
-			<input type="hidden" name="id" id="editId"/>
+	<script>
+		const createModal = document.getElementById('createCouponModal');
+		const editModal = document.getElementById('editCouponModal');
 
-			<div class="flex items-center justify-between">
-				<h3 class="text-2xl font-headline font-bold text-tertiary">Chỉnh Sửa Coupon</h3>
-				<button type="button" onclick="closeEditModal()" class="p-2 rounded-full hover:bg-slate-100"><span class="material-symbols-outlined">close</span></button>
-			</div>
+		function validateCouponForm(form) {
+			// Clear all previous errors
+			form.querySelectorAll('.error-msg').forEach(el => {
+				el.classList.add('hidden');
+				el.innerText = '';
+			});
+			form.querySelectorAll('input').forEach(el => el.classList.remove('border-red-500'));
 
-			<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-				<div>
-					<label class="text-xs font-bold uppercase tracking-wider text-tertiary">Mã Coupon</label>
-					<input id="editCode" name="code" required class="mt-2 w-full rounded-xl border border-outline-variant/40 px-4 py-3" type="text"/>
-				</div>
-				<div>
-					<label class="text-xs font-bold uppercase tracking-wider text-tertiary">Loại giảm giá</label>
-					<select id="editDiscountType" name="discountType" class="mt-2 w-full rounded-xl border border-outline-variant/40 px-4 py-3">
-						<option value="PERCENT">PERCENT</option>
-						<option value="FIXED">FIXED</option>
-					</select>
-				</div>
-				<div>
-					<label class="text-xs font-bold uppercase tracking-wider text-tertiary">Giá trị giảm</label>
-					<input id="editDiscountValue" name="discountValue" required min="0" step="0.01" class="mt-2 w-full rounded-xl border border-outline-variant/40 px-4 py-3 font-numeric" type="number"/>
-				</div>
-				<div>
-					<label class="text-xs font-bold uppercase tracking-wider text-tertiary">Đơn tối thiểu</label>
-					<input id="editMinOrderValue" name="minOrderValue" required min="0" step="0.01" class="mt-2 w-full rounded-xl border border-outline-variant/40 px-4 py-3 font-numeric" type="number"/>
-				</div>
-				<div>
-					<label class="text-xs font-bold uppercase tracking-wider text-tertiary">Tổng lượt dùng tối đa</label>
-					<input id="editMaxUses" name="maxUses" required min="1" class="mt-2 w-full rounded-xl border border-outline-variant/40 px-4 py-3 font-numeric" type="number"/>
-				</div>
-				<div>
-					<label class="text-xs font-bold uppercase tracking-wider text-tertiary">Đã dùng</label>
-					<input id="editUsedCount" name="usedCount" min="0" class="mt-2 w-full rounded-xl border border-outline-variant/40 px-4 py-3 font-numeric" type="number"/>
-				</div>
-				<div>
-					<label class="text-xs font-bold uppercase tracking-wider text-tertiary">Ngày bắt đầu</label>
-					<input id="editValidFrom" name="validFromDate" required class="mt-2 w-full rounded-xl border border-outline-variant/40 px-4 py-3 font-numeric" type="date"/>
-				</div>
-				<div>
-					<label class="text-xs font-bold uppercase tracking-wider text-tertiary">Ngày hết hạn</label>
-					<input id="editValidUntil" name="validUntilDate" required class="mt-2 w-full rounded-xl border border-outline-variant/40 px-4 py-3 font-numeric" type="date"/>
-				</div>
-			</div>
+			let isValid = true;
 
-			<label class="inline-flex items-center gap-2 text-sm font-semibold text-tertiary">
-				<input type="hidden" name="active" value="false"/>
-				<input type="checkbox" name="active" value="true" id="editActive" class="rounded border-outline-variant"/>
-				Kích hoạt coupon
-			</label>
+			const validFromInput = form.querySelector('[name="validFromDate"]');
+			const validUntilInput = form.querySelector('[name="validUntilDate"]');
+			const discountTypeInput = form.querySelector('[name="discountType"]');
+			const discountValueInput = form.querySelector('[name="discountValue"]');
+			const minOrderInput = form.querySelector('[name="minOrderValue"]');
 
-			<div class="flex justify-end gap-3">
-				<button type="button" onclick="closeEditModal()" class="px-5 py-2.5 rounded-xl border border-outline-variant/50 text-on-surface-variant">Hủy</button>
-				<button type="submit" class="px-5 py-2.5 rounded-xl bg-primary text-white font-bold">Cập nhật</button>
-			</div>
-		</form>
-	</div>
-</div>
+			const validFrom = new Date(validFromInput.value);
+			const validUntil = new Date(validUntilInput.value);
+			const discountType = discountTypeInput.value;
+			const discountValue = parseFloat(discountValueInput.value);
+			const minOrderValue = parseFloat(minOrderInput.value);
 
-<script>
-	const createModal = document.getElementById('createCouponModal');
-	const editModal = document.getElementById('editCouponModal');
+			if (validUntil <= validFrom) {
+				const errorEl = validUntilInput.parentElement.querySelector('.error-msg');
+				errorEl.innerText = 'Ngày hết hạn phải sau ngày bắt đầu!';
+				errorEl.classList.remove('hidden');
+				validUntilInput.classList.add('border-red-500');
+				isValid = false;
+			}
 
-	function openCreateModal() {
-		createModal.classList.remove('hidden');
-	}
+			if (discountType === 'PERCENT') {
+				if (discountValue > 99) {
+					const errorEl = discountValueInput.parentElement.querySelector('.error-msg');
+					errorEl.innerText = 'Giảm giá theo phần trăm không được vượt quá 99%!';
+					errorEl.classList.remove('hidden');
+					discountValueInput.classList.add('border-red-500');
+					isValid = false;
+				}
+			} else if (discountType === 'FIXED') {
+				if (discountValue > (minOrderValue * 0.5)) {
+					const errorEl = discountValueInput.parentElement.querySelector('.error-msg');
+					errorEl.innerText = 'Số tiền giảm không được vượt quá 50% giá trị đơn tối thiểu (' + (minOrderValue * 0.5).toLocaleString() + 'đ)!';
+					errorEl.classList.remove('hidden');
+					discountValueInput.classList.add('border-red-500');
+					isValid = false;
+				}
+			}
 
-	function closeCreateModal() {
-		createModal.classList.add('hidden');
-	}
-
-	function openEditModal(btn) {
-		document.getElementById('editId').value = btn.getAttribute('data-id') || '';
-		document.getElementById('editCode').value = btn.getAttribute('data-code') || '';
-		document.getElementById('editDiscountType').value = btn.getAttribute('data-discount-type') || 'PERCENT';
-		document.getElementById('editDiscountValue').value = btn.getAttribute('data-discount-value') || '0';
-		document.getElementById('editMinOrderValue').value = btn.getAttribute('data-min-order-value') || '0';
-		document.getElementById('editMaxUses').value = btn.getAttribute('data-max-uses') || '100';
-		document.getElementById('editUsedCount').value = btn.getAttribute('data-used-count') || '0';
-		document.getElementById('editValidFrom').value = btn.getAttribute('data-valid-from') || '';
-		document.getElementById('editValidUntil').value = btn.getAttribute('data-valid-until') || '';
-		document.getElementById('editActive').checked = (btn.getAttribute('data-active') || '').toLowerCase() === 'true';
-
-		editModal.classList.remove('hidden');
-	}
-
-	function closeEditModal() {
-		editModal.classList.add('hidden');
-	}
-
-	function copyCode(btn) {
-		const code = btn.getAttribute('data-code') || '';
-		if (!code) {
-			return;
+			return isValid;
 		}
-		navigator.clipboard.writeText(code);
-	}
-</script>
+
+		function openCreateModal() {
+			createModal.classList.remove('hidden');
+		}
+
+		function closeCreateModal() {
+			createModal.classList.add('hidden');
+		}
+
+		function openEditModal(btn) {
+			document.getElementById('editId').value = btn.getAttribute('data-id') || '';
+			document.getElementById('editCode').value = btn.getAttribute('data-code') || '';
+			document.getElementById('editDiscountType').value = btn.getAttribute('data-discount-type') || 'PERCENT';
+			document.getElementById('editDiscountValue').value = btn.getAttribute('data-discount-value') || '0';
+			document.getElementById('editMinOrderValue').value = btn.getAttribute('data-min-order-value') || '0';
+			document.getElementById('editMaxUses').value = btn.getAttribute('data-max-uses') || '100';
+			document.getElementById('editUsedCount').value = btn.getAttribute('data-used-count') || '0';
+			document.getElementById('editValidFrom').value = btn.getAttribute('data-valid-from') || '';
+			document.getElementById('editValidUntil').value = btn.getAttribute('data-valid-until') || '';
+			document.getElementById('editActive').checked = (btn.getAttribute('data-active') || '').toLowerCase() === 'true';
+
+			editModal.classList.remove('hidden');
+		}
+
+		function closeEditModal() {
+			editModal.classList.add('hidden');
+		}
+
+		function copyCode(btn) {
+			const code = btn.getAttribute('data-code') || '';
+			if (!code) {
+				return;
+			}
+			navigator.clipboard.writeText(code);
+		}
+	</script>
 </body>
+
 </html>

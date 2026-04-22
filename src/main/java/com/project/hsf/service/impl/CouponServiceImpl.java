@@ -119,9 +119,15 @@ public class CouponServiceImpl implements CouponService {
 			throw new IllegalArgumentException("Gia tri giam phai lon hon 0.");
 		}
 
-		if ("PERCENT".equals(normalizedDiscountType)
-				&& coupon.getDiscountValue().compareTo(BigDecimal.valueOf(100)) > 0) {
-			throw new IllegalArgumentException("Gia tri giam theo phan tram khong duoc vuot qua 100.");
+		if ("PERCENT".equals(normalizedDiscountType)) {
+			if (coupon.getDiscountValue().compareTo(BigDecimal.valueOf(99)) > 0) {
+				throw new IllegalArgumentException("Gia tri giam theo phan tram khong duoc vuot qua 99%.");
+			}
+		} else if ("FIXED".equals(normalizedDiscountType)) {
+			BigDecimal halfMinOrder = coupon.getMinOrderValue().multiply(new BigDecimal("0.5"));
+			if (coupon.getDiscountValue().compareTo(halfMinOrder) > 0) {
+				throw new IllegalArgumentException("So tien giam khong duoc vuot qua 50% gia tri don toi thieu.");
+			}
 		}
 
 		if (coupon.getMinOrderValue() == null || coupon.getMinOrderValue().compareTo(BigDecimal.ZERO) < 0) {
@@ -152,6 +158,7 @@ public class CouponServiceImpl implements CouponService {
 			coupon.setActive(Boolean.TRUE);
 		}
 	}
+
 	@Override
 	@Transactional(readOnly = true)
 	public java.util.Optional<Coupon> findByCode(String code) {

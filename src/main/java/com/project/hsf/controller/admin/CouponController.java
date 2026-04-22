@@ -56,7 +56,7 @@ public class CouponController {
 			coupon.setValidFrom(parseDateToInstant(validFromDate));
 			coupon.setValidUntil(parseDateToInstant(validUntilDate));
 			coupon.setActive(active);
-
+//            System.out.println("Creating coupon: " + coupon);
 			couponService.save(coupon);
 			redirectAttributes.addFlashAttribute("successMessage", "Tạo coupon thành công!");
 		} catch (Exception ex) {
