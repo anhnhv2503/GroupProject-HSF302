@@ -64,7 +64,7 @@ public class OrderItem {
     private BigDecimal unitPrice;
 
 //    @ColumnDefault("[quantity]*[unit_price]")
-    @Column(name = "subtotal", precision = 21, scale = 2)
+    @Column(name = "subtotal", precision = 21, scale = 2, insertable = false, updatable = false)
     private BigDecimal subtotal;
 
     @ColumnDefault("getdate()")

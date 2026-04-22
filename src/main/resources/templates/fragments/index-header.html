@@ -76,13 +76,13 @@
                 <a class="nav-link-luxury text-slate-600 dark:text-slate-400" href="#about-us">Về chúng tôi</a>
             </div>
             <div class="flex items-center gap-8 flex-1 justify-end">
-                <div
+                <form th:action="@{/products}" method="get"
                     class="hidden lg:flex items-center bg-[#f5f5f5] px-4 py-2 rounded-full border border-transparent w-full max-w-[420px] transition-all focus-within:border-[#e0e0e0] focus-within:bg-white focus-within:shadow-sm">
                     <span class="material-symbols-outlined text-[20px] text-slate-400">search</span>
-                    <input
+                    <input name="q" th:value="${q}"
                         class="bg-transparent border-none focus:ring-0 text-sm w-full ml-3 text-slate-700 placeholder:text-slate-400 font-medium"
                         placeholder="Tìm kiếm tinh hoa đại dương..." type="text" />
-                </div>
+                </form>
                 <div class="flex items-center gap-5 text-slate-800 dark:text-slate-200 whitespace-nowrap">
                     <a href="/wishlist" class="relative group transition-transform hover:scale-110">
                         <span class="material-symbols-outlined line-art-icon">heart_plus</span>
@@ -108,7 +108,8 @@
                         </div>
                         <div sec:authorize="isAuthenticated()" class="flex items-center gap-4">
                             <div class="flex items-center gap-2 group cursor-pointer relative py-2">
-                                <span class="material-symbols-outlined text-slate-700 line-art-icon">account_circle</span>
+                                <span
+                                    class="material-symbols-outlined text-slate-700 line-art-icon">account_circle</span>
                                 <div class="flex flex-col">
                                     <span class="text-[10px] font-black uppercase tracking-tighter text-slate-900">
                                         Hi, <span sec:authentication="name">User</span>
@@ -124,6 +125,10 @@
                                     <a href="/orders"
                                         class="flex items-center gap-2 p-2.5 hover:bg-slate-50 rounded-md text-xs font-semibold transition-colors text-slate-700">
                                         <span class="material-symbols-outlined text-sm">history</span> Lịch sử đơn hàng
+                                    </a>
+                                    <a sec:authorize="hasRole('ADMIN')" href="/admin/dashboard"
+                                        class="flex items-center gap-2 p-2.5 hover:bg-slate-50 rounded-md text-xs font-semibold transition-colors text-slate-700">
+                                        <span class="material-symbols-outlined text-sm">dashboard</span> Dashboard
                                     </a>
                                     <hr class="my-1 border-slate-50">
                                     <form th:action="@{/logout}" method="post">

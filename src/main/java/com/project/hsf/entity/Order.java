@@ -67,7 +67,7 @@ public class Order {
     @Column(name = "shipping_fee", nullable = false, precision = 10, scale = 2)
     private BigDecimal shippingFee;
 
-    @Column(name = "final_price", precision = 12, scale = 2)
+    @Column(name = "final_price", precision = 12, scale = 2, insertable = false, updatable = false)
     private BigDecimal finalPrice;
 
     @NotNull
