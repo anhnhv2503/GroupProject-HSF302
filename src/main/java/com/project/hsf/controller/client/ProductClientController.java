@@ -39,10 +39,15 @@ public class ProductClientController {
     public String list(
             @RequestParam(required = false) String q,
             @RequestParam(required = false) Long categoryId,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "desc") String sortDir,
             Model model) {
-        model.addAttribute("products", productService.search(q, categoryId, true, null, "id", "desc"));
+        model.addAttribute("products", productService.search(q, categoryId, true, null, sortBy, sortDir));
         model.addAttribute("categories", categoryService.findByActiveTrue());
         model.addAttribute("selectedCategory", categoryId);
+        model.addAttribute("q", q);
+        model.addAttribute("sortBy", sortBy);
+        model.addAttribute("sortDir", sortDir);
         return "user/product-list";
     }
 

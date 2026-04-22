@@ -129,25 +129,24 @@
                 <span class="material-symbols-outlined text-[18px]">error</span>
                 <span th:text="${error}"></span>
             </div>
-            <!-- Full Name -->
+            <!-- Username (Full Name) Field -->
             <div class="space-y-1.5">
-                <label class="text-[10px] font-bold tracking-widest text-on-surface-variant uppercase ml-1">Họ và
-                    Tên</label>
+                <label class="text-[10px] font-bold tracking-widest text-on-surface-variant uppercase ml-1">Tên đăng nhập</label>
                 <div class="relative group">
-                          <input class="w-full px-4 py-3.5 bg-transparent border border-outline-variant/30 rounded-lg focus:border-primary focus:ring-1 focus:ring-primary/20 outline-none transition-all duration-300 placeholder:text-on-surface-variant/40 placeholder:font-light"
-                                    th:classappend="${fieldErrors != null and fieldErrors.containsKey('fullName')} ? ' border-error ring-1 ring-error/20 focus:border-error focus:ring-error/20' : ''"
-                              placeholder="Vui lòng nhập họ tên của bạn" type="text" th:field="*{fullName}" required/>
+                          <input class="w-full px-4 py-3.5 bg-transparent ring-1 ring-outline-variant/30 rounded-lg focus:ring-2 focus:ring-primary outline-none transition-all duration-300 placeholder:text-on-surface-variant/40 placeholder:font-light"
+                                    th:classappend="${fieldErrors != null and fieldErrors.containsKey('fullName')} ? ' ring-error focus:ring-error' : ''"
+                              placeholder="Vui lòng nhập tên của bạn" type="text" th:field="*{fullName}" required/>
                     <span class="material-symbols-outlined absolute right-4 top-3.5 text-on-surface-variant/30 group-focus-within:text-primary transition-colors">person</span>
                 </div>
                 <p th:if="${fieldErrors != null and fieldErrors.containsKey('fullName')}" class="text-xs text-error mt-1 ml-1" th:text="${fieldErrors['fullName']}"></p>
             </div>
             <div class="space-y-1.5">
-                <label class="text-[10px] font-bold tracking-widest text-on-surface-variant uppercase ml-1">Tên đăng nhập</label>
+                <label class="text-[10px] font-bold tracking-widest text-on-surface-variant uppercase ml-1">Tên đăng nhập (ID)</label>
                 <div class="relative group">
-                          <input class="w-full px-4 py-3.5 bg-transparent border border-outline-variant/30 rounded-lg focus:border-primary focus:ring-1 focus:ring-primary/20 outline-none transition-all duration-300 placeholder:text-on-surface-variant/40 placeholder:font-light"
-                                    th:classappend="${fieldErrors != null and fieldErrors.containsKey('username')} ? ' border-error ring-1 ring-error/20 focus:border-error focus:ring-error/20' : ''"
+                          <input class="w-full px-4 py-3.5 bg-transparent ring-1 ring-outline-variant/30 rounded-lg focus:ring-2 focus:ring-primary outline-none transition-all duration-300 placeholder:text-on-surface-variant/40 placeholder:font-light"
+                                    th:classappend="${fieldErrors != null and fieldErrors.containsKey('username')} ? ' ring-error focus:ring-error' : ''"
                               placeholder="Nhập tên đăng nhập" type="text" th:field="*{username}" minlength="4" maxlength="30" pattern="[a-zA-Z0-9._-]{4,30}" required/>
-                    <span class="material-symbols-outlined absolute right-4 top-3.5 text-on-surface-variant/30 group-focus-within:text-primary transition-colors">person</span>
+                    <span class="material-symbols-outlined absolute right-4 top-3.5 text-on-surface-variant/30 group-focus-within:text-primary transition-colors">badge</span>
                 </div>
                 <p class="text-[11px] text-on-surface-variant/80 ml-1">Dùng 4-30 ký tự: chữ, số, ., _, -</p>
                 <p th:if="${fieldErrors != null and fieldErrors.containsKey('username')}" class="text-xs text-error mt-1 ml-1" th:text="${fieldErrors['username']}"></p>
@@ -157,10 +156,10 @@
                 <label class="text-[10px] font-bold tracking-widest text-on-surface-variant uppercase ml-1">
                     Số điện thoại</label>
                 <div class="relative group">
-                          <input class="w-full px-4 py-3.5 bg-transparent border border-outline-variant/30 rounded-lg focus:border-primary focus:ring-1 focus:ring-primary/20 outline-none transition-all duration-300 placeholder:text-on-surface-variant/40 placeholder:font-light"
-                                    th:classappend="${fieldErrors != null and fieldErrors.containsKey('phone')} ? ' border-error ring-1 ring-error/20 focus:border-error focus:ring-error/20' : ''"
+                          <input class="w-full px-4 py-3.5 bg-transparent ring-1 ring-outline-variant/30 rounded-lg focus:ring-2 focus:ring-primary outline-none transition-all duration-300 placeholder:text-on-surface-variant/40 placeholder:font-light"
+                                    th:classappend="${fieldErrors != null and fieldErrors.containsKey('phone')} ? ' ring-error focus:ring-error' : ''"
                               placeholder="Nhập số điện thoại" type="tel" th:field="*{phone}" pattern="[0-9]{9,11}" required/>
-                    <span class="material-symbols-outlined absolute right-4 top-3.5 text-on-surface-variant/30 group-focus-within:text-primary transition-colors">alternate_email</span>
+                    <span class="material-symbols-outlined absolute right-4 top-3.5 text-on-surface-variant/30 group-focus-within:text-primary transition-colors">call</span>
                 </div>
                 <p class="text-[11px] text-on-surface-variant/80 ml-1">Chỉ nhập số, từ 9 đến 11 chữ số.</p>
                 <p th:if="${fieldErrors != null and fieldErrors.containsKey('phone')}" class="text-xs text-error mt-1 ml-1" th:text="${fieldErrors['phone']}"></p>
@@ -169,10 +168,10 @@
                 <label class="text-[10px] font-bold tracking-widest text-on-surface-variant uppercase ml-1">
                     Email</label>
                 <div class="relative group">
-                          <input class="w-full px-4 py-3.5 bg-transparent border border-outline-variant/30 rounded-lg focus:border-primary focus:ring-1 focus:ring-primary/20 outline-none transition-all duration-300 placeholder:text-on-surface-variant/40 placeholder:font-light"
-                                    th:classappend="${fieldErrors != null and fieldErrors.containsKey('email')} ? ' border-error ring-1 ring-error/20 focus:border-error focus:ring-error/20' : ''"
+                          <input class="w-full px-4 py-3.5 bg-transparent ring-1 ring-outline-variant/30 rounded-lg focus:ring-2 focus:ring-primary outline-none transition-all duration-300 placeholder:text-on-surface-variant/40 placeholder:font-light"
+                                    th:classappend="${fieldErrors != null and fieldErrors.containsKey('email')} ? ' ring-error focus:ring-error' : ''"
                               placeholder="Nhập email" type="email" th:field="*{email}" required/>
-                    <span class="material-symbols-outlined absolute right-4 top-3.5 text-on-surface-variant/30 group-focus-within:text-primary transition-colors">alternate_email</span>
+                    <span class="material-symbols-outlined absolute right-4 top-3.5 text-on-surface-variant/30 group-focus-within:text-primary transition-colors">mail</span>
                 </div>
                 <p th:if="${fieldErrors != null and fieldErrors.containsKey('email')}" class="text-xs text-error mt-1 ml-1" th:text="${fieldErrors['email']}"></p>
             </div>
@@ -181,8 +180,8 @@
                 <label class="text-[10px] font-bold tracking-widest text-on-surface-variant uppercase ml-1">Mật
                     khẩu</label>
                 <div class="relative group">
-                          <input class="w-full px-4 py-3.5 bg-transparent border border-outline-variant/30 rounded-lg focus:border-primary focus:ring-1 focus:ring-primary/20 outline-none transition-all duration-300 placeholder:text-on-surface-variant/40 placeholder:font-light"
-                                    th:classappend="${fieldErrors != null and fieldErrors.containsKey('password')} ? ' border-error ring-1 ring-error/20 focus:border-error focus:ring-error/20' : ''"
+                          <input class="w-full px-4 py-3.5 bg-transparent ring-1 ring-outline-variant/30 rounded-lg focus:ring-2 focus:ring-primary outline-none transition-all duration-300 placeholder:text-on-surface-variant/40 placeholder:font-light"
+                                    th:classappend="${fieldErrors != null and fieldErrors.containsKey('password')} ? ' ring-error focus:ring-error' : ''"
                               placeholder="Tối thiểu 6 ký tự" id="registerPassword" type="password" minlength="6" th:field="*{password}" required/>
                     <button class="absolute right-4 top-3.5 text-on-surface-variant/40 hover:text-primary transition-colors" type="button" id="toggleRegisterPassword" aria-label="Hiển thị mật khẩu">
                         <span class="material-symbols-outlined text-[20px]" id="registerPasswordIcon">visibility</span>
@@ -201,8 +200,8 @@
                 <label class="text-[10px] font-bold tracking-widest text-on-surface-variant uppercase ml-1">Xác nhận mật
                     khẩu</label>
                 <div class="relative group">
-                          <input class="w-full px-4 py-3.5 bg-transparent border border-outline-variant/30 rounded-lg focus:border-primary focus:ring-1 focus:ring-primary/20 outline-none transition-all duration-300 placeholder:text-on-surface-variant/40 placeholder:font-light"
-                                    th:classappend="${fieldErrors != null and fieldErrors.containsKey('confirmPassword')} ? ' border-error ring-1 ring-error/20 focus:border-error focus:ring-error/20' : ''"
+                          <input class="w-full px-4 py-3.5 bg-transparent ring-1 ring-outline-variant/30 rounded-lg focus:ring-2 focus:ring-primary outline-none transition-all duration-300 placeholder:text-on-surface-variant/40 placeholder:font-light"
+                                    th:classappend="${fieldErrors != null and fieldErrors.containsKey('confirmPassword')} ? ' ring-error focus:ring-error' : ''"
                               placeholder="Nhập lại mật khẩu để kiểm tra" id="registerConfirmPassword" type="password" minlength="6" th:field="*{confirmPassword}" required/>
                     <button class="absolute right-4 top-3.5 text-on-surface-variant/40 hover:text-primary transition-colors" type="button" id="toggleRegisterConfirmPassword" aria-label="Hiển thị mật khẩu xác nhận">
                         <span class="material-symbols-outlined text-[20px]" id="registerConfirmPasswordIcon">visibility</span>

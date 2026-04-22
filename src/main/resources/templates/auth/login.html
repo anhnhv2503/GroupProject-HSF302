@@ -87,17 +87,6 @@
         .ocean-overlay {
             background: linear-gradient(to right, rgba(10, 25, 41, 0.5), rgba(10, 25, 41, 0.8));
         }
-
-        .floating-label-input input {
-            box-sizing: border-box;
-        }
-
-        .floating-label-input input:focus + label,
-        .floating-label-input input:not(:placeholder-shown) + label {
-            top: 0.45rem;
-            font-size: 0.72rem;
-            color: #F26522;
-        }
     </style>
 </head>
 <body class="bg-surface font-body text-on-background antialiased selection:bg-primary-fixed selection:text-on-primary-fixed">
@@ -158,30 +147,32 @@
 
             <!-- Form -->
             <form class="space-y-6" th:action="@{/login}" method="post" role="form">
-                <!-- Email Field -->
-                <div class="relative floating-label-input">
-                      <input class="peer w-full h-14 px-4 pt-5 pb-2 bg-white border-none ring-1 ring-outline-variant/30 focus:ring-2 focus:ring-primary rounded-lg outline-none text-on-surface transition"
-                             th:classappend="${param.error} ? ' ring-error/50 focus:ring-error' : ''"
-                          id="username" name="username" placeholder=" " type="text" autocomplete="username" th:value="${param.username}" required autofocus/>
-                      <label class="absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none transition-all"
-                           for="username">
+                <!-- Username Field -->
+                <div class="space-y-1.5">
+                    <label class="text-[10px] font-bold tracking-widest text-on-surface-variant uppercase ml-1" for="username">
                         Tên đăng nhập
                     </label>
+                    <div class="relative group">
+                          <input class="w-full px-4 py-3.5 bg-white ring-1 ring-outline-variant/30 focus:ring-2 focus:ring-primary rounded-lg outline-none text-on-surface transition-all duration-300"
+                                 th:classappend="${param.error} ? ' ring-error/50 focus:ring-error' : ''"
+                              id="username" name="username" placeholder="Nhập tên đăng nhập của bạn" type="text" autocomplete="username" th:value="${param.username}" required autofocus/>
+                        <span class="material-symbols-outlined absolute right-4 top-3.5 text-on-surface-variant/30 group-focus-within:text-primary transition-colors">person</span>
+                    </div>
                 </div>
                 <!-- Password Field -->
-                <div class="relative floating-label-input">
-                      <input class="peer w-full h-14 px-4 pt-5 pb-2 pr-11 bg-white border-none ring-1 ring-outline-variant/30 focus:ring-2 focus:ring-primary rounded-lg outline-none text-on-surface transition"
-                             th:classappend="${param.error} ? ' ring-error/50 focus:ring-error' : ''"
-                          id="password" placeholder=" " type="password" name="password" autocomplete="current-password" required>
-
-                      <label class="absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none transition-all"
-                           for="password">
+                <div class="space-y-1.5">
+                    <label class="text-[10px] font-bold tracking-widest text-on-surface-variant uppercase ml-1" for="password">
                         Mật khẩu
                     </label>
-                    <button class="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-primary transition-colors"
-                        type="button" id="togglePassword" aria-label="Hiển thị mật khẩu">
-                       <span class="material-symbols-outlined text-[20px]" id="passwordIcon" data-icon="visibility">visibility</span>
-                    </button>
+                    <div class="relative group">
+                          <input class="w-full px-4 py-3.5 pr-11 bg-white ring-1 ring-outline-variant/30 focus:ring-2 focus:ring-primary rounded-lg outline-none text-on-surface transition-all duration-300"
+                                 th:classappend="${param.error} ? ' ring-error/50 focus:ring-error' : ''"
+                              id="password" placeholder="Nhập mật khẩu của bạn" type="password" name="password" autocomplete="current-password" required>
+                        <button class="absolute right-4 top-3.5 text-on-surface-variant/40 hover:text-primary transition-colors"
+                            type="button" id="togglePassword" aria-label="Hiển thị mật khẩu">
+                           <span class="material-symbols-outlined text-[20px]" id="passwordIcon" data-icon="visibility">visibility</span>
+                        </button>
+                    </div>
                 </div>
                 <!-- Options Row -->
                 <div class="flex items-center justify-between text-sm">
