@@ -13,5 +13,7 @@ public interface CouponService {
 
 	Coupon update(Coupon coupon);
 
-	void deleteById(Long id);
+    void deleteById(Long id);
+    
+    java.util.Optional<Coupon> findByCode(String code);
 }

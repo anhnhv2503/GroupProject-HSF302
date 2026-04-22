@@ -29,7 +29,7 @@
 
         <div class="mb-8">
             <h1 class="text-3xl font-black tracking-tighter text-slate-900">Chi Tiết Đơn Hàng</h1>
-            <p class="text-slate-500 mt-1">Mã đơn hàng: <span class="font-bold" th:text="'#' + ${order.id}">#1</span></p>
+            <p class="text-slate-500 mt-1">Mã đơn hàng: <span class="font-bold" th:text="'#' + ${order.orderCode}">#CODE</span></p>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -79,7 +79,7 @@
                                 <p class="font-medium text-slate-900" th:text="${history.status.label}">PENDING</p>
                                 <p class="text-xs text-slate-500" th:text="${history.note}">Ghi chú</p>
                                 <p class="text-xs text-slate-400 mt-1"
-                                   th:text="${history.changedAt != null ? #temporals.format(history.changedAt, 'dd/MM/yyyy HH:mm') : ''}">01/01/2026</p>
+                                   th:text="${history.changedAt != null ? #temporals.format(history.changedAt, 'yyyy-MM-dd HH:mm') : ''}">2026-01-01</p>
                             </div>
                         </div>
                     </div>
@@ -104,7 +104,7 @@
                         </div>
                         <div class="flex justify-between">
                             <span class="text-slate-500">Ngày đặt</span>
-                            <span class="text-slate-900" th:text="${#temporals.format(order.createdDate, 'dd/MM/yyyy HH:mm')}">01/01/2026</span>
+                            <span class="text-slate-900" th:text="${#temporals.format(order.createdDate, 'yyyy-MM-dd HH:mm')}">2026-01-01</span>
                         </div>
                         <div class="flex justify-between">
                             <span class="text-slate-500">Phương thức</span>
@@ -114,10 +114,23 @@
                 </div>
 
                 <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-                    <h2 class="font-bold text-lg text-slate-900 mb-4">Địa chỉ giao hàng</h2>
-                    <p class="text-slate-700" th:text="${order.shippingAddress}">123 Đường Nguyễn Trãi, Quận 1, TP.HCM</p>
+                    <h2 class="font-bold text-lg text-slate-900 mb-4">Thông tin nhận hàng</h2>
+                    <div class="space-y-3">
+                        <div class="flex flex-col">
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Người nhận</span>
+                            <span class="text-slate-900 font-medium" th:text="${order.recipientName}">Nguyễn Văn A</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Số điện thoại</span>
+                            <span class="text-slate-900 font-medium" th:text="${order.recipientPhone}">0912345678</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Địa chỉ giao hàng</span>
+                            <span class="text-slate-900 font-medium" th:text="${order.shippingAddress}">123 Đường Nguyễn Trãi, Quận 1, TP.HCM</span>
+                        </div>
+                    </div>
                     <div th:if="${order.notes}" class="mt-4 pt-4 border-t border-slate-100">
-                        <p class="text-slate-500 text-sm">Ghi chú:</p>
+                        <p class="text-slate-500 text-sm italic">Ghi chú:</p>
                         <p class="text-slate-700" th:text="${order.notes}">Ghi chú đơn hàng</p>
                     </div>
                 </div>
@@ -142,6 +155,17 @@
                             <span class="font-bold text-[#D35400] text-lg" th:text="${#numbers.formatDecimal(order.finalPrice, 0, 'COMMA', 0, 'POINT')} + ' ₫'">110.000 ₫</span>
                         </div>
                     </div>
+                </div>
+                
+                <div th:if="${order.orderStatus.name() == 'SHIPPING'}" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                    <h2 class="font-bold text-lg text-slate-900 mb-4">Xác nhận đơn hàng</h2>
+                    <p class="text-sm text-slate-500 mb-4">Vui lòng chỉ xác nhận khi bạn đã nhận được hàng và hài lòng với sản phẩm.</p>
+                    <form th:action="@{/orders/{id}/received(id=${order.id})}" method="post">
+                        <button type="submit" class="w-full bg-green-600 text-white px-4 py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-green-700 transition-colors shadow-sm shadow-green-600/20">
+                            <span class="material-symbols-outlined text-xl">check_circle</span>
+                            Đã nhận hàng
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>

@@ -32,8 +32,10 @@ public class OrderAdminController {
     private final OrderStatusHistoryService orderStatusHistoryService;
 
     @GetMapping
-    public String list(@RequestParam(required = false) Long orderId, Model model) {
-        List<Order> orders = orderService.getAllOrders(Sort.by(Sort.Direction.DESC, "createdDate"));
+    public String list(@RequestParam(required = false) Long orderId, 
+                       @RequestParam(required = false) String orderCode,
+                       Model model) {
+        List<Order> orders = orderService.getAllOrders(Sort.by(Sort.Direction.DESC, "createdDate"), orderCode);
 
         Order selectedOrder = null;
         if (!orders.isEmpty()) {
@@ -57,6 +59,7 @@ public class OrderAdminController {
         model.addAttribute("selectedItems", selectedItems);
         model.addAttribute("statusHistories", statusHistories);
         model.addAttribute("orderStatuses", OrderStatus.values());
+        model.addAttribute("orderCode", orderCode);
         model.addAttribute("page", "orders");
         return "admin/order-manage";
     }

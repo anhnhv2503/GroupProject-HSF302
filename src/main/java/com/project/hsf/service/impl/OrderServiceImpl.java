@@ -65,8 +65,11 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Order> getAllOrders(org.springframework.data.domain.Sort sort) {
-        return orderRepository.findAll(sort);
+    public List<Order> getAllOrders(org.springframework.data.domain.Sort sort, String orderCode) {
+        if (orderCode == null || orderCode.isBlank()) {
+            return orderRepository.findAll(sort);
+        }
+        return orderRepository.findAllWithFilters(orderCode.trim());
     }
 
     @Override
@@ -102,11 +105,11 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Order> getOrdersByUserWithFilters(User user, OrderStatus orderStatus, PaymentStatus paymentStatus) {
-        if (orderStatus == null && paymentStatus == null) {
+    public List<Order> getOrdersByUserWithFilters(User user, OrderStatus orderStatus, PaymentStatus paymentStatus, String orderCode) {
+        if (orderStatus == null && paymentStatus == null && (orderCode == null || orderCode.isBlank())) {
             return getOrdersByUser(user);
         }
-        return orderRepository.findByCustomerIdAndFilters(user.getId(), orderStatus, paymentStatus);
+        return orderRepository.findByCustomerIdAndFilters(user.getId(), orderStatus, paymentStatus, (orderCode != null && !orderCode.isBlank() ? orderCode.trim() : null));
     }
 
     @Override
@@ -137,6 +140,8 @@ public class OrderServiceImpl implements OrderService {
             String shippingAddress,
             String paymentMethod,
             String notes,
+            String recipientName,
+            String recipientPhone,
             User customer) throws RuntimeException {
 
         BigDecimal subtotal = BigDecimal.ZERO;
@@ -175,6 +180,10 @@ public class OrderServiceImpl implements OrderService {
             }
         }
 
+        if (discountAmount.compareTo(subtotal) > 0) {
+            discountAmount = subtotal;
+        }
+
         BigDecimal shippingFee = BigDecimal.ZERO;
         BigDecimal finalPrice = subtotal.subtract(discountAmount).add(shippingFee);
         long orderCode = System.currentTimeMillis() / 1000;
@@ -192,6 +201,8 @@ public class OrderServiceImpl implements OrderService {
                 .shippingAddress(shippingAddress)
                 .couponCode(usedCoupon)
                 .notes(notes)
+                .recipientName(recipientName)
+                .recipientPhone(recipientPhone)
                 .orderCode(orderCode)
                 .build();
 

@@ -334,7 +334,7 @@
                                 <td class="px-8 py-6 text-center">
                                     <span class="text-sm font-bold font-numeric"
                                         th:classappend="${product.stockQuantity < 10} ? ' text-red-600' : ' text-tertiary'"
-                                        th:text="${product.stockQuantity}">0</span>
+                                        th:text="${product.stockQuantity} + ' ' + ${product.unit}">0</span>
                                 </td>
                                 <td class="px-8 py-6">
                                     <span th:if="${product.active}"
@@ -352,6 +352,7 @@
                                         <button type="button" th:data-id="${product.id}" th:data-name="${product.name}"
                                             th:data-description="${product.description}"
                                             th:data-price="${product.price}" th:data-stock="${product.stockQuantity}"
+                                            th:data-unit="${product.unit}"
                                             th:data-category-id="${product.category.id}"
                                             th:data-active="${product.active}"
                                             th:data-imported-from="${product.importedFrom}"
@@ -481,7 +482,7 @@
                         </div>
 
                         <div class="space-y-8">
-                            <div class="grid grid-cols-2 gap-4">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 <div class="space-y-2">
                                     <label class="block text-xs font-bold text-tertiary uppercase tracking-wider">Giá
                                         bán (₫)</label>
@@ -496,6 +497,19 @@
                                         class="w-full bg-slate-50 border-0 border-b-2 border-outline-variant focus:border-primary focus:ring-0 text-sm py-3 px-1 transition-all"
                                         type="number" />
                                 </div>
+                                <div class="space-y-2">
+                                    <label class="block text-xs font-bold text-tertiary uppercase tracking-wider">Đơn vị (kg, con, gram...)</label>
+                                    <input name="unit" required
+                                        class="w-full bg-slate-50 border-0 border-b-2 border-outline-variant focus:border-primary focus:ring-0 text-sm py-3 px-1 transition-all"
+                                        placeholder="Ví dụ: kg" type="text" />
+                                </div>
+                            </div>
+
+                            <div class="space-y-2">
+                                <label class="block text-xs font-bold text-tertiary uppercase tracking-wider">Đơn vị tính (kg, con, gram...)</label>
+                                <input name="unit" required
+                                    class="w-full bg-slate-50 border-0 border-b-2 border-outline-variant focus:border-primary focus:ring-0 text-sm py-3 px-1 transition-all"
+                                    placeholder="Ví dụ: kg" type="text" />
                             </div>
 
                             <div class="space-y-2">
@@ -714,6 +728,7 @@
                 form.description.value = btn.getAttribute('data-description') || '';
                 form.price.value = btn.getAttribute('data-price') || '';
                 form.stockQuantity.value = btn.getAttribute('data-stock') || '';
+                form.unit.value = btn.getAttribute('data-unit') || '';
                 form.categoryId.value = btn.getAttribute('data-category-id') || '';
                 form.active.checked = btn.getAttribute('data-active') === 'true';
                 form.importedFrom.value = btn.getAttribute('data-imported-from') || '';

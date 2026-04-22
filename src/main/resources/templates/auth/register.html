@@ -1,14 +1,17 @@
 <!DOCTYPE html>
 
 <html class="light" lang="vi" xmlns:th="http://www.thymeleaf.org">
+
 <head>
-    <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>Đăng Ký - SeafoodStoreAI</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap"
-          rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
-          rel="stylesheet"/>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <script id="tailwind-config">
         tailwind.config = {
@@ -95,235 +98,237 @@
         }
     </style>
 </head>
+
 <body class="bg-background text-on-surface font-body min-h-screen flex items-stretch">
-<!-- Left Side: Cinematic Visual -->
-<div class="hidden lg:flex lg:w-1/2 relative overflow-hidden items-center justify-center">
-    <img alt="Cinematic seafood display" class="absolute inset-0 w-full h-full object-cover"
-         data-alt="Exquisite plate of chilled king crab legs and oysters on crushed ice with fine herbs and moody atmospheric lighting"
-         src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4_LMNachjAe_RFkOAivPpO9_KPD7GLk6iClKToZT7KY0FlkiDa5JA2GAR2oWfSO1SRUXDTDr_S5ZMVFQ0Zk4XvA3PCqgjoDKb-qQjxesw3CApdeBubqvVIbkzia2FSrGJ8yZ2enXx5kB8DrCvQYwfaS5H0nxOh1GALosp2UeCy0yKiMe1FL1aqgwt_D0Pg8T5shcvgWQ-D6Zli5W-d-or0_IA0rMCwbMXUqgu3vdNidfYDBMluW6acWlZWTgphznR-FVPfqFCZ1A"/>
-    <div class="absolute inset-0 ocean-overlay backdrop-blur-[2px]"></div>
-    <div class="relative z-10 p-16 flex flex-col items-start max-w-2xl">
-        <p class="font-headline tracking-[0.3em] text-white text-xs mb-6 opacity-80">THE CULINARY CURATOR</p>
-        <h1 class="font-display italic text-white text-6xl leading-tight mb-8">
-            Tinh Hoa Đại Dương, <br/>
-            Giao Tận Bàn Ăn.
-        </h1>
-        <div class="h-px w-24 bg-primary mb-8"></div>
-        <p class="text-white/70 text-lg font-light leading-relaxed">
-            Trải nghiệm hương vị hải sản thượng hạng từ khắp nơi trên thế giới được tuyển chọn khắt khe bởi các chuyên
-            gia ẩm thực của SeafoodStoreAI.
-        </p>
-    </div>
-</div>
-<!-- Right Side: Sign Up Form -->
-<div class="w-full lg:w-1/2 bg-surface flex items-center justify-center px-8 md:px-16 py-12">
-    <div class="max-w-md w-full">
-        <!-- Header -->
-        <div class="mb-10 text-center lg:text-left">
-            <h2 class="font-display text-4xl font-bold text-on-surface mb-2">Bắt đầu hành trình</h2>
-            <p class="text-on-surface-variant font-light">Khám phá thế giới hải sản cao cấp ngay hôm nay.</p>
-        </div>
-        <!-- Form -->
-        <form class="space-y-5" th:action="@{/register-user}" method="post" th:object="${registerDTO}">
-            <div th:if="${error}" class="rounded-lg bg-error-container text-on-error-container px-4 py-3 text-sm flex items-center gap-2">
-                <span class="material-symbols-outlined text-[18px]">error</span>
-                <span th:text="${error}"></span>
-            </div>
-            <!-- Username (Full Name) Field -->
-            <div class="space-y-1.5">
-                <label class="text-[10px] font-bold tracking-widest text-on-surface-variant uppercase ml-1">Tên đăng nhập</label>
-                <div class="relative group">
-                          <input class="w-full px-4 py-3.5 bg-transparent ring-1 ring-outline-variant/30 rounded-lg focus:ring-2 focus:ring-primary outline-none transition-all duration-300 placeholder:text-on-surface-variant/40 placeholder:font-light"
-                                    th:classappend="${fieldErrors != null and fieldErrors.containsKey('fullName')} ? ' ring-error focus:ring-error' : ''"
-                              placeholder="Vui lòng nhập tên của bạn" type="text" th:field="*{fullName}" required/>
-                    <span class="material-symbols-outlined absolute right-4 top-3.5 text-on-surface-variant/30 group-focus-within:text-primary transition-colors">person</span>
-                </div>
-                <p th:if="${fieldErrors != null and fieldErrors.containsKey('fullName')}" class="text-xs text-error mt-1 ml-1" th:text="${fieldErrors['fullName']}"></p>
-            </div>
-            <div class="space-y-1.5">
-                <label class="text-[10px] font-bold tracking-widest text-on-surface-variant uppercase ml-1">Tên đăng nhập (ID)</label>
-                <div class="relative group">
-                          <input class="w-full px-4 py-3.5 bg-transparent ring-1 ring-outline-variant/30 rounded-lg focus:ring-2 focus:ring-primary outline-none transition-all duration-300 placeholder:text-on-surface-variant/40 placeholder:font-light"
-                                    th:classappend="${fieldErrors != null and fieldErrors.containsKey('username')} ? ' ring-error focus:ring-error' : ''"
-                              placeholder="Nhập tên đăng nhập" type="text" th:field="*{username}" minlength="4" maxlength="30" pattern="[a-zA-Z0-9._-]{4,30}" required/>
-                    <span class="material-symbols-outlined absolute right-4 top-3.5 text-on-surface-variant/30 group-focus-within:text-primary transition-colors">badge</span>
-                </div>
-                <p class="text-[11px] text-on-surface-variant/80 ml-1">Dùng 4-30 ký tự: chữ, số, ., _, -</p>
-                <p th:if="${fieldErrors != null and fieldErrors.containsKey('username')}" class="text-xs text-error mt-1 ml-1" th:text="${fieldErrors['username']}"></p>
-            </div>
-            <!-- Email/Phone -->
-            <div class="space-y-1.5">
-                <label class="text-[10px] font-bold tracking-widest text-on-surface-variant uppercase ml-1">
-                    Số điện thoại</label>
-                <div class="relative group">
-                          <input class="w-full px-4 py-3.5 bg-transparent ring-1 ring-outline-variant/30 rounded-lg focus:ring-2 focus:ring-primary outline-none transition-all duration-300 placeholder:text-on-surface-variant/40 placeholder:font-light"
-                                    th:classappend="${fieldErrors != null and fieldErrors.containsKey('phone')} ? ' ring-error focus:ring-error' : ''"
-                              placeholder="Nhập số điện thoại" type="tel" th:field="*{phone}" pattern="[0-9]{9,11}" required/>
-                    <span class="material-symbols-outlined absolute right-4 top-3.5 text-on-surface-variant/30 group-focus-within:text-primary transition-colors">call</span>
-                </div>
-                <p class="text-[11px] text-on-surface-variant/80 ml-1">Chỉ nhập số, từ 9 đến 11 chữ số.</p>
-                <p th:if="${fieldErrors != null and fieldErrors.containsKey('phone')}" class="text-xs text-error mt-1 ml-1" th:text="${fieldErrors['phone']}"></p>
-            </div>
-            <div class="space-y-1.5">
-                <label class="text-[10px] font-bold tracking-widest text-on-surface-variant uppercase ml-1">
-                    Email</label>
-                <div class="relative group">
-                          <input class="w-full px-4 py-3.5 bg-transparent ring-1 ring-outline-variant/30 rounded-lg focus:ring-2 focus:ring-primary outline-none transition-all duration-300 placeholder:text-on-surface-variant/40 placeholder:font-light"
-                                    th:classappend="${fieldErrors != null and fieldErrors.containsKey('email')} ? ' ring-error focus:ring-error' : ''"
-                              placeholder="Nhập email" type="email" th:field="*{email}" required/>
-                    <span class="material-symbols-outlined absolute right-4 top-3.5 text-on-surface-variant/30 group-focus-within:text-primary transition-colors">mail</span>
-                </div>
-                <p th:if="${fieldErrors != null and fieldErrors.containsKey('email')}" class="text-xs text-error mt-1 ml-1" th:text="${fieldErrors['email']}"></p>
-            </div>
-            <!-- Password -->
-            <div class="space-y-1.5">
-                <label class="text-[10px] font-bold tracking-widest text-on-surface-variant uppercase ml-1">Mật
-                    khẩu</label>
-                <div class="relative group">
-                          <input class="w-full px-4 py-3.5 bg-transparent ring-1 ring-outline-variant/30 rounded-lg focus:ring-2 focus:ring-primary outline-none transition-all duration-300 placeholder:text-on-surface-variant/40 placeholder:font-light"
-                                    th:classappend="${fieldErrors != null and fieldErrors.containsKey('password')} ? ' ring-error focus:ring-error' : ''"
-                              placeholder="Tối thiểu 6 ký tự" id="registerPassword" type="password" minlength="6" th:field="*{password}" required/>
-                    <button class="absolute right-4 top-3.5 text-on-surface-variant/40 hover:text-primary transition-colors" type="button" id="toggleRegisterPassword" aria-label="Hiển thị mật khẩu">
-                        <span class="material-symbols-outlined text-[20px]" id="registerPasswordIcon">visibility</span>
-                    </button>
-                </div>
-                <div class="ml-1 mt-1">
-                    <div class="h-1.5 w-full rounded-full bg-surface-container overflow-hidden">
-                        <div id="passwordStrengthBar" class="h-full w-0 rounded-full transition-all duration-300 bg-error"></div>
-                    </div>
-                    <p id="passwordStrengthText" class="text-[11px] text-on-surface-variant/80 mt-1">Độ mạnh mật khẩu: Chưa nhập</p>
-                </div>
-                <p th:if="${fieldErrors != null and fieldErrors.containsKey('password')}" class="text-xs text-error mt-1 ml-1" th:text="${fieldErrors['password']}"></p>
-            </div>
-            <!-- Confirm Password -->
-            <div class="space-y-1.5">
-                <label class="text-[10px] font-bold tracking-widest text-on-surface-variant uppercase ml-1">Xác nhận mật
-                    khẩu</label>
-                <div class="relative group">
-                          <input class="w-full px-4 py-3.5 bg-transparent ring-1 ring-outline-variant/30 rounded-lg focus:ring-2 focus:ring-primary outline-none transition-all duration-300 placeholder:text-on-surface-variant/40 placeholder:font-light"
-                                    th:classappend="${fieldErrors != null and fieldErrors.containsKey('confirmPassword')} ? ' ring-error focus:ring-error' : ''"
-                              placeholder="Nhập lại mật khẩu để kiểm tra" id="registerConfirmPassword" type="password" minlength="6" th:field="*{confirmPassword}" required/>
-                    <button class="absolute right-4 top-3.5 text-on-surface-variant/40 hover:text-primary transition-colors" type="button" id="toggleRegisterConfirmPassword" aria-label="Hiển thị mật khẩu xác nhận">
-                        <span class="material-symbols-outlined text-[20px]" id="registerConfirmPasswordIcon">visibility</span>
-                    </button>
-                </div>
-                <p id="confirmPasswordHint" class="text-[11px] text-on-surface-variant/80 mt-1 ml-1">Mật khẩu xác nhận cần trùng với mật khẩu.</p>
-                <p th:if="${fieldErrors != null and fieldErrors.containsKey('confirmPassword')}" class="text-xs text-error mt-1 ml-1" th:text="${fieldErrors['confirmPassword']}"></p>
-            </div>
-            <!-- Action Button -->
-            <button class="w-full bg-primary text-white py-4 rounded-lg font-headline font-semibold shadow-lg shadow-primary/20 hover:shadow-primary/40 active:scale-[0.98] transition-all duration-300 mt-4"
-                    type="submit">
-                Đăng Ký Ngay
-            </button>
-        </form>
-        <!-- Footer Link -->
-        <div class="mt-12 text-center">
-            <p class="text-on-surface-variant text-sm">
-                Đã có tài khoản?
-                <a class="text-primary font-semibold ml-1 hover:underline underline-offset-4 decoration-primary/30"
-                   th:href="@{/login}">Đăng nhập ngay</a>
+    <!-- Left Side: Cinematic Visual -->
+    <div class="hidden lg:flex lg:w-1/2 relative overflow-hidden items-center justify-center">
+        <img alt="Cinematic seafood display" class="absolute inset-0 w-full h-full object-cover"
+             data-alt="Exquisite plate of chilled king crab legs and oysters on crushed ice with fine herbs and moody atmospheric lighting"
+             src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4_LMNachjAe_RFkOAivPpO9_KPD7GLk6iClKToZT7KY0FlkiDa5JA2GAR2oWfSO1SRUXDTDr_S5ZMVFQ0Zk4XvA3PCqgjoDKb-qQjxesw3CApdeBubqvVIbkzia2FSrGJ8yZ2enXx5kB8DrCvQYwfaS5H0nxOh1GALosp2UeCy0yKiMe1FL1aqgwt_D0Pg8T5shcvgWQ-D6Zli5W-d-or0_IA0rMCwbMXUqgu3vdNidfYDBMluW6acWlZWTgphznR-FVPfqFCZ1A"/>
+        <div class="absolute inset-0 ocean-overlay backdrop-blur-[2px]"></div>
+        <div class="relative z-10 p-16 flex flex-col items-start max-w-2xl">
+            <p class="font-headline tracking-[0.3em] text-white text-xs mb-6 opacity-80">THE CULINARY CURATOR</p>
+            <h1 class="font-display italic text-white text-6xl leading-tight mb-8">
+                Tinh Hoa Đại Dương, <br/>
+                Giao Tận Bàn Ăn.
+            </h1>
+            <div class="h-px w-24 bg-primary mb-8"></div>
+            <p class="text-white/70 text-lg font-light leading-relaxed">
+                Trải nghiệm hương vị hải sản thượng hạng từ khắp nơi trên thế giới được tuyển chọn khắt khe bởi các chuyên
+                gia ẩm thực của SeafoodStoreAI.
             </p>
         </div>
-        <!-- Brand Footer (Mobile only) -->
-        <div class="mt-16 pt-8 border-t border-outline-variant/10 lg:hidden text-center">
-            <p class="font-display text-xl font-bold text-primary">SeafoodStoreAI</p>
-            <p class="text-[10px] tracking-widest text-on-surface-variant/60 uppercase mt-2">© 2024 Orchestrating
-                Culinary Excellence</p>
+    </div>
+    <!-- Right Side: Sign Up Form -->
+    <div class="w-full lg:w-1/2 bg-surface flex items-center justify-center px-8 md:px-16 py-12">
+        <div class="max-w-md w-full">
+            <!-- Header -->
+            <div class="mb-10 text-center lg:text-left">
+                <h2 class="font-display text-4xl font-bold text-on-surface mb-2">Bắt đầu hành trình</h2>
+                <p class="text-on-surface-variant font-light">Khám phá thế giới hải sản cao cấp ngay hôm nay.</p>
+            </div>
+            <!-- Form -->
+            <form class="space-y-5" th:action="@{/register-user}" method="post" th:object="${registerDTO}">
+                <div th:if="${error}" class="rounded-lg bg-error-container text-on-error-container px-4 py-3 text-sm flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[18px]">error</span>
+                    <span th:text="${error}"></span>
+                </div>
+                <!-- Username (Full Name) Field -->
+                <div class="space-y-1.5">
+                    <label class="text-[10px] font-bold tracking-widest text-on-surface-variant uppercase ml-1">Tên đăng nhập</label>
+                    <div class="relative group">
+                              <input class="w-full px-4 py-3.5 bg-transparent ring-1 ring-outline-variant/30 rounded-lg focus:ring-2 focus:ring-primary outline-none transition-all duration-300 placeholder:text-on-surface-variant/40 placeholder:font-light"
+                                        th:classappend="${fieldErrors != null and fieldErrors.containsKey('fullName')} ? ' ring-error focus:ring-error' : ''"
+                                  placeholder="Vui lòng nhập tên của bạn" type="text" th:field="*{fullName}" required/>
+                        <span class="material-symbols-outlined absolute right-4 top-3.5 text-on-surface-variant/30 group-focus-within:text-primary transition-colors">person</span>
+                    </div>
+                    <p th:if="${fieldErrors != null and fieldErrors.containsKey('fullName')}" class="text-xs text-error mt-1 ml-1" th:text="${fieldErrors['fullName']}"></p>
+                </div>
+                <div class="space-y-1.5">
+                    <label class="text-[10px] font-bold tracking-widest text-on-surface-variant uppercase ml-1">Tên đăng nhập (ID)</label>
+                    <div class="relative group">
+                              <input class="w-full px-4 py-3.5 bg-transparent ring-1 ring-outline-variant/30 rounded-lg focus:ring-2 focus:ring-primary outline-none transition-all duration-300 placeholder:text-on-surface-variant/40 placeholder:font-light"
+                                        th:classappend="${fieldErrors != null and fieldErrors.containsKey('username')} ? ' ring-error focus:ring-error' : ''"
+                                  placeholder="Nhập tên đăng nhập" type="text" th:field="*{username}" minlength="4" maxlength="30" pattern="[a-zA-Z0-9._-]{4,30}" required/>
+                        <span class="material-symbols-outlined absolute right-4 top-3.5 text-on-surface-variant/30 group-focus-within:text-primary transition-colors">badge</span>
+                    </div>
+                    <p class="text-[11px] text-on-surface-variant/80 ml-1">Dùng 4-30 ký tự: chữ, số, ., _, -</p>
+                    <p th:if="${fieldErrors != null and fieldErrors.containsKey('username')}" class="text-xs text-error mt-1 ml-1" th:text="${fieldErrors['username']}"></p>
+                </div>
+                <!-- Email/Phone -->
+                <div class="space-y-1.5">
+                    <label class="text-[10px] font-bold tracking-widest text-on-surface-variant uppercase ml-1">
+                        Số điện thoại</label>
+                    <div class="relative group">
+                              <input class="w-full px-4 py-3.5 bg-transparent ring-1 ring-outline-variant/30 rounded-lg focus:ring-2 focus:ring-primary outline-none transition-all duration-300 placeholder:text-on-surface-variant/40 placeholder:font-light"
+                                        th:classappend="${fieldErrors != null and fieldErrors.containsKey('phone')} ? ' ring-error focus:ring-error' : ''"
+                                  placeholder="Nhập số điện thoại" type="tel" th:field="*{phone}" pattern="[0-9]{9,11}" required/>
+                        <span class="material-symbols-outlined absolute right-4 top-3.5 text-on-surface-variant/30 group-focus-within:text-primary transition-colors">call</span>
+                    </div>
+                    <p class="text-[11px] text-on-surface-variant/80 ml-1">Chỉ nhập số, từ 9 đến 11 chữ số.</p>
+                    <p th:if="${fieldErrors != null and fieldErrors.containsKey('phone')}" class="text-xs text-error mt-1 ml-1" th:text="${fieldErrors['phone']}"></p>
+                </div>
+                <div class="space-y-1.5">
+                    <label class="text-[10px] font-bold tracking-widest text-on-surface-variant uppercase ml-1">
+                        Email</label>
+                    <div class="relative group">
+                              <input class="w-full px-4 py-3.5 bg-transparent ring-1 ring-outline-variant/30 rounded-lg focus:ring-2 focus:ring-primary outline-none transition-all duration-300 placeholder:text-on-surface-variant/40 placeholder:font-light"
+                                        th:classappend="${fieldErrors != null and fieldErrors.containsKey('email')} ? ' ring-error focus:ring-error' : ''"
+                                  placeholder="Nhập email" type="email" th:field="*{email}" required/>
+                        <span class="material-symbols-outlined absolute right-4 top-3.5 text-on-surface-variant/30 group-focus-within:text-primary transition-colors">mail</span>
+                    </div>
+                    <p th:if="${fieldErrors != null and fieldErrors.containsKey('email')}" class="text-xs text-error mt-1 ml-1" th:text="${fieldErrors['email']}"></p>
+                </div>
+                <!-- Password -->
+                <div class="space-y-1.5">
+                    <label class="text-[10px] font-bold tracking-widest text-on-surface-variant uppercase ml-1">Mật
+                        khẩu</label>
+                    <div class="relative group">
+                              <input class="w-full px-4 py-3.5 bg-transparent ring-1 ring-outline-variant/30 rounded-lg focus:ring-2 focus:ring-primary outline-none transition-all duration-300 placeholder:text-on-surface-variant/40 placeholder:font-light"
+                                        th:classappend="${fieldErrors != null and fieldErrors.containsKey('password')} ? ' ring-error focus:ring-error' : ''"
+                                  placeholder="Tối thiểu 6 ký tự" id="registerPassword" type="password" minlength="6" th:field="*{password}" required/>
+                        <button class="absolute right-4 top-3.5 text-on-surface-variant/40 hover:text-primary transition-colors" type="button" id="toggleRegisterPassword" aria-label="Hiển thị mật khẩu">
+                            <span class="material-symbols-outlined text-[20px]" id="registerPasswordIcon">visibility</span>
+                        </button>
+                    </div>
+                    <div class="ml-1 mt-1">
+                        <div class="h-1.5 w-full rounded-full bg-surface-container overflow-hidden">
+                            <div id="passwordStrengthBar" class="h-full w-0 rounded-full transition-all duration-300 bg-error"></div>
+                        </div>
+                        <p id="passwordStrengthText" class="text-[11px] text-on-surface-variant/80 mt-1">Độ mạnh mật khẩu: Chưa nhập</p>
+                    </div>
+                    <p th:if="${fieldErrors != null and fieldErrors.containsKey('password')}" class="text-xs text-error mt-1 ml-1" th:text="${fieldErrors['password']}"></p>
+                </div>
+                <!-- Confirm Password -->
+                <div class="space-y-1.5">
+                    <label class="text-[10px] font-bold tracking-widest text-on-surface-variant uppercase ml-1">Xác nhận mật
+                        khẩu</label>
+                    <div class="relative group">
+                              <input class="w-full px-4 py-3.5 bg-transparent ring-1 ring-outline-variant/30 rounded-lg focus:ring-2 focus:ring-primary outline-none transition-all duration-300 placeholder:text-on-surface-variant/40 placeholder:font-light"
+                                        th:classappend="${fieldErrors != null and fieldErrors.containsKey('confirmPassword')} ? ' ring-error focus:ring-error' : ''"
+                                  placeholder="Nhập lại mật khẩu để kiểm tra" id="registerConfirmPassword" type="password" minlength="6" th:field="*{confirmPassword}" required/>
+                        <button class="absolute right-4 top-3.5 text-on-surface-variant/40 hover:text-primary transition-colors" type="button" id="toggleRegisterConfirmPassword" aria-label="Hiển thị mật khẩu xác nhận">
+                            <span class="material-symbols-outlined text-[20px]" id="registerConfirmPasswordIcon">visibility</span>
+                        </button>
+                    </div>
+                    <p id="confirmPasswordHint" class="text-[11px] text-on-surface-variant/80 mt-1 ml-1">Mật khẩu xác nhận cần trùng với mật khẩu.</p>
+                    <p th:if="${fieldErrors != null and fieldErrors.containsKey('confirmPassword')}" class="text-xs text-error mt-1 ml-1" th:text="${fieldErrors['confirmPassword']}"></p>
+                </div>
+                <!-- Action Button -->
+                <button class="w-full bg-primary text-white py-4 rounded-lg font-headline font-semibold shadow-lg shadow-primary/20 hover:shadow-primary/40 active:scale-[0.98] transition-all duration-300 mt-4"
+                        type="submit">
+                    Đăng Ký Ngay
+                </button>
+            </form>
+            <!-- Footer Link -->
+            <div class="mt-12 text-center">
+                <p class="text-on-surface-variant text-sm">
+                    Đã có tài khoản?
+                    <a class="text-primary font-semibold ml-1 hover:underline underline-offset-4 decoration-primary/30"
+                       th:href="@{/login}">Đăng nhập ngay</a>
+                </p>
+            </div>
+            <!-- Brand Footer (Mobile only) -->
+            <div class="mt-16 pt-8 border-t border-outline-variant/10 lg:hidden text-center">
+                <p class="font-display text-xl font-bold text-primary">SeafoodStoreAI</p>
+                <p class="text-[10px] tracking-widest text-on-surface-variant/60 uppercase mt-2">© 2024 Orchestrating
+                    Culinary Excellence</p>
+            </div>
         </div>
     </div>
-</div>
-<script>
-    (function () {
-        const passwordInput = document.getElementById('registerPassword');
-        const confirmInput = document.getElementById('registerConfirmPassword');
-        const strengthBar = document.getElementById('passwordStrengthBar');
-        const strengthText = document.getElementById('passwordStrengthText');
-        const confirmHint = document.getElementById('confirmPasswordHint');
+    <script>
+            (function () {
+                const passwordInput = document.getElementById('registerPassword');
+                const confirmInput = document.getElementById('registerConfirmPassword');
+                const strengthBar = document.getElementById('passwordStrengthBar');
+                const strengthText = document.getElementById('passwordStrengthText');
+                const confirmHint = document.getElementById('confirmPasswordHint');
 
-        function togglePassword(inputId, iconId, button) {
-            const input = document.getElementById(inputId);
-            const icon = document.getElementById(iconId);
-            if (!input || !icon) return;
+                function togglePassword(inputId, iconId, button) {
+                    const input = document.getElementById(inputId);
+                    const icon = document.getElementById(iconId);
+                    if (!input || !icon) return;
 
-            const isPassword = input.type === 'password';
-            input.type = isPassword ? 'text' : 'password';
-            icon.textContent = isPassword ? 'visibility_off' : 'visibility';
-            button.setAttribute('aria-label', isPassword ? 'Ẩn mật khẩu' : 'Hiển thị mật khẩu');
-        }
+                    const isPassword = input.type === 'password';
+                    input.type = isPassword ? 'text' : 'password';
+                    icon.textContent = isPassword ? 'visibility_off' : 'visibility';
+                    button.setAttribute('aria-label', isPassword ? 'Ẩn mật khẩu' : 'Hiển thị mật khẩu');
+                }
 
-        const togglePwdBtn = document.getElementById('toggleRegisterPassword');
-        const toggleConfirmBtn = document.getElementById('toggleRegisterConfirmPassword');
+                const togglePwdBtn = document.getElementById('toggleRegisterPassword');
+                const toggleConfirmBtn = document.getElementById('toggleRegisterConfirmPassword');
 
-        if (togglePwdBtn) {
-            togglePwdBtn.addEventListener('click', function () {
-                togglePassword('registerPassword', 'registerPasswordIcon', this);
-            });
-        }
+                if (togglePwdBtn) {
+                    togglePwdBtn.addEventListener('click', function () {
+                        togglePassword('registerPassword', 'registerPasswordIcon', this);
+                    });
+                }
 
-        if (toggleConfirmBtn) {
-            toggleConfirmBtn.addEventListener('click', function () {
-                togglePassword('registerConfirmPassword', 'registerConfirmPasswordIcon', this);
-            });
-        }
+                if (toggleConfirmBtn) {
+                    toggleConfirmBtn.addEventListener('click', function () {
+                        togglePassword('registerConfirmPassword', 'registerConfirmPasswordIcon', this);
+                    });
+                }
 
-        function evaluateStrength(value) {
-            let score = 0;
-            if (value.length >= 6) score += 1;
-            if (/[A-Z]/.test(value) && /[a-z]/.test(value)) score += 1;
-            if (/[0-9]/.test(value)) score += 1;
-            if (/[^A-Za-z0-9]/.test(value)) score += 1;
-            return score;
-        }
+                function evaluateStrength(value) {
+                    let score = 0;
+                    if (value.length >= 6) score += 1;
+                    if (/[A-Z]/.test(value) && /[a-z]/.test(value)) score += 1;
+                    if (/[0-9]/.test(value)) score += 1;
+                    if (/[^A-Za-z0-9]/.test(value)) score += 1;
+                    return score;
+                }
 
-        function renderStrength() {
-            if (!passwordInput || !strengthBar || !strengthText) return;
+                function renderStrength() {
+                    if (!passwordInput || !strengthBar || !strengthText) return;
 
-            const value = passwordInput.value || '';
-            const score = evaluateStrength(value);
-            const widths = ['0%', '25%', '50%', '75%', '100%'];
-            const labels = ['Chưa nhập', 'Yếu', 'Trung bình', 'Khá', 'Mạnh'];
-            const colors = ['#ba1a1a', '#d97706', '#d97706', '#2563eb', '#15803d'];
+                    const value = passwordInput.value || '';
+                    const score = evaluateStrength(value);
+                    const widths = ['0%', '25%', '50%', '75%', '100%'];
+                    const labels = ['Chưa nhập', 'Yếu', 'Trung bình', 'Khá', 'Mạnh'];
+                    const colors = ['#ba1a1a', '#d97706', '#d97706', '#2563eb', '#15803d'];
 
-            strengthBar.style.width = widths[score];
-            strengthBar.style.backgroundColor = colors[score];
-            strengthText.textContent = 'Độ mạnh mật khẩu: ' + labels[score];
-        }
+                    strengthBar.style.width = widths[score];
+                    strengthBar.style.backgroundColor = colors[score];
+                    strengthText.textContent = 'Độ mạnh mật khẩu: ' + labels[score];
+                }
 
-        function renderConfirmHint() {
-            if (!passwordInput || !confirmInput || !confirmHint) return;
+                function renderConfirmHint() {
+                    if (!passwordInput || !confirmInput || !confirmHint) return;
 
-            const password = passwordInput.value || '';
-            const confirm = confirmInput.value || '';
+                    const password = passwordInput.value || '';
+                    const confirm = confirmInput.value || '';
 
-            if (!confirm) {
-                confirmHint.textContent = 'Mật khẩu xác nhận cần trùng với mật khẩu.';
-                confirmHint.className = 'text-[11px] text-on-surface-variant/80 mt-1 ml-1';
-                return;
-            }
+                    if (!confirm) {
+                        confirmHint.textContent = 'Mật khẩu xác nhận cần trùng với mật khẩu.';
+                        confirmHint.className = 'text-[11px] text-on-surface-variant/80 mt-1 ml-1';
+                        return;
+                    }
 
-            if (password === confirm) {
-                confirmHint.textContent = 'Mật khẩu xác nhận đã khớp.';
-                confirmHint.className = 'text-[11px] text-green-700 mt-1 ml-1';
-            } else {
-                confirmHint.textContent = 'Mật khẩu xác nhận chưa khớp.';
-                confirmHint.className = 'text-[11px] text-error mt-1 ml-1';
-            }
-        }
+                    if (password === confirm) {
+                        confirmHint.textContent = 'Mật khẩu xác nhận đã khớp.';
+                        confirmHint.className = 'text-[11px] text-green-700 mt-1 ml-1';
+                    } else {
+                        confirmHint.textContent = 'Mật khẩu xác nhận chưa khớp.';
+                        confirmHint.className = 'text-[11px] text-error mt-1 ml-1';
+                    }
+                }
 
-        if (passwordInput) {
-            passwordInput.addEventListener('input', function () {
+                if (passwordInput) {
+                    passwordInput.addEventListener('input', function () {
+                        renderStrength();
+                        renderConfirmHint();
+                    });
+                }
+
+                if (confirmInput) {
+                    confirmInput.addEventListener('input', renderConfirmHint);
+                }
+
                 renderStrength();
                 renderConfirmHint();
-            });
-        }
-
-        if (confirmInput) {
-            confirmInput.addEventListener('input', renderConfirmHint);
-        }
-
-        renderStrength();
-        renderConfirmHint();
-    })();
-</script>
+            })();
+    </script>
 </body>
+
 </html>

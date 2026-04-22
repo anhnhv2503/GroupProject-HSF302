@@ -70,7 +70,13 @@ public class SeafoodProductServiceImpl implements SeafoodProductService {
                 if (imageFiles != null && !imageFiles.isEmpty()) {
                     if (existing.getImages() != null) {
                         for (ProductImage oldImg : existing.getImages()) {
-                            FileUploadUtil.deleteFile(oldImg.getImageUrl());
+                            if (oldImg.getPublicId() != null) {
+                                try {
+                                    cloudinaryService.delete(oldImg.getPublicId());
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
                         }
                         existing.getImages().clear();
                     }
@@ -86,6 +92,7 @@ public class SeafoodProductServiceImpl implements SeafoodProductService {
                 existing.setActive(seafoodProduct.getActive());
                 existing.setImportedDate(seafoodProduct.getImportedDate());
                 existing.setExpiryDate(seafoodProduct.getExpiryDate());
+                existing.setUnit(seafoodProduct.getUnit());
 
                 productToSave = existing;
             }
@@ -117,10 +124,10 @@ public class SeafoodProductServiceImpl implements SeafoodProductService {
 //
                         Map upload = cloudinaryService.upload(file);
                         String url = (String) upload.get("url");
-//                        String fileName = FileUploadUtil.saveFile(uploadDir, file);
+                        String publicId = (String) upload.get("public_id");
                         ProductImage productImage = new ProductImage();
-//                        productImage.setImageUrl("/" + uploadDir + "/" + fileName);
                         productImage.setImageUrl(url);
+                        productImage.setPublicId(publicId);
                         productImage.setProduct(productToSave);
                         productImage.setIsPrimary(primaryImageIndex != null && index == primaryImageIndex);
                         productImage.setCreatedDate(Instant.now());
@@ -143,10 +150,16 @@ public class SeafoodProductServiceImpl implements SeafoodProductService {
         SeafoodProduct seafoodProduct = seafoodProductRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Khong tim thay san pham voi id: " + id));
 
-        // Delete associated files from disk
+        // Delete associated files from Cloudinary
         if (seafoodProduct.getImages() != null) {
             for (ProductImage image : seafoodProduct.getImages()) {
-                FileUploadUtil.deleteFile(image.getImageUrl());
+                if (image.getPublicId() != null) {
+                    try {
+                        cloudinaryService.delete(image.getPublicId());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         }
 

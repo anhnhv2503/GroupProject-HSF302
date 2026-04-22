@@ -16,6 +16,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -38,7 +39,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "orders")
+@Table(name = "orders", indexes = {
+    @Index(name = "idx_order_code", columnList = "orderCode")
+})
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -98,6 +101,16 @@ public class Order {
     @Nationalized
     @Column(name = "notes", length = 1000)
     private String notes;
+
+    @Size(max = 100)
+    @Nationalized
+    @Column(name = "recipient_name", length = 100)
+    private String recipientName;
+
+    @Size(max = 20)
+    @Nationalized
+    @Column(name = "recipient_phone", length = 20)
+    private String recipientPhone;
 
     @ColumnDefault("getdate()")
     @Column(name = "created_date")
