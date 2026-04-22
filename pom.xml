@@ -103,6 +103,13 @@
 			<artifactId>spring-boot-starter-webmvc-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+	<!-- Source: https://mvnrepository.com/artifact/dev.langchain4j/langchain4j -->
+	<dependency>
+		<groupId>dev.langchain4j</groupId>
+		<artifactId>langchain4j-google-ai-gemini</artifactId>
+		<version>1.12.2</version>
+	</dependency>
 	</dependencies>
 
 	<build>
