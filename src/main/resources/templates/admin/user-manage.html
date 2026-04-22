@@ -150,7 +150,7 @@
                         </td>
                         <td class="px-6 py-4 text-sm text-on-surface-variant font-numeric" th:text="${user.createdDate != null ? #strings.substring(user.createdDate.toString(), 0, 10) : '-'}">2025-01-01</td>
                         <td class="px-6 py-4 text-xl font-bold text-tertiary font-numeric" th:text="${orderCountByUser[user.id] != null ? orderCountByUser[user.id] : 0}">0</td>
-                        <td class="px-6 py-4 text-xl font-bold text-primary font-numeric" th:text="'$' + ${#numbers.formatDecimal(spendingByUser[user.id] != null ? spendingByUser[user.id] : 0, 1, 'POINT', 2, 'COMMA')}">$0.00</td>
+                        <td class="px-6 py-4 text-xl font-bold text-primary font-numeric" th:text="${#numbers.formatDecimal(spendingByUser[user.id] != null ? spendingByUser[user.id] : 0, 1, 'COMMA', 0, 'POINT')} + ' đ'">0 đ</td>
                         <td class="px-6 py-4">
                             <form th:action="@{'/admin/users/' + ${user.id} + '/toggle'}" method="post" class="inline-flex">
                                 <input type="hidden" name="enabled" th:value="${!user.enabled}"/>

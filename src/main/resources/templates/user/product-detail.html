@@ -50,13 +50,28 @@
                         <img id="mainDetailImage" th:if="${product.images != null and !product.images.isEmpty()}"
                             th:with="primaryImg=${product.images.^[isPrimary != null and isPrimary]}"
                             th:src="@{${primaryImg != null ? primaryImg.imageUrl : product.images[0].imageUrl}}"
-                            class="w-full h-full object-cover" th:alt="${product.name}" />
+                            class="w-full h-full object-cover" 
+                            th:classappend="${product.stockQuantity != null and product.stockQuantity <= 0} ? 'grayscale opacity-60' : ''"
+                            th:alt="${product.name}" />
                         <img id="mainDetailImage" th:unless="${product.images != null and !product.images.isEmpty()}"
                             src="https://via.placeholder.com/800x800?text=Premium+Seafood"
-                            class="w-full h-full object-cover" alt="Seafood" />
+                            class="w-full h-full object-cover" 
+                            th:classappend="${product.stockQuantity != null and product.stockQuantity <= 0} ? 'grayscale opacity-60' : ''"
+                            alt="Seafood" />
+
+                        <!-- Out of Stock Overlay -->
+                        <div th:if="${product.stockQuantity != null and product.stockQuantity <= 0}" 
+                             class="absolute inset-0 z-10 bg-black/20 backdrop-blur-[4px] flex items-center justify-center">
+                            <div class="bg-white/10 backdrop-blur-md border border-white/20 px-10 py-5 rounded-3xl shadow-2xl transform -rotate-12">
+                                <span class="text-white font-black text-4xl uppercase tracking-[0.2em] drop-shadow-lg">Hết hàng</span>
+                            </div>
+                        </div>
 
                         <!-- Floating Badge -->
                         <div class="absolute top-6 left-6 z-10 flex flex-col gap-3">
+                            <span th:if="${product.stockQuantity != null and product.stockQuantity <= 0}"
+                                class="bg-black/80 backdrop-blur text-white text-xs font-black px-4 py-2 rounded-xl uppercase tracking-[0.2em] shadow-lg">
+                                Hết hàng</span>
                             <span th:if="${product.freshnessStatus == 'FRESH'}"
                                 class="bg-green-600/90 backdrop-blur text-white text-xs font-black px-4 py-2 rounded-xl uppercase tracking-[0.2em] shadow-lg">Daily
                                 Fresh</span>
@@ -123,10 +138,10 @@
                     <div class="p-8 rounded-3xl bg-surface-container-low border border-outline-variant/10 space-y-6">
                         <div class="flex items-end gap-3">
                             <span class="text-5xl font-black text-primary-container tracking-tighter leading-none"
-                                th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + '₫'">0₫</span>
+                                th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' đ'">0 đ</span>
                             <span class="text-lg text-on-surface-variant font-bold pb-1 lowercase">/ kg</span>
                             <span class="text-sm text-outline-variant line-through font-medium pb-1 ml-2"
-                                th:text="${#numbers.formatDecimal(product.price * 1.2, 0, 'COMMA', 0, 'POINT')} + '₫'">0₫</span>
+                                th:text="${#numbers.formatDecimal(product.price * 1.2, 0, 'COMMA', 0, 'POINT')} + ' đ'">0 đ</span>
                         </div>
 
                         <p class="text-xs text-on-surface-variant/70 leading-relaxed font-medium">

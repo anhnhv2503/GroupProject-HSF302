@@ -1,13 +1,18 @@
 <!DOCTYPE html>
-<html class="light" lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html class="light" lang="vi" xmlns:th="http://www.thymeleaf.org"
+    xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>Danh Sách Hải Sản | The Culinary Curator</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&amp;family=Cormorant+Garamond:wght@500;600;700&amp;family=Manrope:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&amp;family=Cormorant+Garamond:wght@500;600;700&amp;family=Manrope:wght@300;400;500;600;700;800&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
     <script id="tailwind-config" th:replace="~{index :: #tailwind-config}"></script>
     <style>
@@ -23,37 +28,76 @@
             --seafoam-100: #e8f6f3;
         }
 
-        body { font-family: 'Manrope', 'Be Vietnam Pro', sans-serif; }
-        .display-serif { font-family: 'Cormorant Garamond', serif; }
-        .glass-effect { backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
-        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
-        .fill-1 { font-variation-settings: 'FILL' 1 !important; }
+        body {
+            font-family: 'Manrope', 'Be Vietnam Pro', sans-serif;
+        }
+
+        .display-serif {
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        .glass-effect {
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .fill-1 {
+            font-variation-settings: 'FILL' 1 !important;
+        }
+
         .ocean-bg {
             background:
                 radial-gradient(1000px 500px at 10% -10%, rgba(232, 246, 243, 0.9), transparent 60%),
                 radial-gradient(900px 600px at 90% -20%, rgba(247, 243, 238, 0.9), transparent 60%),
                 linear-gradient(180deg, #f8fbff 0%, #f3f7fb 40%, #f1f5f9 100%);
         }
+
         .panel {
             background: rgba(255, 255, 255, 0.9);
             border: 1px solid rgba(15, 23, 42, 0.06);
             box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
         }
-        .panel-muted { background: rgba(255, 255, 255, 0.7); }
-        .nav-link-luxury { letter-spacing: 0.12em; }
+
+        .panel-muted {
+            background: rgba(255, 255, 255, 0.7);
+        }
+
+        .nav-link-luxury {
+            letter-spacing: 0.12em;
+        }
+
         .category-link.active {
             background: rgba(232, 111, 58, 0.95);
             color: white;
             box-shadow: 0 12px 24px rgba(232, 107, 58, 0.25);
         }
-        .category-link:hover { background: rgba(255, 255, 255, 0.06); }
-        .product-card-hover:hover .wishlist-icon { opacity: 1; transform: scale(1); }
-        .product-card-hover { border-radius: 28px; }
-        .product-card-hover:hover { box-shadow: 0 28px 50px rgba(14, 44, 63, 0.18); }
+
+        .category-link:hover {
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .product-card-hover:hover .wishlist-icon {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .product-card-hover {
+            border-radius: 28px;
+        }
+
+        .product-card-hover:hover {
+            box-shadow: 0 28px 50px rgba(14, 44, 63, 0.18);
+        }
+
         .price-chip {
             background: rgba(255, 255, 255, 0.85);
             border: 1px solid rgba(15, 23, 42, 0.08);
         }
+
         .filter-chip input:focus-visible,
         .filter-chip input:focus {
             outline: 2px solid rgba(232, 107, 58, 0.4);
@@ -68,69 +112,74 @@
 
     <main class="pt-32">
         <div class="pb-20">
-        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-8 pt-8">
+            <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-8 pt-8">
 
-            <!-- Sidebar Navigation -->
-            <aside class="lg:col-span-3 space-y-6 lg:sticky lg:top-28 h-fit">
-                <div class="rounded-3xl overflow-hidden border border-white/10 bg-tertiary shadow-2xl">
-                    <!-- Sidebar Brand Header -->
-                    <div class="p-8 pb-4 text-center">
-                        <div class="inline-flex bg-white/10 p-3 rounded-2xl mb-4">
-                            <i class="bi bi-tsunami text-brand-primary fs-3"></i>
-                        </div>
-                        <h2 class="font-black text-xl tracking-tight leading-none text-white uppercase display-serif">The
-                            Culinary<br />Curator</h2>
-                        <div class="h-1 w-12 bg-brand-primary mx-auto mt-4 rounded-full"></div>
-                    </div>
-
-                    <div class="p-4 pt-2 space-y-2">
-                        <div class="text-[10px] font-black uppercase tracking-[0.2em] text-white/40 px-4 mb-2">Điều
-                            hướng</div>
-
-                        <a th:href="@{/products(q=${q})}"
-                            class="category-link flex items-center gap-3 px-4 py-3.5 rounded-2xl transition-all group text-white/80 hover:text-white"
-                            th:classappend="${selectedCategory == null} ? 'active' : ''">
-                            <span
-                                class="material-symbols-outlined text-xl group-hover:rotate-12 transition-transform">grid_view</span>
-                            <span class="font-bold text-sm">Tất cả sản phẩm</span>
-                        </a>
-
-                        <div class="h-px bg-white/5 my-2 mx-4"></div>
-                        <div class="text-[10px] font-black uppercase tracking-[0.2em] text-white/40 px-4 mb-2">Danh mục
+                <!-- Sidebar Navigation -->
+                <aside class="lg:col-span-3 space-y-6 lg:sticky lg:top-28 h-fit">
+                    <div class="rounded-3xl overflow-hidden border border-white/10 bg-tertiary shadow-2xl">
+                        <!-- Sidebar Brand Header -->
+                        <div class="p-8 pb-4 text-center">
+                            <div class="inline-flex bg-white/10 p-3 rounded-2xl mb-4">
+                                <i class="bi bi-tsunami text-brand-primary fs-3"></i>
+                            </div>
+                            <h2
+                                class="font-black text-xl tracking-tight leading-none text-white uppercase display-serif">
+                                The
+                                Culinary<br />Curator</h2>
+                            <div class="h-1 w-12 bg-brand-primary mx-auto mt-4 rounded-full"></div>
                         </div>
 
-                        <a th:each="cat : ${categories}" th:href="@{/products(categoryId=${cat.id}, q=${q})}"
-                            class="category-link flex items-center gap-3 px-4 py-3.5 rounded-2xl transition-all group text-white/80 hover:text-white"
-                            th:classappend="${selectedCategory == cat.id} ? 'active' : ''">
-                            <span class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform"
-                                th:text="${cat.name.contains('Cá') ? 'water_lux' : 
+                        <div class="p-4 pt-2 space-y-2">
+                            <div class="text-[10px] font-black uppercase tracking-[0.2em] text-white/40 px-4 mb-2">Điều
+                                hướng</div>
+
+                            <a th:href="@{/products(q=${q})}"
+                                class="category-link flex items-center gap-3 px-4 py-3.5 rounded-2xl transition-all group text-white/80 hover:text-white"
+                                th:classappend="${selectedCategory == null} ? 'active' : ''">
+                                <span
+                                    class="material-symbols-outlined text-xl group-hover:rotate-12 transition-transform">grid_view</span>
+                                <span class="font-bold text-sm">Tất cả sản phẩm</span>
+                            </a>
+
+                            <div class="h-px bg-white/5 my-2 mx-4"></div>
+                            <div class="text-[10px] font-black uppercase tracking-[0.2em] text-white/40 px-4 mb-2">Danh
+                                mục
+                            </div>
+
+                            <a th:each="cat : ${categories}" th:href="@{/products(categoryId=${cat.id}, q=${q})}"
+                                class="category-link flex items-center gap-3 px-4 py-3.5 rounded-2xl transition-all group text-white/80 hover:text-white"
+                                th:classappend="${selectedCategory == cat.id} ? 'active' : ''">
+                                <span
+                                    class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform"
+                                    th:text="${cat.name.contains('Cá') ? 'water_lux' : 
                                        (cat.name.contains('Tôm') ? 'set_meal' : 
                                        (cat.name.contains('Cua') ? 'phishing' : 
                                        (cat.name.contains('Ốc') ? 'temple_buddhist' : 
                                        (cat.name.contains('Combo') ? 'local_fire_department' : 'database'))))}">
-                                water_lux
-                            </span>
-                            <span class="font-bold text-sm" th:text="${cat.name}">Category Name</span>
-                        </a>
+                                    water_lux
+                                </span>
+                                <span class="font-bold text-sm" th:text="${cat.name}">Category Name</span>
+                            </a>
 
-                        <div class="h-px bg-white/5 my-4 mx-4"></div>
+                            <div class="h-px bg-white/5 my-4 mx-4"></div>
 
-                        <a th:href="@{/products(sortBy='soldCount', sortDir='desc')}"
-                            class="flex items-center gap-3 px-4 py-3.5 rounded-2xl transition-all hover:bg-white/10 group text-white/80 hover:text-white">
-                            <span class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform text-brand-primary"
-                                style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
-                            <span class="font-bold text-sm">Bán chạy nhất</span>
-                        </a>
+                            <a th:href="@{/products(sortBy='soldCount', sortDir='desc')}"
+                                class="flex items-center gap-3 px-4 py-3.5 rounded-2xl transition-all hover:bg-white/10 group text-white/80 hover:text-white">
+                                <span
+                                    class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform text-brand-primary"
+                                    style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+                                <span class="font-bold text-sm">Bán chạy nhất</span>
+                            </a>
+                        </div>
+
+                        <!-- Sidebar Footer Decor -->
+                        <div class="p-6 bg-black/10 text-center">
+                            <p class="text-[9px] font-bold text-white/30 uppercase tracking-widest">Premium Curator
+                                Experience</p>
+                        </div>
                     </div>
 
-                    <!-- Sidebar Footer Decor -->
-                    <div class="p-6 bg-black/10 text-center">
-                        <p class="text-[9px] font-bold text-white/30 uppercase tracking-widest">Premium Curator
-                            Experience</p>
-                    </div>
-                </div>
-
-                <!-- Quick Filter -->
+                    <!-- Quick Filter
                 <div class="panel rounded-3xl p-8 space-y-6">
                     <h3
                         class="font-black text-xs uppercase tracking-widest text-on-surface-variant flex items-center gap-2">
@@ -157,203 +206,237 @@
                                 lạnh (Frozen)</span>
                         </label>
                     </div>
-                </div>
-            </aside>
+                </div> -->
+                </aside>
 
-            <!-- Main Content -->
-            <main class="lg:col-span-9 space-y-10">
-                <!-- Header Section -->
-                <div
-                    class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 panel rounded-3xl p-8 relative overflow-hidden">
-                    <div class="absolute top-0 right-0 p-2 opacity-5">
-                        <i class="bi bi-tsunami text-brand-secondary" style="font-size: 120px;"></i>
-                    </div>
-                    <div class="relative z-10">
-                        <div class="flex items-center gap-2 text-brand-primary mb-2">
-                            <span class="material-symbols-outlined text-sm"
-                                style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
-                            <span class="text-[10px] font-black uppercase tracking-[0.3em]"
-                                th:text="${selectedCategory != null ? 'DANH MỤC: ' + products[0].category.name : 'TẤT CẢ SẢN PHẨM'}">BÁN
-                                CHẠY NHẤT</span>
+                <!-- Main Content -->
+                <main class="lg:col-span-9 space-y-10">
+                    <!-- Header Section -->
+                    <div
+                        class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 panel rounded-3xl p-8 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 p-2 opacity-5">
+                            <i class="bi bi-tsunami text-brand-secondary" style="font-size: 120px;"></i>
                         </div>
-                        <h1 class="text-4xl font-black tracking-tight text-brand-secondary uppercase leading-none mb-3 display-serif"
-                            th:text="${selectedCategory != null ? products[0].category.name : 'Thực Đơn Oceanic'}">Thực
-                            Đơn Oceanic</h1>
-                        <p class="text-sm text-on-surface-variant font-medium max-w-md">Sản phẩm hải sản cao cấp nhất
-                            được tuyển chọn và bảo quản theo tiêu chuẩn 5 sao.</p>
-                        <p class="text-xs text-on-surface-variant font-semibold mt-3">
-                            <span th:text="${#lists.size(products)}">0</span> sản phẩm đang hiển thị
-                        </p>
-                    </div>
+                        <div class="relative z-10">
+                            <div class="flex items-center gap-2 text-brand-primary mb-2">
+                                <span class="material-symbols-outlined text-sm"
+                                    style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+                                <span class="text-[10px] font-black uppercase tracking-[0.3em]"
+                                    th:text="${selectedCategory != null ? 'DANH MỤC: ' + products[0].category.name : 'TẤT CẢ SẢN PHẨM'}">BÁN
+                                    CHẠY NHẤT</span>
+                            </div>
+                            <h1 class="text-4xl font-black tracking-tight text-brand-secondary uppercase leading-none mb-3 display-serif"
+                                th:text="${selectedCategory != null ? products[0].category.name : 'Thực Đơn Oceanic'}">
+                                Thực
+                                Đơn Oceanic</h1>
+                            <p class="text-sm text-on-surface-variant font-medium max-w-md">Sản phẩm hải sản cao cấp
+                                nhất
+                                được tuyển chọn và bảo quản theo tiêu chuẩn 5 sao.</p>
+                            <p class="text-xs text-on-surface-variant font-semibold mt-3">
+                                <span th:text="${#lists.size(products)}">0</span> sản phẩm đang hiển thị
+                            </p>
+                        </div>
 
-                    <div class="flex items-center gap-4 relative z-10">
-                        <div class="flex flex-col">
-                            <span
-                                class="text-[9px] font-black uppercase text-on-surface-variant tracking-widest mb-2">Sắp
-                                xếp theo</span>
-                            <select onchange="window.location.href = this.value"
-                                class="bg-white border border-outline-variant/10 rounded-2xl px-6 py-3 text-xs font-black uppercase tracking-widest text-brand-secondary focus:ring-2 focus:ring-brand-primary outline-none transition-all cursor-pointer shadow-sm">
-                                <option th:value="@{/products(q=${q}, categoryId=${selectedCategory}, sortBy='id', sortDir='desc')}" 
+                        <div class="flex items-center gap-4 relative z-10">
+                            <div class="flex flex-col">
+                                <span
+                                    class="text-[9px] font-black uppercase text-on-surface-variant tracking-widest mb-2">Sắp
+                                    xếp theo</span>
+                                <select onchange="window.location.href = this.value"
+                                    class="bg-white border border-outline-variant/10 rounded-2xl px-6 py-3 text-xs font-black uppercase tracking-widest text-brand-secondary focus:ring-2 focus:ring-brand-primary outline-none transition-all cursor-pointer shadow-sm">
+                                    <option
+                                        th:value="@{/products(q=${q}, categoryId=${selectedCategory}, sortBy='id', sortDir='desc')}"
                                         th:selected="${sortBy == 'id'}">Mới nhất</option>
-                                <option th:value="@{/products(q=${q}, categoryId=${selectedCategory}, sortBy='price', sortDir='asc')}" 
-                                        th:selected="${sortBy == 'price' and sortDir == 'asc'}">Giá: Thấp đến Cao</option>
-                                <option th:value="@{/products(q=${q}, categoryId=${selectedCategory}, sortBy='price', sortDir='desc')}" 
-                                        th:selected="${sortBy == 'price' and sortDir == 'desc'}">Giá: Cao đến Thấp</option>
-                                <option th:value="@{/products(q=${q}, categoryId=${selectedCategory}, sortBy='soldCount', sortDir='desc')}" 
+                                    <option
+                                        th:value="@{/products(q=${q}, categoryId=${selectedCategory}, sortBy='price', sortDir='asc')}"
+                                        th:selected="${sortBy == 'price' and sortDir == 'asc'}">Giá: Thấp đến Cao
+                                    </option>
+                                    <option
+                                        th:value="@{/products(q=${q}, categoryId=${selectedCategory}, sortBy='price', sortDir='desc')}"
+                                        th:selected="${sortBy == 'price' and sortDir == 'desc'}">Giá: Cao đến Thấp
+                                    </option>
+                                    <option
+                                        th:value="@{/products(q=${q}, categoryId=${selectedCategory}, sortBy='soldCount', sortDir='desc')}"
                                         th:selected="${sortBy == 'soldCount'}">Phổ biến nhất</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Product Grid -->
-                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-                    <!-- If no products -->
-                    <div th:if="${#lists.isEmpty(products)}" class="col-span-full py-32 text-center space-y-6">
-                        <div
-                            class="w-24 h-24 bg-surface-container-low rounded-full flex items-center justify-center mx-auto mb-4">
-                            <span class="material-symbols-outlined text-5xl text-outline-variant/40">inventory_2</span>
-                        </div>
-                        <div>
-                            <h2 class="text-xl font-black text-brand-secondary uppercase tracking-tight">Không tìm thấy
-                                sản phẩm</h2>
-                            <p class="text-on-surface-variant font-medium mt-1">Chúng tôi chưa có sản phẩm trong danh
-                                mục này.</p>
-                        </div>
-                        <a th:href="@{/products}"
-                            class="inline-flex items-center gap-2 bg-brand-primary text-white px-8 py-3 rounded-full font-black text-xs uppercase tracking-widest shadow-lg shadow-brand-primary/20 hover:brightness-110 active:scale-95 transition-all">
-                            Xem tất cả sản phẩm
-                        </a>
-                    </div>
-
-                    <!-- Product Card -->
-                    <div th:each="product : ${products}"
-                        class="product-card-hover group bg-white overflow-hidden flex flex-col transition-all hover:-translate-y-2">
-                        <!-- Image Wrapper -->
-                        <div class="relative aspect-[4/5] overflow-hidden bg-brand-bg">
-                            <a th:href="@{'/products/' + ${product.id}}">
-                                <!-- Badges -->
-                                <div class="absolute top-5 left-5 z-10 flex flex-col gap-2">
-                                    <div th:if="${product.freshnessStatus == 'FRESH'}"
-                                        class="bg-green-600/90 backdrop-blur text-white text-[9px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest shadow-lg">
-                                        Daily</div>
-                                    <div th:if="${product.freshnessStatus == 'FROZEN'}"
-                                        class="bg-blue-600/90 backdrop-blur text-white text-[9px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest shadow-lg">
-                                        Frozen</div>
-                                    <div th:if="${product.freshnessStatus == 'LIVE'}"
-                                        class="bg-orange-600/90 backdrop-blur text-white text-[9px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest shadow-lg">
-                                        Live</div>
-                                </div>
-                                <!-- Sale Badge -->
-                                <div th:if="${product.id % 3 == 0}" class="absolute top-5 right-5 z-10">
-                                    <div
-                                        class="bg-red-600/90 backdrop-blur text-white text-[9px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest shadow-lg">
-                                        Sale</div>
-                                </div>
-
-                                <!-- Product Image -->
-                                <img th:if="${product.images != null and !product.images.isEmpty()}"
-                                    th:with="primaryImg=${product.images.^[isPrimary != null and isPrimary]}"
-                                    th:src="@{${primaryImg != null ? primaryImg.imageUrl : product.images[0].imageUrl}}"
-                                    class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
-                                    th:alt="${product.name}" />
-                                <img th:unless="${product.images != null and !product.images.isEmpty()}"
-                                    src="https://via.placeholder.com/400x500?text=Premium+Seafood"
-                                    class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
-                                    alt="Seafood" />
-                            </a>
-
-                            <!-- Wishlist Heart -->
-                            <button type="button"
-                                class="wishlist-btn absolute bottom-6 right-6 z-20 w-12 h-12 rounded-full bg-white/90 backdrop-blur shadow-2xl flex items-center justify-center text-on-surface-variant hover:text-red-500 hover:scale-110 active:scale-90 transition-all border border-white/70"
-                                th:data-product-id="${product.id}">
-                                <span class="material-symbols-outlined text-2xl"
-                                    th:classappend="${session.wishlistProductIds != null and session.wishlistProductIds.contains(product.id)} ? 'text-red-500 fill-1' : ''">favorite</span>
-                            </button>
-                        </div>
-
-                        <!-- Card Body -->
-                        <div class="p-8 flex flex-col flex-grow space-y-4">
-                            <div class="space-y-2">
-                                <div class="flex items-center gap-2 text-brand-primary">
-                                    <span class="material-symbols-outlined text-xs">location_on</span>
-                                    <span class="text-[9px] font-black uppercase tracking-[0.2em]"
-                                        th:text="${product.importedFrom ?: 'Biển Việt Nam'}">Nhật Bản</span>
-                                </div>
-                                <a th:href="@{'/products/' + ${product.id}}" class="block">
-                                    <h3 class="text-xl font-black tracking-tight text-brand-secondary leading-tight hover:text-brand-primary transition-colors h-14 overflow-hidden"
-                                        th:text="${product.name}">Tên Sản Phẩm</h3>
-                                </a>
-                                <!-- Rating & Sales Count -->
-                                <div class="flex items-center gap-4 mt-1">
-                                    <div class="flex items-center gap-0.5 text-yellow-500">
-                                        <span class="material-symbols-outlined text-[16px] fill-1">star</span>
-                                        <span class="material-symbols-outlined text-[16px] fill-1">star</span>
-                                        <span class="material-symbols-outlined text-[16px] fill-1">star</span>
-                                        <span class="material-symbols-outlined text-[16px] fill-1">star</span>
-                                        <span class="material-symbols-outlined text-[16px] fill-1">star</span>
-                                    </div>
-                                    <div class="h-1 w-1 rounded-full bg-outline-variant/30"></div>
-                                    <span class="text-[11px] font-bold text-on-surface-variant/70 uppercase tracking-widest">
-                                        Đã bán <span th:text="${product.soldCount ?: 0}">0</span>
-                                    </span>
-                                </div>
+                                </select>
                             </div>
+                        </div>
+                    </div>
 
-                            <!-- Price & Action -->
+                    <!-- Product Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+                        <!-- If no products -->
+                        <div th:if="${#lists.isEmpty(products)}" class="col-span-full py-32 text-center space-y-6">
                             <div
-                                class="pt-4 mt-auto border-t border-outline-variant/10 flex items-center justify-between">
-                                <div class="flex flex-col">
-                                    <div class="flex items-baseline gap-1">
-                                        <span class="text-2xl font-black text-brand-secondary"
-                                            th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + '₫'">0₫</span>
-                                        <span
-                                            class="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest">/
-                                            kg</span>
+                                class="w-24 h-24 bg-surface-container-low rounded-full flex items-center justify-center mx-auto mb-4">
+                                <span
+                                    class="material-symbols-outlined text-5xl text-outline-variant/40">inventory_2</span>
+                            </div>
+                            <div>
+                                <h2 class="text-xl font-black text-brand-secondary uppercase tracking-tight">Không tìm
+                                    thấy
+                                    sản phẩm</h2>
+                                <p class="text-on-surface-variant font-medium mt-1">Chúng tôi chưa có sản phẩm trong
+                                    danh
+                                    mục này.</p>
+                            </div>
+                            <a th:href="@{/products}"
+                                class="inline-flex items-center gap-2 bg-brand-primary text-white px-8 py-3 rounded-full font-black text-xs uppercase tracking-widest shadow-lg shadow-brand-primary/20 hover:brightness-110 active:scale-95 transition-all">
+                                Xem tất cả sản phẩm
+                            </a>
+                        </div>
+
+                        <!-- Product Card -->
+                        <div th:each="product : ${products}"
+                            class="product-card-hover group bg-white overflow-hidden flex flex-col transition-all hover:-translate-y-2">
+                            <!-- Image Wrapper -->
+                            <div class="relative aspect-[4/5] overflow-hidden bg-brand-bg">
+                                <a th:href="@{'/products/' + ${product.id}}">
+                                    <!-- Badges -->
+                                    <div class="absolute top-5 left-5 z-10 flex flex-col gap-2">
+                                        <div th:if="${product.freshnessStatus == 'FRESH'}"
+                                            class="bg-green-600/90 backdrop-blur text-white text-[9px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest shadow-lg">
+                                            Daily</div>
+                                        <div th:if="${product.freshnessStatus == 'FROZEN'}"
+                                            class="bg-blue-600/90 backdrop-blur text-white text-[9px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest shadow-lg">
+                                            Frozen</div>
+                                        <div th:if="${product.freshnessStatus == 'LIVE'}"
+                                            class="bg-orange-600/90 backdrop-blur text-white text-[9px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest shadow-lg">
+                                            Live</div>
                                     </div>
-                                    <span th:if="${product.id % 3 == 0}"
-                                        class="text-xs text-outline-variant line-through font-bold"
-                                        th:text="${#numbers.formatDecimal(product.price * 1.2, 0, 'COMMA', 0, 'POINT')} + '₫'">0₫</span>
+                                    <!-- Status Badges -->
+                                    <div class="absolute top-5 left-5 z-20 flex flex-col gap-2">
+                                        <div th:if="${product.stockQuantity != null and product.stockQuantity <= 0}"
+                                            class="bg-black/80 backdrop-blur text-white text-[9px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest shadow-lg">
+                                            Hết hàng</div>
+                                    </div>
+                                    <!-- Sale Badge -->
+                                    <div th:if="${product.id % 3 == 0}" class="absolute top-5 right-5 z-10">
+                                        <div
+                                            class="bg-red-600/90 backdrop-blur text-white text-[9px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest shadow-lg">
+                                            Sale</div>
+                                    </div>
+
+                                    <!-- Product Image -->
+                                    <img th:if="${product.images != null and !product.images.isEmpty()}"
+                                        th:with="primaryImg=${product.images.^[isPrimary != null and isPrimary]}"
+                                        th:src="@{${primaryImg != null ? primaryImg.imageUrl : product.images[0].imageUrl}}"
+                                        class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+                                        th:classappend="${product.stockQuantity != null and product.stockQuantity <= 0} ? 'grayscale opacity-60' : ''"
+                                        th:alt="${product.name}" />
+                                    <img th:unless="${product.images != null and !product.images.isEmpty()}"
+                                        src="https://via.placeholder.com/400x500?text=Premium+Seafood"
+                                        class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+                                        th:classappend="${product.stockQuantity != null and product.stockQuantity <= 0} ? 'grayscale opacity-60' : ''"
+                                        alt="Seafood" />
+
+                                    <!-- Out of Stock Overlay -->
+                                    <div th:if="${product.stockQuantity != null and product.stockQuantity <= 0}"
+                                        class="absolute inset-0 z-10 bg-black/20 backdrop-blur-[2px] flex items-center justify-center">
+                                        <div
+                                            class="bg-white/10 backdrop-blur-md border border-white/20 px-6 py-3 rounded-2xl shadow-2xl transform -rotate-12">
+                                            <span
+                                                class="text-white font-black text-xl uppercase tracking-[0.2em] drop-shadow-lg">Hết
+                                                hàng</span>
+                                        </div>
+                                    </div>
+                                </a>
+
+                                <!-- Wishlist Heart -->
+                                <button type="button"
+                                    class="wishlist-btn absolute bottom-6 right-6 z-20 w-12 h-12 rounded-full bg-white/90 backdrop-blur shadow-2xl flex items-center justify-center text-on-surface-variant hover:text-red-500 hover:scale-110 active:scale-90 transition-all border border-white/70"
+                                    th:data-product-id="${product.id}">
+                                    <span class="material-symbols-outlined text-2xl"
+                                        th:classappend="${session.wishlistProductIds != null and session.wishlistProductIds.contains(product.id)} ? 'text-red-500 fill-1' : ''">favorite</span>
+                                </button>
+                            </div>
+
+                            <!-- Card Body -->
+                            <div class="p-8 flex flex-col flex-grow space-y-4">
+                                <div class="space-y-2">
+                                    <div class="flex items-center gap-2 text-brand-primary">
+                                        <span class="material-symbols-outlined text-xs">location_on</span>
+                                        <span class="text-[9px] font-black uppercase tracking-[0.2em]"
+                                            th:text="${product.importedFrom ?: 'Biển Việt Nam'}">Nhật Bản</span>
+                                    </div>
+                                    <a th:href="@{'/products/' + ${product.id}}" class="block">
+                                        <h3 class="text-xl font-black tracking-tight text-brand-secondary leading-tight hover:text-brand-primary transition-colors h-14 overflow-hidden"
+                                            th:text="${product.name}">Tên Sản Phẩm</h3>
+                                    </a>
+                                    <!-- Rating & Sales Count -->
+                                    <div class="flex items-center gap-4 mt-1">
+                                        <div class="flex items-center gap-0.5 text-yellow-500">
+                                            <span class="material-symbols-outlined text-[16px] fill-1">star</span>
+                                            <span class="material-symbols-outlined text-[16px] fill-1">star</span>
+                                            <span class="material-symbols-outlined text-[16px] fill-1">star</span>
+                                            <span class="material-symbols-outlined text-[16px] fill-1">star</span>
+                                            <span class="material-symbols-outlined text-[16px] fill-1">star</span>
+                                        </div>
+                                        <div class="h-1 w-1 rounded-full bg-outline-variant/30"></div>
+                                        <span
+                                            class="text-[11px] font-bold text-on-surface-variant/70 uppercase tracking-widest">
+                                            Đã bán <span th:text="${product.soldCount ?: 0}">0</span>
+                                        </span>
+                                    </div>
                                 </div>
 
-                                <form th:action="@{/cart/add}" method="post">
-                                    <input type="hidden" name="productId" th:value="${product.id}" />
-                                    <input type="hidden" name="name" th:value="${product.name}" />
-                                    <input type="hidden" name="price" th:value="${product.price}" />
-                                    <input type="hidden" name="imageUrl" th:value="${not #lists.isEmpty(product.images) ? product.images[0].imageUrl : '/images/no-image.jpg'}" />
-                                    <input type="hidden" name="quantity" value="1" />
-                                    <button type="submit"
-                                        class="w-12 h-12 bg-[#F26522] text-white rounded-2xl flex items-center justify-center hover:shadow-xl hover:shadow-orange-500/40 hover:-translate-y-1 active:scale-95 transition-all">
-                                        <span class="material-symbols-outlined font-black">add_shopping_cart</span>
-                                    </button>
-                                </form>
+                                <!-- Price & Action -->
+                                <div
+                                    class="pt-4 mt-auto border-t border-outline-variant/10 flex items-center justify-between">
+                                    <div class="flex flex-col">
+                                        <div class="flex items-baseline gap-1">
+                                            <span class="text-2xl font-black text-brand-secondary"
+                                                th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' đ'">0 đ</span>
+                                            <span
+                                                class="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest">/
+                                                kg</span>
+                                        </div>
+                                        <span th:if="${product.id % 3 == 0}"
+                                            class="text-xs text-outline-variant line-through font-bold"
+                                            th:text="${#numbers.formatDecimal(product.price * 1.2, 0, 'COMMA', 0, 'POINT')} + ' đ'">0 đ</span>
+                                    </div>
+
+                                    <form th:action="@{/cart/add}" method="post">
+                                        <input type="hidden" name="productId" th:value="${product.id}" />
+                                        <input type="hidden" name="name" th:value="${product.name}" />
+                                        <input type="hidden" name="price" th:value="${product.price}" />
+                                        <input type="hidden" name="imageUrl"
+                                            th:value="${not #lists.isEmpty(product.images) ? product.images[0].imageUrl : '/images/no-image.jpg'}" />
+                                        <input type="hidden" name="quantity" value="1" />
+                                        <button type="submit"
+                                            th:disabled="${product.stockQuantity != null and product.stockQuantity <= 0}"
+                                            class="w-12 h-12 bg-[#F26522] text-white rounded-2xl flex items-center justify-center hover:shadow-xl hover:shadow-orange-500/40 hover:-translate-y-1 active:scale-95 transition-all disabled:bg-slate-300 disabled:shadow-none disabled:cursor-not-allowed disabled:translate-y-0">
+                                            <span class="material-symbols-outlined font-black"
+                                                th:text="${product.stockQuantity != null and product.stockQuantity <= 0 ? 'block' : 'add_shopping_cart'}">add_shopping_cart</span>
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Pagination Placeholder -->
-                <div th:if="${!#lists.isEmpty(products)}" class="flex justify-center pt-12">
-                    <nav
-                        class="flex items-center gap-3 p-2 bg-white rounded-full shadow-sm border border-outline-variant/10">
-                        <button
-                            class="w-12 h-12 rounded-full flex items-center justify-center text-brand-secondary hover:bg-brand-bg transition-all">
-                            <span class="material-symbols-outlined">west</span>
-                        </button>
-                        <span
-                            class="w-12 h-12 rounded-full bg-brand-primary text-white flex items-center justify-center font-black text-sm shadow-xl shadow-brand-primary/30">1</span>
-                        <button
-                            class="w-12 h-12 rounded-full text-brand-secondary hover:bg-brand-bg transition-all font-black text-sm">2</button>
-                        <button
-                            class="w-12 h-12 rounded-full text-brand-secondary hover:bg-brand-bg transition-all font-black text-sm text-outline-variant">...</button>
-                        <button
-                            class="w-12 h-12 rounded-full flex items-center justify-center text-brand-secondary hover:bg-brand-bg transition-all">
-                            <span class="material-symbols-outlined">east</span>
-                        </button>
-                    </nav>
-                </div>
-            </main>
-        </div>
+                    <!-- Pagination Placeholder -->
+                    <div th:if="${!#lists.isEmpty(products)}" class="flex justify-center pt-12">
+                        <nav
+                            class="flex items-center gap-3 p-2 bg-white rounded-full shadow-sm border border-outline-variant/10">
+                            <button
+                                class="w-12 h-12 rounded-full flex items-center justify-center text-brand-secondary hover:bg-brand-bg transition-all">
+                                <span class="material-symbols-outlined">west</span>
+                            </button>
+                            <span
+                                class="w-12 h-12 rounded-full bg-brand-primary text-white flex items-center justify-center font-black text-sm shadow-xl shadow-brand-primary/30">1</span>
+                            <button
+                                class="w-12 h-12 rounded-full text-brand-secondary hover:bg-brand-bg transition-all font-black text-sm">2</button>
+                            <button
+                                class="w-12 h-12 rounded-full text-brand-secondary hover:bg-brand-bg transition-all font-black text-sm text-outline-variant">...</button>
+                            <button
+                                class="w-12 h-12 rounded-full flex items-center justify-center text-brand-secondary hover:bg-brand-bg transition-all">
+                                <span class="material-symbols-outlined">east</span>
+                            </button>
+                        </nav>
+                    </div>
+                </main>
+            </div>
     </main>
 
     <!-- Footer -->
@@ -366,14 +449,14 @@
 
     <!-- AJAX Handler for Cart/Wishlist -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // Intercept Cart Add Forms
             document.querySelectorAll('form[action="/cart/add"]').forEach(form => {
-                form.addEventListener('submit', function(e) {
+                form.addEventListener('submit', function (e) {
                     e.preventDefault();
                     const formData = new FormData(this);
                     const btn = this.querySelector('button');
-                    
+
                     fetch(this.getAttribute('action'), {
                         method: 'POST',
                         body: formData,
@@ -383,7 +466,7 @@
                     }).then(data => {
                         if (data) {
                             const badge = document.getElementById('cart-badge');
-                            if(badge) {
+                            if (badge) {
                                 badge.textContent = data.count;
                                 badge.classList.add('animate-bounce');
                                 setTimeout(() => badge.classList.remove('animate-bounce'), 1000);
@@ -398,39 +481,39 @@
             });
 
             // Intercept Wishlist Buttons
-            document.addEventListener('click', function(e) {
+            document.addEventListener('click', function (e) {
                 const wishBtn = e.target.closest('.wishlist-btn');
                 if (wishBtn) {
                     e.preventDefault();
                     const productId = wishBtn.dataset.productId;
-                    
-                    fetch('/wishlist/toggle/' + productId, { 
+
+                    fetch('/wishlist/toggle/' + productId, {
                         method: 'POST',
                         headers: { 'X-Requested-With': 'XMLHttpRequest' }
                     })
-                    .then(response => {
-                        if (response.status === 401) {
-                            window.location.href = '/login';
-                            return;
-                        }
-                        if (response.ok) return response.json();
-                    })
-                    .then(data => {
-                        if (data) {
-                            const badge = document.getElementById('wishlist-badge');
-                            if(badge) badge.textContent = data.count;
-                            const icon = wishBtn.querySelector('.material-symbols-outlined');
-                            if (data.added) {
-                                icon.classList.add('text-red-500', 'fill-1');
-                            } else {
-                                icon.classList.remove('text-red-500', 'fill-1');
+                        .then(response => {
+                            if (response.status === 401) {
+                                window.location.href = '/login';
+                                return;
                             }
-                            if(badge) {
-                                badge.classList.add('animate-bounce');
-                                setTimeout(() => badge.classList.remove('animate-bounce'), 1000);
+                            if (response.ok) return response.json();
+                        })
+                        .then(data => {
+                            if (data) {
+                                const badge = document.getElementById('wishlist-badge');
+                                if (badge) badge.textContent = data.count;
+                                const icon = wishBtn.querySelector('.material-symbols-outlined');
+                                if (data.added) {
+                                    icon.classList.add('text-red-500', 'fill-1');
+                                } else {
+                                    icon.classList.remove('text-red-500', 'fill-1');
+                                }
+                                if (badge) {
+                                    badge.classList.add('animate-bounce');
+                                    setTimeout(() => badge.classList.remove('animate-bounce'), 1000);
+                                }
                             }
-                        }
-                    });
+                        });
                 }
             });
         });

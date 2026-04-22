@@ -119,7 +119,7 @@
                             </div>
                             <span class="text-gray-700 font-bold text-sm">Tổng</span>
                         </div>
-                        <span class="text-green-700 font-black" th:text="${order.finalPrice}">0₫</span>
+                        <span class="text-green-700 font-black" th:text="${#numbers.formatDecimal(order.finalPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'">0 đ</span>
                     </div>
                 </div>
 

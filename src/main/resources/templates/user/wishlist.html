@@ -62,11 +62,28 @@
                         <a th:href="@{/products/{id}(id=${product.id})}">
                             <img th:if="${product.images != null and !product.images.isEmpty()}"
                                 th:src="@{${product.images[0].imageUrl}}"
-                                class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" th:alt="${product.name}" />
+                                class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" 
+                                th:classappend="${product.stockQuantity != null and product.stockQuantity <= 0} ? 'grayscale opacity-60' : ''"
+                                th:alt="${product.name}" />
                             <img th:unless="${product.images != null and !product.images.isEmpty()}"
                                 src="https://via.placeholder.com/400x400?text=Premium+Seafood"
-                                class="w-full h-full object-cover" alt="Seafood" />
+                                class="w-full h-full object-cover" 
+                                th:classappend="${product.stockQuantity != null and product.stockQuantity <= 0} ? 'grayscale opacity-60' : ''"
+                                alt="Seafood" />
+
+                            <!-- Out of Stock Overlay -->
+                            <div th:if="${product.stockQuantity != null and product.stockQuantity <= 0}" 
+                                 class="absolute inset-0 z-10 bg-black/20 backdrop-blur-[2px] flex items-center justify-center">
+                                <div class="bg-white/10 backdrop-blur-md border border-white/20 px-6 py-3 rounded-2xl shadow-2xl transform -rotate-12">
+                                    <span class="text-white font-black text-xl uppercase tracking-[0.2em] drop-shadow-lg">Hết hàng</span>
+                                </div>
+                            </div>
                         </a>
+
+                        <!-- Stock Badge -->
+                        <div th:if="${product.stockQuantity != null and product.stockQuantity <= 0}"
+                            class="absolute top-6 left-6 z-10 bg-black/80 backdrop-blur text-white text-[9px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest shadow-lg">
+                            Hết hàng</div>
 
                         <!-- Remove Button -->
                         <button type="button" 
@@ -90,7 +107,7 @@
 
                         <!-- Price Section -->
                         <div class="pt-2 flex items-end gap-2">
-                            <span class="text-2xl font-black text-[#0D4A7A] leading-none" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + '₫'">0₫</span>
+                            <span class="text-2xl font-black text-[#0D4A7A] leading-none" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' đ'">0 đ</span>
                             <span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest pb-1">/ kg</span>
                         </div>
 
@@ -100,10 +117,10 @@
                                 <input type="hidden" name="productId" th:value="${product.id}" />
                                 <input type="hidden" name="name" th:value="${product.name}" />
                                 <input type="hidden" name="price" th:value="${product.price}" />
-                                <button type="submit" 
-                                    class="w-full h-14 rounded-2xl bg-[#F26522] text-white font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-3 hover:shadow-xl hover:brightness-110 active:scale-95 transition-all shadow-lg">
-                                    <span class="material-symbols-outlined text-lg">shopping_cart</span>
-                                    THÊM VÀO GIỎ HÀNG
+                                <button type="submit" th:disabled="${product.stockQuantity != null and product.stockQuantity <= 0}"
+                                    class="w-full h-14 rounded-2xl bg-[#F26522] text-white font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-3 hover:shadow-xl hover:brightness-110 active:scale-95 transition-all shadow-lg disabled:bg-slate-300 disabled:shadow-none disabled:cursor-not-allowed">
+                                    <span class="material-symbols-outlined text-lg" th:text="${product.stockQuantity != null and product.stockQuantity <= 0 ? 'block' : 'shopping_cart'}">shopping_cart</span>
+                                    <span th:text="${product.stockQuantity != null and product.stockQuantity <= 0 ? 'HẾT HÀNG' : 'THÊM VÀO GIỎ HÀNG'}">THÊM VÀO GIỎ HÀNG</span>
                                 </button>
                             </form>
                         </div>
