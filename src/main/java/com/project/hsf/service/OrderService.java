@@ -1,6 +1,7 @@
 package com.project.hsf.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.project.hsf.dto.CartItemDTO;
 import com.project.hsf.entity.Order;
@@ -37,4 +38,8 @@ public interface OrderService {
     Order processOrder(Long orderCode, String status, boolean cancel, HttpSession session);
 
     Order orderCallback(Long orderCode, boolean success, HttpSession session);
+
+    List<Order> getNewestOrders();
+
+    Map<String, Object> getOrderStatistics();
 }

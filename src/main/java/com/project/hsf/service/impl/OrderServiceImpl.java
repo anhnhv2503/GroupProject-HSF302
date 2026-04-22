@@ -2,7 +2,9 @@ package com.project.hsf.service.impl;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.project.hsf.service.CartService;
 import jakarta.servlet.http.HttpSession;
@@ -300,5 +302,21 @@ public class OrderServiceImpl implements OrderService {
         }
 
         return null;
+    }
+
+    @Override
+    public List<Order> getNewestOrders() {
+        return orderRepository.findTop4ByOrderByCreatedDateDesc();
+    }
+
+    @Override
+    public Map<String, Object> getOrderStatistics() {
+        Map<String, Object> response = new HashMap<>();
+
+        long totalOrder = orderRepository.count();
+        long totalRevenue = paymentRepository.sumAmountByStatus("PAID");
+        response.put("totalOrder", totalOrder);
+        response.put("totalRevenue", totalRevenue);
+        return response;
     }
 }
