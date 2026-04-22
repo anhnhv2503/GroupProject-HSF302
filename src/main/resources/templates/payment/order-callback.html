@@ -108,7 +108,7 @@
                             </div>
                             <span class="text-gray-600 font-semibold text-sm">Ngày đặt</span>
                         </div>
-                        <span class="text-gray-900 font-bold text-sm" th:text="${order.createdDate}">21/04</span>
+                        <span class="text-gray-900 font-bold text-sm" th:text="${order.createdDate != null ? #temporals.format(order.createdDate, 'yyyy-MM-dd HH:mm') : '-'}">21/04</span>
                     </div>
 
                     <!-- Total Price -->

@@ -134,7 +134,7 @@
                                 </div>
                                 <span class="text-gray-600 font-semibold text-sm">Ngày</span>
                             </div>
-                            <span class="text-gray-900 font-bold text-sm" th:text="${order.createdDate}">21/04</span>
+                            <span class="text-gray-900 font-bold text-sm" th:text="${order.createdDate != null ? #temporals.format(order.createdDate, 'yyyy-MM-dd HH:mm') : '-'}">21/04</span>
                         </div>
                         <div class="flex items-center justify-between p-2 bg-gradient-to-r from-green-100 to-emerald-100 rounded-lg border border-green-200">
                             <div class="flex items-center gap-2">

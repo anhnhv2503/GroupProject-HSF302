@@ -196,7 +196,6 @@ public class OrderServiceImpl implements OrderService {
                 .totalPrice(subtotal)
                 .discountAmount(discountAmount)
                 .shippingFee(shippingFee)
-                .finalPrice(finalPrice)
                 .orderStatus(OrderStatus.PENDING)
                 .paymentMethod(paymentMethod)
                 .paymentStatus(PaymentStatus.UNPAID)
@@ -206,8 +205,8 @@ public class OrderServiceImpl implements OrderService {
                 .recipientName(recipientName)
                 .recipientPhone(recipientPhone)
                 .orderCode(orderCode)
+                .finalPrice(finalPrice)
                 .build();
-
         Order savedOrder = orderRepository.save(order);
 
         // 4. Save Order Items
