@@ -32,6 +32,7 @@ public class SecurityConfig {
                     "/webjars/**",
                     "/register-user",
                     "/cart",
+                    "/wishlist/**",
                     "/chatbot/**"
             );
 //    private final List<String> privateUrl = new ArrayList<>();
@@ -49,11 +50,22 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers(publicUrl.toArray(String[]::new)).permitAll()
+                .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .formLogin((form) -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/login")
-                        .defaultSuccessUrl("/home", true)
+                        .successHandler((request, response, authentication) -> {
+                            boolean isAdmin = authentication.getAuthorities().stream()
+                                    .anyMatch(authority -> "ROLE_ADMIN".equals(authority.getAuthority()));
+
+                            if (isAdmin) {
+                                response.sendRedirect("/admin/dashboard");
+                                return;
+                            }
+
+                            response.sendRedirect("/home");
+                        })
                         .failureUrl("/login?error=true")
                         .permitAll())
                 .logout((logout) -> logout

@@ -88,9 +88,14 @@
             background: linear-gradient(to right, rgba(10, 25, 41, 0.5), rgba(10, 25, 41, 0.8));
         }
 
-        .floating-label-input:focus-within label,
+        .floating-label-input input {
+            box-sizing: border-box;
+        }
+
+        .floating-label-input input:focus + label,
         .floating-label-input input:not(:placeholder-shown) + label {
-            transform: translateY(-1.5rem) scale(0.85);
+            top: 0.45rem;
+            font-size: 0.72rem;
             color: #F26522;
         }
     </style>
@@ -155,25 +160,27 @@
             <form class="space-y-6" th:action="@{/login}" method="post" role="form">
                 <!-- Email Field -->
                 <div class="relative floating-label-input">
-                    <input class="peer w-full px-4 py-4 bg-white border-none ring-1 ring-outline-variant/30 focus:ring-2 focus:ring-primary rounded-lg transition-all outline-none text-on-surface"
-                           id="username" name="username" placeholder=" " type="text" required/>
-                    <label class="absolute left-4 top-4 text-on-surface-variant pointer-events-none transition-all origin-left"
+                      <input class="peer w-full h-14 px-4 pt-5 pb-2 bg-white border-none ring-1 ring-outline-variant/30 focus:ring-2 focus:ring-primary rounded-lg outline-none text-on-surface transition"
+                             th:classappend="${param.error} ? ' ring-error/50 focus:ring-error' : ''"
+                          id="username" name="username" placeholder=" " type="text" autocomplete="username" th:value="${param.username}" required autofocus/>
+                      <label class="absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none transition-all"
                            for="username">
                         Tên đăng nhập
                     </label>
                 </div>
                 <!-- Password Field -->
                 <div class="relative floating-label-input">
-                    <input class="peer w-full px-4 py-4 bg-white border-none ring-1 ring-outline-variant/30 focus:ring-2 focus:ring-primary rounded-lg transition-all outline-none text-on-surface"
-                           id="password" placeholder=" " type="password" name="password" required>
+                      <input class="peer w-full h-14 px-4 pt-5 pb-2 pr-11 bg-white border-none ring-1 ring-outline-variant/30 focus:ring-2 focus:ring-primary rounded-lg outline-none text-on-surface transition"
+                             th:classappend="${param.error} ? ' ring-error/50 focus:ring-error' : ''"
+                          id="password" placeholder=" " type="password" name="password" autocomplete="current-password" required>
 
-                    <label class="absolute left-4 top-4 text-on-surface-variant pointer-events-none transition-all origin-left"
+                      <label class="absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none transition-all"
                            for="password">
                         Mật khẩu
                     </label>
                     <button class="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-primary transition-colors"
-                            type="button">
-                        <span class="material-symbols-outlined text-[20px]" data-icon="visibility">visibility</span>
+                        type="button" id="togglePassword" aria-label="Hiển thị mật khẩu">
+                       <span class="material-symbols-outlined text-[20px]" id="passwordIcon" data-icon="visibility">visibility</span>
                     </button>
                 </div>
                 <!-- Options Row -->
@@ -181,7 +188,7 @@
                     <label class="flex items-center gap-2 cursor-pointer group">
                         <div class="relative flex items-center">
                             <input class="peer appearance-none w-5 h-5 rounded border border-outline-variant checked:bg-primary checked:border-primary transition-all cursor-pointer"
-                                   type="checkbox"/>
+                                type="checkbox" name="remember-me"/>
                             <span class="material-symbols-outlined absolute text-white text-[16px] opacity-0 peer-checked:opacity-100 left-1/2 -translate-x-1/2"
                                   data-icon="check" style="font-variation-settings: 'FILL' 1;">check</span>
                         </div>
@@ -257,5 +264,21 @@
         </div>
     </div>
 </footer>
+<script>
+    (function () {
+        const passwordInput = document.getElementById('password');
+        const toggleButton = document.getElementById('togglePassword');
+        const passwordIcon = document.getElementById('passwordIcon');
+
+        if (passwordInput && toggleButton && passwordIcon) {
+            toggleButton.addEventListener('click', function () {
+                const isPassword = passwordInput.getAttribute('type') === 'password';
+                passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
+                passwordIcon.textContent = isPassword ? 'visibility_off' : 'visibility';
+                toggleButton.setAttribute('aria-label', isPassword ? 'Ẩn mật khẩu' : 'Hiển thị mật khẩu');
+            });
+        }
+    })();
+</script>
 </body>
 </html>

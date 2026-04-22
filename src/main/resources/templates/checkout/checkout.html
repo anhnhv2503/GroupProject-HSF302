@@ -1,169 +1,360 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="vi"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/customer-layout}">
-<head><title>Thanh Toán</title></head>
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Thanh Toán</title>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;family=Roboto:wght@300;400;500;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+          rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-fixed-variant": "#7f2b00",
+                        "surface-container-low": "#f3f4f5",
+                        "on-background": "#191c1d",
+                        "surface-container-highest": "#e1e3e4",
+                        "error": "#ba1a1a",
+                        "surface-container-high": "#e7e8e9",
+                        "surface-variant": "#e1e3e4",
+                        "primary": "#a63b00",
+                        "on-tertiary-fixed": "#001e2f",
+                        "on-secondary": "#ffffff",
+                        "secondary-fixed": "#d1e4ff",
+                        "on-secondary-fixed": "#001d35",
+                        "surface-dim": "#d9dadb",
+                        "outline": "#8d7166",
+                        "on-surface-variant": "#594138",
+                        "inverse-on-surface": "#f0f1f2",
+                        "surface-container": "#edeeef",
+                        "on-primary-container": "#4f1800",
+                        "surface-bright": "#f8f9fa",
+                        "secondary": "#2e6192",
+                        "error-container": "#ffdad6",
+                        "on-primary-fixed": "#370e00",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-fixed-dim": "#9dcaff",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-fixed-variant": "#004b6f",
+                        "primary-fixed-dim": "#ffb599",
+                        "surface": "#f8f9fa",
+                        "secondary-container": "#98c7ff",
+                        "on-tertiary-container": "#002d45",
+                        "background": "#f8f9fa",
+                        "tertiary-fixed-dim": "#8cceff",
+                        "on-secondary-container": "#1c5384",
+                        "surface-tint": "#a63b00",
+                        "outline-variant": "#e1bfb3",
+                        "on-error": "#ffffff",
+                        "primary-fixed": "#ffdbce",
+                        "inverse-primary": "#ffb599",
+                        "on-tertiary": "#ffffff",
+                        "on-surface": "#191c1d",
+                        "inverse-surface": "#2e3132",
+                        "tertiary-container": "#009ade",
+                        "on-secondary-fixed-variant": "#0b4979",
+                        "tertiary": "#006492",
+                        "primary-container": "#f26522",
+                        "on-error-container": "#93000a",
+                        "tertiary-fixed": "#cae6ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"],
+                        "value": ["Roboto"]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
 <body>
-<div layout:fragment="content" class="container py-5">
-
-    <!-- Messages -->
-    <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
-        <span th:text="${error}"></span>
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
-    <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
-        <span th:text="${success}"></span>
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
-
-    <!-- Progress Bar -->
-    <div class="d-flex justify-content-center align-items-center gap-3 mb-5 small fw-bold text-uppercase">
-        <div class="d-flex align-items-center gap-2 text-primary">
-            <span class="rounded-circle border border-primary d-flex align-items-center justify-content-center" style="width:32px;height:32px;">1</span>
-            <span class="opacity-75">Giỏ hàng</span>
+<header th:replace="~{fragments/index-header :: header}"></header>
+<main class="pt-32">
+    <div class="container mx-auto py-8 px-4 max-w-7xl">
+        <!-- Messages -->
+        <div th:if="${error}"
+             class="mb-6 p-4 bg-red-50 border-l-4 border-red-500 rounded-md flex items-center gap-2 animate-in slide-in-from-top">
+            <i class="bi bi-exclamation-circle text-red-600 text-lg"></i>
+            <span class="text-red-700 text-sm" th:text="${error}"></span>
         </div>
-        <div class="border-bottom border-primary" style="width:40px;"></div>
-        <div class="d-flex align-items-center gap-2 text-primary">
-            <span class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style="width:32px;height:32px;">2</span>
-            <span>Thanh toán</span>
+        <div th:if="${success}"
+             class="mb-6 p-4 bg-green-50 border-l-4 border-green-500 rounded-md flex items-center gap-2 animate-in slide-in-from-top">
+            <i class="bi bi-check-circle text-green-600 text-lg"></i>
+            <span class="text-green-700 text-sm" th:text="${success}"></span>
         </div>
-        <div class="border-bottom" style="width:40px;"></div>
-        <div class="d-flex align-items-center gap-2 text-muted opacity-50">
-            <span class="rounded-circle border d-flex align-items-center justify-content-center" style="width:32px;height:32px;">3</span>
-            <span>Hoàn tất</span>
-        </div>
-    </div>
 
-    <div class="row g-4">
-        <!-- LEFT: Cart Items + Summary -->
-        <div class="col-lg-7">
-            <h3 class="fw-bold mb-4">Giỏ Hàng Của Bạn <span class="text-muted fw-normal fs-6" th:text="'(' + ${#lists.size(cartItems)} + ' món)'"></span></h3>
-            <div th:each="item : ${cartItems}" class="d-flex align-items-center gap-3 p-3 rounded-3 bg-white shadow-sm border mb-3">
-                <div class="rounded-3 overflow-hidden bg-light flex-shrink-0" style="width:70px;height:70px;">
-                    <img th:if="${!#strings.isEmpty(item.imageUrl)}" th:src="${item.imageUrl}" th:alt="${item.name}" class="w-100 h-100" style="object-fit:cover;"/>
-                    <div th:if="${#strings.isEmpty(item.imageUrl)}" class="w-100 h-100 d-flex align-items-center justify-content-center text-muted"><i class="bi bi-image"></i></div>
+        <!-- Progress Bar -->
+        <div class="flex justify-center items-center gap-2 mb-12 flex-wrap">
+            <!-- Step 1 -->
+            <div class="flex flex-col md:flex-row items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-green-500 text-white flex items-center justify-center font-semibold shadow-md">
+                    <i class="bi bi-check-lg text-lg"></i>
                 </div>
-                <div class="flex-grow-1">
-                    <h6 class="fw-bold mb-0" th:text="${item.name}">SP</h6>
-                    <small class="text-muted">
-                        <span th:text="'×' + ${item.quantity}"></span> —
-                        <span th:text="${#numbers.formatDecimal(item.unitPrice, 0, 'COMMA', 0, 'POINT')} + ' ₫'"></span>
-                    </small>
-                </div>
-                <span class="fw-bold" th:text="${#numbers.formatDecimal(item.subtotal, 0, 'COMMA', 0, 'POINT')} + ' ₫'">0₫</span>
+                <span class="text-gray-500 text-xs font-semibold uppercase">Giỏ hàng</span>
             </div>
+            <div class="h-0.5 w-8 md:w-12 bg-blue-600 hidden md:block"></div>
+            <div class="w-0.5 h-8 bg-blue-600 md:hidden"></div>
 
-            <!-- Order Summary -->
-            <div class="card border-0 bg-light rounded-3 p-4 mt-4">
-                <h5 class="fw-bold mb-3">Tóm tắt đơn hàng</h5>
-                <div class="d-flex justify-content-between mb-2 text-muted">
-                    <span>Tạm tính</span>
-                    <span th:text="${#numbers.formatDecimal(totalPrice, 0, 'COMMA', 0, 'POINT')} + ' ₫'">0₫</span>
+            <!-- Step 2 -->
+            <div class="flex flex-col md:flex-row items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-600 to-blue-800 text-white flex items-center justify-center font-semibold shadow-lg">
+                    2
                 </div>
-                <div class="d-flex justify-content-between mb-2 text-muted">
-                    <span>Phí vận chuyển</span>
-                    <span th:text="${shippingFee != null} ? ${#numbers.formatDecimal(shippingFee, 0, 'COMMA', 0, 'POINT')} + ' ₫' : '0 ₫'">0₫</span>
-                </div>
-                <div th:if="${discountAmount != null and discountAmount > 0}" class="d-flex justify-content-between mb-2 text-success">
-                    <span>Giảm giá</span>
-                    <span th:text="'- ' + ${#numbers.formatDecimal(discountAmount, 0, 'COMMA', 0, 'POINT')} + ' ₫'">0₫</span>
-                </div>
-                <hr/>
-                <div class="d-flex justify-content-between align-items-end">
-                    <strong>Tổng cộng</strong>
-                    <span class="text-primary fw-bold" style="font-size:1.75rem;" th:text="${#numbers.formatDecimal(totalPrice - (discountAmount != null ? discountAmount : 0) + (shippingFee != null ? shippingFee : 0), 0, 'COMMA', 0, 'POINT')} + ' ₫'">0₫</span>
-                </div>
+                <span class="text-blue-600 text-xs font-semibold uppercase">Thanh toán</span>
             </div>
+            <div class="h-0.5 w-8 md:w-12 bg-gray-300 hidden md:block"></div>
+            <div class="w-0.5 h-8 bg-gray-300 md:hidden"></div>
 
-            <!-- Coupon -->
-            <div class="mt-4">
-                <h6 class="fw-bold mb-2">Nhập mã giảm giá</h6>
-                <form th:action="@{/checkout/apply-coupon}" method="post" class="d-flex gap-2" style="max-width:400px;">
-                    <input name="code" th:value="${appliedCoupon}" type="text" placeholder="Mã giảm giá" class="form-control text-uppercase"/>
-                    <button type="submit" class="btn btn-outline-primary fw-bold px-4">Áp dụng</button>
-                </form>
-                <div th:if="${appliedCoupon != null}" class="mt-2 small text-success fw-medium bg-success bg-opacity-10 d-inline-block px-3 py-1 rounded-pill">
-                    <i class="bi bi-check-circle me-1"></i>Đã áp dụng mã: <strong th:text="${appliedCoupon}"></strong>
+            <!-- Step 3 -->
+            <div class="flex flex-col md:flex-row items-center gap-3">
+                <div class="w-10 h-10 rounded-full border-2 border-gray-300 text-gray-500 flex items-center justify-center font-semibold">
+                    3
                 </div>
+                <span class="text-gray-500 text-xs font-semibold uppercase">Hoàn tất</span>
             </div>
         </div>
 
-        <!-- RIGHT: Checkout Form -->
-        <div class="col-lg-5">
-            <form id="checkoutForm" th:action="@{/checkout/place-order}" method="post">
-                <div class="card border-0 shadow-sm rounded-3 mb-4">
-                    <div class="card-body p-4">
-                        <h5 class="fw-bold mb-4">Thông Tin Giao Hàng</h5>
+        <div class="grid grid-cols-1 lg:grid-cols-7 gap-6">
+            <!-- LEFT: Cart Items + Summary -->
+            <div class="lg:col-span-4 space-y-6">
+                <h3 class="text-2xl font-bold flex items-center gap-2">
+                    <i class="bi bi-bag-check-fill text-blue-600 text-2xl"></i>
+                    Giỏ Hàng Của Bạn
+                    <span class="inline-flex items-center justify-center px-3 py-1 ml-2 text-xs font-semibold leading-none text-white bg-blue-800 rounded-full">
+                    <span th:text="${#lists.size(cartItems)}"></span>&nbsp;món
+                </span>
+                </h3>
+
+                <!-- Cart Items -->
+                <div class="space-y-3">
+                    <div th:each="item : ${cartItems}"
+                         class="flex items-center gap-3 p-4 bg-white rounded-2xl shadow-sm border border-gray-200 hover:shadow-md hover:border-blue-600 hover:-translate-y-0.5 transition-all duration-300">
+                        <div class="w-20 h-20 flex-shrink-0 rounded-2xl overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
+                            <img th:if="${!#strings.isEmpty(item.imageUrl)}" th:src="${item.imageUrl}"
+                                 th:alt="${item.name}"
+                                 class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"/>
+                            <div th:if="${#strings.isEmpty(item.imageUrl)}"
+                                 class="w-full h-full flex items-center justify-center text-gray-400"><i
+                                    class="bi bi-image text-2xl"></i></div>
+                        </div>
+                        <div class="flex-grow">
+                            <h6 class="font-bold text-gray-900 mb-1" th:text="${item.name}"></h6>
+                            <div class="flex items-center gap-2">
+                            <span class="inline-flex items-center px-2 py-1 text-xs font-semibold bg-gray-100 text-gray-900 rounded">Qty: <span
+                                    class="ml-1" th:text="${item.quantity}"></span></span>
+                                <span class="text-gray-500 text-sm">@</span>
+                                <span class="text-gray-600"
+                                      th:text="${#numbers.formatDecimal(item.unitPrice, 0, 'COMMA', 0, 'POINT')} + ' ₫'"></span>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                        <span class="font-bold text-gray-900 block"
+                              th:text="${#numbers.formatDecimal(item.subtotal, 0, 'COMMA', 0, 'POINT')} + ' ₫'"></span>
+                            <small class="text-gray-500">Thành tiền</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order Summary -->
+                <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-6 border border-gray-200 space-y-3">
+                    <h5 class="text-lg font-bold flex items-center gap-2">
+                        <i class="bi bi-receipt text-blue-600"></i>
+                        Tóm tắt đơn hàng
+                    </h5>
+
+                    <div class="space-y-2 border-b border-gray-300 pb-3">
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Tạm tính</span>
+                            <span class="font-semibold text-gray-900"
+                                  th:text="${#numbers.formatDecimal(totalPrice, 0, 'COMMA', 0, 'POINT')} + ' ₫'"></span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Phí vận chuyển</span>
+                            <span class="font-semibold text-gray-900"
+                                  th:text="${shippingFee != null} ? ${#numbers.formatDecimal(shippingFee, 0, 'COMMA', 0, 'POINT')} + ' ₫' : '0 ₫'"></span>
+                        </div>
+                        <div th:if="${discountAmount != null and discountAmount > 0}"
+                             class="flex justify-between text-green-600">
+                            <span>Giảm giá</span>
+                            <span class="font-semibold"
+                                  th:text="'- ' + ${#numbers.formatDecimal(discountAmount, 0, 'COMMA', 0, 'POINT')} + ' ₫'"></span>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between items-end pt-3">
+                        <strong class="text-gray-900">Tổng cộng</strong>
+                        <span class="text-3xl font-bold bg-orange-500 bg-clip-text text-transparent"
+                              th:text="${#numbers.formatDecimal(totalPrice - (discountAmount != null ? discountAmount : 0) + (shippingFee != null ? shippingFee : 0), 0, 'COMMA', 0, 'POINT')} + ' ₫'"></span>
+                    </div>
+                </div>
+
+                <!-- Coupon -->
+                <div class="space-y-2">
+                    <h6 class="font-bold flex items-center gap-2">
+                        <i class="bi bi-ticket-perforated text-blue-600"></i>
+                        Nhập mã giảm giá
+                    </h6>
+                    <form th:action="@{/checkout/apply-coupon}" method="post" class="flex gap-2">
+                        <input name="code" th:value="${appliedCoupon}" type="text" placeholder="Mã giảm giá"
+                               class="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-20 transition-all uppercase"
+                               maxlength="20"/>
+                        <button type="submit"
+                                class="px-6 py-2 bg-orange-600 hover:bg-orange-700 text-white font-semibold rounded-lg transition-colors">
+                            Áp dụng
+                        </button>
+                    </form>
+                    <div th:if="${appliedCoupon != null}"
+                         class="mt-2 p-3 bg-green-50 border border-green-300 rounded-lg inline-flex items-center gap-2 text-green-700 text-sm font-semibold animate-in slide-in-from-top">
+                        <i class="bi bi-check-circle"></i>Đã áp dụng: <strong th:text="${appliedCoupon}"></strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT: Checkout Form -->
+            <div class="lg:col-span-3 space-y-4">
+                <form id="checkoutForm" th:action="@{/checkout/place-order}" method="post" class="space-y-4">
+
+                    <!-- Shipping Info Card -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow p-6 space-y-4">
+                        <h5 class="text-lg font-bold flex items-center gap-2">
+                            <i class="bi bi-geo-alt-fill text-blue-600"></i>
+                            Thông Tin Giao Hàng
+                        </h5>
 
                         <!-- No addresses -->
-                        <div th:if="${#lists.isEmpty(addresses)}" class="alert alert-info small">
-                            Bạn chưa có địa chỉ giao hàng nào. Vui lòng cập nhật trong Hồ sơ cá nhân.
+                        <div th:if="${#lists.isEmpty(addresses)}"
+                             class="p-4 bg-blue-50 border-l-4 border-blue-600 rounded-lg flex items-center gap-2">
+                            <i class="bi bi-info-circle text-blue-600 text-lg"></i>
+                            <span class="text-blue-700 text-sm">Bạn chưa có địa chỉ giao hàng nào. Vui lòng cập nhật trong Hồ sơ cá nhân.</span>
                         </div>
 
                         <!-- Address radio -->
-                        <div th:unless="${#lists.isEmpty(addresses)}" class="mb-4">
-                            <label class="form-label fw-bold small text-muted text-uppercase">Chọn Địa Chỉ</label>
-                            <div th:each="addr : ${addresses}" class="form-check border rounded-3 p-3 ps-5 mb-2">
-                                <input class="form-check-input" type="radio" name="addressInfo" required
-                                       th:value="${addr.address_line + ', ' + addr.ward + ', ' + addr.city + ' (SĐT: ' + addr.phone + ')'}"
-                                       th:checked="${addr.is_default}" th:id="'addr-' + ${addr.id}"/>
-                                <label class="form-check-label w-100" th:for="'addr-' + ${addr.id}">
-                                    <span class="d-flex align-items-center gap-2">
-                                        <i class="bi bi-geo-alt text-primary"></i>
-                                        <strong>Giao đến địa chỉ này</strong>
-                                        <span th:if="${addr.is_default}" class="badge bg-primary ms-auto" style="font-size:.6rem;">Mặc định</span>
-                                    </span>
-                                    <small class="text-muted d-block mt-1">SĐT: <span th:text="${addr.phone}"></span></small>
-                                    <small class="text-muted d-block" th:text="${addr.address_line + ', ' + addr.ward + ', ' + addr.city}"></small>
+                        <div th:unless="${#lists.isEmpty(addresses)}" class="space-y-2">
+                            <label class="block text-xs font-bold text-gray-600 uppercase mb-3">Chọn Địa Chỉ Giao
+                                Hàng</label>
+                            <div th:each="addr : ${addresses}"
+                                 class="border-2 border-gray-200 rounded-lg p-3 cursor-pointer hover:border-blue-600 hover:bg-blue-50 transition-all">
+                                <label class="flex gap-3 w-full cursor-pointer">
+                                    <input class="w-5 h-5 text-blue-600 rounded-full border-2 border-gray-300 focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50 transition-all mt-0.5 cursor-pointer"
+                                           type="radio" name="address" required
+                                           th:value="${addr.addressLine + ', ' + addr.ward + ', ' + addr.city + ' (SĐT: ' + addr.phone + ')'}"
+                                           th:checked="${addr.isDefault}" th:id="'addr-' + ${addr.id}"/>
+                                    <div class="flex-grow">
+                                        <div class="flex items-center gap-2 mb-1">
+                                            <i class="bi bi-geo-alt text-blue-600"></i>
+                                            <strong class="text-gray-900" th:text="${addr.addressLine}"></strong>
+                                            <span th:if="${addr.isDefault}"
+                                                  class="inline-flex items-center px-2 py-0.5 text-xs font-semibold text-white bg-blue-600 rounded-full">Mặc định</span>
+                                        </div>
+                                        <small class="text-gray-600 block">📞 <span
+                                                th:text="${addr.phone}"></span></small>
+                                        <small class="text-gray-600 block"
+                                               th:text="${addr.ward + ', ' + addr.city}"></small>
+                                    </div>
                                 </label>
                             </div>
                         </div>
 
-                        <!-- Payment -->
-                        <h6 class="fw-bold mb-3">Phương thức thanh toán</h6>
-                        <div class="form-check border rounded-3 p-3 ps-5 mb-2">
-                            <input class="form-check-input" type="radio" name="paymentMethod" value="COD" checked id="payCOD"/>
-                            <label class="form-check-label" for="payCOD">
-                                <strong>💵 Thanh toán khi nhận hàng (COD)</strong><br/>
-                                <small class="text-muted">Thanh toán bằng tiền mặt khi nhận hàng</small>
-                            </label>
+                        <!-- Manual Address if no addresses -->
+                        <div th:if="${#lists.isEmpty(addresses)}" class="space-y-2">
+                            <label class="block text-xs font-bold text-gray-600 uppercase mb-2">Địa Chỉ Nhận
+                                Hàng</label>
+                            <textarea name="address"
+                                      class="w-full px-4 py-2 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-20 transition-all"
+                                      rows="3" placeholder="Nhập địa chỉ nhận hàng của bạn..." required></textarea>
                         </div>
-                        <div class="form-check border rounded-3 p-3 ps-5 mb-2">
-                            <input class="form-check-input" type="radio" name="paymentMethod" value="BANK_TRANSFER" id="payBank"/>
-                            <label class="form-check-label" for="payBank">
-                                <strong>🏦 Chuyển khoản ngân hàng</strong><br/>
-                                <small class="text-muted">Thanh toán qua mã QR hoặc STK</small>
-                            </label>
+
+                        <!-- Notes -->
+                        <div class="space-y-2">
+                            <label class="block text-xs font-bold text-gray-600 uppercase mb-2">Ghi chú (Tùy
+                                chọn)</label>
+                            <textarea name="notes"
+                                      class="w-full px-4 py-2 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-20 transition-all"
+                                      rows="2" placeholder="VD: Giao sau 17h, gọi trước khi đến..."></textarea>
                         </div>
                     </div>
-                </div>
 
-                <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold rounded-3 py-3">🔒 ĐẶT HÀNG NGAY</button>
-                <p class="text-center text-muted small mt-2 text-uppercase fw-bold" style="letter-spacing:.1em;">Cam kết bảo mật thông tin 100%</p>
-            </form>
+                    <!-- Payment Card -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow p-6 space-y-4">
+                        <h6 class="font-bold text-gray-900 flex items-center gap-2">
+                            <i class="bi bi-credit-card-2-front text-blue-600"></i>
+                            Phương thức thanh toán
+                        </h6>
 
-            <!-- Trust badges -->
-            <div class="card border-0 bg-light rounded-3 mt-3">
-                <div class="card-body d-flex gap-3 align-items-center small">
-                    <i class="bi bi-truck text-brand-secondary fs-5"></i>
-                    <div>
-                        <strong>Giao hàng cực tốc</strong><br/>
-                        <span class="text-muted">Luôn đảm bảo trải nghiệm tốt nhất</span>
+                        <label class="border-2 border-gray-200 rounded-lg p-3 cursor-pointer hover:border-orange-600 hover:bg-orange-50 transition-all flex gap-3">
+                            <input class="w-5 h-5 text-blue-600 rounded-full border-2 border-gray-300 focus:ring-2 focus:ring-orange-600 focus:ring-opacity-50 transition-all mt-0.5 cursor-pointer"
+                                   type="radio" name="paymentMethod" value="COD" id="payCOD"/>
+                            <div>
+                                <strong class="text-gray-900">💵 Thanh toán khi nhận hàng (COD)</strong><br/>
+                                <small class="text-gray-600">Thanh toán bằng tiền mặt khi nhận hàng. An toàn và tiện
+                                    lợi.</small>
+                            </div>
+                        </label>
+
+                        <label class="border-2 border-gray-200 rounded-lg p-3 cursor-pointer hover:border-orange-600 hover:bg-orange-50 transition-all flex gap-3">
+                            <input class="w-5 h-5 text-blue-800 rounded-full border-2 border-gray-300 focus:ring-2 focus:ring-orange-600 focus:ring-opacity-50 transition-all mt-0.5 cursor-pointer"
+                                   type="radio" name="paymentMethod" value="BANK_TRANSFER" checked id="payBank"/>
+                            <div>
+                                <strong class="text-gray-900">🏦 Chuyển khoản ngân hàng</strong><br/>
+                                <small class="text-gray-600">Thanh toán qua mã QR hoặc số tài khoản. Nhanh chóng và bảo
+                                    mật.</small>
+                            </div>
+                        </label>
                     </div>
-                </div>
-            </div>
-            <div class="card border-0 bg-light rounded-3 mt-2">
-                <div class="card-body d-flex gap-3 align-items-center small">
-                    <i class="bi bi-patch-check text-brand-secondary fs-5"></i>
-                    <div>
-                        <strong>Mọi sản phẩm là Tinh Hoa</strong><br/>
-                        <span class="text-muted">The Culinary Curator đảm bảo chất lượng</span>
+
+                    <!-- CTA Button -->
+                    <button type="submit"
+                            class="mt-6 inline-flex w-full items-center justify-center rounded-2xl bg-primary px-4 py-3 text-xs font-black uppercase tracking-widest text-white shadow-lg shadow-primary/20 hover:opacity-90 transition">
+                        <i class="bi bi-lock-fill"></i>ĐẶT HÀNG NGAY
+                    </button>
+                    <p class="text-center text-gray-600 text-xs font-semibold tracking-wider">
+                        <i class="bi bi-shield-check text-green-600 mr-1"></i>
+                        Cam kết bảo mật thông tin 100%
+                    </p>
+                </form>
+
+                <!-- Trust Badges -->
+                <div class="space-y-3 mt-6">
+                    <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl border border-gray-200 p-4 hover:shadow-md hover:translate-x-1 transition-all flex gap-3 items-center">
+                        <div class="text-3xl">🚚</div>
+                        <div class="text-sm">
+                            <strong class="text-gray-900">Giao hàng cực tốc</strong><br/>
+                            <span class="text-gray-600">Đảm bảo trải nghiệm tốt nhất</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl border border-gray-200 p-4 hover:shadow-md hover:translate-x-1 transition-all flex gap-3 items-center">
+                        <div class="text-3xl">✅</div>
+                        <div class="text-sm">
+                            <strong class="text-gray-900">Mọi sản phẩm là Tinh Hoa</strong><br/>
+                            <span class="text-gray-600">The Culinary Curator đảm bảo chất lượng</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl border border-gray-200 p-4 hover:shadow-md hover:translate-x-1 transition-all flex gap-3 items-center">
+                        <div class="text-3xl">🛡️</div>
+                        <div class="text-sm">
+                            <strong class="text-gray-900">Thanh toán an toàn</strong><br/>
+                            <span class="text-gray-600">Được bảo vệ bởi hệ thống mã hóa</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-</div>
+    </div>
+</main>
 </body>
 </html>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đơn hàng đang được chuẩn bị</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+    <style>
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(242, 101, 34, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(242, 101, 34, 0.6); }
+        }
+        @keyframes slide-in {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+        .animate-pulse-glow {
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+        .animate-slide-in {
+            animation: slide-in 0.8s ease-out;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #F26522 0%, #0D4A7A 100%);
+        }
+        .gradient-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(248,249,250,0.95) 100%);
+            backdrop-filter: blur(20px);
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen overflow-hidden">
+
+<!-- Decorative Elements -->
+<div class="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl -mr-48 -mt-48"></div>
+<div class="absolute bottom-0 left-0 w-80 h-80 bg-white/5 rounded-full blur-3xl -ml-40 -mb-40"></div>
+
+<div class="min-h-screen flex items-center justify-center p-4 relative z-10">
+    <div class="w-full max-w-sm animate-slide-in">
+        <!-- Main Card -->
+        <div class="gradient-card rounded-2xl shadow-2xl overflow-hidden border border-white/20">
+            <div class="p-5 md:p-6">
+
+                <!-- Success Icon with Animation -->
+                <div class="flex justify-center mb-5">
+                    <div class="relative">
+                        <!-- Outer glow circle -->
+                        <div class="absolute inset-0 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full blur-lg opacity-50"></div>
+
+                        <!-- Inner icon circle -->
+                        <div class="relative w-16 h-16 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center shadow-xl animate-pulse-glow">
+                            <svg class="w-8 h-8 text-white animate-float" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Status Badge -->
+                <div class="text-center mb-2">
+                    <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-gradient-to-r from-green-100 to-emerald-100 text-emerald-700 font-bold text-xs uppercase tracking-wide">
+                        <i class="bi bi-check-circle-fill text-sm"></i> Xác nhận
+                    </span>
+                </div>
+
+                <!-- Heading -->
+                <h2 class="text-2xl font-black text-transparent bg-gradient-to-r from-gray-900 to-blue-900 bg-clip-text text-center mb-2">
+                    Chuẩn bị hàng
+                </h2>
+
+                <p class="text-gray-600 text-center mb-5 text-sm leading-relaxed">
+                    🎉 Đơn hàng xác nhận. Sắp giao đến bạn.
+                </p>
+
+                <!-- Order Info Section -->
+                <div class="bg-gradient-to-br from-blue-50 via-blue-50 to-indigo-50 rounded-xl p-4 mb-5 border border-blue-100/50 space-y-2">
+
+                    <!-- Order Code -->
+                    <div class="flex items-center justify-between p-2 bg-white/50 rounded-lg hover:bg-white/80 transition-all">
+                        <div class="flex items-center gap-2">
+                            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white text-xs">
+                                <i class="bi bi-box2"></i>
+                            </div>
+                            <span class="text-gray-600 font-semibold text-sm">Mã đơn</span>
+                        </div>
+                        <span class="text-gray-900 font-bold text-sm" th:text="${order.orderCode}">#ORD</span>
+                    </div>
+
+                    <!-- Order Date -->
+                    <div class="flex items-center justify-between p-2 bg-white/50 rounded-lg hover:bg-white/80 transition-all">
+                        <div class="flex items-center gap-2">
+                            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center text-white text-xs">
+                                <i class="bi bi-calendar-event"></i>
+                            </div>
+                            <span class="text-gray-600 font-semibold text-sm">Ngày đặt</span>
+                        </div>
+                        <span class="text-gray-900 font-bold text-sm" th:text="${order.createdDate}">21/04</span>
+                    </div>
+
+                    <!-- Total Price -->
+                    <div class="flex items-center justify-between p-2 bg-gradient-to-r from-green-100 to-emerald-100 rounded-lg border border-green-200">
+                        <div class="flex items-center gap-2">
+                            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center text-white text-xs">
+                                <i class="bi bi-currency-dollar"></i>
+                            </div>
+                            <span class="text-gray-700 font-bold text-sm">Tổng</span>
+                        </div>
+                        <span class="text-green-700 font-black" th:text="${order.finalPrice}">0₫</span>
+                    </div>
+                </div>
+
+                <!-- Timeline / Progress -->
+                <div class="mb-5 space-y-2">
+                    <div class="flex items-start gap-2">
+                        <div class="flex-shrink-0 mt-0.5">
+                            <div class="flex items-center justify-center h-6 w-6 rounded-full bg-green-500 text-white">
+                                <i class="bi bi-check-lg text-xs"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow">
+                            <p class="font-semibold text-gray-900 text-xs">Thanh toán xác nhận</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start gap-2">
+                        <div class="flex-shrink-0 mt-0.5">
+                            <div class="flex items-center justify-center h-6 w-6 rounded-full bg-orange-500 text-white animate-pulse">
+                                <i class="bi bi-box-seam text-xs"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow">
+                            <p class="font-semibold text-gray-900 text-xs">Chuẩn bị hàng</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start gap-2 opacity-50">
+                        <div class="flex-shrink-0 mt-0.5">
+                            <div class="flex items-center justify-center h-6 w-6 rounded-full bg-gray-300 text-white">
+                                <i class="bi bi-truck text-xs"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow">
+                            <p class="font-semibold text-gray-700 text-xs">Giao hàng</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-col gap-2">
+                    <a th:href="@{/}"
+                       class="w-full bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white font-bold py-2 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg flex items-center justify-center gap-2 text-sm">
+                        <i class="bi bi-house-fill text-sm"></i> Trang chủ
+                    </a>
+
+                    <a th:href="@{/user/orders}"
+                       class="w-full border-2 border-gray-300 hover:border-orange-500 text-gray-700 hover:text-orange-600 font-bold py-2 px-4 rounded-lg transition-all duration-300 flex items-center justify-center gap-2 text-sm">
+                        <i class="bi bi-list-check text-sm"></i> Đơn hàng
+                    </a>
+                </div>
+
+                <!-- Support Info -->
+                <div class="mt-4 p-3 bg-blue-50/50 rounded-lg border border-blue-100/50 text-center">
+                    <p class="text-xs text-gray-600">
+                        <i class="bi bi-headset text-blue-600"></i> Hotline: 1900-0000
+                    </p>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Bottom decorative element -->
+        <div class="text-center mt-4">
+            <p class="text-white/60 text-xs font-medium">The Culinary Curator © 2026</p>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

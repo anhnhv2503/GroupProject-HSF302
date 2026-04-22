@@ -35,6 +35,10 @@ public class ProductReview {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id")
+    private Order order;
+
     @Column(name = "rating", columnDefinition = "tinyint not null")
     private Short rating;
 
@@ -44,7 +48,7 @@ public class ProductReview {
     private String comment;
 
     @NotNull
-    @ColumnDefault("1")
+    @ColumnDefault("0")
     @Column(name = "is_visible", nullable = false)
     private Boolean isVisible = false;
 
@@ -55,5 +59,16 @@ public class ProductReview {
     @ColumnDefault("getdate()")
     @Column(name = "updated_date")
     private Instant updatedDate;
+
+    @PrePersist
+    protected void onCreate() {
+        createdDate = Instant.now();
+        updatedDate = Instant.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedDate = Instant.now();
+    }
 
 }

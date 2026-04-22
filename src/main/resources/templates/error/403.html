@@ -1,21 +1,248 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8"/>
-    <title>403 - Truy Cập Bị Từ Chối</title>
-    <link th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"/>
-    <link th:href="@{/css/custom.css}" rel="stylesheet"/>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>403 - Truy Cap Bi Tu Choi</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+	<style>
+		:root {
+			--ink: #1b1f3b;
+			--deep: #243b6b;
+			--alert: #ff6b35;
+			--ice: #ebf2ff;
+			--card: #ffffff;
+			--muted: #556079;
+			--ring: rgba(255, 107, 53, 0.25);
+		}
+
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+		}
+
+		body {
+			min-height: 100vh;
+			font-family: 'Manrope', sans-serif;
+			color: var(--ink);
+			background:
+				radial-gradient(circle at 15% 8%, rgba(255, 107, 53, 0.24), transparent 32%),
+				radial-gradient(circle at 92% 18%, rgba(37, 99, 235, 0.24), transparent 35%),
+				linear-gradient(135deg, #f9fbff 0%, #eef3ff 100%);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			padding: 24px;
+		}
+
+		.scene {
+			width: min(1040px, 100%);
+			display: grid;
+			grid-template-columns: 1.1fr 1fr;
+			gap: 24px;
+		}
+
+		.shield-wrap {
+			position: relative;
+			border-radius: 28px;
+			overflow: hidden;
+			background: linear-gradient(150deg, #243b6b 0%, #2f4c89 62%, #1d2f5d 100%);
+			padding: 42px 32px;
+			box-shadow: 0 22px 70px rgba(27, 31, 59, 0.28);
+		}
+
+		.shield-wrap::before,
+		.shield-wrap::after {
+			content: "";
+			position: absolute;
+			border-radius: 50%;
+			background: rgba(255, 255, 255, 0.08);
+			animation: float 7s ease-in-out infinite;
+		}
+
+		.shield-wrap::before {
+			width: 220px;
+			height: 220px;
+			right: -40px;
+			top: -90px;
+		}
+
+		.shield-wrap::after {
+			width: 170px;
+			height: 170px;
+			left: -50px;
+			bottom: -80px;
+			animation-delay: -2s;
+		}
+
+		.code {
+			font-family: 'Bebas Neue', sans-serif;
+			font-size: clamp(4.2rem, 9vw, 7rem);
+			letter-spacing: 0.08em;
+			color: #ffffff;
+			line-height: 0.88;
+		}
+
+		.tag {
+			margin-top: 14px;
+			display: inline-flex;
+			align-items: center;
+			gap: 10px;
+			color: #dbe7ff;
+			font-size: 0.9rem;
+			font-weight: 700;
+			text-transform: uppercase;
+			letter-spacing: 0.14em;
+		}
+
+		.tag i {
+			width: 10px;
+			height: 10px;
+			border-radius: 50%;
+			background: var(--alert);
+			box-shadow: 0 0 0 8px rgba(255, 107, 53, 0.16);
+		}
+
+		.shield {
+			margin-top: 34px;
+			width: 130px;
+			height: 160px;
+			clip-path: polygon(50% 0%, 90% 15%, 90% 56%, 50% 100%, 10% 56%, 10% 15%);
+			background: linear-gradient(180deg, #ffbfa7 0%, #ff7f50 100%);
+			display: grid;
+			place-items: center;
+			box-shadow: inset 0 -12px 25px rgba(0, 0, 0, 0.18), 0 14px 25px rgba(0, 0, 0, 0.2);
+		}
+
+		.shield span {
+			font-size: 2.4rem;
+			font-weight: 800;
+			color: #7a2200;
+		}
+
+		.content {
+			background: var(--card);
+			border-radius: 28px;
+			padding: 42px 34px;
+			box-shadow: 0 22px 70px rgba(48, 68, 113, 0.14);
+			border: 1px solid rgba(66, 88, 141, 0.16);
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+		}
+
+		h1 {
+			font-size: clamp(1.8rem, 4vw, 2.7rem);
+			line-height: 1.15;
+			margin-bottom: 12px;
+			font-weight: 800;
+		}
+
+		p {
+			color: var(--muted);
+			line-height: 1.65;
+			margin-bottom: 24px;
+		}
+
+		.actions {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 12px;
+		}
+
+		.btn {
+			border: 0;
+			text-decoration: none;
+			border-radius: 12px;
+			padding: 12px 18px;
+			font-weight: 700;
+			font-size: 0.95rem;
+			transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+		}
+
+		.btn-primary {
+			background: var(--alert);
+			color: #fff;
+			box-shadow: 0 12px 24px rgba(255, 107, 53, 0.28);
+		}
+
+		.btn-primary:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 14px 28px rgba(255, 107, 53, 0.36);
+			background: #f95e24;
+		}
+
+		.btn-ghost {
+			background: var(--ice);
+			color: var(--deep);
+			border: 1px solid rgba(36, 59, 107, 0.16);
+		}
+
+		.btn-ghost:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 10px 20px rgba(36, 59, 107, 0.16);
+		}
+
+		.note {
+			margin-top: 18px;
+			font-size: 0.9rem;
+			color: #6a768f;
+			padding: 12px 14px;
+			border-radius: 12px;
+			background: #f6f8ff;
+			border: 1px dashed #cdd8f1;
+		}
+
+		.btn:focus-visible {
+			outline: none;
+			box-shadow: 0 0 0 4px var(--ring);
+		}
+
+		@keyframes float {
+			0%, 100% { transform: translateY(0px); }
+			50% { transform: translateY(-10px); }
+		}
+
+		@media (max-width: 900px) {
+			.scene {
+				grid-template-columns: 1fr;
+			}
+
+			.shield-wrap,
+			.content {
+				padding: 30px 24px;
+			}
+
+			.shield {
+				width: 105px;
+				height: 130px;
+			}
+		}
+	</style>
 </head>
-<body class="d-flex align-items-center justify-content-center min-vh-100 bg-light">
-    <div class="text-center">
-        <div class="bg-danger bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-4" style="width:80px;height:80px;">
-            <i class="bi bi-shield-lock text-danger" style="font-size:2rem;"></i>
-        </div>
-        <h1 class="font-serif fw-bold text-brand-secondary display-1 mb-2">403</h1>
-        <h4 class="fw-bold mb-3">Truy Cập Bị Từ Chối</h4>
-        <p class="text-muted mb-4">Bạn không có quyền truy cập vào trang này.</p>
-        <a href="/" class="btn btn-primary fw-bold rounded-pill px-4">Về Trang Chủ</a>
-    </div>
+<body>
+	<main class="scene" role="main">
+		<section class="shield-wrap" aria-hidden="true">
+			<div class="code">403</div>
+			<div class="tag"><i></i> ACCESS DENIED</div>
+			<div class="shield"><span>!</span></div>
+		</section>
+
+		<section class="content">
+			<h1>Khu vực này cần quyền cao hơn</h1>
+			<p>
+				Bạn đã đăng nhập, nhưng tài khoản hiện tại không có quyền truy cập vào trang này.
+				ếu bạn nghi ngờ đây là nhầm lẫn, hãy liên hệ quản trị viên để được cấp quyền.
+			</p>
+			<div class="actions">
+				<a class="btn btn-primary" th:href="@{/home}">Quay về trang chủ</a>
+				<a class="btn btn-ghost" th:href="@{/products}">Khám phá sản phẩm</a>
+			</div>
+			<div class="note">Mã lỗi 403: Hệ thống đã chặn yêu cầu để bảo vệ tài nguyên quản trị.</div>
+		</section>
+	</main>
 </body>
 </html>

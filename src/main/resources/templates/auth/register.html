@@ -9,8 +9,6 @@
           rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
           rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
-          rel="stylesheet"/>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <script id="tailwind-config">
         tailwind.config = {
@@ -127,62 +125,91 @@
         </div>
         <!-- Form -->
         <form class="space-y-5" th:action="@{/register-user}" method="post" th:object="${registerDTO}">
+            <div th:if="${error}" class="rounded-lg bg-error-container text-on-error-container px-4 py-3 text-sm flex items-center gap-2">
+                <span class="material-symbols-outlined text-[18px]">error</span>
+                <span th:text="${error}"></span>
+            </div>
             <!-- Full Name -->
             <div class="space-y-1.5">
                 <label class="text-[10px] font-bold tracking-widest text-on-surface-variant uppercase ml-1">Họ và
                     Tên</label>
                 <div class="relative group">
-                    <input class="w-full px-4 py-3.5 bg-transparent border border-outline-variant/30 rounded-lg focus:border-primary focus:ring-1 focus:ring-primary/20 outline-none transition-all duration-300 placeholder:text-on-surface-variant/40 placeholder:font-light"
-                           placeholder="Vui lòng nhập họ tên của bạn" type="text" th:field="*{fullName}"/>
+                          <input class="w-full px-4 py-3.5 bg-transparent border border-outline-variant/30 rounded-lg focus:border-primary focus:ring-1 focus:ring-primary/20 outline-none transition-all duration-300 placeholder:text-on-surface-variant/40 placeholder:font-light"
+                                    th:classappend="${fieldErrors != null and fieldErrors.containsKey('fullName')} ? ' border-error ring-1 ring-error/20 focus:border-error focus:ring-error/20' : ''"
+                              placeholder="Vui lòng nhập họ tên của bạn" type="text" th:field="*{fullName}" required/>
                     <span class="material-symbols-outlined absolute right-4 top-3.5 text-on-surface-variant/30 group-focus-within:text-primary transition-colors">person</span>
                 </div>
+                <p th:if="${fieldErrors != null and fieldErrors.containsKey('fullName')}" class="text-xs text-error mt-1 ml-1" th:text="${fieldErrors['fullName']}"></p>
             </div>
             <div class="space-y-1.5">
                 <label class="text-[10px] font-bold tracking-widest text-on-surface-variant uppercase ml-1">Tên đăng nhập</label>
                 <div class="relative group">
-                    <input class="w-full px-4 py-3.5 bg-transparent border border-outline-variant/30 rounded-lg focus:border-primary focus:ring-1 focus:ring-primary/20 outline-none transition-all duration-300 placeholder:text-on-surface-variant/40 placeholder:font-light"
-                           placeholder="Vui lòng nhập họ tên của bạn" type="text" th:field="*{username}"/>
+                          <input class="w-full px-4 py-3.5 bg-transparent border border-outline-variant/30 rounded-lg focus:border-primary focus:ring-1 focus:ring-primary/20 outline-none transition-all duration-300 placeholder:text-on-surface-variant/40 placeholder:font-light"
+                                    th:classappend="${fieldErrors != null and fieldErrors.containsKey('username')} ? ' border-error ring-1 ring-error/20 focus:border-error focus:ring-error/20' : ''"
+                              placeholder="Nhập tên đăng nhập" type="text" th:field="*{username}" minlength="4" maxlength="30" pattern="[a-zA-Z0-9._-]{4,30}" required/>
                     <span class="material-symbols-outlined absolute right-4 top-3.5 text-on-surface-variant/30 group-focus-within:text-primary transition-colors">person</span>
                 </div>
+                <p class="text-[11px] text-on-surface-variant/80 ml-1">Dùng 4-30 ký tự: chữ, số, ., _, -</p>
+                <p th:if="${fieldErrors != null and fieldErrors.containsKey('username')}" class="text-xs text-error mt-1 ml-1" th:text="${fieldErrors['username']}"></p>
             </div>
             <!-- Email/Phone -->
             <div class="space-y-1.5">
                 <label class="text-[10px] font-bold tracking-widest text-on-surface-variant uppercase ml-1">
                     Số điện thoại</label>
                 <div class="relative group">
-                    <input class="w-full px-4 py-3.5 bg-transparent border border-outline-variant/30 rounded-lg focus:border-primary focus:ring-1 focus:ring-primary/20 outline-none transition-all duration-300 placeholder:text-on-surface-variant/40 placeholder:font-light"
-                           placeholder="Nhập email hoặc SĐT để đăng ký" type="text" th:field="*{phone}"/>
+                          <input class="w-full px-4 py-3.5 bg-transparent border border-outline-variant/30 rounded-lg focus:border-primary focus:ring-1 focus:ring-primary/20 outline-none transition-all duration-300 placeholder:text-on-surface-variant/40 placeholder:font-light"
+                                    th:classappend="${fieldErrors != null and fieldErrors.containsKey('phone')} ? ' border-error ring-1 ring-error/20 focus:border-error focus:ring-error/20' : ''"
+                              placeholder="Nhập số điện thoại" type="tel" th:field="*{phone}" pattern="[0-9]{9,11}" required/>
                     <span class="material-symbols-outlined absolute right-4 top-3.5 text-on-surface-variant/30 group-focus-within:text-primary transition-colors">alternate_email</span>
                 </div>
+                <p class="text-[11px] text-on-surface-variant/80 ml-1">Chỉ nhập số, từ 9 đến 11 chữ số.</p>
+                <p th:if="${fieldErrors != null and fieldErrors.containsKey('phone')}" class="text-xs text-error mt-1 ml-1" th:text="${fieldErrors['phone']}"></p>
             </div>
             <div class="space-y-1.5">
                 <label class="text-[10px] font-bold tracking-widest text-on-surface-variant uppercase ml-1">
                     Email</label>
                 <div class="relative group">
-                    <input class="w-full px-4 py-3.5 bg-transparent border border-outline-variant/30 rounded-lg focus:border-primary focus:ring-1 focus:ring-primary/20 outline-none transition-all duration-300 placeholder:text-on-surface-variant/40 placeholder:font-light"
-                           placeholder="Nhập email hoặc SĐT để đăng ký" type="text" th:field="*{email}"/>
+                          <input class="w-full px-4 py-3.5 bg-transparent border border-outline-variant/30 rounded-lg focus:border-primary focus:ring-1 focus:ring-primary/20 outline-none transition-all duration-300 placeholder:text-on-surface-variant/40 placeholder:font-light"
+                                    th:classappend="${fieldErrors != null and fieldErrors.containsKey('email')} ? ' border-error ring-1 ring-error/20 focus:border-error focus:ring-error/20' : ''"
+                              placeholder="Nhập email" type="email" th:field="*{email}" required/>
                     <span class="material-symbols-outlined absolute right-4 top-3.5 text-on-surface-variant/30 group-focus-within:text-primary transition-colors">alternate_email</span>
                 </div>
+                <p th:if="${fieldErrors != null and fieldErrors.containsKey('email')}" class="text-xs text-error mt-1 ml-1" th:text="${fieldErrors['email']}"></p>
             </div>
             <!-- Password -->
             <div class="space-y-1.5">
                 <label class="text-[10px] font-bold tracking-widest text-on-surface-variant uppercase ml-1">Mật
                     khẩu</label>
                 <div class="relative group">
-                    <input class="w-full px-4 py-3.5 bg-transparent border border-outline-variant/30 rounded-lg focus:border-primary focus:ring-1 focus:ring-primary/20 outline-none transition-all duration-300 placeholder:text-on-surface-variant/40 placeholder:font-light"
-                           placeholder="Tối thiểu 8 ký tự" type="password" th:field="*{password}"/>
-                    <span class="material-symbols-outlined absolute right-4 top-3.5 text-on-surface-variant/30 group-focus-within:text-primary transition-colors">lock_open</span>
+                          <input class="w-full px-4 py-3.5 bg-transparent border border-outline-variant/30 rounded-lg focus:border-primary focus:ring-1 focus:ring-primary/20 outline-none transition-all duration-300 placeholder:text-on-surface-variant/40 placeholder:font-light"
+                                    th:classappend="${fieldErrors != null and fieldErrors.containsKey('password')} ? ' border-error ring-1 ring-error/20 focus:border-error focus:ring-error/20' : ''"
+                              placeholder="Tối thiểu 6 ký tự" id="registerPassword" type="password" minlength="6" th:field="*{password}" required/>
+                    <button class="absolute right-4 top-3.5 text-on-surface-variant/40 hover:text-primary transition-colors" type="button" id="toggleRegisterPassword" aria-label="Hiển thị mật khẩu">
+                        <span class="material-symbols-outlined text-[20px]" id="registerPasswordIcon">visibility</span>
+                    </button>
                 </div>
+                <div class="ml-1 mt-1">
+                    <div class="h-1.5 w-full rounded-full bg-surface-container overflow-hidden">
+                        <div id="passwordStrengthBar" class="h-full w-0 rounded-full transition-all duration-300 bg-error"></div>
+                    </div>
+                    <p id="passwordStrengthText" class="text-[11px] text-on-surface-variant/80 mt-1">Độ mạnh mật khẩu: Chưa nhập</p>
+                </div>
+                <p th:if="${fieldErrors != null and fieldErrors.containsKey('password')}" class="text-xs text-error mt-1 ml-1" th:text="${fieldErrors['password']}"></p>
             </div>
             <!-- Confirm Password -->
             <div class="space-y-1.5">
                 <label class="text-[10px] font-bold tracking-widest text-on-surface-variant uppercase ml-1">Xác nhận mật
                     khẩu</label>
                 <div class="relative group">
-                    <input class="w-full px-4 py-3.5 bg-transparent border border-outline-variant/30 rounded-lg focus:border-primary focus:ring-1 focus:ring-primary/20 outline-none transition-all duration-300 placeholder:text-on-surface-variant/40 placeholder:font-light"
-                           placeholder="Nhập lại mật khẩu để kiểm tra" type="password" th:field="*{confirmPassword}"/>
-                    <span class="material-symbols-outlined absolute right-4 top-3.5 text-on-surface-variant/30 group-focus-within:text-primary transition-colors">verified_user</span>
+                          <input class="w-full px-4 py-3.5 bg-transparent border border-outline-variant/30 rounded-lg focus:border-primary focus:ring-1 focus:ring-primary/20 outline-none transition-all duration-300 placeholder:text-on-surface-variant/40 placeholder:font-light"
+                                    th:classappend="${fieldErrors != null and fieldErrors.containsKey('confirmPassword')} ? ' border-error ring-1 ring-error/20 focus:border-error focus:ring-error/20' : ''"
+                              placeholder="Nhập lại mật khẩu để kiểm tra" id="registerConfirmPassword" type="password" minlength="6" th:field="*{confirmPassword}" required/>
+                    <button class="absolute right-4 top-3.5 text-on-surface-variant/40 hover:text-primary transition-colors" type="button" id="toggleRegisterConfirmPassword" aria-label="Hiển thị mật khẩu xác nhận">
+                        <span class="material-symbols-outlined text-[20px]" id="registerConfirmPasswordIcon">visibility</span>
+                    </button>
                 </div>
+                <p id="confirmPasswordHint" class="text-[11px] text-on-surface-variant/80 mt-1 ml-1">Mật khẩu xác nhận cần trùng với mật khẩu.</p>
+                <p th:if="${fieldErrors != null and fieldErrors.containsKey('confirmPassword')}" class="text-xs text-error mt-1 ml-1" th:text="${fieldErrors['confirmPassword']}"></p>
             </div>
             <!-- Action Button -->
             <button class="w-full bg-primary text-white py-4 rounded-lg font-headline font-semibold shadow-lg shadow-primary/20 hover:shadow-primary/40 active:scale-[0.98] transition-all duration-300 mt-4"
@@ -206,5 +233,98 @@
         </div>
     </div>
 </div>
+<script>
+    (function () {
+        const passwordInput = document.getElementById('registerPassword');
+        const confirmInput = document.getElementById('registerConfirmPassword');
+        const strengthBar = document.getElementById('passwordStrengthBar');
+        const strengthText = document.getElementById('passwordStrengthText');
+        const confirmHint = document.getElementById('confirmPasswordHint');
+
+        function togglePassword(inputId, iconId, button) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+            if (!input || !icon) return;
+
+            const isPassword = input.type === 'password';
+            input.type = isPassword ? 'text' : 'password';
+            icon.textContent = isPassword ? 'visibility_off' : 'visibility';
+            button.setAttribute('aria-label', isPassword ? 'Ẩn mật khẩu' : 'Hiển thị mật khẩu');
+        }
+
+        const togglePwdBtn = document.getElementById('toggleRegisterPassword');
+        const toggleConfirmBtn = document.getElementById('toggleRegisterConfirmPassword');
+
+        if (togglePwdBtn) {
+            togglePwdBtn.addEventListener('click', function () {
+                togglePassword('registerPassword', 'registerPasswordIcon', this);
+            });
+        }
+
+        if (toggleConfirmBtn) {
+            toggleConfirmBtn.addEventListener('click', function () {
+                togglePassword('registerConfirmPassword', 'registerConfirmPasswordIcon', this);
+            });
+        }
+
+        function evaluateStrength(value) {
+            let score = 0;
+            if (value.length >= 6) score += 1;
+            if (/[A-Z]/.test(value) && /[a-z]/.test(value)) score += 1;
+            if (/[0-9]/.test(value)) score += 1;
+            if (/[^A-Za-z0-9]/.test(value)) score += 1;
+            return score;
+        }
+
+        function renderStrength() {
+            if (!passwordInput || !strengthBar || !strengthText) return;
+
+            const value = passwordInput.value || '';
+            const score = evaluateStrength(value);
+            const widths = ['0%', '25%', '50%', '75%', '100%'];
+            const labels = ['Chưa nhập', 'Yếu', 'Trung bình', 'Khá', 'Mạnh'];
+            const colors = ['#ba1a1a', '#d97706', '#d97706', '#2563eb', '#15803d'];
+
+            strengthBar.style.width = widths[score];
+            strengthBar.style.backgroundColor = colors[score];
+            strengthText.textContent = 'Độ mạnh mật khẩu: ' + labels[score];
+        }
+
+        function renderConfirmHint() {
+            if (!passwordInput || !confirmInput || !confirmHint) return;
+
+            const password = passwordInput.value || '';
+            const confirm = confirmInput.value || '';
+
+            if (!confirm) {
+                confirmHint.textContent = 'Mật khẩu xác nhận cần trùng với mật khẩu.';
+                confirmHint.className = 'text-[11px] text-on-surface-variant/80 mt-1 ml-1';
+                return;
+            }
+
+            if (password === confirm) {
+                confirmHint.textContent = 'Mật khẩu xác nhận đã khớp.';
+                confirmHint.className = 'text-[11px] text-green-700 mt-1 ml-1';
+            } else {
+                confirmHint.textContent = 'Mật khẩu xác nhận chưa khớp.';
+                confirmHint.className = 'text-[11px] text-error mt-1 ml-1';
+            }
+        }
+
+        if (passwordInput) {
+            passwordInput.addEventListener('input', function () {
+                renderStrength();
+                renderConfirmHint();
+            });
+        }
+
+        if (confirmInput) {
+            confirmInput.addEventListener('input', renderConfirmHint);
+        }
+
+        renderStrength();
+        renderConfirmHint();
+    })();
+</script>
 </body>
 </html>

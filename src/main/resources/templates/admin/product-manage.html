@@ -1,449 +1,774 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="vi"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/admin-layout}">
-<head><title>Quản Lý Sản Phẩm</title></head>
-<body>
-<div layout:fragment="content">
+<html xmlns:th="http://www.thymeleaf.org" class="light" lang="vi">
 
-    <!-- Header -->
-    <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-5">
-        <div>
-            <nav class="breadcrumb-custom mb-2">
-                <span>Hệ thống</span> <i class="bi bi-chevron-right mx-1" style="font-size:.5rem;"></i>
-                <span>Quản lý kho</span> <i class="bi bi-chevron-right mx-1" style="font-size:.5rem;"></i>
-                <span class="active">Sản phẩm</span>
-            </nav>
-            <h2 class="font-serif fw-bold text-brand-secondary mb-1" style="font-size:2.5rem;">Quản Lý Sản Phẩm</h2>
-            <p class="text-muted fst-italic">"Kho tàng mỹ vị từ đại dương, đảm bảo chất lượng tươi ngon nhất."</p>
-        </div>
-        <button class="btn btn-primary btn-lg d-flex align-items-center gap-2 fw-bold" data-bs-toggle="modal" data-bs-target="#createModal">
-            <i class="bi bi-plus-square"></i> Thêm sản phẩm mới
-        </button>
-    </div>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Oceanic - Quản Lý Sản Phẩm</title>
 
-    <!-- Stats -->
-    <div class="row g-4 mb-5">
-        <div class="col-md-4">
-            <div class="card stat-card position-relative p-4">
-                <i class="bi bi-box-seam stat-icon text-brand-secondary"></i>
-                <p class="text-muted fw-bold small mb-3"><span class="d-inline-block rounded-circle bg-warning me-2" style="width:8px;height:8px;"></span>Tổng Số Sản Phẩm</p>
-                <h3 class="stat-value" th:text="${totalProducts}">0</h3>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card stat-card position-relative p-4">
-                <i class="bi bi-patch-check stat-icon text-success"></i>
-                <p class="text-muted fw-bold small mb-3"><span class="d-inline-block rounded-circle bg-success me-2" style="width:8px;height:8px;"></span>Đang Hoạt Động</p>
-                <h3 class="stat-value" th:text="${activeProducts}">0</h3>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card stat-card stat-card-accent position-relative p-4">
-                <i class="bi bi-exclamation-triangle stat-icon text-white"></i>
-                <p class="fw-bold small mb-3" style="color:var(--brand-gold);"><span class="d-inline-block rounded-circle bg-primary me-2" style="width:8px;height:8px;"></span>Sắp Hết Hàng</p>
-                <h3 class="stat-value" th:text="${lowStockProducts}">0</h3>
-                <p class="small mb-0" style="color:var(--brand-gold);">Cần bổ sung nguồn cung</p>
-            </div>
-        </div>
-    </div>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#F26522',
+                        secondary: '#E8C872',
+                        accent: '#F26522',
+                        surface: '#FDFBF7',
+                        'on-surface': '#1B1C17',
+                        'on-surface-variant': '#44483D',
+                        'outline-variant': '#C4C8BA',
+                        background: '#F4F7F5',
+                        tertiary: '#0D4A7A',
+                        'primary-container': '#FFEDE5',
+                        'on-primary-container': '#F26522'
+                    },
+                    borderRadius: {
+                        DEFAULT: '0.5rem',
+                        lg: '1rem',
+                        xl: '1.5rem',
+                        full: '9999px'
+                    },
+                    fontFamily: {
+                        headline: ['Playfair Display', 'serif'],
+                        body: ['Plus Jakarta Sans', 'sans-serif']
+                    }
+                }
+            }
+        };
+    </script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&amp;family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
 
-    <!-- Filters -->
-    <div class="card border-0 shadow-sm rounded-4 p-3 mb-4">
-        <form th:action="@{/admin/seafood-products}" method="get" id="filterForm" class="row g-3 align-items-end">
-            <div class="col-md-4">
-                <div class="input-group">
-                    <span class="input-group-text bg-light border-0"><i class="bi bi-search"></i></span>
-                    <input type="text" name="keyword" th:value="${keyword}" placeholder="Tìm theo tên sản phẩm..." class="form-control bg-light border-0"/>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .font-headline {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .font-numeric {
+            font-family: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
+            font-variant-numeric: tabular-nums lining-nums;
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        .modal-overlay {
+            background: rgba(13, 74, 122, 0.4);
+            backdrop-filter: blur(4px);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #e1e3e4;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body class="bg-background text-on-surface flex min-h-screen">
+    <div th:replace="~{admin/fragments/sidebar :: sidebar}"></div>
+
+    <main class="flex-1 ml-72 min-h-screen relative">
+        <div th:replace="~{admin/fragments/header :: header}"></div>
+
+        <div class="p-10 space-y-8">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+                <div class="max-w-3xl">
+                    <nav
+                        class="flex items-center gap-2 mb-4 text-xs font-bold uppercase tracking-widest text-tertiary/60">
+                        <span>Hệ thống</span>
+                        <span class="material-symbols-outlined text-[10px]">chevron_right</span>
+                        <span>Quản lý kho</span>
+                        <span class="material-symbols-outlined text-[10px]">chevron_right</span>
+                        <span class="text-primary">Sản phẩm</span>
+                    </nav>
+                    <h2 class="text-5xl font-headline font-bold text-tertiary tracking-tight mb-4">Quản Lý Sản Phẩm</h2>
+                    <p class="text-on-surface-variant leading-relaxed text-lg italic opacity-80">Kho tàng mỹ vị từ đại
+                        dương, đảm bảo chất lượng tươi ngon nhất tới từng bàn tiệc.</p>
+                </div>
+                <button type="button" onclick="openModal()"
+                    class="bg-primary text-white font-bold px-8 py-4 rounded-xl flex items-center gap-3 shadow-xl shadow-primary/20 hover:-translate-y-1 active:translate-y-0 transition-all">
+                    <span class="material-symbols-outlined">add_box</span>
+                    THÊM SẢN PHẨM MỚI
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div
+                    class="bg-white p-8 rounded-2xl border border-outline-variant/10 shadow-sm relative overflow-hidden group hover:shadow-lg transition-all duration-300">
+                    <div
+                        class="absolute -right-6 -bottom-6 opacity-[0.03] group-hover:scale-110 transition-transform duration-500">
+                        <span class="material-symbols-outlined text-[160px] text-tertiary"
+                            style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+                    </div>
+                    <div class="relative z-10">
+                        <p
+                            class="text-xs font-bold text-on-surface-variant/60 uppercase tracking-widest mb-6 flex items-center gap-2">
+                            <span class="w-2 h-2 bg-secondary rounded-full"></span> Tổng Số Sản Phẩm
+                        </p>
+                        <h3 class="text-5xl font-numeric font-bold text-tertiary" th:text="${totalProducts}">0</h3>
+                    </div>
+                </div>
+
+                <div
+                    class="bg-white p-8 rounded-2xl border border-outline-variant/10 shadow-sm relative overflow-hidden group hover:shadow-lg transition-all duration-300">
+                    <div
+                        class="absolute -right-6 -bottom-6 opacity-[0.03] group-hover:scale-110 transition-transform duration-500 text-green-600">
+                        <span class="material-symbols-outlined text-[160px]"
+                            style="font-variation-settings: 'FILL' 1;">verified</span>
+                    </div>
+                    <div class="relative z-10">
+                        <p
+                            class="text-xs font-bold text-on-surface-variant/60 uppercase tracking-widest mb-6 flex items-center gap-2">
+                            <span class="w-2 h-2 bg-green-500 rounded-full"></span> Đang Hoạt Động
+                        </p>
+                        <h3 class="text-5xl font-numeric font-bold text-tertiary" th:text="${activeProducts}">0</h3>
+                    </div>
+                </div>
+
+                <div
+                    class="bg-tertiary text-white p-8 rounded-2xl shadow-xl relative overflow-hidden group hover:scale-[1.02] transition-all duration-300">
+                    <div
+                        class="absolute -right-6 -bottom-6 opacity-10 group-hover:scale-110 transition-transform duration-500">
+                        <span class="material-symbols-outlined text-[160px]"
+                            style="font-variation-settings: 'FILL' 1;">warning</span>
+                    </div>
+                    <div class="relative z-10">
+                        <p
+                            class="text-xs font-bold text-secondary uppercase tracking-widest mb-6 flex items-center gap-2">
+                            <span class="w-2 h-2 bg-primary rounded-full animate-pulse"></span> Sắp Hết Hàng
+                        </p>
+                        <h3 class="text-5xl font-numeric font-bold text-white" th:text="${lowStockProducts}">0</h3>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-2">
-                <select name="categoryId" class="form-select" onchange="this.form.submit()">
-                    <option value="">Tất cả danh mục</option>
-                    <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}" th:selected="${cat.id == categoryId}"></option>
-                </select>
-            </div>
-            <div class="col-md-2">
-                <select name="active" class="form-select" onchange="this.form.submit()">
-                    <option value="">Tất cả trạng thái</option>
-                    <option value="true" th:selected="${active == true}">Đang bán</option>
-                    <option value="false" th:selected="${active == false}">Tạm ngưng</option>
-                </select>
-            </div>
-            <div class="col-auto">
-                <button type="submit" class="btn btn-primary"><i class="bi bi-funnel"></i> Lọc</button>
-            </div>
-            <div class="col-auto" th:if="${keyword != null || categoryId != null || active != null}">
-                <a th:href="@{/admin/seafood-products}" class="btn btn-outline-secondary"><i class="bi bi-x-circle"></i> Xóa lọc</a>
-            </div>
-            <input type="hidden" name="sortBy" id="sortByInput" th:value="${sortBy ?: 'id'}"/>
-            <input type="hidden" name="sortDir" id="sortDirInput" th:value="${sortDir ?: 'desc'}"/>
-        </form>
-    </div>
 
-    <!-- Flash Messages -->
-    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
-        <span th:text="${successMessage}"></span>
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
-    <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
-        <span th:text="${errorMessage}"></span>
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
+            <div th:if="${successMessage}"
+                class="rounded-xl border border-green-200 bg-green-50 text-green-700 px-4 py-3 text-sm font-semibold"
+                th:text="${successMessage}"></div>
+            <div th:if="${errorMessage}"
+                class="rounded-xl border border-red-200 bg-red-50 text-red-700 px-4 py-3 text-sm font-semibold"
+                th:text="${errorMessage}"></div>
 
-    <!-- Data Table -->
-    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
-        <div class="card-header bg-white d-flex justify-content-between align-items-center py-3 px-4">
-            <div>
-                <h5 class="font-serif fw-bold text-brand-secondary mb-0">Danh sách sản phẩm</h5>
-                <small class="text-muted" th:text="${products.size()} + ' kết quả'"></small>
-            </div>
-        </div>
-        <div class="table-responsive">
-            <table class="table table-modern mb-0">
-                <thead>
-                <tr>
-                    <th style="cursor:pointer;" onclick="changeSort('id')">Mã ID
-                        <i class="bi" th:classappend="${sortBy == 'id'} ? (${sortDir == 'asc'} ? 'bi-arrow-up' : 'bi-arrow-down') : ''"></i>
-                    </th>
-                    <th style="cursor:pointer;" onclick="changeSort('name')">Sản Phẩm
-                        <i class="bi" th:classappend="${sortBy == 'name'} ? (${sortDir == 'asc'} ? 'bi-arrow-up' : 'bi-arrow-down') : ''"></i>
-                    </th>
-                    <th>Danh Mục</th>
-                    <th style="cursor:pointer;" onclick="changeSort('price')">Giá Bán
-                        <i class="bi" th:classappend="${sortBy == 'price'} ? (${sortDir == 'asc'} ? 'bi-arrow-up' : 'bi-arrow-down') : ''"></i>
-                    </th>
-                    <th class="text-center" style="cursor:pointer;" onclick="changeSort('stockQuantity')">Tồn Kho
-                        <i class="bi" th:classappend="${sortBy == 'stockQuantity'} ? (${sortDir == 'asc'} ? 'bi-arrow-up' : 'bi-arrow-down') : ''"></i>
-                    </th>
-                    <th>Trạng Thái</th>
-                    <th class="text-end">Quản Lý</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="product : ${products}">
-                    <td class="text-muted small fw-semibold font-monospace" th:text="'#PRO-' + ${product.id}">#PRO-001</td>
-                    <td>
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="rounded-3 overflow-hidden bg-light flex-shrink-0" style="width:48px;height:48px;">
-                                <img th:if="${product.images != null and !product.images.isEmpty()}"
-                                     th:with="primaryImg=${product.images.^[isPrimary != null and isPrimary]}"
-                                     th:src="@{${primaryImg != null ? primaryImg.imageUrl : product.images[0].imageUrl}}"
-                                     alt="Image" class="w-100 h-100" style="object-fit:cover;"/>
-                                <div th:unless="${product.images != null and !product.images.isEmpty()}" class="w-100 h-100 d-flex align-items-center justify-content-center text-muted">
-                                    <i class="bi bi-image"></i>
-                                </div>
-                            </div>
-                            <div>
-                                <span class="fw-bold text-brand-secondary" th:text="${product.name}">Tên SP</span><br/>
-                                <small class="text-muted text-uppercase fw-bold" style="font-size:.6rem;" th:text="${product.importedFrom}">Xuất xứ</small>
-                            </div>
-                        </div>
-                    </td>
-                    <td><span class="badge bg-light text-brand-secondary border" th:text="${product.category.name}">DM</span></td>
-                    <td class="fw-bold" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' đ'">1,000 đ</td>
-                    <td class="text-center fw-bold font-monospace" th:classappend="${product.stockQuantity < 10} ? 'text-primary' : ''" th:text="${product.stockQuantity}">10</td>
-                    <td>
-                        <span th:if="${product.active}" class="badge badge-active rounded-pill"><i class="bi bi-circle-fill me-1" style="font-size:.4rem;"></i>Đang bán</span>
-                        <span th:unless="${product.active}" class="badge badge-inactive rounded-pill"><i class="bi bi-circle-fill me-1" style="font-size:.4rem;"></i>Tạm ngưng</span>
-                    </td>
-                    <td class="text-end">
-                        <!-- Gallery -->
-                        <button class="btn btn-sm btn-outline-info rounded-2 me-1" data-bs-toggle="modal" data-bs-target="#galleryModal"
-                                th:data-name="${product.name}"
-                                th:data-images="${#strings.listJoin(product.images.![imageUrl], ',')}">
-                            <i class="bi bi-images"></i>
-                        </button>
-                        <!-- Edit -->
-                        <button class="btn btn-sm btn-outline-secondary rounded-2 me-1" data-bs-toggle="modal" data-bs-target="#editModal"
-                                th:data-id="${product.id}" th:data-name="${product.name}"
-                                th:data-description="${product.description}" th:data-price="${product.price}"
-                                th:data-stock="${product.stockQuantity}" th:data-category-id="${product.category.id}"
-                                th:data-active="${product.active}" th:data-imported-from="${product.importedFrom}"
-                                th:data-freshness="${product.freshnessStatus}"
-                                th:data-images="${#strings.listJoin(product.images.![imageUrl], ',')}"
-                                th:data-primary-flags="${#strings.listJoin(product.images.![isPrimary], ',')}">
-                            <i class="bi bi-pencil"></i>
-                        </button>
-                        <!-- Delete -->
-                        <button class="btn btn-sm btn-outline-danger rounded-2" data-bs-toggle="modal" data-bs-target="#deleteModal"
-                                th:data-id="${product.id}" th:data-name="${product.name}">
-                            <i class="bi bi-trash"></i>
-                        </button>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <!-- ==================== CREATE MODAL ==================== -->
-    <div class="modal fade" id="createModal" tabindex="-1">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content rounded-4 overflow-hidden">
-                <div class="modal-header modal-header-brand">
+            <div class="bg-white rounded-2xl shadow-sm overflow-hidden border border-outline-variant/20">
+                <div
+                    class="px-8 py-6 border-b border-outline-variant/10 flex flex-col md:flex-row justify-between items-center gap-4 bg-surface/50">
                     <div>
-                        <h5 class="modal-title font-serif fw-bold">Thêm Sản Phẩm Mới</h5>
-                        <small class="opacity-75">Khởi tạo mỹ vị mới cho thực đơn đại dương</small>
+                        <h4 class="font-headline font-bold text-xl text-tertiary">Danh sách sản phẩm</h4>
+                        <p class="text-xs text-on-surface-variant font-medium mt-1"
+                            th:text="${products.size()} + ' sản phẩm hiện có'">0 sản phẩm hiện có</p>
                     </div>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <form th:action="@{/admin/seafood-products/create}" method="post" enctype="multipart/form-data">
-                    <div class="modal-body p-4">
-                        <div class="row g-3">
-                            <div class="col-12">
-                                <label class="form-label fw-bold small text-muted text-uppercase">Tên Sản Phẩm</label>
-                                <input type="text" name="name" class="form-control form-control-lg" required placeholder="VD: Tôm Hùm Alaska XL"/>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold small text-muted text-uppercase">Danh Mục</label>
-                                <select name="categoryId" class="form-select" required>
-                                    <option value="" disabled selected>Chọn danh mục</option>
-                                    <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"></option>
-                                </select>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold small text-muted text-uppercase">Giá Bán (VNĐ)</label>
-                                <input type="number" name="price" class="form-control" required min="0" placeholder="0"/>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold small text-muted text-uppercase">Số Lượng Tồn Kho</label>
-                                <input type="number" name="stockQuantity" class="form-control" required min="0" placeholder="0"/>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold small text-muted text-uppercase">Xuất Xứ</label>
-                                <input type="text" name="importedFrom" class="form-control" placeholder="VD: Alaska, USA"/>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold small text-muted text-uppercase">Tình Trạng</label>
-                                <select name="freshnessStatus" class="form-select">
-                                    <option value="FRESH">Tươi Sống</option>
-                                    <option value="FROZEN">Đông Lạnh</option>
-                                    <option value="PROCESSED">Đã Chế Biến</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-check form-switch mt-4 pt-2">
-                                    <input class="form-check-input" type="checkbox" name="active" value="true" checked id="createActiveSwitch"/>
-                                    <label class="form-check-label fw-bold" for="createActiveSwitch">Hoạt động (hiển thị trên menu)</label>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <label class="form-label fw-bold small text-muted text-uppercase">Hình Ảnh (Tối đa 4 ảnh)</label>
-                                <input type="file" name="imageFiles" class="form-control" multiple accept="image/*" id="createImageFiles"/>
-                                <input type="hidden" name="primaryImageIndex" value="0"/>
-                                <div id="createPreview" class="row g-2 mt-2"></div>
-                            </div>
-                            <div class="col-12">
-                                <label class="form-label fw-bold small text-muted text-uppercase">Mô Tả</label>
-                                <textarea name="description" class="form-control" rows="3" placeholder="Chi tiết về sản phẩm..."></textarea>
+
+                <form method="get" th:action="@{/admin/seafood-products}"
+                    class="px-8 py-6 border-b border-outline-variant/10 bg-white">
+                    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-6 gap-4 items-end">
+                        <div class="xl:col-span-2">
+                            <label class="block text-[11px] font-bold uppercase tracking-wider text-tertiary mb-2">Tìm
+                                kiếm</label>
+                            <div class="relative">
+                                <span
+                                    class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant/70 text-lg">search</span>
+                                <input name="keyword" th:value="${keyword}" type="text" placeholder="Tên sản phẩm..."
+                                    class="w-full rounded-xl border border-outline-variant/40 pl-10 pr-3 py-2.5 text-sm focus:border-primary focus:ring-primary/20" />
                             </div>
                         </div>
+
+                        <div>
+                            <label class="block text-[11px] font-bold uppercase tracking-wider text-tertiary mb-2">Danh
+                                mục</label>
+                            <select name="categoryId"
+                                class="w-full rounded-xl border border-outline-variant/40 py-2.5 text-sm focus:border-primary focus:ring-primary/20">
+                                <option value="">Tất cả</option>
+                                <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"
+                                    th:selected="${categoryId != null and categoryId == cat.id}"></option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-[11px] font-bold uppercase tracking-wider text-tertiary mb-2">Trạng
+                                thái</label>
+                            <select name="active"
+                                class="w-full rounded-xl border border-outline-variant/40 py-2.5 text-sm focus:border-primary focus:ring-primary/20">
+                                <option value="" th:selected="${active == null}">Tất cả</option>
+                                <option value="true" th:selected="${active != null and active}">Đang bán</option>
+                                <option value="false" th:selected="${active != null and !active}">Tạm ngưng</option>
+                            </select>
+                        </div>
+
+                        <!-- <div>
+                        <label class="block text-[11px] font-bold uppercase tracking-wider text-tertiary mb-2">Tồn kho</label>
+                        <select name="lowStock" class="w-full rounded-xl border border-outline-variant/40 py-2.5 text-sm focus:border-primary focus:ring-primary/20">
+                            <option value="" th:selected="${lowStock == null}">Tất cả</option>
+                            <option value="true" th:selected="${lowStock != null and lowStock}">Sắp hết (&lt;10)</option>
+                            <option value="false" th:selected="${lowStock != null and !lowStock}">Đủ hàng</option>
+                        </select>
+                    </div> -->
+
+                        <input type="hidden" name="sortBy" th:value="${sortBy}" />
+                        <input type="hidden" name="sortDir" th:value="${sortDir}" />
+
+                        <div class="mt-5 flex flex-wrap items-center gap-3 justify-end">
+                            <a th:href="@{/admin/seafood-products}"
+                                class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-outline-variant/50 text-on-surface-variant text-sm font-semibold hover:bg-slate-50 transition-colors">
+                                <span class="material-symbols-outlined text-base">restart_alt</span>
+                                Xóa lọc
+                            </a>
+                        </div>
+
+                        <div>
+
+                            <button type="submit"
+                                class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-tertiary text-white text-sm font-bold hover:bg-tertiary/90 transition-colors">
+                                <span class="material-symbols-outlined text-base">filter_alt</span>
+                                Áp dụng
+                            </button>
+                        </div>
+
+
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-light fw-bold" data-bs-dismiss="modal">Hủy bỏ</button>
-                        <button type="submit" class="btn btn-primary fw-bold px-4">Lưu thông tin</button>
+
+
+                </form>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-background/50">
+                                <th
+                                    class="px-8 py-5 text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant/60">
+                                    <a th:href="@{/admin/seafood-products(keyword=${keyword}, categoryId=${categoryId}, active=${active}, lowStock=${lowStock}, sortBy='id', sortDir=${sortBy == 'id' and sortDir == 'asc' ? 'desc' : 'asc'})}"
+                                        class="inline-flex items-center gap-1 hover:text-tertiary transition-colors"
+                                        th:classappend="${sortBy == 'id'} ? ' text-tertiary' : ''">
+                                        <span>Mã ID</span>
+                                        <span class="material-symbols-outlined text-sm"
+                                            th:text="${sortBy == 'id'} ? (${sortDir == 'asc'} ? 'north' : 'south') : 'swap_vert'">swap_vert</span>
+                                    </a>
+                                </th>
+                                <th
+                                    class="px-8 py-5 text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant/60">
+                                    <a th:href="@{/admin/seafood-products(keyword=${keyword}, categoryId=${categoryId}, active=${active}, lowStock=${lowStock}, sortBy='name', sortDir=${sortBy == 'name' and sortDir == 'asc' ? 'desc' : 'asc'})}"
+                                        class="inline-flex items-center gap-1 hover:text-tertiary transition-colors"
+                                        th:classappend="${sortBy == 'name'} ? ' text-tertiary' : ''">
+                                        <span>Sản Phẩm</span>
+                                        <span class="material-symbols-outlined text-sm"
+                                            th:text="${sortBy == 'name'} ? (${sortDir == 'asc'} ? 'north' : 'south') : 'swap_vert'">swap_vert</span>
+                                    </a>
+                                </th>
+                                <th
+                                    class="px-8 py-5 text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant/60">
+                                    Danh Mục</th>
+                                <th
+                                    class="px-8 py-5 text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant/60">
+                                    <a th:href="@{/admin/seafood-products(keyword=${keyword}, categoryId=${categoryId}, active=${active}, lowStock=${lowStock}, sortBy='price', sortDir=${sortBy == 'price' and sortDir == 'asc' ? 'desc' : 'asc'})}"
+                                        class="inline-flex items-center gap-1 hover:text-tertiary transition-colors"
+                                        th:classappend="${sortBy == 'price'} ? ' text-tertiary' : ''">
+                                        <span>Giá Bán</span>
+                                        <span class="material-symbols-outlined text-sm"
+                                            th:text="${sortBy == 'price'} ? (${sortDir == 'asc'} ? 'north' : 'south') : 'swap_vert'">swap_vert</span>
+                                    </a>
+                                </th>
+                                <th
+                                    class="px-8 py-5 text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant/60 text-center">
+                                    <a th:href="@{/admin/seafood-products(keyword=${keyword}, categoryId=${categoryId}, active=${active}, lowStock=${lowStock}, sortBy='stockQuantity', sortDir=${sortBy == 'stockQuantity' and sortDir == 'asc' ? 'desc' : 'asc'})}"
+                                        class="inline-flex items-center gap-1 hover:text-tertiary transition-colors"
+                                        th:classappend="${sortBy == 'stockQuantity'} ? ' text-tertiary' : ''">
+                                        <span>Tồn Kho</span>
+                                        <span class="material-symbols-outlined text-sm"
+                                            th:text="${sortBy == 'stockQuantity'} ? (${sortDir == 'asc'} ? 'north' : 'south') : 'swap_vert'">swap_vert</span>
+                                    </a>
+                                </th>
+                                <th
+                                    class="px-8 py-5 text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant/60">
+                                    Trạng Thái</th>
+                                <th
+                                    class="px-8 py-5 text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant/60 text-right">
+                                    Quản Lý</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-outline-variant/10">
+                            <tr th:if="${#lists.isEmpty(products)}">
+                                <td colspan="7" class="px-8 py-12 text-center text-sm text-on-surface-variant">Chưa có
+                                    sản phẩm nào.</td>
+                            </tr>
+
+                            <tr th:each="product : ${products}" class="hover:bg-background/40 transition-colors group">
+                                <td class="px-8 py-6 font-numeric text-xs text-tertiary/60 font-semibold"
+                                    th:text="'#PRO-' + ${product.id}">#PRO-1</td>
+                                <td class="px-8 py-6">
+                                    <span class="font-headline font-bold text-tertiary block text-lg"
+                                        th:text="${product.name}">Tên sản phẩm</span>
+                                    <span class="text-[10px] text-primary font-bold uppercase"
+                                        th:text="${product.importedFrom ?: 'Chưa cập nhật xuất xứ'}">Xuất xứ</span>
+                                </td>
+                                <td class="px-8 py-6 text-sm text-on-surface-variant"
+                                    th:text="${product.category.name}">Danh mục</td>
+                                <td class="px-8 py-6 font-semibold text-tertiary font-numeric"
+                                    th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' đ'">0
+                                    đ</td>
+                                <td class="px-8 py-6 text-center">
+                                    <span class="text-sm font-bold font-numeric"
+                                        th:classappend="${product.stockQuantity < 10} ? ' text-red-600' : ' text-tertiary'"
+                                        th:text="${product.stockQuantity}">0</span>
+                                </td>
+                                <td class="px-8 py-6">
+                                    <span th:if="${product.active}"
+                                        class="inline-flex items-center gap-1.5 px-4 py-1.5 bg-green-50 text-green-700 text-[10px] font-bold uppercase rounded-full border border-green-200">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span> Đang
+                                        Bán
+                                    </span>
+                                    <span th:unless="${product.active}"
+                                        class="inline-flex items-center gap-1.5 px-4 py-1.5 bg-slate-100 text-slate-600 text-[10px] font-bold uppercase rounded-full border border-slate-200">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span> Tạm ngưng
+                                    </span>
+                                </td>
+                                <td class="px-8 py-6 text-right">
+                                    <div class="flex justify-end gap-3">
+                                        <button type="button" th:data-id="${product.id}" th:data-name="${product.name}"
+                                            th:data-description="${product.description}"
+                                            th:data-price="${product.price}" th:data-stock="${product.stockQuantity}"
+                                            th:data-category-id="${product.category.id}"
+                                            th:data-active="${product.active}"
+                                            th:data-imported-from="${product.importedFrom}"
+                                            th:data-freshness="${product.freshnessStatus}"
+                                            th:data-images="${product.images != null ? #strings.listJoin(product.images.![imageUrl], ',') : ''}"
+                                            th:data-primary-flags="${product.images != null ? #strings.listJoin(product.images.![isPrimary], ',') : ''}"
+                                            onclick="openModal(true, this)"
+                                            class="w-9 h-9 inline-flex items-center justify-center bg-tertiary/5 hover:bg-tertiary hover:text-white rounded-lg transition-all text-tertiary">
+                                            <span class="material-symbols-outlined text-lg">edit</span>
+                                        </button>
+                                        <button type="button" th:data-id="${product.id}" th:data-name="${product.name}"
+                                            onclick="openDeleteModal(this)"
+                                            class="w-9 h-9 inline-flex items-center justify-center bg-primary/5 hover:bg-primary hover:text-white rounded-lg transition-all text-primary">
+                                            <span class="material-symbols-outlined text-lg">delete</span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="productModal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 modal-overlay" onclick="closeModal()"></div>
+
+        <div class="relative z-10 flex min-h-screen items-center justify-center p-4">
+            <div
+                class="bg-white w-full max-w-5xl max-h-[92vh] overflow-hidden rounded-xl shadow-[0px_20px_40px_rgba(13,74,122,0.15)] flex flex-col">
+                <div class="px-8 py-6 flex justify-between items-start border-b border-slate-100">
+                    <div>
+                        <h2 id="modalTitle" class="text-2xl font-bold text-tertiary tracking-tight">Thêm Sản Phẩm Mới
+                        </h2>
+                        <p id="modalSubtitle" class="text-on-surface-variant text-sm mt-1">Nhập thông tin chi tiết để
+                            niêm yết hải sản lên cửa hàng.</p>
+                    </div>
+                    <button type="button" onclick="closeModal()"
+                        class="p-2 hover:bg-slate-50 rounded-full transition-colors text-on-surface-variant">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                </div>
+
+                <form id="productForm" th:action="@{/admin/seafood-products/create}" method="post"
+                    enctype="multipart/form-data" class="flex-1 overflow-y-auto px-8 py-8 custom-scrollbar">
+                    <input type="hidden" name="id" id="productId" />
+                    <input id="primaryImageIndex" name="primaryImageIndex" type="hidden" value="0" />
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                        <div class="space-y-8">
+                            <div class="space-y-2">
+                                <label class="block text-xs font-bold text-tertiary uppercase tracking-wider">Tên sản
+                                    phẩm</label>
+                                <input name="name" required
+                                    class="w-full bg-slate-50 border-0 border-b-2 border-outline-variant focus:border-primary focus:ring-0 text-sm py-3 px-1 transition-all"
+                                    placeholder="Ví dụ: Cua Hoàng Đế Alaska" type="text" />
+                            </div>
+
+                            <div class="space-y-2">
+                                <label class="block text-xs font-bold text-tertiary uppercase tracking-wider">Danh
+                                    mục</label>
+                                <select name="categoryId" required
+                                    class="w-full bg-slate-50 border-0 border-b-2 border-outline-variant focus:border-primary focus:ring-0 text-sm py-3 px-1">
+                                    <option value="" disabled selected>Chọn danh mục sản phẩm</option>
+                                    <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}">
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="space-y-2">
+                                <label class="block text-xs font-bold text-tertiary uppercase tracking-wider">Mô tả sản
+                                    phẩm</label>
+                                <div class="bg-slate-50 rounded-lg p-2 border-b-2 border-outline-variant">
+                                    <div class="flex gap-2 mb-2 pb-2 border-b border-outline-variant/30">
+                                        <button class="p-1 hover:bg-slate-200 rounded text-on-surface-variant"
+                                            type="button"><span
+                                                class="material-symbols-outlined text-sm">format_bold</span></button>
+                                        <button class="p-1 hover:bg-slate-200 rounded text-on-surface-variant"
+                                            type="button"><span
+                                                class="material-symbols-outlined text-sm">format_italic</span></button>
+                                        <button class="p-1 hover:bg-slate-200 rounded text-on-surface-variant"
+                                            type="button"><span
+                                                class="material-symbols-outlined text-sm">format_list_bulleted</span></button>
+                                        <button class="p-1 hover:bg-slate-200 rounded text-on-surface-variant"
+                                            type="button"><span
+                                                class="material-symbols-outlined text-sm">link</span></button>
+                                    </div>
+                                    <textarea name="description"
+                                        class="w-full bg-transparent border-0 focus:ring-0 text-sm p-2 resize-none"
+                                        placeholder="Nhập mô tả chi tiết về nguồn gốc, quy cách đóng gói..."
+                                        rows="6"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <label class="block text-xs font-bold text-tertiary uppercase tracking-wider">Hình
+                                        ảnh sản phẩm</label>
+                                    <span id="imageCountLabel"
+                                        class="text-[11px] font-semibold text-on-surface-variant">0/4 ảnh</span>
+                                </div>
+
+                                <div id="dropzone"
+                                    class="border-2 border-dashed border-outline-variant rounded-lg p-8 text-center flex flex-col items-center justify-center hover:bg-slate-50 transition-colors cursor-pointer group relative">
+                                    <input id="fileInput" type="file" accept="image/*" multiple
+                                        class="absolute inset-0 opacity-0 cursor-pointer" />
+                                    <span
+                                        class="material-symbols-outlined text-4xl text-outline-variant group-hover:text-primary transition-colors mb-2">add_photo_alternate</span>
+                                    <p class="text-sm text-on-surface-variant">Kéo thả hoặc <span
+                                            class="text-primary font-semibold">Tải lên từ máy tính</span></p>
+                                    <p class="text-xs text-slate-500 mt-1 italic">PNG, JPG tối đa 5MB, tối đa 4 ảnh</p>
+                                </div>
+
+                                <input id="realFileInput" name="imageFiles" type="file" accept="image/*" multiple
+                                    class="hidden" />
+                                <div id="previewGrid" class="flex gap-3 mt-4 flex-wrap"></div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-8">
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="space-y-2">
+                                    <label class="block text-xs font-bold text-tertiary uppercase tracking-wider">Giá
+                                        bán (₫)</label>
+                                    <input name="price" required min="0"
+                                        class="w-full bg-slate-50 border-0 border-b-2 border-outline-variant focus:border-primary focus:ring-0 text-sm py-3 px-1 transition-all"
+                                        type="number" />
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="block text-xs font-bold text-tertiary uppercase tracking-wider">Tồn
+                                        kho</label>
+                                    <input name="stockQuantity" required min="0"
+                                        class="w-full bg-slate-50 border-0 border-b-2 border-outline-variant focus:border-primary focus:ring-0 text-sm py-3 px-1 transition-all"
+                                        type="number" />
+                                </div>
+                            </div>
+
+                            <div class="space-y-2">
+                                <label class="block text-xs font-bold text-tertiary uppercase tracking-wider">Xuất
+                                    xứ</label>
+                                <input name="importedFrom"
+                                    class="w-full bg-slate-50 border-0 border-b-2 border-outline-variant focus:border-primary focus:ring-0 text-sm py-3 px-1 transition-all"
+                                    type="text" />
+                            </div>
+
+                            <div class="space-y-2">
+                                <label class="block text-xs font-bold text-tertiary uppercase tracking-wider">Trạng thái
+                                    tươi sống</label>
+                                <select name="freshnessStatus"
+                                    class="w-full bg-slate-50 border-0 border-b-2 border-outline-variant focus:border-primary focus:ring-0 text-sm py-3 px-1">
+                                    <option value="FRESH">Đang bơi (Sống)</option>
+                                    <option value="FROZEN">Đông lạnh sâu (-18°C)</option>
+                                    <option value="PROCESSED">Khô/Chế biến sẵn</option>
+                                </select>
+                            </div>
+
+                            <div
+                                class="p-5 bg-slate-50 rounded-xl flex items-center justify-between border border-outline-variant/20">
+                                <div>
+                                    <p class="text-sm font-bold text-tertiary uppercase tracking-tight">Trạng thái hiển
+                                        thị</p>
+                                    <p class="text-xs text-on-surface-variant mt-1">Sản phẩm sẽ được hiển thị ngay trên
+                                        website</p>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input name="active" value="true" checked class="sr-only peer" type="checkbox" />
+                                    <div
+                                        class="w-12 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-6 peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary">
+                                    </div>
+                                </label>
+                            </div>
+
+                            <div class="mt-8 pt-6 border-t border-outline-variant/30">
+                                <div class="flex gap-4 items-start">
+                                    <span class="material-symbols-outlined text-tertiary text-xl"
+                                        style="font-variation-settings: 'FILL' 1;">verified</span>
+                                    <div>
+                                        <p class="text-xs font-bold text-tertiary">Cam kết Cold-Chain Oceanic</p>
+                                        <p class="text-[11px] text-on-surface-variant leading-relaxed mt-1">Sản phẩm
+                                            luôn được bảo quản đúng quy trình trước khi tới tay khách hàng.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </form>
-            </div>
-        </div>
-    </div>
 
-    <!-- ==================== EDIT MODAL ==================== -->
-    <div class="modal fade" id="editModal" tabindex="-1">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content rounded-4 overflow-hidden">
-                <div class="modal-header modal-header-brand">
-                    <div>
-                        <h5 class="modal-title font-serif fw-bold">Chỉnh Sửa Sản Phẩm</h5>
-                        <small class="opacity-75">Cập nhật thông tin chi tiết</small>
-                    </div>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <div class="px-8 py-6 bg-slate-50/70 flex items-center justify-end gap-4 border-t border-slate-100">
+                    <button
+                        class="px-8 py-3 rounded-lg border border-outline-variant text-on-surface-variant font-semibold text-sm hover:bg-slate-100 transition-all active:scale-95"
+                        type="button" onclick="closeModal()">
+                        Hủy bỏ
+                    </button>
+                    <button
+                        class="px-10 py-3 rounded-lg bg-primary text-white font-bold text-sm shadow-md hover:brightness-110 hover:shadow-lg transition-all active:scale-95 flex items-center gap-2"
+                        type="submit" form="productForm">
+                        <span class="material-symbols-outlined text-lg"
+                            style="font-variation-settings: 'FILL' 1;">save</span>
+                        Lưu Sản Phẩm
+                    </button>
                 </div>
-                <form id="editForm" method="post" enctype="multipart/form-data">
-                    <div class="modal-body p-4">
-                        <div class="row g-3">
-                            <div class="col-12">
-                                <label class="form-label fw-bold small text-muted text-uppercase">Tên Sản Phẩm</label>
-                                <input type="text" name="name" id="editName" class="form-control form-control-lg" required/>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold small text-muted text-uppercase">Danh Mục</label>
-                                <select name="categoryId" id="editCategoryId" class="form-select" required>
-                                    <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"></option>
-                                </select>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold small text-muted text-uppercase">Giá Bán (VNĐ)</label>
-                                <input type="number" name="price" id="editPrice" class="form-control" required min="0"/>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold small text-muted text-uppercase">Số Lượng Tồn Kho</label>
-                                <input type="number" name="stockQuantity" id="editStock" class="form-control" required min="0"/>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold small text-muted text-uppercase">Xuất Xứ</label>
-                                <input type="text" name="importedFrom" id="editImportedFrom" class="form-control"/>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold small text-muted text-uppercase">Tình Trạng</label>
-                                <select name="freshnessStatus" id="editFreshness" class="form-select">
-                                    <option value="FRESH">Tươi Sống</option>
-                                    <option value="FROZEN">Đông Lạnh</option>
-                                    <option value="PROCESSED">Đã Chế Biến</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-check form-switch mt-4 pt-2">
-                                    <input class="form-check-input" type="checkbox" name="active" value="true" id="editActive"/>
-                                    <label class="form-check-label fw-bold" for="editActive">Hoạt động</label>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <label class="form-label fw-bold small text-muted text-uppercase">Hình Ảnh mới (thay thế ảnh cũ)</label>
-                                <input type="file" name="imageFiles" class="form-control" multiple accept="image/*" id="editImageFiles"/>
-                                <input type="hidden" name="primaryImageIndex" value="0" id="editPrimaryIndex"/>
-                                <div id="editPreview" class="row g-2 mt-2"></div>
-                            </div>
-                            <div class="col-12">
-                                <label class="form-label fw-bold small text-muted text-uppercase">Mô Tả</label>
-                                <textarea name="description" id="editDescription" class="form-control" rows="3"></textarea>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-light fw-bold" data-bs-dismiss="modal">Hủy bỏ</button>
-                        <button type="submit" class="btn btn-primary fw-bold px-4">Cập nhật</button>
-                    </div>
-                </form>
             </div>
         </div>
     </div>
 
-    <!-- ==================== DELETE MODAL ==================== -->
-    <div class="modal fade" id="deleteModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content rounded-4 overflow-hidden">
-                <div class="modal-body text-center p-5">
-                    <div class="bg-danger bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-4" style="width:64px;height:64px;">
-                        <i class="bi bi-exclamation-triangle text-danger fs-3"></i>
-                    </div>
-                    <h5 class="font-serif fw-bold text-brand-secondary mb-2">Xác Nhận Xóa</h5>
-                    <p class="text-muted">Bạn có chắc chắn muốn xóa sản phẩm <strong id="deleteProductName" class="text-primary"></strong>? Hành động này không thể hoàn tác.</p>
-                    <form id="deleteForm" method="post" class="d-flex gap-3 justify-content-center mt-4">
-                        <button type="button" class="btn btn-light fw-bold px-4" data-bs-dismiss="modal">Hủy bỏ</button>
-                        <button type="submit" class="btn btn-danger fw-bold px-4">Xóa ngay</button>
+    <div id="deleteModal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-slate-900/50 backdrop-blur-sm" onclick="closeDeleteModal()"></div>
+
+        <div class="relative z-10 flex min-h-screen items-center justify-center p-4">
+            <div class="w-full max-w-md overflow-hidden rounded-3xl bg-white shadow-2xl border border-slate-200">
+                <div class="p-8 text-center">
+                    <h3 class="text-xl font-black text-blue-900 mb-2">Xác Nhận Xóa</h3>
+                    <p class="text-sm text-slate-600 mb-6">Bạn có chắc chắn muốn xóa sản phẩm <span
+                            id="deleteProductName" class="font-bold text-primary"></span>?</p>
+                    <form id="deleteForm" method="post" class="flex gap-3 justify-center">
+                        <button type="button" onclick="closeDeleteModal()"
+                            class="px-6 py-2.5 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-100">Hủy</button>
+                        <button type="submit"
+                            class="px-6 py-2.5 bg-primary hover:bg-orange-600 text-white text-sm font-bold rounded-xl">Xóa</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- ==================== GALLERY MODAL ==================== -->
-    <div class="modal fade" id="galleryModal" tabindex="-1">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content rounded-4 overflow-hidden">
-                <div class="modal-header">
-                    <h5 class="modal-title font-serif fw-bold text-brand-secondary" id="galleryTitle">Hình Ảnh Sản Phẩm</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body p-3">
-                    <!-- Bootstrap Carousel -->
-                    <div id="productCarousel" class="carousel slide" data-bs-ride="false">
-                        <div class="carousel-inner rounded-3 overflow-hidden" id="carouselInner">
-                            <!-- JS will inject slides -->
-                        </div>
-                        <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon bg-dark bg-opacity-50 rounded-circle p-3"></span>
-                        </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
-                            <span class="carousel-control-next-icon bg-dark bg-opacity-50 rounded-circle p-3"></span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ==================== MINIMAL JS ==================== -->
     <script>
-        // Sort
-        function changeSort(field) {
-            const f = document.getElementById('filterForm');
-            const sb = document.getElementById('sortByInput');
-            const sd = document.getElementById('sortDirInput');
-            if (sb.value === field) { sd.value = sd.value === 'asc' ? 'desc' : 'asc'; }
-            else { sb.value = field; sd.value = 'asc'; }
-            f.submit();
+        const maxImageFiles = 4;
+        let selectedImageFiles = [];
+        let primaryImageIndex = 0;
+
+        function syncRealFileInput() {
+            const dt = new DataTransfer();
+            selectedImageFiles.forEach(file => dt.items.add(file));
+            document.getElementById('realFileInput').files = dt.files;
+            document.getElementById('primaryImageIndex').value = String(primaryImageIndex);
+            document.getElementById('imageCountLabel').innerText = `${selectedImageFiles.length}/4 ảnh`;
         }
 
-        // Edit Modal populate
-        const editModal = document.getElementById('editModal');
-        if (editModal) {
-            editModal.addEventListener('show.bs.modal', function (e) {
-                const btn = e.relatedTarget;
-                const id = btn.getAttribute('data-id');
-                document.getElementById('editForm').action = '/admin/seafood-products/' + id + '/edit';
-                document.getElementById('editName').value = btn.getAttribute('data-name');
-                document.getElementById('editDescription').value = btn.getAttribute('data-description') || '';
-                document.getElementById('editPrice').value = parseFloat(btn.getAttribute('data-price'));
-                document.getElementById('editStock').value = btn.getAttribute('data-stock');
-                document.getElementById('editCategoryId').value = btn.getAttribute('data-category-id');
-                document.getElementById('editActive').checked = btn.getAttribute('data-active') === 'true';
-                document.getElementById('editImportedFrom').value = btn.getAttribute('data-imported-from') || '';
-                document.getElementById('editFreshness').value = btn.getAttribute('data-freshness') || 'FRESH';
+        function renderImagePreviews() {
+            const previewGrid = document.getElementById('previewGrid');
+            previewGrid.innerHTML = '';
+
+            selectedImageFiles.forEach((file, index) => {
+                const isPrimary = index === primaryImageIndex;
+                const objectUrl = URL.createObjectURL(file);
+                const item = document.createElement('div');
+                item.className = 'relative w-20 h-20 rounded-lg overflow-hidden group border ' + (isPrimary ? 'border-primary ring-2 ring-primary/40' : 'border-outline-variant/30');
+                item.innerHTML = `
+                <img src="${objectUrl}" alt="Preview" class="w-full h-full object-cover" />
+                <button type="button" onclick="removeSelectedImage(${index})" class="absolute top-1 right-1 bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <span class="material-symbols-outlined text-xs">close</span>
+                </button>
+                <button type="button" onclick="setPrimaryImage(${index})" title="Chọn ảnh chính" class="absolute bottom-1 left-1 right-1 text-[10px] font-semibold rounded px-1 py-0.5 ${isPrimary ? 'bg-primary text-white' : 'bg-black/60 text-white'}">
+                    ${isPrimary ? 'Ảnh chính' : 'Đặt chính'}
+                </button>
+            `;
+                previewGrid.appendChild(item);
+                item.querySelector('img').onload = () => URL.revokeObjectURL(objectUrl);
             });
         }
 
-        // Delete Modal populate
-        const deleteModal = document.getElementById('deleteModal');
-        if (deleteModal) {
-            deleteModal.addEventListener('show.bs.modal', function (e) {
-                const btn = e.relatedTarget;
-                document.getElementById('deleteProductName').innerText = btn.getAttribute('data-name');
-                document.getElementById('deleteForm').action = '/admin/seafood-products/' + btn.getAttribute('data-id') + '/delete';
-            });
+        function addSelectedImages(fileList) {
+            const files = Array.from(fileList);
+            const remaining = maxImageFiles - selectedImageFiles.length;
+            if (remaining <= 0) {
+                alert('Chỉ được tải tối đa 4 ảnh.');
+                return;
+            }
+
+            const picked = files.slice(0, remaining);
+            if (files.length > remaining) {
+                alert('Chỉ được tải tối đa 4 ảnh. Các ảnh vượt quá đã bị bỏ qua.');
+            }
+
+            selectedImageFiles = selectedImageFiles.concat(picked);
+            syncRealFileInput();
+            renderImagePreviews();
         }
 
-        // Gallery Modal
-        const galleryModal = document.getElementById('galleryModal');
-        if (galleryModal) {
-            galleryModal.addEventListener('show.bs.modal', function (e) {
-                const btn = e.relatedTarget;
-                document.getElementById('galleryTitle').innerText = 'Hình Ảnh: ' + btn.getAttribute('data-name');
-                const imgs = (btn.getAttribute('data-images') || '').split(',').filter(u => u.trim() !== '');
-                const inner = document.getElementById('carouselInner');
-                if (imgs.length === 0) {
-                    inner.innerHTML = '<div class="carousel-item active text-center p-5 bg-light"><p class="text-muted fw-bold">Không có hình ảnh</p></div>';
-                } else {
-                    inner.innerHTML = imgs.map((url, i) => '<div class="carousel-item' + (i === 0 ? ' active' : '') + '"><img src="' + url + '" class="d-block w-100" style="max-height:450px;object-fit:contain;background:#f8f9fa;"/></div>').join('');
+        function removeSelectedImage(index) {
+            selectedImageFiles.splice(index, 1);
+            if (primaryImageIndex >= selectedImageFiles.length) {
+                primaryImageIndex = 0;
+            }
+            syncRealFileInput();
+            renderImagePreviews();
+        }
+
+        function setPrimaryImage(index) {
+            primaryImageIndex = index;
+            syncRealFileInput();
+            renderImagePreviews();
+        }
+
+        async function preloadImagesForEdit(button) {
+            const imagesStr = button.getAttribute('data-images') || '';
+            if (!imagesStr.trim()) {
+                return;
+            }
+
+            const imageUrls = imagesStr.split(',').map(url => url.trim()).filter(Boolean);
+            const primaryFlags = (button.getAttribute('data-primary-flags') || '').split(',').map(flag => flag.trim());
+            let primaryIndexFromServer = primaryFlags.findIndex(flag => flag === 'true');
+            if (primaryIndexFromServer < 0) {
+                primaryIndexFromServer = 0;
+            }
+
+            for (let i = 0; i < imageUrls.length && selectedImageFiles.length < maxImageFiles; i++) {
+                const imageUrl = imageUrls[i];
+                try {
+                    const response = await fetch(imageUrl);
+                    if (!response.ok) {
+                        continue;
+                    }
+                    const blob = await response.blob();
+                    const filename = imageUrl.substring(imageUrl.lastIndexOf('/') + 1) || `image-${i + 1}.jpg`;
+                    const file = new File([blob], filename, { type: blob.type || 'image/jpeg' });
+                    selectedImageFiles.push(file);
+                } catch (error) {
+                    console.error('Khong the tai anh cu:', imageUrl, error);
                 }
-            });
+            }
+
+            primaryImageIndex = Math.min(primaryIndexFromServer, Math.max(selectedImageFiles.length - 1, 0));
+            syncRealFileInput();
+            renderImagePreviews();
         }
 
-        // Image preview (Create)
-        document.getElementById('createImageFiles')?.addEventListener('change', function(e) {
-            previewImages(e.target.files, 'createPreview');
-        });
-        document.getElementById('editImageFiles')?.addEventListener('change', function(e) {
-            previewImages(e.target.files, 'editPreview');
+        async function openModal(isEdit, btn) {
+            const modal = document.getElementById('productModal');
+            const form = document.getElementById('productForm');
+            const title = document.getElementById('modalTitle');
+            const subtitle = document.getElementById('modalSubtitle');
+
+            form.reset();
+            document.getElementById('productId').value = '';
+            document.getElementById('primaryImageIndex').value = '0';
+            selectedImageFiles = [];
+            primaryImageIndex = 0;
+            syncRealFileInput();
+            renderImagePreviews();
+
+            if (isEdit && btn) {
+                title.innerText = 'Chỉnh Sửa Sản Phẩm';
+                subtitle.innerText = 'Cập nhật thông tin sản phẩm';
+                const id = btn.getAttribute('data-id');
+                form.action = `/admin/seafood-products/${id}/edit`;
+
+                document.getElementById('productId').value = id;
+                form.name.value = btn.getAttribute('data-name') || '';
+                form.description.value = btn.getAttribute('data-description') || '';
+                form.price.value = btn.getAttribute('data-price') || '';
+                form.stockQuantity.value = btn.getAttribute('data-stock') || '';
+                form.categoryId.value = btn.getAttribute('data-category-id') || '';
+                form.active.checked = btn.getAttribute('data-active') === 'true';
+                form.importedFrom.value = btn.getAttribute('data-imported-from') || '';
+                form.freshnessStatus.value = btn.getAttribute('data-freshness') || 'FRESH';
+                await preloadImagesForEdit(btn);
+            } else {
+                title.innerText = 'Thêm Sản Phẩm Mới';
+                subtitle.innerText = 'Cấu hình thông tin sản phẩm';
+                form.action = '/admin/seafood-products/create';
+            }
+
+            modal.classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('productModal').classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+        }
+
+        function openDeleteModal(btn) {
+            const id = btn.getAttribute('data-id');
+            const name = btn.getAttribute('data-name');
+            document.getElementById('deleteProductName').innerText = name || '';
+            document.getElementById('deleteForm').action = `/admin/seafood-products/${id}/delete`;
+            document.getElementById('deleteModal').classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+        }
+
+        const fileInput = document.getElementById('fileInput');
+        const dropzone = document.getElementById('dropzone');
+        fileInput.addEventListener('change', function (event) {
+            addSelectedImages(event.target.files);
+            fileInput.value = '';
         });
 
-        function previewImages(files, containerId) {
-            const container = document.getElementById(containerId);
-            container.innerHTML = '';
-            Array.from(files).slice(0, 4).forEach((file, i) => {
-                const col = document.createElement('div');
-                col.className = 'col-3';
-                const url = URL.createObjectURL(file);
-                col.innerHTML = '<div class="img-preview-card ' + (i === 0 ? 'is-primary' : '') + '"><img src="' + url + '" class="w-100"/>' +
-                    (i === 0 ? '<span class="position-absolute bottom-0 start-0 badge bg-primary m-1" style="font-size:.6rem;">Ảnh chính</span>' : '') +
-                    '</div>';
-                container.appendChild(col);
-            });
-        }
+        dropzone.addEventListener('dragover', function (event) {
+            event.preventDefault();
+            dropzone.classList.add('bg-slate-100');
+        });
+
+        dropzone.addEventListener('dragleave', function () {
+            dropzone.classList.remove('bg-slate-100');
+        });
+
+        dropzone.addEventListener('drop', function (event) {
+            event.preventDefault();
+            dropzone.classList.remove('bg-slate-100');
+            addSelectedImages(event.dataTransfer.files);
+        });
+
+        window.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape') {
+                closeModal();
+                closeDeleteModal();
+            }
+        });
     </script>
-
-</div>
 </body>
+
 </html>

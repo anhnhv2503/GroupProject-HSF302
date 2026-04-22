@@ -68,12 +68,4 @@ public class AuthController {
             return "auth/register";
         }
     }
-
-    @GetMapping("/profile")
-    public String showProfileForm(Authentication  authentication, Model model) {
-        String username = authentication.getName();
-        model.addAttribute("username", username);
-        return "user/profile";
-    }
 }
-

@@ -1,16 +1,40 @@
 package com.project.hsf.service;
 
-import com.project.hsf.dto.CartItemDTO;
-import com.project.hsf.repository.*;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 
-@Service
+import com.project.hsf.dto.CartItemDTO;
+import com.project.hsf.entity.Order;
+import com.project.hsf.entity.OrderItem;
+import com.project.hsf.enums.OrderStatus;
+import com.project.hsf.entity.OrderStatusHistory;
+import com.project.hsf.enums.PaymentStatus;
+import com.project.hsf.entity.User;
+import jakarta.servlet.http.HttpSession;
 
 public interface OrderService {
+    List<Order> getOrdersByUser(User user);
 
-   public void placeOrder(List<CartItemDTO> cartItems, String couponCode, Object orderTmp) throws RuntimeException;
+    List<Order> getOrdersByUserWithFilters(User user, OrderStatus orderStatus, PaymentStatus paymentStatus);
+
+    Order getOrderById(Long id, User user);
+
+    Order getOrderById(Long id);
+
+    List<Order> getAllOrders();
+
+    List<Order> getAllOrders(org.springframework.data.domain.Sort sort);
+
+    void updateOrderStatus(Long orderId, OrderStatus status, String note);
+
+    List<OrderItem> getOrderItems(Long orderId);
+
+    List<OrderStatusHistory> getOrderStatusHistory(Long orderId);
+
+    List<Order> getOrdersByCustomer(User customer);
+
+    String placeOrder(List<CartItemDTO> cartItems, String couponCode, String shippingAddress, String paymentMethod, String notes, User customer) throws RuntimeException;
+
+    Order processOrder(Long orderCode, String status, boolean cancel, HttpSession session);
+
+    Order orderCallback(Long orderCode, boolean success, HttpSession session);
 }
