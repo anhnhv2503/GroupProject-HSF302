@@ -143,6 +143,17 @@
                         </div>
                     </div>
                 </div>
+                
+                <div th:if="${order.orderStatus.name() == 'SHIPPING'}" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                    <h2 class="font-bold text-lg text-slate-900 mb-4">Xác nhận đơn hàng</h2>
+                    <p class="text-sm text-slate-500 mb-4">Vui lòng chỉ xác nhận khi bạn đã nhận được hàng và hài lòng với sản phẩm.</p>
+                    <form th:action="@{/orders/{id}/received(id=${order.id})}" method="post">
+                        <button type="submit" class="w-full bg-green-600 text-white px-4 py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-green-700 transition-colors shadow-sm shadow-green-600/20">
+                            <span class="material-symbols-outlined text-xl">check_circle</span>
+                            Đã nhận hàng
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </main>

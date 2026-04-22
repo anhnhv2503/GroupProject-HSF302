@@ -152,4 +152,9 @@ public class CouponServiceImpl implements CouponService {
 			coupon.setActive(Boolean.TRUE);
 		}
 	}
+	@Override
+	@Transactional(readOnly = true)
+	public java.util.Optional<Coupon> findByCode(String code) {
+		return couponRepository.findByCode(code);
+	}
 }

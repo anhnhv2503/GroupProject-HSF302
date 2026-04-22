@@ -103,6 +103,15 @@
                     <p class="font-medium text-slate-900" th:text="${order.shippingAddress}">123 Đường Nguyễn Trãi, Quận 1, TP.HCM</p>
                 </div>
                 </a>
+                
+                <div th:if="${order.orderStatus.name() == 'SHIPPING'}" class="mt-4 pt-4 border-t border-slate-200 flex justify-end">
+                    <form th:action="@{/orders/{id}/received(id=${order.id})}" method="post">
+                        <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-700 transition-colors flex items-center gap-2">
+                            <span class="material-symbols-outlined text-sm">check_circle</span>
+                            Đã nhận hàng
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </main>
