@@ -2,6 +2,7 @@ package com.project.hsf.service;
 
 import com.project.hsf.entity.Order;
 import com.project.hsf.entity.ProductReview;
+import com.project.hsf.entity.ProductReviewCount;
 import com.project.hsf.entity.SeafoodProduct;
 import com.project.hsf.entity.User;
 
@@ -27,4 +28,14 @@ public interface ProductReviewService {
     List<ProductReview> getUserReviews(Long userId);
 
     ProductReview getUserReviewForProduct(Long productId, Long userId);
+
+    List<ProductReview> getPendingReviews();
+
+    long getPendingReviewCount();
+
+    ProductReview approveReview(Long id);
+
+    List<ProductReview> getAllReviewsForProduct(Long productId);
+
+    List<ProductReviewCount> getPendingReviewCountByProduct();
 }

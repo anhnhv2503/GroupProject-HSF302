@@ -1,13 +1,12 @@
 package com.project.hsf.repository;
 
-import com.project.hsf.entity.ProductReview;
-import com.project.hsf.entity.SeafoodProduct;
-import com.project.hsf.entity.User;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Optional;
+import com.project.hsf.entity.ProductReview;
 
 @Repository
 public interface ProductReviewRepository extends JpaRepository<ProductReview, Long> {
@@ -18,4 +17,8 @@ public interface ProductReviewRepository extends JpaRepository<ProductReview, Lo
     Optional<ProductReview> findByProductIdAndUserId(Long productId, Long userId);
 
     boolean existsByProductIdAndUserId(Long productId, Long userId);
+
+    List<ProductReview> findByIsVisibleFalse();
+
+    long countByIsVisibleFalse();
 }

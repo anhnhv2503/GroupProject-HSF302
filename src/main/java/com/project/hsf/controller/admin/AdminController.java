@@ -2,6 +2,7 @@ package com.project.hsf.controller.admin;
 
 import com.project.hsf.service.CategoryService;
 import com.project.hsf.service.SeafoodProductService;
+import com.project.hsf.service.ProductReviewService;
 import com.project.hsf.entity.SeafoodProduct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -19,9 +20,11 @@ public class AdminController {
 
     private final SeafoodProductService productService;
     private final CategoryService categoryService;
+    private final ProductReviewService reviewService;
 
     @GetMapping("/dashboard")
     public String dashboard(Model model) {
+        model.addAttribute("pendingCount", reviewService.getPendingReviewCount());
         // Basic stats derived from existing services
         model.addAttribute("totalProducts", productService.findAll().size());
         model.addAttribute("totalCategories", categoryService.findAll().size());
