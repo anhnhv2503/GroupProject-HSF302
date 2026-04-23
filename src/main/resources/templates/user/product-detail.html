@@ -1,475 +1,177 @@
 <!DOCTYPE html>
-<html class="light" lang="vi" xmlns:th="http://www.thymeleaf.org"
-    xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-
-<head>
-    <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title th:text="${product.name} + ' | The Culinary Curator'"></title>
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&amp;family=Inter:wght@300;400;500;600;700;800;900&amp;family=Roboto:wght@400;500;700&amp;display=swap"
-        rel="stylesheet" />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
-        rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
-    <script id="tailwind-config" th:replace="~{index :: #tailwind-config}"></script>
-    <style>
-        body {
-            font-family: 'Be Vietnam Pro', 'Inter', sans-serif;
-        }
-
-        .glass-effect {
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-        }
-
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-
-        .fill-1 {
-            font-variation-settings: 'FILL' 1 !important;
-        }
-
-        .quantity-btn:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
-        }
-
-        .tab-btn.active {
-            color: #f26522;
-            border-bottom-color: #f26522;
-        }
-
-        .ocean-spray {
-            background-color: #0D4A7A;
-        }
-    </style>
-</head>
-
-<body class="bg-surface text-on-surface">
-    <!-- TopNavBar -->
-    <header th:replace="~{fragments/index-header :: header}"></header>
-
-    <main class="pt-32">
-        <div class="bg-surface pb-32">
-            <!-- Breadcrumb Section -->
-            <nav class="max-w-7xl mx-auto px-6 py-6 overflow-x-auto whitespace-nowrap">
-                <div
-                    class="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-on-surface-variant">
-                    <a href="/" class="hover:text-primary-container transition-colors">TRANG CHỦ</a>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/main :: head(${product.name})}"></head>
+<body th:replace="~{layout/main :: layout(~{:: .detail-content})}">
+    <div class="detail-content">
+        <style>
+            .tab-btn.active { color: #f26522; border-bottom: 2px solid #f26522; }
+            .quantity-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+        </style>
+        
+        <div class="bg-slate-50 pb-32 pt-10">
+            <!-- Breadcrumb -->
+            <nav class="max-w-7xl mx-auto px-8 mb-10">
+                <div class="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-slate-400">
+                    <a href="/" class="hover:text-brand-primary">TRANG CHỦ</a>
                     <span class="material-symbols-outlined text-sm">chevron_right</span>
-                    <a href="/products" class="hover:text-primary-container transition-colors">SẢN PHẨM</a>
+                    <a href="/products" class="hover:text-brand-primary">SẢN PHẨM</a>
                     <span class="material-symbols-outlined text-sm">chevron_right</span>
-                    <span class="text-on-surface" th:text="${product.name}">Tên sản phẩm</span>
+                    <span class="text-brand-secondary" th:text="${product.name}">Tên sản phẩm</span>
                 </div>
             </nav>
 
-            <div class="max-w-7xl mx-auto px-6">
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
-
-                    <!-- Image Gallery Section -->
-                    <div class="lg:col-span-7 space-y-6">
-                        <!-- Main Image -->
-                        <div
-                            class="relative aspect-square rounded-3xl overflow-hidden bg-white border border-outline-variant/10 shadow-sm">
-                            <img id="mainDetailImage" th:if="${product.images != null and !product.images.isEmpty()}"
-                                th:with="primaryImg=${product.images.^[isPrimary != null and isPrimary]}"
-                                th:src="@{${primaryImg != null ? primaryImg.imageUrl : product.images[0].imageUrl}}"
-                                class="w-full h-full object-cover"
-                                th:classappend="${product.stockQuantity != null and product.stockQuantity <= 0} ? 'grayscale opacity-60' : ''"
-                                th:alt="${product.name}" />
-                            <img id="mainDetailImage"
-                                th:unless="${product.images != null and !product.images.isEmpty()}"
-                                src="https://via.placeholder.com/800x800?text=Premium+Seafood"
-                                class="w-full h-full object-cover"
-                                th:classappend="${product.stockQuantity != null and product.stockQuantity <= 0} ? 'grayscale opacity-60' : ''"
-                                alt="Seafood" />
-
-                            <!-- Out of Stock Overlay -->
-                            <div th:if="${product.stockQuantity != null and product.stockQuantity <= 0}"
-                                class="absolute inset-0 z-10 bg-black/20 backdrop-blur-[4px] flex items-center justify-center">
-                                <div
-                                    class="bg-white/10 backdrop-blur-md border border-white/20 px-10 py-5 rounded-3xl shadow-2xl transform -rotate-12">
-                                    <span
-                                        class="text-white font-black text-4xl uppercase tracking-[0.2em] drop-shadow-lg">Hết
-                                        hàng</span>
-                                </div>
-                            </div>
-
-                            <!-- Floating Badge -->
-                            <div class="absolute top-6 left-6 z-10 flex flex-col gap-3">
-                                <span th:if="${product.stockQuantity != null and product.stockQuantity <= 0}"
-                                    class="bg-black/80 backdrop-blur text-white text-xs font-black px-4 py-2 rounded-xl uppercase tracking-[0.2em] shadow-lg">
-                                    Hết hàng</span>
-                                <span th:if="${product.freshnessStatus == 'FRESH'}"
-                                    class="bg-green-600/90 backdrop-blur text-white text-xs font-black px-4 py-2 rounded-xl uppercase tracking-[0.2em] shadow-lg">Daily
-                                    Fresh</span>
-                                <span th:if="${product.freshnessStatus == 'FROZEN'}"
-                                    class="bg-cyan-600/90 backdrop-blur text-white text-xs font-black px-4 py-2 rounded-xl uppercase tracking-[0.2em] shadow-lg">Premium
-                                    Frozen</span>
-                                <span th:if="${product.freshnessStatus == 'LIVE'}"
-                                    class="bg-orange-600/90 backdrop-blur text-white text-xs font-black px-4 py-2 rounded-xl uppercase tracking-[0.2em] shadow-lg">Wild
-                                    Caught</span>
-                            </div>
-                        </div>
-
-                        <!-- Thumbnails -->
-                        <div class="flex gap-4 overflow-x-auto pb-2 scrollbar-hide"
-                            th:if="${product.images != null and product.images.size() > 1}">
-                            <div th:each="img, stat : ${product.images}"
-                                class="flex-shrink-0 w-24 h-24 rounded-2xl overflow-hidden cursor-pointer border-2 transition-all hover:scale-105"
-                                th:classappend="${img.isPrimary} ? 'border-primary-container shadow-lg' : 'border-outline-variant/20 shadow-sm opacity-60 hover:opacity-100'"
-                                onclick="changeMainImage(this);">
-                                <img th:src="@{${img.imageUrl}}" class="w-full h-full object-cover" alt="Thumbnail" />
-                            </div>
+            <div class="max-w-7xl mx-auto px-8">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-16">
+                    <!-- Gallery -->
+                    <div class="lg:col-span-7">
+                        <div class="aspect-square rounded-[3rem] overflow-hidden bg-white border border-slate-100 shadow-sm relative">
+                            <img id="mainDetailImage" th:if="${product.images != null and !product.images.isEmpty()}" th:src="@{${product.images[0].imageUrl}}" class="w-full h-full object-cover" />
+                            <img th:unless="${product.images != null and !product.images.isEmpty()}" src="https://via.placeholder.com/800x800?text=Premium+Seafood" class="w-full h-full object-cover" />
                         </div>
                     </div>
 
-                    <!-- Product Purchase Info Section -->
-                    <div class="lg:col-span-5 space-y-8">
-                        <div class="space-y-4">
-                            <div class="space-y-1">
-                                <div
-                                    class="flex items-center gap-2 text-primary-container font-black text-xs uppercase tracking-[0.2em] mb-2">
-                                    <span class="material-symbols-outlined text-lg">workspace_premium</span>
-                                    <span th:text="${product.category.name}">Collection</span>
+                    <!-- Info -->
+                    <div class="lg:col-span-5 space-y-10">
+                        <div>
+                            <span class="text-brand-primary font-black text-xs uppercase tracking-widest block mb-4" th:text="${product.category.name}">Collection</span>
+                            <h1 class="text-5xl font-black text-brand-secondary tracking-tighter uppercase leading-none mb-6" th:text="${product.name}">Product Name</h1>
+                            <div class="flex items-center gap-6" th:with="avgRating=${#lists.isEmpty(reviews) ? 5 : 0}">
+                                <div class="flex text-amber-400">
+                                    <span th:each="i : ${#numbers.sequence(1, 5)}" 
+                                          class="material-symbols-outlined"
+                                          th:classappend="${!#lists.isEmpty(reviews) ? (i <= #aggregates.avg(reviews.![rating]) ? 'fill-1' : '') : 'fill-1'}">star</span>
                                 </div>
-                                <h1 class="text-4xl md:text-5xl font-black tracking-tighter text-on-surface leading-[0.95] uppercase"
-                                    th:text="${product.name}">Tên Sản Phẩm</h1>
-                            </div>
-
-                            <div class="flex items-center gap-6 pt-2">
-                                <div class="flex items-center gap-1.5">
-                                    <div class="flex text-amber-500">
-                                        <span class="material-symbols-outlined text-lg"
-                                            style="font-variation-settings: 'FILL' 1;">star</span>
-                                        <span class="material-symbols-outlined text-lg"
-                                            style="font-variation-settings: 'FILL' 1;">star</span>
-                                        <span class="material-symbols-outlined text-lg"
-                                            style="font-variation-settings: 'FILL' 1;">star</span>
-                                        <span class="material-symbols-outlined text-lg"
-                                            style="font-variation-settings: 'FILL' 1;">star</span>
-                                        <span class="material-symbols-outlined text-lg"
-                                            style="font-variation-settings: 'FILL' 1;">star</span>
-                                    </div>
-                                    <span
-                                        class="text-xs font-black uppercase tracking-tighter text-on-surface-variant">(<span
-                                            th:text="${#lists.size(reviews)}">0</span> Reviews)</span>
-                                </div>
-                                <div class="h-4 w-px bg-outline-variant/30"></div>
-                                <div class="flex items-center gap-2 text-on-surface-variant">
-                                    <span class="material-symbols-outlined text-lg">location_on</span>
-                                    <span class="text-[10px] font-bold uppercase tracking-wider"
-                                        th:text="${product.importedFrom ?: 'Biển Việt Nam'}">Nhật Bản</span>
-                                </div>
+                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                                    <span th:text="${#lists.size(reviews)}">0</span> Đánh giá 
+                                    <span class="mx-2">•</span>
+                                    Đã bán <span th:text="${product.soldCount ?: 0}">0</span>
+                                </span>
                             </div>
                         </div>
 
-                        <!-- Price Block -->
-                        <div
-                            class="p-8 rounded-3xl bg-surface-container-low border border-outline-variant/10 space-y-6">
-                            <div class="flex items-end gap-3">
-                                <span class="text-5xl font-black text-primary-container tracking-tighter leading-none"
-                                    th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' đ'">0
-                                    đ</span>
-                                <span class="text-lg text-on-surface-variant font-bold pb-1 lowercase">/ kg</span>
-                                <span class="text-sm text-outline-variant line-through font-medium pb-1 ml-2"
-                                    th:text="${#numbers.formatDecimal(product.price * 1.2, 0, 'COMMA', 0, 'POINT')} + ' đ'">0
-                                    đ</span>
+                        <div class="p-10 rounded-[2.5rem] bg-white border border-slate-100 shadow-sm">
+                            <div class="flex items-baseline gap-3 mb-2">
+                                <span class="text-5xl font-black text-brand-secondary tracking-tighter" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' đ'"></span>
+                                <span class="text-lg font-bold text-slate-400">/ kg</span>
                             </div>
-
-                            <p class="text-xs text-on-surface-variant/70 leading-relaxed font-medium">
-                                Giá đã bao gồm thuế tiêu thụ đặc biệt & phí vận hành kho lạnh chuyên dụng. Cam kết hoàn
-                                tiền
-                                200% nếu phát hiện hàng giả, kém chất lượng.
-                            </p>
+                            <p class="text-xs text-slate-400 font-medium">Giá đã bao gồm VAT và phí bảo quản tiêu chuẩn.</p>
                         </div>
 
-                        <!-- Add to Cart Form -->
-                        <form th:action="@{/cart/add}" method="post" class="space-y-6">
-                            <div class="space-y-3">
-                                <label
-                                    class="text-[10px] font-black uppercase tracking-[0.27em] text-on-surface-variant ml-1">Số
-                                    lượng đặt hàng</label>
+                        <form th:action="@{/cart/add}" th:onsubmit="'addToCartAjax(event, this)'" method="post" class="space-y-8">
+                            <div class="space-y-4">
+                                <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Số lượng đặt hàng</label>
                                 <div class="flex items-center gap-4">
-                                    <div
-                                        class="flex items-center bg-white border border-outline-variant/20 rounded-2xl p-1.5 shadow-sm">
-                                        <button type="button"
-                                            class="quantity-btn w-12 h-12 rounded-xl hover:bg-surface-container-low flex items-center justify-center transition-colors"
-                                            onclick="updateQuantity(-1);" id="decreaseBtn">
-                                            <span class="material-symbols-outlined">remove</span>
-                                        </button>
-                                        <input type="number" id="purchaseQuantity" name="quantity" value="1" min="1"
-                                            th:max="${product.stockQuantity}"
-                                            class="w-16 text-center border-none focus:ring-0 font-black text-lg bg-transparent"
-                                            readonly th:data-stock="${product.stockQuantity}" />
-                                        <button type="button"
-                                            class="quantity-btn w-12 h-12 rounded-xl hover:bg-surface-container-low flex items-center justify-center transition-colors"
-                                            onclick="updateQuantity(1);" id="increaseBtn">
-                                            <span class="material-symbols-outlined">add</span>
-                                        </button>
+                                    <div class="flex items-center bg-white border border-slate-200 rounded-2xl p-2">
+                                        <button type="button" onclick="updateQuantity(-1)" class="w-10 h-10 flex items-center justify-center rounded-xl hover:bg-slate-50 transition-colors"><span class="material-symbols-outlined">remove</span></button>
+                                        <input type="number" id="purchaseQuantity" name="quantity" value="1" min="1" class="w-16 text-center font-black text-lg bg-transparent border-none focus:ring-0" readonly />
+                                        <button type="button" onclick="updateQuantity(1)" class="w-10 h-10 flex items-center justify-center rounded-xl hover:bg-slate-50 transition-colors"><span class="material-symbols-outlined">add</span></button>
                                     </div>
-                                    <span th:if="${product.stockQuantity > 0}"
-                                        class="text-xs font-bold text-on-surface-variant uppercase"
-                                        th:text=" 'Còn hàng ' + ' ( ' + ${product.stockQuantity} + ' )'"></span>
-                                    <span th:unless="${product.stockQuantity > 0}"
-                                        class="text-xs font-bold text-red-600 uppercase"
-                                        th:text="'Hết hàng (Out of Stock)'"></span>
+                                    <span class="text-xs font-bold text-slate-400 uppercase">Còn lại: <span th:text="${product.stockQuantity}">0</span></span>
                                 </div>
-                            </div>
-
-                            <div class="grid grid-cols-5 gap-4">
-                                <button type="submit"
-                                    th:disabled="${!(product.stockQuantity > 0) or (canAddToCart != null and !canAddToCart)}"
-                                    th:title="${canAddToCart != null and !canAddToCart} ? 'Quyền mua hàng của bạn đã bị thu hồi. Liên hệ admin.' : ''"
-                                    class="col-span-4 bg-brand-primary text-white h-16 rounded-2xl font-black flex items-center justify-center gap-3 hover:shadow-2xl hover:brightness-110 active:scale-[0.98] transition-all disabled:opacity-50 disabled:grayscale disabled:cursor-not-allowed">
-                                    <span class="material-symbols-outlined">shopping_cart</span>
-                                    <span
-                                        th:if="${product.stockQuantity > 0 and (canAddToCart == null or canAddToCart)}"
-                                        class="text-sm uppercase tracking-widest">THÊM VÀO GIỎ HÀNG</span>
-                                    <span
-                                        th:if="${product.stockQuantity > 0 and (canAddToCart != null and !canAddToCart)}"
-                                        class="text-xs uppercase tracking-widest">Quyền mua hàng của bạn đã bị thu hồi.
-                                        LH admin.</span>
-                                    <span th:if="${product.stockQuantity <= 0}"
-                                        class="text-sm uppercase tracking-widest">HẾT HÀNG</span>
-                                </button>
-                                <button type="button" th:data-product-id="${product.id}"
-                                    class="wishlist-btn col-span-1 border border-outline-variant/20 rounded-2xl flex items-center justify-center text-on-surface-variant hover:border-red-500 hover:text-red-500 transition-all active:scale-95">
-                                    <span class="material-symbols-outlined text-2xl"
-                                        th:classappend="${session.wishlistProductIds != null and session.wishlistProductIds.contains(product.id)} ? 'text-red-500 fill-1' : ''">favorite</span>
-                                </button>
                             </div>
 
                             <input type="hidden" name="productId" th:value="${product.id}" />
                             <input type="hidden" name="name" th:value="${product.name}" />
                             <input type="hidden" name="price" th:value="${product.price}" />
-                            <input type="hidden" name="imageUrl"
-                                th:value="${not #lists.isEmpty(product.images) ? product.images[0].imageUrl : '/images/no-image.jpg'}" />
+                            <input type="hidden" name="imageUrl" th:value="${not #lists.isEmpty(product.images) ? product.images[0].imageUrl : ''}" />
+                            
+                            <div class="flex gap-4">
+                                <button type="submit" class="flex-1 bg-brand-primary text-white h-16 rounded-2xl font-black text-xs uppercase tracking-widest hover:shadow-2xl transition-all shadow-lg active:scale-95">Thêm vào giỏ hàng</button>
+                                <button type="button" th:onclick="'toggleWishlistAjax(event, this, ' + ${product.id} + ')'" class="w-16 h-16 rounded-2xl border border-slate-200 flex items-center justify-center text-slate-300 hover:text-red-500 transition-all group"><span class="material-symbols-outlined group-hover:fill-1">favorite</span></button>
+                            </div>
                         </form>
-
-                        <!-- Value Props -->
-                        <div class="grid grid-cols-2 gap-4">
-                            <div
-                                class="flex items-center gap-3 p-4 rounded-2xl border border-outline-variant/10 bg-white">
-                                <div
-                                    class="w-10 h-10 rounded-xl bg-orange-100 flex items-center justify-center text-orange-600">
-                                    <span class="material-symbols-outlined text-xl">speed</span>
-                                </div>
-                                <div class="flex flex-col">
-                                    <span class="font-black text-[10px] uppercase tracking-widest text-on-surface">Giao
-                                        2h</span>
-                                    <span class="text-[9px] font-bold text-on-surface-variant">Nội thành Hà Nội</span>
-                                </div>
-                            </div>
-                            <div
-                                class="flex items-center gap-3 p-4 rounded-2xl border border-outline-variant/10 bg-white">
-                                <div
-                                    class="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center text-blue-600">
-                                    <span class="material-symbols-outlined text-xl">verified_user</span>
-                                </div>
-                                <div class="flex flex-col">
-                                    <span class="font-black text-[10px] uppercase tracking-widest text-on-surface">Kiểm
-                                        định</span>
-                                    <span class="text-[9px] font-bold text-on-surface-variant">Tiêu chuẩn Nhật
-                                        JAS</span>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
-                <!-- Tabs & Editorial Content -->
-                <div class="mt-32">
-                    <div class="flex flex-wrap gap-12 border-b border-outline-variant/10 pb-4">
-                        <button onclick="switchTab('desc');" id="btn-desc"
-                            class="tab-btn active text-xs font-black uppercase tracking-[0.2em] pb-4 border-b-2 border-transparent transition-all">Thông
-                            tin chi tiết</button>
-
-                        <button onclick="switchTab('reviews');" id="btn-reviews"
-                            class="tab-btn text-xs font-black uppercase tracking-[0.2em] pb-4 border-b-2 border-transparent transition-all">Đánh
-                            giá khách hàng (<span th:text="${#lists.size(reviews)}">0</span>)</button>
+                <!-- Tabs -->
+                <div class="mt-24 border-t border-slate-100 pt-16">
+                    <div class="flex gap-12 mb-12 border-b border-slate-100">
+                        <button onclick="switchTab('desc')" id="btn-desc" class="tab-btn active pb-6 text-xs font-black uppercase tracking-widest">Mô tả sản phẩm</button>
+                        <button onclick="switchTab('reviews')" id="btn-reviews" class="tab-btn pb-6 text-xs font-black uppercase tracking-widest">Đánh giá khách hàng</button>
                     </div>
-
-                    <div class="mt-12">
-                        <!-- Description Tab -->
-                        <div id="tab-desc" class="tab-content transition-opacity duration-500">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-                                <div class="space-y-8">
-                                    <div class="space-y-4">
-                                        <h2 class="text-3xl font-black tracking-tighter uppercase leading-none">Vị Ngon
-                                            <br /> Từ Đại Dương Sâu
-                                        </h2>
-                                        <p class="text-on-surface-variant leading-relaxed font-medium"
-                                            th:text="${product.description}">
-                                            Từng sản phẩm được tuyển chọn tại vùng biển sạch nhất thế giới.
-                                        </p>
-                                    </div>
-                                    <div class="grid grid-cols-2 gap-6 pb-8 border-b border-outline-variant/10">
-                                        <div>
-                                            <h4
-                                                class="font-black text-[10px] uppercase tracking-widest text-on-surface-variant mb-2">
-                                                Xuất xứ</h4>
-                                            <p class="font-bold text-sm" th:text="${product.importedFrom}">Alaska, USA
-                                            </p>
-                                        </div>
-                                        <div>
-                                            <h4
-                                                class="font-black text-[10px] uppercase tracking-widest text-on-surface-variant mb-2">
-                                                Trạng thái</h4>
-                                            <p class="font-bold text-sm"
-                                                th:text="${product.freshnessStatus == 'FRESH' ? 'Tươi sống (Hàng ngày)' : 'Nguyên con đông lạnh'}">
-                                                Tươi sống</p>
-                                        </div>
-                                    </div>
+                    <div id="tab-desc" class="tab-content text-slate-600 leading-relaxed max-w-4xl font-medium">
+                        <p th:text="${product.description}"></p>
+                    </div>
+                    <div id="tab-reviews" class="tab-content hidden">
+                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-16">
+                            <!-- Review List -->
+                            <div class="lg:col-span-7 space-y-10">
+                                <div th:if="${#lists.isEmpty(reviews)}" class="py-20 text-center bg-white rounded-[2rem] border border-dashed border-slate-200">
+                                    <span class="material-symbols-outlined text-4xl text-slate-200 mb-4">rate_review</span>
+                                    <p class="text-slate-400 font-medium">Chưa có đánh giá nào cho sản phẩm này.</p>
                                 </div>
-                                <div
-                                    class="relative rounded-3xl overflow-hidden aspect-[4/3] bg-surface-container-low group">
-                                    <img th:if="${product.images != null and product.images.size() > 1}"
-                                        th:src="@{${product.images[1].imageUrl}}"
-                                        class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
-                                    <div
-                                        class="absolute inset-x-0 bottom-0 p-8 bg-gradient-to-t from-black/60 to-transparent">
-                                        <p
-                                            class="text-white text-xs font-bold leading-relaxed italic opacity-80 uppercase tracking-widest">
-                                            "Chất lượng tinh hoa trong từng thớ hải sản."</p>
+
+                                <div th:each="review : ${reviews}" class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-50 space-y-4">
+                                    <div class="flex justify-between items-start">
+                                        <div class="flex items-center gap-4">
+                                            <div class="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center text-brand-secondary font-black text-xs uppercase" th:text="${#strings.substring(review.user.fullName, 0, 1)}">U</div>
+                                            <div>
+                                                <h4 class="font-bold text-brand-secondary text-sm uppercase tracking-tight" th:text="${review.user.fullName}">User Name</h4>
+                                                <div class="flex text-amber-400 text-[10px]">
+                                                    <span th:each="i : ${#numbers.sequence(1, 5)}" 
+                                                          class="material-symbols-outlined text-sm" 
+                                                          th:classappend="${i <= review.rating} ? 'fill-1' : ''">star</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <span class="text-[10px] font-bold text-slate-300 uppercase tracking-widest" th:text="${#temporals.format(review.createdAt, 'dd/MM/yyyy')}">Date</span>
                                     </div>
+                                    <p class="text-slate-600 leading-relaxed font-medium text-sm" th:text="${review.comment}">Comment content...</p>
                                 </div>
                             </div>
-                        </div>
 
+                            <!-- Review Form -->
+                            <div class="lg:col-span-5">
+                                <div class="sticky top-32 space-y-8">
+                                    <div th:if="${reviewSuccess}" class="bg-green-50 border border-green-100 text-green-600 p-6 rounded-2xl text-xs font-bold uppercase tracking-widest" th:text="${reviewSuccess}"></div>
+                                    <div th:if="${reviewError}" class="bg-red-50 border border-red-100 text-red-600 p-6 rounded-2xl text-xs font-bold uppercase tracking-widest" th:text="${reviewError}"></div>
 
-
-                        <!-- Reviews Tab (Requested Editorial Section) -->
-                        <div id="tab-reviews" class="tab-content hidden">
-                            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
-                                <!-- Summary -->
-                                <div class="lg:col-span-4 space-y-8">
-                                    <div
-                                        class="p-8 rounded-3xl bg-surface-container-low border border-outline-variant/10 text-center space-y-4">
-                                        <h1 class="text-6xl font-black text-primary-container leading-none"
-                                            th:text="${#numbers.formatDecimal(#aggregates.avg(reviews.![rating]) ?: 0, 1, 1, 'POINT')}">
-                                            0.0</h1>
-                                        <div class="flex justify-center text-amber-500">
-                                            <span th:each="i : ${#numbers.sequence(1, 5)}"
-                                                class="material-symbols-outlined text-2xl"
-                                                th:style="${i <= (#aggregates.avg(reviews.![rating]) ?: 0)} ? 'font-variation-settings: \&#39;FILL\&#39; 1' : ''">star</span>
-                                        </div>
-                                        <p class="text-xs font-black uppercase tracking-widest text-on-surface-variant">
-                                            Dựa
-                                            trên <span th:text="${#lists.size(reviews) ?: 0}">0</span> lượt đánh giá</p>
-                                    </div>
-
-                                    <div class="space-y-4 px-4">
-                                        <div th:if="${hasReviewed}"
-                                            class="bg-yellow-50 border border-yellow-200 rounded-2xl p-4 text-center">
-                                            <th:block th:if="${userReviewVisible}">
-                                                <p class="text-green-700 font-bold text-sm">Cảm ơn bạn đã đánh giá!</p>
-                                                <p class="text-green-600 text-xs mt-1">Đánh giá của bạn đã được duyệt
-                                                </p>
-                                            </th:block>
-                                            <th:block th:unless="${userReviewVisible}">
-                                                <p class="text-yellow-700 font-bold text-sm">Bạn đã đánh giá sản phẩm
-                                                    này rồi</p>
-                                                <p class="text-yellow-600 text-xs mt-1">Chờ quản trị viên duyệt</p>
-                                            </th:block>
-                                        </div>
-                                        <div th:unless="${hasReviewed}">
-                                            <div th:if="${canReview}">
-                                                <form th:action="@{/products/{id}/review(id=${product.id})}"
-                                                    method="post" class="space-y-4">
-                                                    <div>
-                                                        <label
-                                                            class="text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant block mb-2">Đánh
-                                                            giá của bạn</label>
-                                                        <div class="flex gap-2 flex-row-reverse">
-                                                            <input type="radio" name="rating" value="5" id="star5"
-                                                                class="peer hidden" />
-                                                            <label for="star5"
-                                                                class="text-3xl cursor-pointer text-amber-500 peer-checked:text-amber-500 text-slate-300">★</label>
-                                                            <input type="radio" name="rating" value="4" id="star4"
-                                                                class="peer hidden" />
-                                                            <label for="star4"
-                                                                class="text-3xl cursor-pointer text-amber-500 peer-checked:text-amber-500 text-slate-300">★</label>
-                                                            <input type="radio" name="rating" value="3" id="star3"
-                                                                class="peer hidden" />
-                                                            <label for="star3"
-                                                                class="text-3xl cursor-pointer text-amber-500 peer-checked:text-amber-500 text-slate-300">★</label>
-                                                            <input type="radio" name="rating" value="2" id="star2"
-                                                                class="peer hidden" />
-                                                            <label for="star2"
-                                                                class="text-3xl cursor-pointer text-amber-500 peer-checked:text-amber-500 text-slate-300">★</label>
-                                                            <input type="radio" name="rating" value="1" id="star1"
-                                                                class="peer hidden" />
-                                                            <label for="star1"
-                                                                class="text-3xl cursor-pointer text-amber-500 peer-checked:text-amber-500 text-slate-300">★</label>
-                                                        </div>
+                                    <div th:if="${canReview}" class="bg-brand-secondary p-10 rounded-[2.5rem] text-white shadow-2xl">
+                                        <h3 class="text-2xl font-black uppercase tracking-tighter mb-2">Gửi đánh giá</h3>
+                                        <p class="text-xs text-white/60 font-medium mb-8">Chia sẻ trải nghiệm của bạn về sản phẩm này.</p>
+                                        
+                                        <form th:action="@{'/products/' + ${product.id} + '/review'}" method="post" class="space-y-6">
+                                            <div class="space-y-3">
+                                                <label class="text-[10px] font-black uppercase tracking-[0.2em] text-white/40">Xếp hạng của bạn</label>
+                                                <div class="flex gap-2">
+                                                    <div class="flex flex-row-reverse justify-end">
+                                                        <input type="radio" id="star5" name="rating" value="5" class="hidden peer" required />
+                                                        <label for="star5" class="material-symbols-outlined cursor-pointer text-white/20 peer-checked:text-amber-400 hover:text-amber-400 peer-hover:text-amber-400 transition-colors">star</label>
+                                                        <input type="radio" id="star4" name="rating" value="4" class="hidden peer" />
+                                                        <label for="star4" class="material-symbols-outlined cursor-pointer text-white/20 peer-checked:text-amber-400 hover:text-amber-400 peer-hover:text-amber-400 transition-colors">star</label>
+                                                        <input type="radio" id="star3" name="rating" value="3" class="hidden peer" />
+                                                        <label for="star3" class="material-symbols-outlined cursor-pointer text-white/20 peer-checked:text-amber-400 hover:text-amber-400 peer-hover:text-amber-400 transition-colors">star</label>
+                                                        <input type="radio" id="star2" name="rating" value="2" class="hidden peer" />
+                                                        <label for="star2" class="material-symbols-outlined cursor-pointer text-white/20 peer-checked:text-amber-400 hover:text-amber-400 peer-hover:text-amber-400 transition-colors">star</label>
+                                                        <input type="radio" id="star1" name="rating" value="1" class="hidden peer" />
+                                                        <label for="star1" class="material-symbols-outlined cursor-pointer text-white/20 peer-checked:text-amber-400 hover:text-amber-400 peer-hover:text-amber-400 transition-colors">star</label>
                                                     </div>
-                                                    <textarea name="comment" rows="3" required
-                                                        class="w-full px-4 py-3 rounded-xl border border-outline-variant/20 bg-white focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none"
-                                                        placeholder="Chia sẻ trải nghiệm của bạn..."></textarea>
-                                                    <button type="submit"
-                                                        class="w-full bg-brand-secondary text-white h-14 rounded-2xl font-black text-xs uppercase tracking-widest hover:brightness-110 shadow-lg transition-all">GỬI
-                                                        ĐÁNH GIÁ</button>
-                                                </form>
+                                                </div>
                                             </div>
-                                            <div th:unless="${canReview}"
-                                                class="bg-red-50 border border-red-200 rounded-2xl p-4 text-center">
-                                                <th:block th:if="${isReviewBlocked}">
-                                                    <p class="text-red-700 font-bold text-sm">Quyền đánh giá của bạn đã
-                                                        bị thu hồi</p>
-                                                    <p class="text-red-600 text-xs mt-1">Liên hệ admin để được hỗ trợ
-                                                    </p>
-                                                </th:block>
-                                                <th:block th:unless="${isReviewBlocked}">
-                                                    <p class="text-red-700 font-bold text-sm">Bạn cần mua sản phẩm này
-                                                    </p>
-                                                    <p class="text-red-600 text-xs mt-1">và đơn hàng phải được giao
-                                                        thành công để đánh giá</p>
-                                                </th:block>
-                                            </div>
-                                        </div>
-                                        <p th:if="${session.reviewSuccess}" th:text="${session.reviewSuccess}"
-                                            class="text-green-600 text-sm text-center font-medium"></p>
-                                        <p th:if="${session.reviewError}" th:text="${session.reviewError}"
-                                            class="text-red-600 text-sm text-center font-medium"></p>
-                                    </div>
-                                </div>
 
-                                <!-- Review List -->
-                                <div class="lg:col-span-8 space-y-8">
-                                    <div th:if="${#lists.isEmpty(reviews)}"
-                                        class="text-center py-8 text-on-surface-variant">
-                                        Chưa có đánh giá nào
+                                            <div class="space-y-3">
+                                                <label class="text-[10px] font-black uppercase tracking-[0.2em] text-white/40">Nội dung đánh giá</label>
+                                                <textarea name="comment" rows="4" class="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white text-sm focus:ring-brand-primary focus:border-brand-primary placeholder:text-white/20" placeholder="Viết cảm nhận của bạn..."></textarea>
+                                            </div>
+
+                                            <button type="submit" class="w-full bg-brand-primary text-white py-4 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-white hover:text-brand-secondary transition-all shadow-xl">Gửi đánh giá ngay</button>
+                                        </form>
                                     </div>
-                                    <div th:each="review : ${reviews}"
-                                        class="space-y-6 pb-8 border-b border-outline-variant/10">
-                                        <div class="flex justify-between items-start">
-                                            <div class="flex items-center gap-4">
-                                                <div
-                                                    class="w-12 h-12 rounded-full overflow-hidden bg-surface-container-high flex items-center justify-center font-black text-lg text-primary-container">
-                                                    <span
-                                                        th:text="${#strings.substring(review.user.fullName, 0, 1)}">U</span>
-                                                </div>
-                                                <div>
-                                                    <h4 class="font-black text-sm uppercase tracking-widest"
-                                                        th:text="${review.user.fullName}">User</h4>
-                                                    <p class="text-[10px] font-bold text-on-surface-variant"
-                                                        th:text="${review.createdDate != null ? #temporals.format(review.createdDate, 'dd/MM/yyyy') : ''}">
-                                                        Date</p>
-                                                </div>
+
+                                    <div th:unless="${canReview}" class="bg-white p-10 rounded-[2.5rem] border border-slate-100">
+                                        <div th:if="${hasReviewed}" class="text-center space-y-4">
+                                            <div class="w-16 h-16 bg-green-50 text-green-500 rounded-full flex items-center justify-center mx-auto">
+                                                <span class="material-symbols-outlined">verified</span>
                                             </div>
-                                            <div class="flex text-amber-500">
-                                                <span th:each="i : ${#numbers.sequence(1, 5)}"
-                                                    class="material-symbols-outlined text-sm"
-                                                    th:style="${i <= review.rating} ? 'font-variation-settings: \&#39;FILL\&#39; 1' : 'color: #d1d5db'">star</span>
-                                            </div>
+                                            <h4 class="font-black text-brand-secondary uppercase tracking-tight">Bạn đã đánh giá</h4>
+                                            <p class="text-xs text-slate-400 font-medium">Cảm ơn bạn đã đóng góp ý kiến cho sản phẩm này.</p>
                                         </div>
-                                        <p class="text-sm font-medium leading-relaxed text-on-surface"
-                                            th:text="${review.comment}">Comment</p>
+                                        <div th:unless="${hasReviewed}" class="text-center space-y-4">
+                                            <span class="material-symbols-outlined text-slate-200 text-4xl">lock</span>
+                                            <h4 class="font-black text-brand-secondary uppercase tracking-tight">Chưa thể đánh giá</h4>
+                                            <p class="text-[10px] text-slate-400 font-bold uppercase leading-relaxed">Bạn cần mua sản phẩm và nhận hàng thành công để có thể gửi đánh giá.</p>
+                                            <a href="/products" class="inline-block text-[10px] font-black text-brand-primary uppercase tracking-widest mt-4">Mua ngay</a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -478,139 +180,99 @@
                 </div>
             </div>
         </div>
-    </main>
 
-    <!-- Footer -->
-    <footer th:replace="~{fragments/index-footer :: footer}"></footer>
+        <script th:inline="javascript">
+            function updateQuantity(delta) {
+                const input = document.getElementById('purchaseQuantity');
+                let val = parseInt(input.value) + delta;
+                if (val < 1) val = 1;
+                input.value = val;
+            }
+            function switchTab(name) {
+                document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+                document.getElementById('tab-' + name).classList.remove('hidden');
+                document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+                document.getElementById('btn-' + name).classList.add('active');
+            }
 
-    <!-- Chatbot Widget -->
-    <div th:replace="~{chatbot/chatbot :: widget}"></div>
+            function addToCartAjax(event, form) {
+                event.preventDefault();
+                const formData = new FormData(form);
+                const params = new URLSearchParams(formData);
 
-    <script th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
-
-    <script>
-        function changeMainImage(thumb) {
-            const main = document.getElementById('mainDetailImage');
-            main.src = thumb.querySelector('img').src;
-
-            document.querySelectorAll('.flex-shrink-0.w-24').forEach(el => {
-                el.classList.remove('border-primary-container', 'shadow-lg', 'opacity-100');
-                el.classList.add('border-outline-variant/20', 'shadow-sm', 'opacity-60');
-            });
-            thumb.classList.add('border-primary-container', 'shadow-lg', 'opacity-100');
-            thumb.classList.remove('opacity-60');
-        }
-
-        function updateQuantity(delta) {
-
-            const input = document.getElementById('purchaseQuantity');
-            const increaseBtn = document.getElementById('increaseBtn');
-            const decreaseBtn = document.getElementById('decreaseBtn');
-
-            let val = parseInt(input.value);
-
-            const maxStock = parseInt(input.dataset.stock);
-
-            val += delta;
-
-            // Không nhỏ hơn 1
-            if (val < 1) val = 1;
-
-            // Không vượt stock
-            if (val > maxStock) val = maxStock;
-
-            input.value = val;
-
-            // Disable nút +
-            increaseBtn.disabled = val >= maxStock;
-
-            // Disable nút -
-            decreaseBtn.disabled = val <= 1;
-        }
-
-        function switchTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.getElementById('tab-' + tabName).classList.remove('hidden');
-
-            document.querySelectorAll('.tab-btn').forEach(el => {
-                el.classList.remove('active');
-            });
-            document.getElementById('btn-' + tabName).classList.add('active');
-        }
-
-        // Handle hash navigation for reviews
-        if (window.location.hash === '#reviews') {
-            switchTab('reviews');
-            setTimeout(() => {
-                document.getElementById('tab-reviews').scrollIntoView({ behavior: 'smooth' });
-            }, 100);
-        }
-
-        // AJAX for Cart
-        document.querySelector('form[action="/cart/add"]').addEventListener('submit', function (e) {
-            e.preventDefault();
-            const formData = new FormData(this);
-            const btn = this.querySelector('button');
-
-            fetch(this.getAttribute('action'), {
-                method: 'POST',
-                body: formData,
-                headers: { 'X-Requested-With': 'XMLHttpRequest' }
-            }).then(response => {
-                if (response.ok) return response.json();
-            }).then(data => {
-                if (data) {
-                    const badge = document.getElementById('cart-badge');
-                    if (badge) {
-                        badge.textContent = data.count;
-                        badge.classList.add('animate-bounce');
-                        setTimeout(() => badge.classList.remove('animate-bounce'), 1000);
+                fetch(form.action || '/cart/add', {
+                    method: 'POST',
+                    body: params,
+                    headers: { 
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Content-Type': 'application/x-www-form-urlencoded'
                     }
-                    if (btn) {
-                        btn.classList.add('brightness-110');
-                        setTimeout(() => btn.classList.remove('brightness-110'), 500);
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const badge = document.getElementById('cart-badge');
+                        if (badge) badge.innerText = data.count;
+                        const btn = form.querySelector('button[type="submit"]');
+                        const originalText = btn.innerText;
+                        btn.innerText = 'ĐÃ THÊM VÀO GIỎ';
+                        btn.classList.replace('bg-brand-primary', 'bg-green-600');
+                        setTimeout(() => {
+                            btn.innerText = originalText;
+                            btn.classList.replace('bg-green-600', 'bg-brand-primary');
+                        }, 2000);
+                    } else if (data.error) {
+                        alert(data.error);
                     }
-                }
-            });
-        });
+                })
+                .catch(error => console.error('Error:', error));
+            }
 
-        // AJAX for Wishlist
-        document.addEventListener('click', function (e) {
-            const wishBtn = e.target.closest('.wishlist-btn');
-            if (wishBtn) {
-                e.preventDefault();
-                const productId = wishBtn.dataset.productId;
-
+            function toggleWishlistAjax(event, btn, productId) {
+                event.preventDefault();
+                event.stopPropagation();
                 fetch('/wishlist/toggle/' + productId, {
                     method: 'POST',
                     headers: { 'X-Requested-With': 'XMLHttpRequest' }
                 })
-                    .then(response => {
-                        if (response.status === 401) {
-                            window.location.href = '/login';
-                            return;
-                        }
-                        if (response.ok) return response.json();
-                    })
-                    .then(data => {
-                        if (data) {
-                            const badge = document.getElementById('wishlist-badge');
-                            if (badge) badge.textContent = data.count;
-                            const icon = wishBtn.querySelector('.material-symbols-outlined');
-                            if (data.added) {
-                                icon.classList.add('text-red-500', 'fill-1');
-                            } else {
-                                icon.classList.remove('text-red-500', 'fill-1');
-                            }
-                            if (badge) {
-                                badge.classList.add('animate-bounce');
-                                setTimeout(() => badge.classList.remove('animate-bounce'), 1000);
-                            }
-                        }
-                    });
+                .then(response => response.json())
+                .then(data => {
+                    const icon = btn.querySelector('.material-symbols-outlined');
+                    const badge = document.getElementById('wishlist-badge');
+                    
+                    if (data.status === 'added') {
+                        icon.classList.add('fill-1');
+                        icon.classList.replace('text-slate-300', 'text-red-500');
+                    } else {
+                        icon.classList.remove('fill-1');
+                        icon.classList.replace('text-red-500', 'text-slate-300');
+                    }
+                    if (badge && data.count !== undefined) badge.innerText = data.count;
+                })
+                .catch(error => console.error('Error:', error));
             }
-        });
-    </script>
-</body>
+        </script>
+        <script th:inline="javascript">
+            function setRating(star) {
+                const rating = star.getAttribute('data-rating');
+                document.getElementById('rating-input').value = rating;
+                
+                const stars = document.querySelectorAll('.star-item');
+                stars.forEach((s, index) => {
+                    if (index < rating) {
+                        s.classList.add('fill-1');
+                    } else {
+                        s.classList.remove('fill-1');
+                    }
+                });
+            }
 
+            // Initialize 5 stars by default
+            document.addEventListener('DOMContentLoaded', () => {
+                const defaultStars = document.querySelectorAll('.star-item');
+                defaultStars.forEach(s => s.classList.add('fill-1'));
+            });
+        </script>
+    </div>
+</body>
 </html>

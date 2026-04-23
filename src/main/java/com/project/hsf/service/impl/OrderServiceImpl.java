@@ -100,8 +100,8 @@ public class OrderServiceImpl implements OrderService {
         boolean isValidTransition = switch (currentStatus) {
             case PENDING -> targetStatus == OrderStatus.CONFIRMED || targetStatus == OrderStatus.CANCELLED;
             case CONFIRMED -> targetStatus == OrderStatus.PROCESSING || targetStatus == OrderStatus.CANCELLED;
-            case PROCESSING -> targetStatus == OrderStatus.SHIPPING || targetStatus == OrderStatus.CANCELLED;
-            case SHIPPING -> targetStatus == OrderStatus.DELIVERED || targetStatus == OrderStatus.CANCELLED;
+            case PROCESSING -> targetStatus == OrderStatus.SHIPPED || targetStatus == OrderStatus.CANCELLED;
+            case SHIPPED -> targetStatus == OrderStatus.DELIVERED || targetStatus == OrderStatus.CANCELLED;
             default -> false;
         };
 
@@ -122,8 +122,20 @@ public class OrderServiceImpl implements OrderService {
                 order.setPaymentStatus(PaymentStatus.PAID);
                 Payment payment = paymentRepository.findByOrderId(order.getId()).orElse(null);
                 if (payment != null) {
-                    payment.setStatus("PAID");
+                    payment.setStatus("SUCCESS");
                     paymentRepository.save(payment);
+                }
+            }
+            
+            // Update Sold Count for each product in the order
+            if (order.getOrderItems() != null) {
+                for (OrderItem item : order.getOrderItems()) {
+                    if (item.getProduct() != null) {
+                        SeafoodProduct product = item.getProduct();
+                        int currentSold = product.getSoldCount() != null ? product.getSoldCount() : 0;
+                        product.setSoldCount(currentSold + item.getQuantity());
+                        seafoodProductRepository.save(product);
+                    }
                 }
             }
         }
@@ -315,15 +327,15 @@ public class OrderServiceImpl implements OrderService {
             if (cancel) {
                 order.setOrderStatus(OrderStatus.CANCELLED);
                 order.setPaymentStatus(PaymentStatus.UNPAID);
-                if (payment != null) payment.setStatus("CANCELLED");
+                if (payment != null) payment.setStatus("FAILED");
             } else if ("PAID".equals(status)) {
                 order.setOrderStatus(OrderStatus.CONFIRMED);
                 order.setPaymentStatus(PaymentStatus.PAID);
-                if (payment != null) payment.setStatus("PAID");
+                if (payment != null) payment.setStatus("SUCCESS");
             } else {
                 order.setOrderStatus(OrderStatus.CANCELLED);
                 order.setPaymentStatus(PaymentStatus.UNPAID);
-                if (payment != null) payment.setStatus("CANCELLED");
+                if (payment != null) payment.setStatus("FAILED");
             }
             if (payment != null) paymentRepository.save(payment);
             Order savedOrder = orderRepository.save(order);
@@ -346,7 +358,7 @@ public class OrderServiceImpl implements OrderService {
             } else {
                 order.setOrderStatus(OrderStatus.CANCELLED);
                 order.setPaymentStatus(PaymentStatus.UNPAID);
-                if (payment != null) payment.setStatus("CANCELLED");
+                if (payment != null) payment.setStatus("FAILED");
             }
             if (payment != null) paymentRepository.save(payment);
             Order savedOrder = orderRepository.save(order);
