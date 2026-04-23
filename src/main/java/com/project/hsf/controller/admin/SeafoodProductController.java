@@ -1,21 +1,15 @@
 package com.project.hsf.controller.admin;
 
-import com.project.hsf.entity.SeafoodProduct;
 import com.project.hsf.entity.ProductReview;
 import com.project.hsf.entity.ProductReviewCount;
-import com.project.hsf.service.impl.CategoryServiceImpl;
-import com.project.hsf.service.impl.SeafoodProductServiceImpl;
+import com.project.hsf.entity.SeafoodProduct;
+import com.project.hsf.service.CategoryService;
 import com.project.hsf.service.ProductReviewService;
-
+import com.project.hsf.service.SeafoodProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -28,8 +22,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class SeafoodProductController {
 
-    private final SeafoodProductServiceImpl seafoodProductService;
-    private final CategoryServiceImpl categoryService;
+    private final SeafoodProductService seafoodProductService;
+    private final CategoryService categoryService;
     private final ProductReviewService reviewService;
 
     @GetMapping
@@ -78,10 +72,10 @@ public class SeafoodProductController {
 
     @PostMapping("/create")
     public String create(@ModelAttribute SeafoodProduct seafoodProduct,
-            @RequestParam("categoryId") Long categoryId,
-            @RequestParam(value = "imageFiles", required = false) List<MultipartFile> imageFiles,
-            @RequestParam(value = "primaryImageIndex", defaultValue = "0") Integer primaryImageIndex,
-            RedirectAttributes redirectAttributes) {
+                         @RequestParam("categoryId") Long categoryId,
+                         @RequestParam(value = "imageFiles", required = false) List<MultipartFile> imageFiles,
+                         @RequestParam(value = "primaryImageIndex", defaultValue = "0") Integer primaryImageIndex,
+                         RedirectAttributes redirectAttributes) {
         try {
             seafoodProductService.save(seafoodProduct, categoryId, imageFiles, primaryImageIndex);
             redirectAttributes.addFlashAttribute("successMessage", "Tạo sản phẩm thành công!");
@@ -94,11 +88,11 @@ public class SeafoodProductController {
 
     @PostMapping("/{id}/edit")
     public String update(@PathVariable Long id,
-            @ModelAttribute SeafoodProduct seafoodProduct,
-            @RequestParam("categoryId") Long categoryId,
-            @RequestParam(value = "imageFiles", required = false) List<MultipartFile> imageFiles,
-            @RequestParam(value = "primaryImageIndex", defaultValue = "0") Integer primaryImageIndex,
-            RedirectAttributes redirectAttributes) {
+                         @ModelAttribute SeafoodProduct seafoodProduct,
+                         @RequestParam("categoryId") Long categoryId,
+                         @RequestParam(value = "imageFiles", required = false) List<MultipartFile> imageFiles,
+                         @RequestParam(value = "primaryImageIndex", defaultValue = "0") Integer primaryImageIndex,
+                         RedirectAttributes redirectAttributes) {
         try {
             seafoodProduct.setId(id);
             seafoodProductService.save(seafoodProduct, categoryId, imageFiles, primaryImageIndex);

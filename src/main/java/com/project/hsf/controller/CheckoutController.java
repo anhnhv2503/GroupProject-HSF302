@@ -4,14 +4,7 @@ import com.project.hsf.dto.CartItemDTO;
 import com.project.hsf.entity.Coupon;
 import com.project.hsf.entity.Order;
 import com.project.hsf.entity.User;
-import com.project.hsf.repository.CouponRepository;
-import com.project.hsf.repository.UserAddressRepository;
-import com.project.hsf.repository.UserRepository;
-import com.project.hsf.service.CartService;
-import com.project.hsf.service.OrderService;
-import com.project.hsf.service.CouponService;
-import com.project.hsf.service.UserService;
-
+import com.project.hsf.service.*;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -32,8 +25,8 @@ public class CheckoutController {
 
     private final CartService cartService;
     private final OrderService orderService;
-    private final UserRepository userRepository;
-    private final UserAddressRepository userAddressRepository;
+    private final UserAddressService userAddressService;
+
     private final CouponService couponService;
     private final UserService userService;
 
@@ -43,7 +36,7 @@ public class CheckoutController {
             return "redirect:/login";
         }
 
-        User user = userRepository.findByUsername(principal.getName());
+        User user = userService.findByUsername(principal.getName());
         if (!userService.canUserAddToCart(user.getId())) {
             model.addAttribute("error", "Quyền mua hàng của bạn đã bị thu hồi. Liên hệ admin.");
             model.addAttribute("cartItems", cartService.getCart(session).values());
@@ -56,7 +49,7 @@ public class CheckoutController {
             return "redirect:/cart";
         }
 
-        var addresses = userAddressRepository.findByUser(user);
+        var addresses = userAddressService.findByUser(user);
 
         String appliedCouponCode = (String) session.getAttribute("appliedCoupon");
         double totalPrice = cartService.calculateTotal(session);
@@ -118,12 +111,12 @@ public class CheckoutController {
             return "redirect:/login";
         }
 
-        User user = userRepository.findByUsername(principal.getName());
+        User user = userService.findByUsername(principal.getName());
         if (!userService.canUserAddToCart(user.getId())) {
             model.addAttribute("error", "Quyền mua hàng của bạn đã bị thu hồi. Liên hệ admin.");
             model.addAttribute("cartItems", cartService.getCart(session).values());
             model.addAttribute("totalPrice", cartService.calculateTotal(session));
-            model.addAttribute("addresses", userAddressRepository.findByUser(user));
+            model.addAttribute("addresses", userAddressService.findByUser(user));
             return "cart/cart";
         }
 
@@ -145,7 +138,7 @@ public class CheckoutController {
             model.addAttribute("error", e.getMessage());
             model.addAttribute("cartItems", cartItems);
             model.addAttribute("totalPrice", cartService.calculateTotal(session));
-            model.addAttribute("addresses", userAddressRepository.findByUser(user));
+            model.addAttribute("addresses", userAddressService.findByUser(user));
             model.addAttribute("appliedCoupon", couponCode);
             return "checkout/checkout";
         }
