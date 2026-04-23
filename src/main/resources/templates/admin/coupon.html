@@ -184,7 +184,7 @@
 							<span class="material-symbols-outlined text-base">edit</span>
 							<span>Sửa</span>
 						</button>
-						<form th:action="@{'/admin/coupon/' + ${coupon.id} + '/delete'}" method="post" class="contents">
+						<form th:action="@{'/admin/coupon/delete/' + ${coupon.id}}" method="post" class="contents">
 							<button type="submit" onclick="return confirm('Bạn có chắc muốn xóa coupon này?')"
 								class="flex items-center justify-center gap-2 py-2.5 rounded-xl bg-red-50 text-red-500 font-bold text-sm hover:bg-red-500 hover:text-white transition-all">
 								<span class="material-symbols-outlined text-base">delete</span>

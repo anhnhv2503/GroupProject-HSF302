@@ -1,693 +1,143 @@
 <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/main :: head('Trang Chủ')}"></head>
+<body th:replace="~{layout/main :: layout(~{:: .index-content})}">
+    <div class="index-content">
+        <!-- Dynamic Banner Slider -->
+        <section class="relative h-[700px] overflow-hidden bg-slate-900" id="hero-slider">
+            <!-- Default Hero (Fallback) -->
+            <div th:if="${#lists.isEmpty(banners)}" class="h-full relative flex items-center justify-center">
+                <div class="absolute inset-0 opacity-40">
+                    <img src="https://images.unsplash.com/photo-1551248429-40975aa4de74?q=80&w=2000" class="w-full h-full object-cover">
+                </div>
+                <div class="relative z-10 text-center text-white px-8">
+                    <span class="inline-block px-4 py-1.5 bg-orange-600 text-white text-[10px] font-black uppercase tracking-[0.3em] rounded-full mb-6">Premium Collection</span>
+                    <h1 class="text-6xl md:text-8xl font-black mb-6 uppercase tracking-tighter leading-none">Oceanic<br/><span class="text-orange-600 italic">Culinary</span></h1>
+                    <p class="text-xl opacity-80 mb-10 max-w-2xl mx-auto font-medium text-slate-200">Tinh hoa hải sản thượng hạng, được tuyển chọn khắt khe từ những vùng biển sâu nhất thế giới.</p>
+                    <a href="/products" class="inline-block bg-white text-slate-900 px-10 py-5 rounded-full font-black uppercase tracking-widest text-xs hover:bg-orange-600 hover:text-white transition-all shadow-2xl">Mua sắm ngay</a>
+                </div>
+            </div>
 
-<html class="light" lang="vi" xmlns:th="http://www.thymeleaf.org"
-    xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-
-<head>
-    <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>The Culinary Curator - Tinh hoa hải sản từ đại dương</title>
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&amp;family=Inter:wght@300;400;500;600;700;800;900&amp;family=Roboto:wght@400;500;700&amp;display=swap"
-        rel="stylesheet" />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
-        rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
-    <script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    "colors": {
-                        "brand-primary": "#F26522",
-                        "brand-secondary": "#0D4A7A",
-                        "brand-bg": "#F8F9FA",
-                        "surface-container-highest": "#e1e3e4",
-                        "on-tertiary-fixed-variant": "#004b6f",
-                        "on-error": "#ffffff",
-                        "secondary-fixed-dim": "#9dcaff",
-                        "inverse-surface": "#2e3132",
-                        "error": "#ba1a1a",
-                        "surface-dim": "#d9dadb",
-                        "surface": "#f8f9fa",
-                        "on-primary-fixed-variant": "#7f2b00",
-                        "on-tertiary": "#ffffff",
-                        "tertiary-fixed-dim": "#8cceff",
-                        "surface-container": "#edeeef",
-                        "tertiary": "#006492",
-                        "on-primary-fixed": "#370e00",
-                        "inverse-on-surface": "#f0f1f2",
-                        "surface-tint": "#a63b00",
-                        "on-surface": "#191c1d",
-                        "on-secondary": "#ffffff",
-                        "tertiary-container": "#009ade",
-                        "surface-container-high": "#e7e8e9",
-                        "secondary": "#2e6192",
-                        "background": "#f8f9fa",
-                        "surface-variant": "#e1e3e4",
-                        "on-surface-variant": "#594138",
-                        "on-primary": "#ffffff",
-                        "secondary-container": "#98c7ff",
-                        "primary-fixed": "#ffdbce",
-                        "on-secondary-container": "#1c5384",
-                        "on-secondary-fixed": "#001d35",
-                        "outline-variant": "#e1bfb3",
-                        "outline": "#8d7166",
-                        "on-primary-container": "#4f1800",
-                        "primary": "#a63b00",
-                        "on-tertiary-fixed": "#001e2f",
-                        "tertiary-fixed": "#cae6ff",
-                        "on-error-container": "#93000a",
-                        "inverse-primary": "#ffb599",
-                        "on-tertiary-container": "#002d45",
-                        "on-secondary-fixed-variant": "#0b4979",
-                        "surface-container-low": "#f3f4f5",
-                        "primary-fixed-dim": "#ffb599",
-                        "surface-bright": "#f8f9fa",
-                        "secondary-fixed": "#d1e4ff",
-                        "on-background": "#191c1d",
-                        "surface-container-lowest": "#ffffff",
-                        "primary-container": "#f26522",
-                        "error-container": "#ffdad6"
-                    },
-                    "borderRadius": {
-                        "DEFAULT": "0.25rem",
-                        "lg": "0.5rem",
-                        "xl": "0.75rem",
-                        "full": "9999px"
-                    },
-                    "fontFamily": {
-                        "headline": ["Inter"],
-                        "body": ["Inter"],
-                        "label": ["Inter"]
-                    }
-                },
-            },
-        }
-    </script>
-    <style>
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-
-        body {
-            font-family: 'Be Vietnam Pro', 'Inter', sans-serif;
-        }
-
-        .font-roboto {
-            font-family: 'Roboto', sans-serif;
-        }
-
-        .glass-effect {
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-        }
-
-        /* Focus styles */
-        button:focus,
-        a:focus {
-            outline: 2px solid #a63b00;
-            outline-offset: 2px;
-        }
-
-        .premium-badge {
-            position: absolute;
-            top: 1rem;
-            left: 1rem;
-            background-color: #009ade;
-            color: white;
-            width: 3.5rem;
-            height: 3.5rem;
-            border-radius: 9999px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.65rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-            z-index: 20;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            text-align: center;
-            line-height: 1;
-        }
-    </style>
-</head>
-
-<body class="bg-surface text-on-surface">
-    <!-- TopNavBar -->
-    <header th:replace="~{fragments/index-header :: header}"></header>
-    <main class="relative z-0 pt-32">
-        <!-- Hero Section -->
-        <section class="relative h-[870px] flex items-center overflow-hidden z-0">
             <!-- Dynamic Banners -->
-            <div th:if="${not #lists.isEmpty(banners)}" class="absolute inset-0 z-0">
+            <div th:unless="${#lists.isEmpty(banners)}" class="h-full relative">
                 <div th:each="banner, iterStat : ${banners}" 
-                     th:classappend="${iterStat.first} ? 'opacity-100' : 'opacity-0'"
-                     data-banner-slide
-                     class="absolute inset-0 transition-opacity duration-1000">
-                    <img th:src="${banner.imageUrl}" class="w-full h-full object-cover" th:alt="${banner.title}">
-                    <div class="absolute inset-0 bg-gradient-to-r from-on-secondary/60 to-transparent"></div>
-                    
-                    <div class="absolute inset-0 z-10 flex items-center">
-                        <div class="max-w-7xl mx-auto px-8 w-full">
-                            <div class="max-w-2xl">
-                                <span class="text-on-surface tracking-widest uppercase text-xs font-bold mb-4 block" th:text="${banner.subtitle}">Thưởng lãm nghệ thuật ẩm thực</span>
-                                <h1 class="text-6xl md:text-8xl font-black text-on-surface leading-[1.1] mb-6 tracking-tighter" th:text="${banner.title}">
-                                    Tinh hoa hải sản <br /> <span class="text-primary-container italic">từ đại dương</span>
-                                </h1>
-                                <div class="flex gap-4">
-                                    <a th:href="${banner.link != null ? banner.link : '/products'}"
-                                       class="bg-gradient-to-r from-primary-container to-primary text-on-primary px-8 py-4 rounded-lg font-bold hover:opacity-90 transition-all shadow-lg shadow-primary-container/20">
-                                        Khám phá ngay
-                                    </a>
-                                </div>
+                     th:class="'banner-slide absolute inset-0 transition-all duration-1000 ease-in-out ' + (${iterStat.first} ? 'opacity-100 z-10' : 'opacity-0 z-0')">
+                    <div class="absolute inset-0">
+                        <img th:src="${banner.imageUrl}" class="w-full h-full object-cover brightness-[0.4]" />
+                    </div>
+                    <div class="max-w-7xl mx-auto px-8 h-full flex items-center relative z-20">
+                        <div class="max-w-3xl space-y-8 translate-y-10 opacity-0 transition-all duration-700 delay-300 slide-content">
+                            <span class="inline-block px-4 py-1.5 bg-white/10 backdrop-blur-md text-white text-[10px] font-black uppercase tracking-[0.3em] rounded-full" th:text="${banner.subtitle ?: 'Special Offer'}"></span>
+                            <h1 class="text-6xl md:text-8xl font-black text-white uppercase tracking-tighter leading-tight" th:text="${banner.title}">Banner Title</h1>
+                            <div class="h-1.5 w-24 bg-orange-600 rounded-full"></div>
+                            <p class="text-xl text-white/70 font-medium max-w-xl leading-relaxed" th:text="${banner.subtitle}">Subtitle description goes here.</p>
+                            <div class="pt-4">
+                                <a th:href="${banner.link ?: '/products'}" class="inline-block bg-orange-600 text-white px-12 py-5 rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-white hover:text-slate-900 transition-all shadow-2xl shadow-orange-600/20">Khám phá ngay</a>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Default Hero if no banners -->
-            <div th:if="${#lists.isEmpty(banners)}" class="absolute inset-0 z-0">
-                <img class="w-full h-full object-cover"
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuA74AVyACnfCK_dAxL86PDqpJp-fC5ZndZ4nhkCI7jTckRpUR5XB3BUW8U_JhPozCuOtvlEOmGvM8R9i0OuwbnHLKtUa9sthSn9tXeEyzoVBQ15h-ngvlHzIrgyCUOfVKSFw4l2pZylkIaj0dzFGBTuIwYqnJ3swElVkyY6oO8RI7GxOcPqpLOG86IHqvsEw6Qr-f-QVFOe8Ztbk6Rh0B3yWjPS4HRr7GH2Qb6CeQrmtNG-PPhDor2g_9O3opl0CxZWJ-wuFWeilVc" />
-                <div class="absolute inset-0 bg-gradient-to-r from-on-secondary/60 to-transparent"></div>
-                <div class="relative z-10 max-w-7xl mx-auto px-8 w-full h-full flex items-center">
-                    <div class="max-w-2xl">
-                        <span class="text-on-surface tracking-widest uppercase text-xs font-bold mb-4 block">Thưởng lãm nghệ
-                            thuật ẩm thực</span>
-                        <h1 class="text-6xl md:text-8xl font-black text-on-surface leading-[1.1] mb-6 tracking-tighter">
-                            Tinh hoa hải sản <br /> <span class="text-primary-container italic">từ đại dương</span>
-                        </h1>
-                        <p class="text-lg text-on-surface-variant mb-8 max-w-lg leading-relaxed">
-                            Trải nghiệm tinh hoa đại dương ngay tại bàn tiệc của bạn với những lựa chọn hải sản quý hiếm
-                            được
-                            tuyển chọn thủ công bởi chuyên gia.
-                        </p>
-                        <div class="flex gap-4">
-                            <a href="/products"
-                                class="bg-gradient-to-r from-primary-container to-primary text-on-primary px-8 py-4 rounded-lg font-bold hover:opacity-90 transition-all shadow-lg shadow-primary-container/20">
-                                Khám phá Bộ sưu tập
-                            </a>
-                            <a href="/products"
-                                class="bg-surface-container-highest text-secondary px-8 py-4 rounded-lg font-bold hover:bg-surface-container-high transition-all flex items-center justify-center">
-                                Xem Bảng giá
-                            </a>
-                        </div>
-                    </div>
+                <!-- Navigation Controls -->
+                <div class="absolute bottom-12 right-12 z-30 flex items-center gap-4">
+                    <button onclick="prevSlide()" class="w-14 h-14 rounded-full border border-white/20 flex items-center justify-center text-white hover:bg-white hover:text-slate-900 transition-all">
+                        <span class="material-symbols-outlined">west</span>
+                    </button>
+                    <button onclick="nextSlide()" class="w-14 h-14 rounded-full border border-white/20 flex items-center justify-center text-white hover:bg-white hover:text-slate-900 transition-all">
+                        <span class="material-symbols-outlined">east</span>
+                    </button>
                 </div>
             </div>
         </section>
-        <!-- Featured Collections -->
-        <section class="py-24 max-w-7xl mx-auto px-8">
-            <div class="mb-12 flex justify-between items-end">
-                <div>
-                    <h2 class="text-3xl font-black text-on-surface tracking-tighter uppercase">Bộ sưu tập nổi bật</h2>
-                    <div class="w-12 h-1 bg-secondary mt-2"></div>
-                </div>
-                <a class="text-secondary font-bold text-sm uppercase tracking-widest flex items-center gap-2 hover:gap-3 transition-all"
-                    th:href="@{/products}">
-                    Tất cả sản phẩm <span class="material-symbols-outlined text-sm">arrow_forward</span>
-                </a>
-            </div>
+
+        <style>
+            .banner-slide.opacity-100 .slide-content {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        </style>
+
+        <script th:inline="javascript">
+            let currentSlide = 0;
+            const slides = document.querySelectorAll('.banner-slide');
+            
+            function showSlide(index) {
+                if (slides.length === 0) return;
+                slides[currentSlide].classList.remove('opacity-100', 'z-10');
+                slides[currentSlide].classList.add('opacity-0', 'z-0');
+                
+                currentSlide = (index + slides.length) % slides.length;
+                
+                slides[currentSlide].classList.remove('opacity-0', 'z-0');
+                slides[currentSlide].classList.add('opacity-100', 'z-10');
+            }
+
+            function nextSlide() { showSlide(currentSlide + 1); }
+            function prevSlide() { showSlide(currentSlide - 1); }
+
+            // Auto slide every 5 seconds
+            if (slides.length > 1) {
+                setInterval(nextSlide, 5000);
+            }
+        </script>
+
+        <!-- Product Grid -->
+        <section class="py-20 max-w-7xl mx-auto px-8">
+            <h2 class="text-2xl font-black mb-10 uppercase tracking-tighter">Sản phẩm đặc sắc</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                <div th:each="product, iterStat : ${products}" th:if="${iterStat.index < 8}"
-                     class="group relative overflow-hidden rounded-xl bg-surface-container-low shadow-sm flex flex-col hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-                    <a th:href="@{'/products/' + ${product.id}}" class="relative aspect-square overflow-hidden block">
-                        <!-- Badge -->
-                        <div class="absolute top-3 left-3 z-10 flex flex-col gap-1.5">
-                            <div th:if="${product.stockQuantity != null and product.stockQuantity <= 0}" class="bg-black/80 backdrop-blur text-white text-[9px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider shadow-lg">Hết hàng</div>
-                            <div th:if="${product.freshnessStatus == 'FRESH'}" class="bg-green-600 text-white text-[9px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider shadow">Daily</div>
-                            <div th:if="${product.freshnessStatus == 'FROZEN'}" class="bg-blue-600 text-white text-[9px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider shadow">Frozen</div>
-                            <div th:if="${product.freshnessStatus == 'LIVE'}" class="bg-orange-600 text-white text-[9px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider shadow">Live</div>
-                        </div>
-                        <!-- Image -->
-                        <img th:if="${product.images != null and !product.images.isEmpty()}"
-                             th:with="primaryImg=${product.images.^[isPrimary != null and isPrimary]}"
-                             th:src="@{${primaryImg != null ? primaryImg.imageUrl : product.images[0].imageUrl}}"
-                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                             th:classappend="${product.stockQuantity != null and product.stockQuantity <= 0} ? 'grayscale opacity-60' : ''"
-                             th:alt="${product.name}"/>
-                        <img th:unless="${product.images != null and !product.images.isEmpty()}"
-                             src="https://via.placeholder.com/400x400?text=Seafood"
-                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                             th:classappend="${product.stockQuantity != null and product.stockQuantity <= 0} ? 'grayscale opacity-60' : ''"
-                             alt="Seafood"/>
-
-                        <!-- Out of Stock Overlay -->
-                        <div th:if="${product.stockQuantity != null and product.stockQuantity <= 0}" 
-                             class="absolute inset-0 z-20 bg-black/20 backdrop-blur-[2px] flex items-center justify-center">
-                            <div class="bg-white/10 backdrop-blur-md border border-white/20 px-6 py-3 rounded-2xl shadow-2xl transform -rotate-12">
-                                <span class="text-white font-black text-xl uppercase tracking-[0.2em] drop-shadow-lg">Hết hàng</span>
-                            </div>
-                        </div>
-                    </a>
-                    <div class="p-6 flex flex-col flex-grow">
-                        <a th:href="@{'/products/' + ${product.id}}" class="block">
-                            <h3 class="text-lg font-bold mb-2 tracking-tight text-on-surface hover:text-primary-container transition-colors line-clamp-2" th:text="${product.name}">Tên sản phẩm</h3>
-                        </a>
-                        <div class="mt-auto">
-                            <p class="text-primary-container font-black text-lg" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' đ'">0 đ</p>
-                            <form th:action="@{/cart/add}" method="post" class="mt-4">
-                                <input type="hidden" name="productId" th:value="${product.id}"/>
-                                <input type="hidden" name="name" th:value="${product.name}"/>
-                                <input type="hidden" name="price" th:value="${product.price}"/>
-                                <input type="hidden" name="imageUrl" th:value="${not #lists.isEmpty(product.images) ? product.images[0].imageUrl : '/images/no-image.jpg'}" />
-                                <input type="hidden" name="quantity" value="1"/>
-                                <button type="submit" th:disabled="${!(product.stockQuantity > 0) or (canAddToCart != null and !canAddToCart)}"
-                                    th:title="${canAddToCart != null and !canAddToCart} ? 'Quyền mua hàng của bạn đã bị thu hồi. Liên hệ admin.' : ''"
-                                    class="w-full bg-surface-container-highest text-secondary py-2.5 rounded font-bold hover:bg-primary-container hover:text-white transition-all uppercase tracking-wide disabled:opacity-50 disabled:grayscale disabled:cursor-not-allowed">
-                                    <span th:if="${product.stockQuantity > 0 and (canAddToCart == null or canAddToCart)}" class="text-sm">Thêm vào giỏ</span>
-                                    <span th:if="${product.stockQuantity > 0 and (canAddToCart != null and !canAddToCart)}" class="text-xs">Quyền mua hàng của bạn đã bị thu hồi. LH admin.</span>
-                                    <span th:if="${product.stockQuantity <= 0}" class="text-sm">Hết hàng</span>
-                                </button>
-                            </form>
-                        </div>
-                    </div>
+                <div th:each="product, iterStat : ${products}" th:if="${iterStat.index < 8}">
+                    <div th:replace="~{fragments/components/product-card :: card(${product}, ${canAddToCart})}"></div>
                 </div>
             </div>
         </section>
-        <!-- Features -->
-        <section class="bg-surface-container-low py-16">
-            <div class="max-w-7xl mx-auto px-8">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
-                    <div class="flex flex-col items-center">
-                        <span class="material-symbols-outlined text-4xl text-secondary mb-4">tsunami</span>
-                        <h4 class="font-bold text-lg mb-2 text-on-surface">Đánh bắt bền vững</h4>
-                        <p class="text-sm text-on-surface-variant">Cam kết bảo vệ hệ sinh thái đại dương qua từng sản
-                            phẩm.</p>
-                    </div>
-                    <div class="flex flex-col items-center">
-                        <span class="material-symbols-outlined text-4xl text-secondary mb-4">local_shipping</span>
-                        <h4 class="font-bold text-lg mb-2 text-on-surface">Giao hàng nhanh</h4>
-                        <p class="text-sm text-on-surface-variant">Vận chuyển siêu tốc, giữ trọn độ tươi ngon trong từng
-                            thớ
-                            thịt.</p>
-                    </div>
-                    <div class="flex flex-col items-center">
-                        <span class="material-symbols-outlined text-4xl text-secondary mb-4">verified</span>
-                        <h4 class="font-bold text-lg mb-2 text-on-surface">Tuyển chọn thủ công</h4>
-                        <p class="text-sm text-on-surface-variant">Chỉ những mẫu vật hoàn hảo nhất mới được đưa đến tay
-                            khách hàng.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!-- Testimonials -->
-<!--        <section class="py-24 max-w-7xl mx-auto px-8">-->
-<!--            <div class="text-center mb-16">-->
-<!--                <h2 class="text-3xl font-black text-on-surface tracking-tighter uppercase">Khách hàng nói gì về chúng-->
-<!--                    tôi</h2>-->
-<!--                <p class="text-on-surface-variant mt-2">Hơn 5000+ tín đồ ẩm thực đã tin dùng</p>-->
-<!--            </div>-->
-<!--            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">-->
-<!--                <div class="bg-surface-container-lowest p-8 rounded-xl shadow-sm border border-outline-variant/10">-->
-<!--                    <div class="flex gap-1 text-primary-container mb-4">-->
-<!--                        <span class="material-symbols-outlined text-sm"-->
-<!--                            style="font-variation-settings: 'FILL' 1;">star</span>-->
-<!--                        <span class="material-symbols-outlined text-sm"-->
-<!--                            style="font-variation-settings: 'FILL' 1;">star</span>-->
-<!--                        <span class="material-symbols-outlined text-sm"-->
-<!--                            style="font-variation-settings: 'FILL' 1;">star</span>-->
-<!--                        <span class="material-symbols-outlined text-sm"-->
-<!--                            style="font-variation-settings: 'FILL' 1;">star</span>-->
-<!--                        <span class="material-symbols-outlined text-sm"-->
-<!--                            style="font-variation-settings: 'FILL' 1;">star</span>-->
-<!--                    </div>-->
-<!--                    <p class="text-on-surface-variant italic mb-6 leading-relaxed">"Chất lượng tôm hùm ở đây thực sự-->
-<!--                        khác-->
-<!--                        biệt, rất chắc thịt và ngọt. Dịch vụ giao hàng nhanh và đóng gói chuyên nghiệp."</p>-->
-<!--                    <div class="flex items-center gap-4">-->
-<!--                        <div class="w-12 h-12 rounded-full bg-slate-200 overflow-hidden">-->
-<!--                            <img class="w-full h-full object-cover" data-alt="Portrait of Anh Hoàng Nam"-->
-<!--                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAp8HAKxZuIp8rMYYIWm9y2IXwOlJVbr1l93AKngWkfAIRBeXa98rFqBeaIOhZrlr78L7ldV3IU9KKhayAcd2U0nONVY1HqnafOhV0Luklkt0cKE-5cuydAmaBF7J7n4lZPzAeHVJeRnn2jydy3QH-NRBcOGTlp_HznR_vGsxn0W1YUxVuZzoJuggcTJwrvDpaIsv19JVme6N30O6H5bqts_5rYY7ik83giywd7NUEfDxkIs-gaa5nWt6lPzU-Y-RP5jKYnpUhjh-k" />-->
-<!--                        </div>-->
-<!--                        <div>-->
-<!--                            <h4 class="font-bold text-sm text-on-surface">Anh Hoàng Nam</h4>-->
-<!--                            <p class="text-[10px] text-on-surface-variant uppercase">Giám đốc Điều hành</p>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <div class="bg-surface-container-lowest p-8 rounded-xl shadow-sm border border-outline-variant/10">-->
-<!--                    <div class="flex gap-1 text-primary-container mb-4">-->
-<!--                        <span class="material-symbols-outlined text-sm"-->
-<!--                            style="font-variation-settings: 'FILL' 1;">star</span>-->
-<!--                        <span class="material-symbols-outlined text-sm"-->
-<!--                            style="font-variation-settings: 'FILL' 1;">star</span>-->
-<!--                        <span class="material-symbols-outlined text-sm"-->
-<!--                            style="font-variation-settings: 'FILL' 1;">star</span>-->
-<!--                        <span class="material-symbols-outlined text-sm"-->
-<!--                            style="font-variation-settings: 'FILL' 1;">star</span>-->
-<!--                        <span class="material-symbols-outlined text-sm"-->
-<!--                            style="font-variation-settings: 'FILL' 1;">star</span>-->
-<!--                    </div>-->
-<!--                    <p class="text-on-surface-variant italic mb-6 leading-relaxed">"Tôi đã đặt hộp quà hải sản cho đối-->
-<!--                        tác-->
-<!--                        và họ rất ấn tượng. Sự tinh tế trong cách bài trí thực sự xứng tầm cao cấp."</p>-->
-<!--                    <div class="flex items-center gap-4">-->
-<!--                        <div class="w-12 h-12 rounded-full bg-slate-200 overflow-hidden">-->
-<!--                            <img class="w-full h-full object-cover" data-alt="Portrait of Chị Minh Thư"-->
-<!--                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDeHRLCKJqYC9QclzscR7owReJnH7_76NX9Tm0Y2UguYfQlfYHqdm6jpOb_JvZAF7rIL6qHaK6JC9YnoQpaXwzUxCGOJsUgZ9abxV1sGFcbI4nFrmtonoI-jQfO5q8-oMFEXKiiUgVfaH80sakCYIqdajRSmd36HiSfKC8xmBaCT_nJ9hiEIqcvkyTlL17Tfg0xxFPtKeoRu6UQuqwhDlKaDmPXo6I8XCv-Y25Tnlc4uQl5MqvmBeZW0raTYFXUNOlMjR70h7Vk7-4" />-->
-<!--                        </div>-->
-<!--                        <div>-->
-<!--                            <h4 class="font-bold text-sm text-on-surface">Chị Minh Thư</h4>-->
-<!--                            <p class="text-[10px] text-on-surface-variant uppercase">Food Blogger</p>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <div class="bg-surface-container-lowest p-8 rounded-xl shadow-sm border border-outline-variant/10">-->
-<!--                    <div class="flex gap-1 text-primary-container mb-4">-->
-<!--                        <span class="material-symbols-outlined text-sm"-->
-<!--                            style="font-variation-settings: 'FILL' 1;">star</span>-->
-<!--                        <span class="material-symbols-outlined text-sm"-->
-<!--                            style="font-variation-settings: 'FILL' 1;">star</span>-->
-<!--                        <span class="material-symbols-outlined text-sm"-->
-<!--                            style="font-variation-settings: 'FILL' 1;">star</span>-->
-<!--                        <span class="material-symbols-outlined text-sm"-->
-<!--                            style="font-variation-settings: 'FILL' 1;">star</span>-->
-<!--                        <span class="material-symbols-outlined text-sm"-->
-<!--                            style="font-variation-settings: 'FILL' 1;">star</span>-->
-<!--                    </div>-->
-<!--                    <p class="text-on-surface-variant italic mb-6 leading-relaxed">"Cách The Culinary Curator kể chuyện-->
-<!--                        về-->
-<!--                        nguồn gốc từng loài hải sản làm tôi cảm thấy yên tâm và trân trọng hơn món ăn mình thưởng thức."-->
-<!--                    </p>-->
-<!--                    <div class="flex items-center gap-4">-->
-<!--                        <div class="w-12 h-12 rounded-full bg-slate-200 overflow-hidden">-->
-<!--                            <img class="w-full h-full object-cover" data-alt="Portrait of Anh Quốc Bảo"-->
-<!--                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSgXcF-DcQC__xr5g6Be1nV0ySLOV0FrwCa7VhE-tm6M_1OUTFsFLTTqzMi8ISiLTqGVOkjGQU1TbHUV_car1rOZWM9d3yWBYvpOHHYEZYc3cyKY68XnV4WTvPFQ6Xy1ezqNxq3RHuLJbRgGCG8PkQ33tVtEiFGakzzduvHB_NPHMEorXYqe7O-KYmHWfYpgSvy6GWNwF_l3XHcmHncx3_7OMdCYnBEN3dke9WBAFRLJul4tGTCfrqTbIqD49YESnmx6YD4M3hPwk" />-->
-<!--                        </div>-->
-<!--                        <div>-->
-<!--                            <h4 class="font-bold text-sm text-on-surface">Anh Quốc Bảo</h4>-->
-<!--                            <p class="text-[10px] text-on-surface-variant uppercase">Chủ nhà hàng</p>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </section>-->
 
         <!-- About Us Section -->
-        <section id="about-us" class="py-24 bg-white overflow-hidden scroll-mt-20">
-            <style>
-                .luxury-text-gradient {
-                    background: linear-gradient(135deg, #1a1a1a 0%, #4a4a4a 100%);
-                    -webkit-background-clip: text;
-                    -webkit-text-fill-color: transparent;
-                }
-
-                @keyframes bounce-slow {
-
-                    0%,
-                    100% {
-                        transform: translateY(-5%);
-                    }
-
-                    50% {
-                        transform: translateY(0);
-                    }
-                }
-
-                .animate-bounce-slow {
-                    animation: bounce-slow 3s infinite ease-in-out;
-                }
-            </style>
-            <div class="px-8 mx-auto" style="max-width: 1440px;">
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                    <div class="space-y-8">
-                        <div class="space-y-4">
-                            <span class="text-[#D35400] font-bold text-xs uppercase tracking-[3px]">Câu chuyện thương
-                                hiệu</span>
-                            <h2
-                                class="text-5xl font-black text-slate-900 tracking-tighter leading-tight luxury-text-gradient">
-                                Hành trình tìm kiếm<br />tinh hoa đại dương</h2>
+        <section id="about-us" class="py-24 bg-white overflow-hidden">
+            <div class="max-w-7xl mx-auto px-8">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+                    <div class="relative group">
+                        <div class="absolute -inset-4 bg-orange-100 rounded-[3rem] rotate-3 group-hover:rotate-0 transition-transform duration-700"></div>
+                        <div class="relative rounded-[3rem] overflow-hidden aspect-square shadow-2xl">
+                            <img src="https://images.unsplash.com/photo-1551248429-40975aa4de74?q=80&w=2000" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" alt="Về chúng tôi" />
                         </div>
-                        <div class="space-y-6 text-slate-600 leading-relaxed text-lg font-light">
-                            <p>
-                                <strong
-                                    class="font-bold text-slate-900 underline decoration-[#D35400]/30 underline-offset-4">The
-                                    Culinary Curator</strong> khởi nguồn từ niềm đam mê mãnh liệt với những giá trị
-                                nguyên bản ẩn mình dưới tầng đại dương lạnh giá. Chúng tôi không dừng lại ở việc cung
-                                cấp hải sản, chúng tôi là những người "tuyển chọn" (Curator) tận tâm.
-                            </p>
-                            <p>
-                                Mỗi sản phẩm có mặt tại cửa hàng đều phải vượt qua những tiêu chuẩn khắt khe nhất về độ
-                                tươi ngon, nguồn gốc bền vững và quy trình bảo quản tiêu chuẩn quốc tế. Từ vùng biển Bắc
-                                Âu xa xôi đến những hòn đảo tại Nhật Bản, chúng tôi lặn lội để mang về bàn tiệc của bạn
-                                những báu vật tinh túy nhất.
-                            </p>
-                        </div>
-                        <div class="flex gap-12 pt-4">
-                            <div class="text-center">
-                                <div class="text-4xl font-black text-slate-900">10+</div>
-                                <div class="text-[10px] uppercase tracking-widest text-slate-400 font-bold mt-2">Vùng
-                                    biển quốc tế</div>
-                            </div>
-                            <div class="h-14 w-[1px] bg-slate-100"></div>
-                            <div class="text-center">
-                                <div class="text-4xl font-black text-slate-900">100%</div>
-                                <div class="text-[10px] uppercase tracking-widest text-slate-400 font-bold mt-2">Tươi
-                                    sống mỗi ngày</div>
-                            </div>
-                        </div>
-                        <div class="pt-6">
-                            <button id="philosophy-btn"
-                                class="group relative bg-slate-900 text-white px-10 py-5 rounded-[4px] text-xs font-bold uppercase tracking-widest overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-[#D35400]/20">
-                                <span class="relative z-10">Khám phá triết lý của chúng tôi</span>
-                                <div
-                                    class="absolute inset-0 bg-[#D35400] translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                                </div>
-                            </button>
+                        <!-- Experience Badge -->
+                        <div class="absolute -bottom-10 -right-10 bg-brand-secondary text-white p-10 rounded-[2.5rem] shadow-2xl hidden md:block">
+                            <div class="text-5xl font-black mb-1">15+</div>
+                            <div class="text-[10px] font-bold uppercase tracking-[0.2em] opacity-60">Năm kinh nghiệm</div>
                         </div>
                     </div>
-                    <div class="relative">
-                        <!-- Decorative elements -->
-                        <div
-                            class="absolute -top-12 -right-12 w-64 h-64 bg-[#f5f5f5] rounded-full -z-10 animate-pulse opacity-50">
-                        </div>
-                        <div
-                            class="absolute -bottom-8 -left-8 w-32 h-32 border-2 border-[#D35400]/10 rounded-full -z-10">
-                        </div>
 
-                        <div
-                            class="rounded-2xl overflow-hidden shadow-[0_32px_64px_-16px_rgba(0,0,0,0.15)] transform hover:scale-[1.01] transition-all duration-700">
-                            <img src="https://file.hstatic.net/200000391061/article/bentleys-restaurant-royal-seafood-platter-312bf27_57b2e998e5024e168a68b61480802beb_1024x1024.jpg"
-                                alt="The Culinary Curator Craft" class="w-full h-full object-cover aspect-[4/5]" />
+                    <div class="space-y-8">
+                        <div class="space-y-4">
+                            <span class="inline-block px-4 py-1.5 bg-orange-50 text-orange-600 text-[10px] font-black uppercase tracking-[0.3em] rounded-full">Câu chuyện thương hiệu</span>
+                            <h2 class="text-5xl font-black text-brand-secondary tracking-tighter uppercase leading-none">Về <span class="text-brand-primary italic">Chúng Tôi</span></h2>
                         </div>
+                        
+                        <p class="text-slate-500 leading-relaxed font-medium text-lg">
+                            Khởi nguồn từ niềm đam mê vô tận với những món quà tinh túy nhất của đại dương, <span class="text-brand-secondary font-bold">The Culinary Curator</span> không chỉ cung cấp hải sản, mà chúng tôi mang đến một trải nghiệm ẩm thực thượng hạng.
+                        </p>
 
-                        <!-- Floating badge -->
-                        <div
-                            class="absolute bottom-10 -left-12 bg-white p-6 shadow-xl rounded-xl border border-slate-50 hidden xl:block animate-bounce-slow">
-                            <div class="flex items-center gap-4">
-                                <div class="w-12 h-12 bg-[#D35400]/10 rounded-full flex items-center justify-center">
-                                    <span class="material-symbols-outlined text-[#D35400]">verified</span>
+                        <div class="grid grid-cols-2 gap-8 pt-4">
+                            <div class="space-y-3">
+                                <div class="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center text-brand-primary">
+                                    <span class="material-symbols-outlined">verified</span>
                                 </div>
-                                <div>
-                                    <h4 class="font-bold text-slate-900 text-sm">Chứng nhận MSC</h4>
-                                    <p class="text-[10px] text-slate-400 font-medium">Đánh bắt bền vững</p>
+                                <h4 class="font-bold text-brand-secondary uppercase text-xs tracking-widest">Chất lượng 5 sao</h4>
+                                <p class="text-xs text-slate-400 leading-relaxed">Tuyển chọn kỹ lưỡng từ những vùng biển sạch nhất thế giới.</p>
+                            </div>
+                            <div class="space-y-3">
+                                <div class="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center text-brand-primary">
+                                    <span class="material-symbols-outlined">delivery_dining</span>
                                 </div>
+                                <h4 class="font-bold text-brand-secondary uppercase text-xs tracking-widest">Giao hàng cực tốc</h4>
+                                <p class="text-xs text-slate-400 leading-relaxed">Đảm bảo độ tươi ngon nguyên bản nhờ hệ thống vận chuyển lạnh chuyên dụng.</p>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>
         </section>
-    </main>
-    <!-- Footer -->
-    <div th:replace="~{fragments/index-footer :: footer}"></div>
-    <!-- Chatbot Widget -->
-    <div th:replace="~{chatbot/chatbot :: widget}"></div>
-    <!-- Philosophy Modal -->
-    <div id="philosophy-modal"
-        class="fixed inset-0 z-[100] flex items-center justify-center hidden opacity-0 transition-all duration-500">
-        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" id="modal-overlay"></div>
-        <div class="relative bg-white/95 w-full max-w-2xl p-12 rounded-2xl shadow-2xl border border-white/20 transform scale-95 transition-all duration-500 overflow-hidden"
-            id="modal-content">
-            <!-- Decorative Background -->
-            <div class="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 bg-[#D35400]/5 rounded-full blur-3xl"></div>
-
-            <div class="flex justify-between items-start mb-10">
-                <div class="space-y-2">
-                    <span class="text-[#D35400] font-bold text-[10px] uppercase tracking-[4px]">Triết lý vận hành</span>
-                    <h3 class="text-3xl font-black text-slate-900 tracking-tighter">Bốn Trụ Cột Tinh Hoa</h3>
-                </div>
-                <button id="close-modal"
-                    class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-slate-100 transition-colors">
-                    <span class="material-symbols-outlined text-slate-400">close</span>
-                </button>
-            </div>
-
-            <div class="space-y-8">
-                <div class="flex gap-6 group">
-                    <div
-                        class="w-14 h-14 bg-slate-900 text-white rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-[#D35400] transition-colors duration-300">
-                        <span class="material-symbols-outlined">waves</span>
-                    </div>
-                    <div>
-                        <h4 class="font-bold text-slate-900 text-lg mb-1">Chất lượng Tuyệt đối</h4>
-                        <p class="text-sm text-slate-500 leading-relaxed font-light">Mọi sản phẩm đều được kiểm duyệt
-                            thủ công bởi đội ngũ chuyên gia dày dạn kinh nghiệm trước khi lên kệ.</p>
-                    </div>
-                </div>
-
-                <div class="flex gap-6 group">
-                    <div
-                        class="w-14 h-14 bg-slate-900 text-white rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-[#D35400] transition-colors duration-300">
-                        <span class="material-symbols-outlined">eco</span>
-                    </div>
-                    <div>
-                        <h4 class="font-bold text-slate-900 text-lg mb-1">Bền vững & Nhân văn</h4>
-                        <p class="text-sm text-slate-500 leading-relaxed font-light">Chúng tôi chỉ hợp tác với các ngư
-                            trường có chứng chỉ đánh bắt bền vững, tôn trọng nhịp sống của đại dương.</p>
-                    </div>
-                </div>
-
-                <div class="flex gap-6 group">
-                    <div
-                        class="w-14 h-14 bg-slate-900 text-white rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-[#D35400] transition-colors duration-300">
-                        <span class="material-symbols-outlined">fingerprint</span>
-                    </div>
-                    <div>
-                        <h4 class="font-bold text-slate-900 text-lg mb-1">Minh bạch Nguồn gốc</h4>
-                        <p class="text-sm text-slate-500 leading-relaxed font-light">Mỗi gói hàng đều mang mã định danh
-                            duy nhất, cho phép khách hàng truy xuất hỏa tốc vùng biển và ngày đánh bắt.</p>
-                    </div>
-                </div>
-
-                <div class="flex gap-6 group">
-                    <div
-                        class="w-14 h-14 bg-slate-900 text-white rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-[#D35400] transition-colors duration-300">
-                        <span class="material-symbols-outlined">diamond</span>
-                    </div>
-                    <div>
-                        <h4 class="font-bold text-slate-900 text-lg mb-1">Trải nghiệm Thượng lưu</h4>
-                        <p class="text-sm text-slate-500 leading-relaxed font-light">Không chỉ là thực phẩm, chúng tôi
-                            mang đến một nghi thức thưởng thức ẩm thực trọn vẹn dành cho giới mộ điệu.</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="mt-12 text-center text-[10px] text-slate-300 uppercase tracking-widest font-bold">
-                The Culinary Curator &copy; Since 2024
-            </div>
-        </div>
     </div>
-
-    <script>
-        const modal = document.getElementById('philosophy-modal');
-        const modalContent = document.getElementById('modal-content');
-        const openBtn = document.getElementById('philosophy-btn');
-        const closeBtn = document.getElementById('close-modal');
-        const overlay = document.getElementById('modal-overlay');
-
-        const openModal = () => {
-            modal.classList.remove('hidden');
-            setTimeout(() => {
-                modal.classList.add('opacity-100');
-                modalContent.classList.remove('scale-95');
-                modalContent.classList.add('scale-100');
-            }, 10);
-        };
-
-        const closeModal = () => {
-            modal.classList.remove('opacity-100');
-            modalContent.classList.remove('scale-100');
-            modalContent.classList.add('scale-95');
-            setTimeout(() => {
-                modal.classList.add('hidden');
-            }, 500);
-        };
-
-        openBtn.addEventListener('click', openModal);
-        closeBtn.addEventListener('click', closeModal);
-        overlay.addEventListener('click', closeModal);
-    </script>
-
-    <!-- Banner Auto-Slide Script -->
-    <script>
-        (function() {
-            const bannerSlides = document.querySelectorAll('[data-banner-slide]');
-            if (bannerSlides.length <= 1) return;
-
-            let currentSlide = 0;
-            const totalSlides = bannerSlides.length;
-            const INTERVAL = 10000;
-
-            // Create dot indicators
-            const dotsContainer = document.createElement('div');
-            dotsContainer.className = 'absolute bottom-8 left-1/2 -translate-x-1/2 z-30 flex gap-3';
-            bannerSlides[0].parentElement.appendChild(dotsContainer);
-
-            for (let i = 0; i < totalSlides; i++) {
-                const dot = document.createElement('button');
-                dot.className = 'w-3 h-3 rounded-full transition-all duration-500 ' +
-                    (i === 0 ? 'bg-white scale-125 shadow-lg' : 'bg-white/50 hover:bg-white/80');
-                dot.addEventListener('click', () => { goToSlide(i); resetAutoPlay(); });
-                dotsContainer.appendChild(dot);
-            }
-
-            function goToSlide(index) {
-                bannerSlides[currentSlide].classList.remove('opacity-100');
-                bannerSlides[currentSlide].classList.add('opacity-0');
-                currentSlide = index;
-                bannerSlides[currentSlide].classList.remove('opacity-0');
-                bannerSlides[currentSlide].classList.add('opacity-100');
-                updateDots();
-            }
-
-            function updateDots() {
-                const dots = dotsContainer.querySelectorAll('button');
-                dots.forEach((d, i) => {
-                    d.className = 'w-3 h-3 rounded-full transition-all duration-500 ' +
-                        (i === currentSlide ? 'bg-white scale-125 shadow-lg' : 'bg-white/50 hover:bg-white/80');
-                });
-            }
-
-            function nextSlide() { goToSlide((currentSlide + 1) % totalSlides); }
-            function prevSlide() { goToSlide((currentSlide - 1 + totalSlides) % totalSlides); }
-
-            // Create arrow buttons dynamically
-            const heroSection = bannerSlides[0].closest('section');
-            const arrowStyle = 'position:absolute;top:50%;transform:translateY(-50%);z-index:30;width:56px;height:56px;border-radius:9999px;background:rgba(255,255,255,0.2);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.3);display:flex;align-items:center;justify-content:center;color:white;cursor:pointer;transition:all 0.3s;font-size:28px;';
-
-            const prevBtn = document.createElement('button');
-            prevBtn.innerHTML = '<span class="material-symbols-outlined" style="font-size:32px">chevron_left</span>';
-            prevBtn.style.cssText = arrowStyle + 'left:24px;';
-            prevBtn.onmouseenter = function() { this.style.background = 'rgba(255,255,255,0.4)'; this.style.transform = 'translateY(-50%) scale(1.1)'; };
-            prevBtn.onmouseleave = function() { this.style.background = 'rgba(255,255,255,0.2)'; this.style.transform = 'translateY(-50%) scale(1)'; };
-            prevBtn.addEventListener('click', () => { prevSlide(); resetAutoPlay(); });
-
-            const nextBtn = document.createElement('button');
-            nextBtn.innerHTML = '<span class="material-symbols-outlined" style="font-size:32px">chevron_right</span>';
-            nextBtn.style.cssText = arrowStyle + 'right:24px;';
-            nextBtn.onmouseenter = function() { this.style.background = 'rgba(255,255,255,0.4)'; this.style.transform = 'translateY(-50%) scale(1.1)'; };
-            nextBtn.onmouseleave = function() { this.style.background = 'rgba(255,255,255,0.2)'; this.style.transform = 'translateY(-50%) scale(1)'; };
-            nextBtn.addEventListener('click', () => { nextSlide(); resetAutoPlay(); });
-
-            if (heroSection) {
-                heroSection.appendChild(prevBtn);
-                heroSection.appendChild(nextBtn);
-            }
-
-            // Auto-play
-            let autoPlay = setInterval(nextSlide, INTERVAL);
-
-            function resetAutoPlay() {
-                clearInterval(autoPlay);
-                autoPlay = setInterval(nextSlide, INTERVAL);
-            }
-
-            // Pause on hover
-            if (heroSection) {
-                heroSection.addEventListener('mouseenter', () => clearInterval(autoPlay));
-                heroSection.addEventListener('mouseleave', () => {
-                    autoPlay = setInterval(nextSlide, INTERVAL);
-                });
-            }
-        })();
-    </script>
 </body>
-
 </html>

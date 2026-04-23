@@ -53,7 +53,7 @@ public class ProductReviewServiceImpl implements ProductReviewService {
                 .order(order)
                 .rating(rating)
                 .comment(comment)
-                .isVisible(false)
+                .isVisible(true)
                 .build();
         return reviewRepository.save(review);
     }

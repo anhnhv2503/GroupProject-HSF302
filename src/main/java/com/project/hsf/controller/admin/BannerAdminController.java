@@ -34,7 +34,7 @@ public class BannerAdminController {
     }
 
     @GetMapping("/delete/{id}")
-    public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+    public String delete(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
         try {
             bannerService.deleteById(id);
             redirectAttributes.addFlashAttribute("successMessage", "Xóa banner thành công!");

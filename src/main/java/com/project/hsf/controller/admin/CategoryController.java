@@ -31,9 +31,14 @@ public class CategoryController {
         return "redirect:/admin/categories";
     }
 
-    @PostMapping("/{id}/delete")
-    public String delete(@PathVariable Long id) {
-        categoryService.deleteById(id);
+    @PostMapping("/delete/{id}")
+    public String delete(@PathVariable("id") Long id, org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttributes) {
+        try {
+            categoryService.deleteById(id);
+            redirectAttributes.addFlashAttribute("successMessage", "Xóa danh mục thành công!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Không thể xóa danh mục này vì có sản phẩm đang thuộc danh mục này!");
+        }
         return "redirect:/admin/categories";
     }
 

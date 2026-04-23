@@ -104,13 +104,13 @@ public class SeafoodProductController {
         }
     }
 
-    @PostMapping("/{id}/delete")
-    public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+    @PostMapping("/delete/{id}")
+    public String delete(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
         try {
             seafoodProductService.deleteById(id);
             redirectAttributes.addFlashAttribute("successMessage", "Xóa sản phẩm thành công!");
-        } catch (IllegalArgumentException ex) {
-            redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
+        } catch (Exception ex) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Lỗi khi xóa sản phẩm: " + ex.getMessage());
         }
         return "redirect:/admin/seafood-products";
     }

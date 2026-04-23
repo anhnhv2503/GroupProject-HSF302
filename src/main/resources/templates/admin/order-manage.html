@@ -126,7 +126,7 @@
                         <div class="flex items-center justify-between gap-2">
                             <p class="font-bold text-tertiary font-numeric" th:text="'#' + ${order.orderCode}">#CODE</p>
                             <span class="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-bold uppercase"
-                                  th:classappend="${order.orderStatus.name() == 'SHIPPING'} ? ' bg-amber-100 text-amber-700' : (${order.orderStatus.name() == 'CONFIRMED' or order.orderStatus.name() == 'PROCESSING'} ? ' bg-blue-100 text-blue-700' : (${order.orderStatus.name() == 'DELIVERED'} ? ' bg-emerald-100 text-emerald-700' : (${order.orderStatus.name() == 'CANCELLED'} ? ' bg-rose-100 text-rose-700' : ' bg-slate-100 text-slate-600')))"
+                                  th:classappend="${order.orderStatus.name() == 'SHIPPED'} ? ' bg-amber-100 text-amber-700' : (${order.orderStatus.name() == 'CONFIRMED' or order.orderStatus.name() == 'PROCESSING'} ? ' bg-blue-100 text-blue-700' : (${order.orderStatus.name() == 'DELIVERED'} ? ' bg-emerald-100 text-emerald-700' : (${order.orderStatus.name() == 'CANCELLED'} ? ' bg-rose-100 text-rose-700' : ' bg-slate-100 text-slate-600')))"
                                   th:text="${order.orderStatus.getLabel()}">PENDING</span>
                         </div>
                         <p class="text-sm text-on-surface-variant mt-2" th:text="${order.customer != null ? (order.customer.fullName != null ? order.customer.fullName : order.customer.username) : 'Khách vãng lai'}">Nguyễn Văn A</p>
@@ -157,8 +157,8 @@
                             </div>
                         </div>
                         <span class="inline-flex items-center px-4 py-1.5 rounded-full text-xs font-bold uppercase"
-                              th:classappend="${selectedOrder.orderStatus.name() == 'SHIPPING'} ? ' bg-amber-100 text-amber-700' : (${selectedOrder.orderStatus.name() == 'CONFIRMED' or selectedOrder.orderStatus.name() == 'PROCESSING'} ? ' bg-blue-100 text-blue-700' : (${selectedOrder.orderStatus.name() == 'DELIVERED'} ? ' bg-emerald-100 text-emerald-700' : (${selectedOrder.orderStatus.name() == 'CANCELLED'} ? ' bg-rose-100 text-rose-700' : ' bg-slate-100 text-slate-600')))"
-                              th:text="${selectedOrder.orderStatus.getLabel()}">SHIPPING</span>
+                              th:classappend="${selectedOrder.orderStatus.name() == 'SHIPPED'} ? ' bg-amber-100 text-amber-700' : (${selectedOrder.orderStatus.name() == 'CONFIRMED' or selectedOrder.orderStatus.name() == 'PROCESSING'} ? ' bg-blue-100 text-blue-700' : (${selectedOrder.orderStatus.name() == 'DELIVERED'} ? ' bg-emerald-100 text-emerald-700' : (${selectedOrder.orderStatus.name() == 'CANCELLED'} ? ' bg-rose-100 text-rose-700' : ' bg-slate-100 text-slate-600')))"
+                              th:text="${selectedOrder.orderStatus.getLabel()}">SHIPPED</span>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -249,17 +249,17 @@
                                 </button>
                             </form>
 
-                            <!-- PROCESSING -> SHIPPING (Next Step) -->
+                            <!-- PROCESSING -> SHIPPED (Next Step) -->
                             <form th:if="${selectedOrder.orderStatus.name() == 'PROCESSING'}" th:action="@{'/admin/orders/' + ${selectedOrder.id} + '/status'}" method="post" class="flex-1">
-                                <input type="hidden" name="status" value="SHIPPING"/>
+                                <input type="hidden" name="status" value="SHIPPED"/>
                                 <button type="submit" class="w-full flex items-center justify-center gap-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-4 transition-all shadow-lg shadow-amber-500/20">
                                     <span class="material-symbols-outlined text-base">local_shipping</span>
                                     Giao Hàng
                                 </button>
                             </form>
 
-                            <!-- SHIPPING -> DELIVERED (Final Step) -->
-                            <form th:if="${selectedOrder.orderStatus.name() == 'SHIPPING'}" th:action="@{'/admin/orders/' + ${selectedOrder.id} + '/status'}" method="post" class="flex-1">
+                            <!-- SHIPPED -> DELIVERED (Final Step) -->
+                            <form th:if="${selectedOrder.orderStatus.name() == 'SHIPPED'}" th:action="@{'/admin/orders/' + ${selectedOrder.id} + '/status'}" method="post" class="flex-1">
                                 <input type="hidden" name="status" value="DELIVERED"/>
                                 <button type="submit" class="w-full flex items-center justify-center gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-4 transition-all shadow-lg shadow-emerald-600/20">
                                     <span class="material-symbols-outlined text-base">verified</span>

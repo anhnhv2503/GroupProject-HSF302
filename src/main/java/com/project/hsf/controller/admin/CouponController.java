@@ -99,8 +99,8 @@ public class CouponController {
 		return "redirect:/admin/coupon";
 	}
 
-	@PostMapping("/{id}/delete")
-	public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+	@PostMapping("/delete/{id}")
+	public String delete(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
 		try {
 			couponService.deleteById(id);
 			redirectAttributes.addFlashAttribute("successMessage", "Xóa coupon thành công!");

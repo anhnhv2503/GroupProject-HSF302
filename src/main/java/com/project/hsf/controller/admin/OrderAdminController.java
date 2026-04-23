@@ -85,7 +85,7 @@ public class OrderAdminController {
         return switch (status) {
             case CONFIRMED -> "Don hang da duoc xac nhan.";
             case PROCESSING -> "Don hang dang duoc chuan bi hang.";
-            case SHIPPING -> "Don hang da duoc ban giao cho don vi van chuyen.";
+            case SHIPPED -> "Don hang da duoc ban giao cho don vi van chuyen.";
             case DELIVERED -> "Don hang da duoc giao den khach hang va hoan tat.";
             case CANCELLED -> "Don hang da bi huy.";
             default -> "Trang thai don hang da duoc cap nhat.";

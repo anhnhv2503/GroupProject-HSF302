@@ -4,8 +4,7 @@ public enum OrderStatus {
     PENDING("Chờ xác nhận"),
     CONFIRMED("Đã xác nhận"),
     PROCESSING("Đang xử lý"),
-    SHIPPED("Đã bàn giao"),
-    SHIPPING("Đang giao"),
+    SHIPPED("Đang giao hàng"),
     DELIVERED("Giao thành công"),
     CANCELLED("Đã hủy");
 

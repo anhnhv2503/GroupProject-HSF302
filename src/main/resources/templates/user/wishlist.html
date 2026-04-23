@@ -1,129 +1,58 @@
 <!DOCTYPE html>
-<html class="light" lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-
-<head>
-    <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>Sản Phẩm Yêu Thích | The Culinary Curator</title>
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&amp;family=Inter:wght@300;400;500;600;700;800;900&amp;family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
-    <script id="tailwind-config" th:replace="~{index :: #tailwind-config}"></script>
-    <style>
-        body { font-family: 'Be Vietnam Pro', 'Inter', sans-serif; }
-        .glass-effect { backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
-        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
-        .fill-1 { font-variation-settings: 'FILL' 1 !important; }
-        .ocean-spray { background-color: #0D4A7A; }
-    </style>
-</head>
-
-<body class="bg-surface text-on-surface">
-    <!-- TopNavBar -->
-    <header th:replace="~{fragments/index-header :: header}"></header>
-
-    <main class="pt-32">
-        <!-- Hero Section -->
-        <div class="relative h-[300px] overflow-hidden bg-[#0D4A7A] flex items-center">
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/main :: head('Sản Phẩm Yêu Thích')}"></head>
+<body th:replace="~{layout/main :: layout(~{:: .wishlist-content})}">
+    <div class="wishlist-content">
+        <div class="relative h-[400px] overflow-hidden bg-brand-secondary flex items-center">
             <div class="absolute inset-0 opacity-20">
-                <img src="https://images.unsplash.com/photo-1551248429-40975aa4de74?q=80&w=2000" class="w-full h-full object-cover" alt="Seafood Background">
+                <img src="https://images.unsplash.com/photo-1551248429-40975aa4de74?q=80&w=2000" class="w-full h-full object-cover">
             </div>
-            <div class="max-w-7xl mx-auto px-6 w-full relative z-10 text-center lg:text-left">
-                <div class="inline-flex bg-brand-primary/20 backdrop-blur-md px-4 py-2 rounded-full mb-6 border border-brand-primary/30">
-                    <span class="text-[10px] font-black uppercase tracking-[0.3em] text-brand-primary">Bộ sưu tập cá nhân</span>
-                </div>
-                <h1 class="text-5xl lg:text-7xl font-black text-white tracking-tighter uppercase leading-none mb-4">Sản Phẩm <br/><span class="text-brand-primary">Yêu Thích</span></h1>
-                <p class="text-white/60 font-medium max-w-xl">Lưu giữ những tinh hoa đại dương bạn yêu thích nhất để sẵn sàng cho bàn tiệc hoàn hảo.</p>
+            <div class="max-w-7xl mx-auto px-8 w-full relative z-10">
+                <span class="inline-block px-4 py-1.5 bg-brand-primary text-white text-[10px] font-black uppercase tracking-[0.3em] rounded-full mb-6">Personal Collection</span>
+                <h1 class="text-6xl lg:text-8xl font-black text-white tracking-tighter uppercase leading-none">Yêu <span class="text-brand-primary italic">Thích</span></h1>
             </div>
         </div>
 
-        <div class="max-w-7xl mx-auto px-6 py-20">
-            <!-- Empty State -->
-            <div th:if="${products == null or products.isEmpty()}" class="text-center py-20 space-y-8">
-                <div class="w-24 h-24 bg-surface-container-low rounded-full flex items-center justify-center mx-auto text-on-surface-variant/30">
-                    <span class="material-symbols-outlined text-5xl">favorite_border</span>
+        <div class="max-w-7xl mx-auto px-8 py-24">
+            <div th:if="${products == null or products.isEmpty()}" class="text-center py-20 bg-white rounded-[3rem] border border-dashed border-slate-200">
+                <div class="w-24 h-24 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <span class="material-symbols-outlined text-5xl text-slate-200">favorite</span>
                 </div>
-                <div class="space-y-2">
-                    <h2 class="text-2xl font-black uppercase tracking-tight">Danh sách trống</h2>
-                    <p class="text-on-surface-variant font-medium text-sm">Bạn chưa có sản phẩm nào trong danh sách yêu thích.</p>
-                </div>
-                <a th:href="@{/products}" class="inline-flex items-center gap-3 bg-brand-primary text-white px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-widest hover:shadow-2xl hover:brightness-110 transition-all">
-                    Bắt đầu mua sắm
-                    <span class="material-symbols-outlined text-sm">east</span>
-                </a>
+                <h2 class="text-2xl font-bold uppercase tracking-tight mb-2">Danh sách trống</h2>
+                <p class="text-slate-400 mb-8">Bạn chưa lưu sản phẩm nào vào danh sách yêu thích.</p>
+                <a th:href="@{/products}" class="inline-flex items-center gap-3 bg-brand-secondary text-white px-10 py-4 rounded-2xl font-bold text-xs uppercase tracking-widest hover:shadow-2xl transition-all">Bắt đầu mua sắm <span class="material-symbols-outlined text-sm">east</span></a>
             </div>
 
-            <!-- Wishlist Grid -->
-            <div th:unless="${products == null or products.isEmpty()}" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                <div th:each="product : ${products}" class="wishlist-item group bg-white rounded-[2.5rem] shadow-sm border border-outline-variant/10 overflow-hidden flex flex-col h-full hover:shadow-2xl transition-all duration-500" th:id="'product-card-' + ${product.id}">
-                    <!-- Card Top: Image -->
-                    <div class="relative aspect-square overflow-hidden bg-white">
+            <div th:unless="${#lists.isEmpty(products)}" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                <div th:each="product : ${products}" class="group bg-white rounded-[2.5rem] shadow-sm border border-slate-100 overflow-hidden flex flex-col h-full hover:shadow-2xl transition-all duration-500" th:id="'product-card-' + ${product.id}">
+                    <div class="relative aspect-square overflow-hidden">
                         <a th:href="@{/products/{id}(id=${product.id})}">
-                            <img th:if="${product.images != null and !product.images.isEmpty()}"
-                                th:src="@{${product.images[0].imageUrl}}"
-                                class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" 
-                                th:classappend="${product.stockQuantity != null and product.stockQuantity <= 0} ? 'grayscale opacity-60' : ''"
-                                th:alt="${product.name}" />
-                            <img th:unless="${product.images != null and !product.images.isEmpty()}"
-                                src="https://via.placeholder.com/400x400?text=Premium+Seafood"
-                                class="w-full h-full object-cover" 
-                                th:classappend="${product.stockQuantity != null and product.stockQuantity <= 0} ? 'grayscale opacity-60' : ''"
-                                alt="Seafood" />
-
-                            <!-- Out of Stock Overlay -->
-                            <div th:if="${product.stockQuantity != null and product.stockQuantity <= 0}" 
-                                 class="absolute inset-0 z-10 bg-black/20 backdrop-blur-[2px] flex items-center justify-center">
-                                <div class="bg-white/10 backdrop-blur-md border border-white/20 px-6 py-3 rounded-2xl shadow-2xl transform -rotate-12">
-                                    <span class="text-white font-black text-xl uppercase tracking-[0.2em] drop-shadow-lg">Hết hàng</span>
-                                </div>
-                            </div>
+                            <img th:if="${product.images != null and !product.images.isEmpty()}" th:src="@{${product.images[0].imageUrl}}" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" th:alt="${product.name}" />
+                            <img th:unless="${product.images != null and !product.images.isEmpty()}" src="https://via.placeholder.com/400x400?text=Premium+Seafood" class="w-full h-full object-cover" />
                         </a>
-
-                        <!-- Stock Badge -->
-                        <div th:if="${product.stockQuantity != null and product.stockQuantity <= 0}"
-                            class="absolute top-6 left-6 z-10 bg-black/80 backdrop-blur text-white text-[9px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest shadow-lg">
-                            Hết hàng</div>
-
-                        <!-- Remove Button -->
-                        <button type="button" 
-                                th:onclick="'removeFromWishlist(' + ${product.id} + ')'"
-                                class="absolute top-6 right-6 w-10 h-10 rounded-full bg-white/80 backdrop-blur flex items-center justify-center text-red-500 shadow-lg hover:bg-red-500 hover:text-white transition-all">
-                            <span class="material-symbols-outlined text-xl">delete</span>
+                        <button type="button" th:onclick="'removeFromWishlist(' + ${product.id} + ')'" class="absolute top-6 right-6 w-12 h-12 rounded-full bg-white/90 backdrop-blur shadow-xl flex items-center justify-center text-red-500 shadow-xl hover:bg-red-500 hover:text-white transition-all transform hover:rotate-12">
+                            <span class="material-symbols-outlined">delete</span>
                         </button>
                     </div>
-
-                    <!-- Card Body -->
-                    <div class="p-8 flex flex-col flex-grow space-y-4">
-                        <div class="space-y-1">
-                            <div class="flex items-center gap-2 text-brand-primary">
-                                <span class="material-symbols-outlined text-xs">workspace_premium</span>
-                                <span class="text-[9px] font-black uppercase tracking-[0.2em]" th:text="${product.category.name}">Fresh Catch</span>
-                            </div>
-                            <h3 class="font-black text-lg tracking-tight uppercase leading-none">
-                                <a th:href="@{/products/{id}(id=${product.id})}" th:text="${product.name}" class="hover:text-brand-primary transition-colors">Product Name</a>
+                    <div class="p-8 flex flex-col flex-grow">
+                        <div class="mb-4">
+                            <h3 class="font-black text-xl tracking-tight uppercase leading-none mb-2">
+                                <a th:href="@{/products/{id}(id=${product.id})}" th:text="${product.name}" class="hover:text-brand-primary transition-colors line-clamp-1">Product Name</a>
                             </h3>
+                            <div class="flex items-baseline gap-2">
+                                <span class="text-2xl font-black text-brand-secondary" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' đ'"></span>
+                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">/ kg</span>
+                            </div>
                         </div>
-
-                        <!-- Price Section -->
-                        <div class="pt-2 flex items-end gap-2">
-                            <span class="text-2xl font-black text-[#0D4A7A] leading-none" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' đ'">0 đ</span>
-                            <span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest pb-1">/ kg</span>
-                        </div>
-
-                        <!-- Actions -->
-                        <div class="pt-4 mt-auto">
-                            <form th:action="@{/cart/add}" method="post" class="cart-ajax-form">
+                        <div class="mt-auto">
+                            <form th:action="@{/cart/add}" th:onsubmit="'addToCartAjax(event, this)'" method="post">
                                 <input type="hidden" name="productId" th:value="${product.id}" />
                                 <input type="hidden" name="name" th:value="${product.name}" />
                                 <input type="hidden" name="price" th:value="${product.price}" />
-                                <button type="submit" th:disabled="${(product.stockQuantity != null and product.stockQuantity <= 0) or (canAddToCart != null and !canAddToCart)}"
-                                    th:title="${canAddToCart != null and !canAddToCart} ? 'Quyền mua hàng của bạn đã bị thu hồi. Liên hệ admin.' : ''"
-                                    class="w-full h-14 rounded-2xl bg-[#F26522] text-white font-black text-xs uppercase tracking-widest flex items-center justify-center gap-3 hover:shadow-xl hover:brightness-110 active:scale-95 transition-all shadow-lg disabled:bg-slate-300 disabled:shadow-none disabled:cursor-not-allowed">
-                                    <span class="material-symbols-outlined text-lg" th:text="${product.stockQuantity != null and product.stockQuantity <= 0 ? 'block' : 'shopping_cart'}">shopping_cart</span>
-                                    <span th:if="${product.stockQuantity > 0 and (canAddToCart == null or canAddToCart)}">THÊM VÀO GIỎ HÀNG</span>
-                                    <span th:if="${product.stockQuantity > 0 and (canAddToCart != null and !canAddToCart)}">Quyền mua hàng của bạn đã bị thu hồi. LH admin.</span>
-                                    <span th:if="${product.stockQuantity <= 0}">HẾT HÀNG</span>
+                                <input type="hidden" name="imageUrl" th:value="${not #lists.isEmpty(product.images) ? product.images[0].imageUrl : ''}" />
+                                <button type="submit" class="w-full h-14 rounded-2xl bg-brand-primary text-white font-black text-xs uppercase tracking-widest flex items-center justify-center gap-3 hover:shadow-xl transition-all shadow-lg active:scale-95">
+                                    <span class="material-symbols-outlined">shopping_cart</span>
+                                    <span>Vào giỏ hàng</span>
                                 </button>
                             </form>
                         </div>
@@ -131,82 +60,71 @@
                 </div>
             </div>
         </div>
-    </main>
 
-    <!-- Footer -->
-    <footer th:replace="~{fragments/index-footer :: footer}"></footer>
+        <script th:inline="javascript">
+            function addToCartAjax(event, form) {
+                event.preventDefault();
+                const formData = new FormData(form);
+                const params = new URLSearchParams(formData);
 
-    <script th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
-
-    <!-- Scripts -->
-    <script>
-        function removeFromWishlist(productId) {
-            fetch('/wishlist/toggle/' + productId, { 
-                method: 'POST',
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-            .then(response => {
-                if (response.ok) return response.json();
-            })
-            .then(data => {
-                if (data && !data.added) {
-                    const card = document.getElementById('product-card-' + productId);
-                    card.style.opacity = '0';
-                    card.style.transform = 'scale(0.9)';
-                    setTimeout(() => {
-                        card.remove();
-                        // Update badge
-                        const badge = document.getElementById('wishlist-badge');
-                        if (badge) badge.textContent = data.count;
-                        
-                        // Check if grid is empty now
-                        if (document.querySelectorAll('.wishlist-item').length === 0) {
-                            location.reload();
-                        }
-                    }, 500);
-                }
-            });
-        }
-
-        // AJAX for Cart
-        document.querySelectorAll('.cart-ajax-form').forEach(form => {
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                const formData = new FormData(this);
-                const btn = this.querySelector('button');
-                const originalContent = btn.innerHTML;
-                
-                fetch(this.getAttribute('action'), {
+                fetch(form.action || '/cart/add', {
                     method: 'POST',
-                    body: formData,
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
+                    body: params,
+                    headers: { 
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Content-Type': 'application/x-www-form-urlencoded'
                     }
-                }).then(response => {
-                    if (response.ok) return response.json();
-                }).then(data => {
-                    if (data) {
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
                         const badge = document.getElementById('cart-badge');
-                        if (badge) {
-                            badge.textContent = data.count;
-                            badge.classList.add('animate-bounce');
-                            setTimeout(() => badge.classList.remove('animate-bounce'), 1000);
-                        }
-                        
-                        // Success Feedback
-                        btn.classList.add('bg-green-600', 'text-white');
-                        btn.innerHTML = '<span class="material-symbols-outlined">check</span> ĐÃ THÊM';
+                        if (badge) badge.innerText = data.count;
+                        const btn = form.querySelector('button[type="submit"]');
+                        const originalContent = btn.innerHTML;
+                        btn.innerHTML = '<span class="material-symbols-outlined">done</span> <span>Đã thêm</span>';
+                        btn.classList.replace('bg-brand-primary', 'bg-green-600');
                         setTimeout(() => {
-                            btn.classList.remove('bg-green-600', 'text-white');
                             btn.innerHTML = originalContent;
+                            btn.classList.replace('bg-green-600', 'bg-brand-primary');
                         }, 2000);
+                    } else if (data.error) {
+                        alert(data.error);
                     }
-                });
-            });
-        });
-    </script>
-</body>
+                })
+                .catch(error => console.error('Error:', error));
+            }
 
+            function removeFromWishlist(productId) {
+                // Remove confirm for faster interaction
+                fetch('/wishlist/toggle/' + productId, {
+                    method: 'POST',
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Service returns {added: false, count: X} when removing
+                    if (data.added === false) {
+                        const card = document.getElementById('product-card-' + productId);
+                        if (card) {
+                            card.style.opacity = '0';
+                            card.style.transform = 'scale(0.9)';
+                            card.style.pointerEvents = 'none';
+                            setTimeout(() => {
+                                card.remove();
+                                const remainingCards = document.querySelectorAll('[id^="product-card-"]');
+                                if (remainingCards.length === 0) {
+                                    window.location.reload();
+                                }
+                            }, 300);
+                        }
+                        const badge = document.getElementById('wishlist-badge');
+                        if (badge) badge.innerText = data.count;
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            }
+        </script>
+    </div>
+</body>
 </html>
