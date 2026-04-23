@@ -1,13 +1,16 @@
 package com.project.hsf.service.impl;
 
-import java.math.BigDecimal;
-import java.time.Instant;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.project.hsf.dto.CartItemDTO;
+import com.project.hsf.entity.*;
+import com.project.hsf.enums.OrderStatus;
+import com.project.hsf.enums.PaymentMethod;
+import com.project.hsf.enums.PaymentStatus;
+import com.project.hsf.repository.*;
 import com.project.hsf.service.CartService;
+import com.project.hsf.service.OrderService;
 import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vn.payos.PayOS;
@@ -15,27 +18,11 @@ import vn.payos.model.v2.paymentRequests.CreatePaymentLinkRequest;
 import vn.payos.model.v2.paymentRequests.CreatePaymentLinkResponse;
 import vn.payos.model.v2.paymentRequests.PaymentLinkItem;
 
-import com.project.hsf.dto.CartItemDTO;
-import com.project.hsf.entity.Coupon;
-import com.project.hsf.entity.Order;
-import com.project.hsf.entity.OrderItem;
-import com.project.hsf.enums.OrderStatus;
-import com.project.hsf.entity.OrderStatusHistory;
-import com.project.hsf.entity.Payment;
-import com.project.hsf.enums.PaymentStatus;
-import com.project.hsf.entity.SeafoodProduct;
-import com.project.hsf.entity.User;
-import com.project.hsf.enums.PaymentMethod;
-import com.project.hsf.repository.CouponRepository;
-import com.project.hsf.repository.OrderItemRepository;
-import com.project.hsf.repository.OrderRepository;
-import com.project.hsf.repository.OrderStatusHistoryRepository;
-import com.project.hsf.repository.PaymentRepository;
-import com.project.hsf.repository.SeafoodProductRepository;
-import com.project.hsf.service.OrderService;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.math.BigDecimal;
+import java.time.Instant;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -70,7 +57,7 @@ public class OrderServiceImpl implements OrderService {
     public List<Order> getAllOrders(org.springframework.data.domain.Sort sort, String orderCode, String paymentMethod) {
         String code = (orderCode == null || orderCode.isBlank()) ? null : orderCode.trim();
         String method = (paymentMethod == null || paymentMethod.isBlank()) ? null : paymentMethod.trim();
-        
+
         if (code == null && method == null) {
             return orderRepository.findAll(sort);
         }
@@ -122,7 +109,7 @@ public class OrderServiceImpl implements OrderService {
                 order.setPaymentStatus(PaymentStatus.PAID);
                 Payment payment = paymentRepository.findByOrderId(order.getId()).orElse(null);
                 if (payment != null) {
-                    payment.setStatus("PAID");
+                    payment.setStatus(PaymentStatus.PAID.name());
                     paymentRepository.save(payment);
                 }
             }
@@ -277,7 +264,7 @@ public class OrderServiceImpl implements OrderService {
                 .order(savedOrder)
                 .paymentMethod(paymentMethod)
                 .amount(finalPrice)
-                .status("PENDING")
+                .status(PaymentStatus.PENDING.name())
                 .createdDate(Instant.now())
                 .updatedDate(Instant.now())
                 .build();
@@ -315,15 +302,15 @@ public class OrderServiceImpl implements OrderService {
             if (cancel) {
                 order.setOrderStatus(OrderStatus.CANCELLED);
                 order.setPaymentStatus(PaymentStatus.UNPAID);
-                if (payment != null) payment.setStatus("CANCELLED");
-            } else if ("PAID".equals(status)) {
+                if (payment != null) payment.setStatus(PaymentStatus.CANCELED.name());
+            } else if (PaymentStatus.PAID.name().equals(status)) {
                 order.setOrderStatus(OrderStatus.CONFIRMED);
                 order.setPaymentStatus(PaymentStatus.PAID);
-                if (payment != null) payment.setStatus("PAID");
+                if (payment != null) payment.setStatus(PaymentStatus.CANCELED.name());
             } else {
                 order.setOrderStatus(OrderStatus.CANCELLED);
                 order.setPaymentStatus(PaymentStatus.UNPAID);
-                if (payment != null) payment.setStatus("CANCELLED");
+                if (payment != null) payment.setStatus(PaymentStatus.CANCELED.name());
             }
             if (payment != null) paymentRepository.save(payment);
             Order savedOrder = orderRepository.save(order);
@@ -342,11 +329,11 @@ public class OrderServiceImpl implements OrderService {
             if (success) {
                 order.setOrderStatus(OrderStatus.PENDING);
                 order.setPaymentStatus(PaymentStatus.UNPAID);
-                if (payment != null) payment.setStatus("PENDING");
+                if (payment != null) payment.setStatus(PaymentStatus.PENDING.name());
             } else {
                 order.setOrderStatus(OrderStatus.CANCELLED);
                 order.setPaymentStatus(PaymentStatus.UNPAID);
-                if (payment != null) payment.setStatus("CANCELLED");
+                if (payment != null) payment.setStatus(PaymentStatus.CANCELED.name());
             }
             if (payment != null) paymentRepository.save(payment);
             Order savedOrder = orderRepository.save(order);
@@ -366,7 +353,7 @@ public class OrderServiceImpl implements OrderService {
     public Map<String, Object> getOrderStatistics() {
         Map<String, Object> response = new HashMap<>();
         BigDecimal totalRevenue = BigDecimal.ZERO;
-        if(paymentRepository.count() > 0){
+        if (paymentRepository.count() > 0) {
 //            totalRevenue = paymentRepository.sumAmountByStatus("PAID");
             List<Payment> paidPayment = paymentRepository.findByStatus("PAID");
             for (Payment payment : paidPayment) {
