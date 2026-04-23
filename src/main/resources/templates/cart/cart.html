@@ -220,8 +220,15 @@
                         <span class="text-2xl font-black text-primary"
                             th:text="${#numbers.formatDecimal(totalPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'">0 đ</span>
                     </div>
-                    <a href="/checkout"
-                        class="mt-6 inline-flex w-full items-center justify-center rounded-2xl bg-primary px-4 py-3 text-xs font-black uppercase tracking-widest text-white shadow-lg shadow-primary/20 hover:opacity-90 transition">Tiến hành thanh toán</a>
+                    <th:block th:if="${canAddToCart}">
+                        <a href="/checkout"
+                            class="mt-6 inline-flex w-full items-center justify-center rounded-2xl bg-primary px-4 py-3 text-xs font-black uppercase tracking-widest text-white shadow-lg shadow-primary/20 hover:opacity-90 transition">Tiến hành thanh toán</a>
+                    </th:block>
+                    <th:block th:unless="${canAddToCart}">
+                        <div class="mt-6 inline-flex w-full items-center justify-center rounded-2xl bg-slate-300 px-4 py-3 text-xs font-black uppercase tracking-widest text-slate-500 cursor-not-allowed">
+                            Quyền mua hàng của bạn đã bị thu hồi
+                        </div>
+                    </th:block>
                 </div>
                 <div class="mt-4 rounded-2xl border border-outline-variant/20 bg-surface-container-low p-4 text-sm">
                     <div class="flex items-start gap-3 text-brand-secondary">

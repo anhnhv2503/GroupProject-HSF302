@@ -35,8 +35,15 @@ public class CartController {
 
     @GetMapping
     public String viewCart(HttpSession session, Model model) {
+        User currentUser = getCurrentUser();
+        boolean canAddToCart = true;
+        if (currentUser != null) {
+            canAddToCart = userService.canUserAddToCart(currentUser.getId());
+        }
+
         model.addAttribute("cartItems", cartService.getCart(session).values());
         model.addAttribute("totalPrice", cartService.calculateTotal(session));
+        model.addAttribute("canAddToCart", canAddToCart);
         return "cart/cart";
     }
 

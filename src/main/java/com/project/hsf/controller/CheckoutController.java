@@ -10,6 +10,7 @@ import com.project.hsf.repository.UserRepository;
 import com.project.hsf.service.CartService;
 import com.project.hsf.service.OrderService;
 import com.project.hsf.service.CouponService;
+import com.project.hsf.service.UserService;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +35,7 @@ public class CheckoutController {
     private final UserRepository userRepository;
     private final UserAddressRepository userAddressRepository;
     private final CouponService couponService;
+    private final UserService userService;
 
     @GetMapping
     public String showCheckoutPage(HttpSession session, Principal principal, Model model) {
@@ -41,12 +43,19 @@ public class CheckoutController {
             return "redirect:/login";
         }
 
+        User user = userRepository.findByUsername(principal.getName());
+        if (!userService.canUserAddToCart(user.getId())) {
+            model.addAttribute("error", "Quyền mua hàng của bạn đã bị thu hồi. Liên hệ admin.");
+            model.addAttribute("cartItems", cartService.getCart(session).values());
+            model.addAttribute("totalPrice", cartService.calculateTotal(session));
+            return "cart/cart";
+        }
+
         var cart = cartService.getCart(session);
         if (cart.isEmpty()) {
             return "redirect:/cart";
         }
 
-        User user = userRepository.findByUsername(principal.getName());
         var addresses = userAddressRepository.findByUser(user);
 
         String appliedCouponCode = (String) session.getAttribute("appliedCoupon");
@@ -77,6 +86,9 @@ public class CheckoutController {
         model.addAttribute("addresses", addresses);
         model.addAttribute("appliedCoupon", appliedCouponCode);
 
+        boolean canPurchase = userService.canUserAddToCart(user.getId());
+        model.addAttribute("canAddToCart", canPurchase);
+
         // If there's a success param from redirect
         if (session.getAttribute("orderSuccess") != null) {
             model.addAttribute("success", "Đặt hàng thành công!");
@@ -106,20 +118,28 @@ public class CheckoutController {
             return "redirect:/login";
         }
 
+        User user = userRepository.findByUsername(principal.getName());
+        if (!userService.canUserAddToCart(user.getId())) {
+            model.addAttribute("error", "Quyền mua hàng của bạn đã bị thu hồi. Liên hệ admin.");
+            model.addAttribute("cartItems", cartService.getCart(session).values());
+            model.addAttribute("totalPrice", cartService.calculateTotal(session));
+            model.addAttribute("addresses", userAddressRepository.findByUser(user));
+            return "cart/cart";
+        }
+
         String couponCode = (String) session.getAttribute("appliedCoupon");
 
         List<CartItemDTO> cartItems = new ArrayList<>(cartService.getCart(session).values());
         if (cartItems.isEmpty()) {
             return "redirect:/cart";
         }
-        User user = userRepository.findByUsername(principal.getName());
         try {
             String redirectUrl = orderService.placeOrder(cartItems, couponCode, address, paymentMethod, notes, recipientName, recipientPhone, user);
-            
+
             // Clear cart and coupon upon successful order placement
             cartService.clearCart(session);
             session.removeAttribute("appliedCoupon");
-            
+
             return "redirect:" + redirectUrl;
         } catch (RuntimeException e) {
             model.addAttribute("error", e.getMessage());
