@@ -166,7 +166,7 @@
                             <div>
                                 <h3 class="text-base font-bold text-on-surface" th:text="${item.name}">SP</h3>
                                 <p class="text-xs text-on-surface-variant"
-                                    th:text="${#numbers.formatDecimal(item.unitPrice, 0, 'COMMA', 0, 'POINT')} + ' đ / đơn vị'">0 đ</p>
+                                    th:text="${#numbers.formatDecimal(item.unitPrice, 0, 'COMMA', 0, 'POINT')} + ' đ /kg'">0 đ</p>
                                 <span th:if="${item.itemType == 'COMBO'}"
                                     class="mt-2 inline-flex items-center rounded-full bg-blue-50 px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest text-blue-700">Combo</span>
                             </div>

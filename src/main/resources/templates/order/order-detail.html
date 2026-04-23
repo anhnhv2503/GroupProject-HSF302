@@ -68,7 +68,7 @@
                                         đ</span>
                                 </p>
                                 <p class="font-medium text-[#D35400] mt-1"
-                                    th:text="${#numbers.formatDecimal(item.subtotal, 0, 'COMMA', 0, 'POINT')} + ' đ'">
+                                    th:text="${#numbers.formatDecimal(item.quantity * item.unitPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'">
                                     100.000 đ</p>
                                 <div th:if="${order.orderStatus.name() == 'DELIVERED' and item.product != null}"
                                     class="mt-2">
