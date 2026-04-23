@@ -1,7 +1,7 @@
 package com.project.hsf.controller.admin;
 
 import com.project.hsf.entity.Category;
-import com.project.hsf.service.impl.CategoryServiceImpl;
+import com.project.hsf.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequiredArgsConstructor
 public class CategoryController {
 
-    private final CategoryServiceImpl categoryService;
+    private final CategoryService categoryService;
 
     @GetMapping
     public String list(Model model) {
@@ -32,12 +32,14 @@ public class CategoryController {
     }
 
     @PostMapping("/delete/{id}")
-    public String delete(@PathVariable("id") Long id, org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttributes) {
+    public String delete(@PathVariable("id") Long id,
+            org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttributes) {
         try {
             categoryService.deleteById(id);
             redirectAttributes.addFlashAttribute("successMessage", "Xóa danh mục thành công!");
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Không thể xóa danh mục này vì có sản phẩm đang thuộc danh mục này!");
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Không thể xóa danh mục này vì có sản phẩm đang thuộc danh mục này!");
         }
         return "redirect:/admin/categories";
     }

@@ -1,6 +1,7 @@
 package com.project.hsf.controller.admin;
 
 import com.project.hsf.entity.Coupon;
+import com.project.hsf.service.CouponService;
 import com.project.hsf.service.impl.CouponServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -23,7 +24,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CouponController {
 
-	private final CouponServiceImpl couponService;
+	private final CouponService couponService;
 
 	@GetMapping
 	public String list(Model model) {
@@ -56,7 +57,7 @@ public class CouponController {
 			coupon.setValidFrom(parseDateToInstant(validFromDate));
 			coupon.setValidUntil(parseDateToInstant(validUntilDate));
 			coupon.setActive(active);
-//            System.out.println("Creating coupon: " + coupon);
+			// System.out.println("Creating coupon: " + coupon);
 			couponService.save(coupon);
 			redirectAttributes.addFlashAttribute("successMessage", "Tạo coupon thành công!");
 		} catch (Exception ex) {

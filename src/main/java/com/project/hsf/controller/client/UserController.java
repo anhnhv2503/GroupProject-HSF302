@@ -1,6 +1,5 @@
 package com.project.hsf.controller.client;
 
-
 import java.util.List;
 
 import com.project.hsf.entity.User;
@@ -10,7 +9,6 @@ import com.project.hsf.service.OrderService;
 
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -38,10 +36,10 @@ public class UserController {
         String username = authentication.getName();
         User user = userService.findByUsername(username);
         model.addAttribute("user", user);
-        
+
         List<Order> orders = orderService.getOrdersByCustomer(user);
         model.addAttribute("orders", orders);
-        
+
         return "user/profile";
     }
 
@@ -146,7 +144,7 @@ public class UserController {
         User user = userService.findByUsername(username);
 
         addressService.createAddress(user, phone, addressLine, ward, city, isDefault);
-        
+
         model.addAttribute("user", user);
         model.addAttribute("success", "Thêm địa chỉ thành công!");
         model.addAttribute("addresses", addressService.getAddressesByUser(user));
@@ -167,7 +165,7 @@ public class UserController {
         User user = userService.findByUsername(username);
 
         addressService.updateAddress(addressId, user, phone, addressLine, ward, city, isDefault);
-        
+
         model.addAttribute("user", user);
         model.addAttribute("success", "Cập nhật địa chỉ thành công!");
         model.addAttribute("addresses", addressService.getAddressesByUser(user));
@@ -183,7 +181,7 @@ public class UserController {
         User user = userService.findByUsername(username);
 
         addressService.deleteAddress(addressId, user);
-        
+
         model.addAttribute("user", user);
         model.addAttribute("success", "Xóa địa chỉ thành công!");
         model.addAttribute("addresses", addressService.getAddressesByUser(user));
@@ -199,7 +197,7 @@ public class UserController {
         User user = userService.findByUsername(username);
 
         addressService.setDefaultAddress(addressId, user);
-        
+
         model.addAttribute("user", user);
         model.addAttribute("success", "Đặt địa chỉ mặc định thành công!");
         model.addAttribute("addresses", addressService.getAddressesByUser(user));
