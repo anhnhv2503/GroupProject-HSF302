@@ -79,7 +79,7 @@
                             <span class="font-bold text-slate-900">Tổng cộng</span>
                             <span class="text-3xl font-black text-brand-primary" th:text="${#numbers.formatDecimal(totalPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'"></span>
                         </div>
-                        <a href="/checkout" class="block w-full text-center bg-brand-secondary text-white py-5 rounded-2xl font-bold uppercase tracking-widest text-xs hover:bg-slate-800 transition-all shadow-xl shadow-brand-secondary/10">Tiến hành thanh toán</a>
+                        <a th:href="@{/checkout}" class="block w-full text-center bg-brand-secondary text-white py-5 rounded-2xl font-bold uppercase tracking-widest text-xs hover:bg-slate-800 transition-all shadow-xl shadow-brand-secondary/10">Tiến hành thanh toán</a>
                     </div>
                 </div>
             </div>

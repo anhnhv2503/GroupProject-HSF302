@@ -1,4 +1,4 @@
-package com.project.hsf.controller;
+package com.project.hsf.controller.client;
 
 import com.project.hsf.dto.CartItemDTO;
 import com.project.hsf.entity.Coupon;
@@ -135,7 +135,7 @@ public class CheckoutController {
 
             return "redirect:" + redirectUrl;
         } catch (RuntimeException e) {
-            model.addAttribute("error", e.getMessage());
+            model.addAttribute("errorMsg", e.getMessage());
             model.addAttribute("cartItems", cartItems);
             model.addAttribute("totalPrice", cartService.calculateTotal(session));
             model.addAttribute("addresses", userAddressService.findByUser(user));

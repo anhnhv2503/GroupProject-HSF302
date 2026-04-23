@@ -4,10 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.Nationalized;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.*;
 
 import java.time.Instant;
 
@@ -44,7 +41,9 @@ public class ProductReview {
 
     @Size(max = 1000)
     @Nationalized
-    @Column(name = "comment", length = 1000)
+    @Column(name = "comment",
+            length = 1000,
+            columnDefinition = "NVARCHAR(1000)")
     private String comment;
 
     @NotNull
@@ -52,10 +51,12 @@ public class ProductReview {
     @Column(name = "is_visible", nullable = false)
     private Boolean isVisible = false;
 
+    @CreationTimestamp
     @ColumnDefault("getdate()")
     @Column(name = "created_date")
     private Instant createdDate;
 
+    @UpdateTimestamp
     @ColumnDefault("getdate()")
     @Column(name = "updated_date")
     private Instant updatedDate;

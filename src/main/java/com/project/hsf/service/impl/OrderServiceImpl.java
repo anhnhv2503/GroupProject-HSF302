@@ -220,7 +220,6 @@ public class OrderServiceImpl implements OrderService {
         if (couponCode != null && !couponCode.isEmpty()) {
             usedCoupon = couponRepository.findByCode(couponCode)
                     .orElseThrow(() -> new RuntimeException("Mã giảm giá không hợp lệ."));
-
             if (subtotal.compareTo(usedCoupon.getMinOrderValue()) < 0) {
                 throw new RuntimeException("Giá trị đơn hàng tối thiểu để áp dụng mã này là " + usedCoupon.getMinOrderValue() + "đ");
             }
@@ -289,7 +288,7 @@ public class OrderServiceImpl implements OrderService {
                 .order(savedOrder)
                 .paymentMethod(paymentMethod)
                 .amount(finalPrice)
-                .status("PENDING")
+                .status(PaymentStatus.PENDING.name())
                 .createdDate(Instant.now())
                 .updatedDate(Instant.now())
                 .build();
@@ -327,15 +326,15 @@ public class OrderServiceImpl implements OrderService {
             if (cancel) {
                 order.setOrderStatus(OrderStatus.CANCELLED);
                 order.setPaymentStatus(PaymentStatus.UNPAID);
-                if (payment != null) payment.setStatus("FAILED");
-            } else if ("PAID".equals(status)) {
+                if (payment != null) payment.setStatus(PaymentStatus.CANCELLED.name());
+            } else if (PaymentStatus.PAID.name().equals(status)) {
                 order.setOrderStatus(OrderStatus.CONFIRMED);
                 order.setPaymentStatus(PaymentStatus.PAID);
-                if (payment != null) payment.setStatus("SUCCESS");
+                if (payment != null) payment.setStatus(PaymentStatus.PAID.name());
             } else {
                 order.setOrderStatus(OrderStatus.CANCELLED);
                 order.setPaymentStatus(PaymentStatus.UNPAID);
-                if (payment != null) payment.setStatus("FAILED");
+                if (payment != null) payment.setStatus(PaymentStatus.CANCELLED.name());
             }
             if (payment != null) paymentRepository.save(payment);
             Order savedOrder = orderRepository.save(order);
@@ -354,11 +353,11 @@ public class OrderServiceImpl implements OrderService {
             if (success) {
                 order.setOrderStatus(OrderStatus.PENDING);
                 order.setPaymentStatus(PaymentStatus.UNPAID);
-                if (payment != null) payment.setStatus("PENDING");
+                if (payment != null) payment.setStatus(PaymentStatus.PENDING.name());
             } else {
                 order.setOrderStatus(OrderStatus.CANCELLED);
                 order.setPaymentStatus(PaymentStatus.UNPAID);
-                if (payment != null) payment.setStatus("FAILED");
+                if (payment != null) payment.setStatus(PaymentStatus.CANCELLED.name());
             }
             if (payment != null) paymentRepository.save(payment);
             Order savedOrder = orderRepository.save(order);

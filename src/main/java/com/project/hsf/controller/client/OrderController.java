@@ -79,7 +79,7 @@ public class OrderController {
         User user = userService.findByUsername(username);
         Order order = orderService.getOrderById(id, user);
         
-        if (order != null && order.getOrderStatus() == OrderStatus.SHIPPING) {
+        if (order != null && order.getOrderStatus() == OrderStatus.SHIPPED) {
             orderService.updateOrderStatus(id, OrderStatus.DELIVERED, "Khách hàng xác nhận đã nhận hàng thành công.");
             return "redirect:/orders/" + id + "?success=received";
         }

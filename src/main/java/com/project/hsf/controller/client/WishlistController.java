@@ -1,4 +1,4 @@
-package com.project.hsf.controller;
+package com.project.hsf.controller.client;
 
 import java.security.Principal;
 import java.util.List;

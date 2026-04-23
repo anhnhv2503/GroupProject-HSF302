@@ -111,7 +111,7 @@
                     </div>
 
                     <!-- Confirm Action -->
-                    <div th:if="${order.orderStatus.name() == 'SHIPPING'}" class="p-2 bg-green-50 rounded-[2.5rem] border border-green-100">
+                    <div th:if="${order.orderStatus.name() == 'SHIPPED'}" class="p-2 bg-green-50 rounded-[2.5rem] border border-green-100">
                         <form th:action="@{/orders/{id}/received(id=${order.id})}" method="post">
                             <button type="submit" class="w-full h-16 rounded-[2rem] bg-green-600 text-white font-black uppercase tracking-widest text-[10px] hover:shadow-xl transition-all shadow-lg active:scale-95">Xác nhận đã nhận hàng</button>
                         </form>

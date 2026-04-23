@@ -2,136 +2,174 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{layout/main :: head('Thanh Toán')}"></head>
 <body th:replace="~{layout/main :: layout(~{:: .checkout-content})}">
-    <div class="checkout-content">
-        <div class="max-w-7xl mx-auto px-8 py-12">
-            <!-- Progress Steps -->
-            <div class="flex justify-center items-center gap-4 mb-16">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-full bg-green-500 text-white flex items-center justify-center shadow-lg"><span class="material-symbols-outlined">check</span></div>
-                    <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">Giỏ hàng</span>
-                </div>
-                <div class="w-12 h-px bg-slate-200"></div>
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-full bg-brand-primary text-white flex items-center justify-center shadow-lg font-black italic">2</div>
-                    <span class="text-[10px] font-black uppercase tracking-widest text-brand-secondary">Thanh toán</span>
-                </div>
-                <div class="w-12 h-px bg-slate-200"></div>
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-full border-2 border-slate-200 text-slate-300 flex items-center justify-center font-black italic">3</div>
-                    <span class="text-[10px] font-black uppercase tracking-widest text-slate-300">Hoàn tất</span>
-                </div>
+<div class="checkout-content">
+    <div class="max-w-7xl mx-auto px-8 py-12">
+        <!-- Progress Steps -->
+        <div class="flex justify-center items-center gap-4 mb-16">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-green-500 text-white flex items-center justify-center shadow-lg">
+                    <span class="material-symbols-outlined">check</span></div>
+                <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">Giỏ hàng</span>
             </div>
+            <div class="w-12 h-px bg-slate-200"></div>
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-brand-primary text-white flex items-center justify-center shadow-lg font-black italic">
+                    2
+                </div>
+                <span class="text-[10px] font-black uppercase tracking-widest text-brand-secondary">Thanh toán</span>
+            </div>
+            <div class="w-12 h-px bg-slate-200"></div>
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full border-2 border-slate-200 text-slate-300 flex items-center justify-center font-black italic">
+                    3
+                </div>
+                <span class="text-[10px] font-black uppercase tracking-widest text-slate-300">Hoàn tất</span>
+            </div>
+        </div>
 
-            <div th:if="${error}" class="mb-8 p-6 bg-red-50 border border-red-100 rounded-3xl text-red-600 font-bold flex items-center gap-3">
+        <div th:if="${errorMsg != null}">
+            <div class="mb-8 p-6 bg-red-50 border border-red-100 rounded-3xl text-red-600 font-bold flex items-center gap-3">
                 <span class="material-symbols-outlined">error</span>
-                <span th:text="${error}"></span>
+                <span th:text="${errorMsg}"></span>
             </div>
+        </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
-                <!-- Left: Order Summary & Coupon -->
-                <div class="lg:col-span-7 space-y-8">
-                    <div class="bg-white rounded-[2.5rem] border border-slate-100 p-8 shadow-sm">
-                        <h3 class="text-2xl font-black text-brand-secondary uppercase tracking-tighter mb-8">Chi tiết đơn hàng</h3>
-                        <div class="space-y-4">
-                            <div th:each="item : ${cartItems}" class="flex items-center gap-6 p-4 rounded-2xl hover:bg-slate-50 transition-colors">
-                                <img th:src="${item.imageUrl}" class="w-20 h-20 object-cover rounded-xl shadow-sm" />
-                                <div class="flex-1">
-                                    <h4 class="font-bold text-slate-900" th:text="${item.name}"></h4>
-                                    <p class="text-xs text-slate-400 font-bold mt-1" th:text="${item.quantity} + ' x ' + ${#numbers.formatDecimal(item.unitPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'"></p>
-                                </div>
-                                <div class="text-right">
-                                    <span class="font-black text-brand-secondary" th:text="${#numbers.formatDecimal(item.subtotal, 0, 'COMMA', 0, 'POINT')} + ' đ'"></span>
-                                </div>
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+            <!-- Left: Order Summary & Coupon -->
+            <div class="lg:col-span-7 space-y-8">
+                <div class="bg-white rounded-[2.5rem] border border-slate-100 p-8 shadow-sm">
+                    <h3 class="text-2xl font-black text-brand-secondary uppercase tracking-tighter mb-8">Chi tiết đơn
+                        hàng</h3>
+                    <div class="space-y-4">
+                        <div th:each="item : ${cartItems}"
+                             class="flex items-center gap-6 p-4 rounded-2xl hover:bg-slate-50 transition-colors">
+                            <img th:src="${item.imageUrl}" class="w-20 h-20 object-cover rounded-xl shadow-sm"/>
+                            <div class="flex-1">
+                                <h4 class="font-bold text-slate-900" th:text="${item.name}"></h4>
+                                <p class="text-xs text-slate-400 font-bold mt-1"
+                                   th:text="${item.quantity} + ' x ' + ${#numbers.formatDecimal(item.unitPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'"></p>
                             </div>
-                        </div>
-
-                        <div class="mt-8 pt-8 border-t border-slate-100 space-y-4">
-                            <div class="flex justify-between text-slate-500 font-bold uppercase text-[10px] tracking-widest">
-                                <span>Tạm tính</span>
-                                <span th:text="${#numbers.formatDecimal(totalPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'"></span>
-                            </div>
-                            <div class="flex justify-between text-slate-500 font-bold uppercase text-[10px] tracking-widest">
-                                <span>Phí vận chuyển</span>
-                                <span th:text="${shippingFee != null ? #numbers.formatDecimal(shippingFee, 0, 'COMMA', 0, 'POINT') + ' đ' : '0 đ'}"></span>
-                            </div>
-                            <div th:if="${discountAmount != null and discountAmount > 0}" class="flex justify-between text-green-500 font-bold uppercase text-[10px] tracking-widest">
-                                <span>Giảm giá</span>
-                                <span th:text="'- ' + ${#numbers.formatDecimal(discountAmount, 0, 'COMMA', 0, 'POINT')} + ' đ'"></span>
-                            </div>
-                            <div class="flex justify-between items-end pt-4">
-                                <span class="font-black text-slate-900 text-lg uppercase tracking-widest">Tổng cộng</span>
-                                <span class="text-4xl font-black text-brand-primary tracking-tighter" th:text="${#numbers.formatDecimal(totalPrice - (discountAmount != null ? discountAmount : 0) + (shippingFee != null ? shippingFee : 0), 0, 'COMMA', 0, 'POINT')} + ' đ'"></span>
+                            <div class="text-right">
+                                <span class="font-black text-brand-secondary"
+                                      th:text="${#numbers.formatDecimal(item.subtotal, 0, 'COMMA', 0, 'POINT')} + ' đ'"></span>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Coupon -->
-                    <div class="bg-white rounded-[2.5rem] border border-slate-100 p-8 shadow-sm">
-                        <h4 class="text-sm font-black uppercase tracking-widest text-brand-secondary mb-6">Mã giảm giá</h4>
-                        <form th:action="@{/checkout/apply-coupon}" method="post" class="flex gap-3">
-                            <input name="code" th:value="${appliedCoupon}" type="text" placeholder="NHẬP MÃ TẠI ĐÂY" class="flex-1 px-6 py-4 rounded-2xl bg-slate-50 border-none focus:ring-2 focus:ring-brand-primary font-bold uppercase tracking-widest text-xs" />
-                            <button type="submit" class="px-8 py-4 bg-brand-secondary text-white rounded-2xl font-black uppercase tracking-widest text-[10px] hover:shadow-xl transition-all">Áp dụng</button>
-                        </form>
+                    <div class="mt-8 pt-8 border-t border-slate-100 space-y-4">
+                        <div class="flex justify-between text-slate-500 font-bold uppercase text-[10px] tracking-widest">
+                            <span>Tạm tính</span>
+                            <span th:text="${#numbers.formatDecimal(totalPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'"></span>
+                        </div>
+                        <div class="flex justify-between text-slate-500 font-bold uppercase text-[10px] tracking-widest">
+                            <span>Phí vận chuyển</span>
+                            <span th:text="${shippingFee != null ? #numbers.formatDecimal(shippingFee, 0, 'COMMA', 0, 'POINT') + ' đ' : '0 đ'}"></span>
+                        </div>
+                        <div th:if="${discountAmount != null and discountAmount > 0}"
+                             class="flex justify-between text-green-500 font-bold uppercase text-[10px] tracking-widest">
+                            <span>Giảm giá</span>
+                            <span th:text="'- ' + ${#numbers.formatDecimal(discountAmount, 0, 'COMMA', 0, 'POINT')} + ' đ'"></span>
+                        </div>
+                        <div class="flex justify-between items-end pt-4">
+                            <span class="font-black text-slate-900 text-lg uppercase tracking-widest">Tổng cộng</span>
+                            <span class="text-4xl font-black text-brand-primary tracking-tighter"
+                                  th:text="${#numbers.formatDecimal(totalPrice - (discountAmount != null ? discountAmount : 0) + (shippingFee != null ? shippingFee : 0), 0, 'COMMA', 0, 'POINT')} + ' đ'"></span>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Right: Shipping & Payment -->
-                <div class="lg:col-span-5">
-                    <form th:action="@{/checkout/place-order}" method="post" class="space-y-8">
-                        <div class="bg-white rounded-[2.5rem] border border-slate-100 p-8 shadow-sm space-y-8">
-                            <h3 class="text-xl font-black text-brand-secondary uppercase tracking-tighter">Thông tin giao hàng</h3>
-                            
-                            <div class="space-y-6">
-                                <div class="space-y-2">
-                                    <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Người nhận</label>
-                                    <input type="text" name="recipientName" required class="w-full px-6 py-4 rounded-2xl bg-slate-50 border-none focus:ring-2 focus:ring-brand-primary font-bold" />
-                                </div>
-                                <div class="space-y-2">
-                                    <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Số điện thoại</label>
-                                    <input type="tel" name="recipientPhone" required class="w-full px-6 py-4 rounded-2xl bg-slate-50 border-none focus:ring-2 focus:ring-brand-primary font-bold" />
-                                </div>
-                                
-                                <div class="space-y-4">
-                                    <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Địa chỉ của bạn</label>
-                                    <div th:each="addr : ${addresses}" class="relative">
-                                        <input type="radio" name="address" th:id="'addr-' + ${addr.id}" th:value="${addr.addressLine + ', ' + addr.ward + ', ' + addr.city}" th:checked="${addr.isDefault}" class="peer hidden" required />
-                                        <label th:for="'addr-' + ${addr.id}" class="block p-5 rounded-2xl border-2 border-slate-100 peer-checked:border-brand-primary peer-checked:bg-orange-50/50 cursor-pointer transition-all">
-                                            <div class="font-bold text-slate-900" th:text="${addr.addressLine}"></div>
-                                            <div class="text-[10px] text-slate-400 font-bold uppercase mt-1" th:text="${addr.ward} + ', ' + ${addr.city}"></div>
-                                        </label>
-                                    </div>
-                                    <div th:if="${#lists.isEmpty(addresses)}" class="space-y-2">
-                                        <textarea name="address" required class="w-full px-6 py-4 rounded-2xl bg-slate-50 border-none focus:ring-2 focus:ring-brand-primary font-medium" rows="3" placeholder="Nhập địa chỉ nhận hàng..."></textarea>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="bg-white rounded-[2.5rem] border border-slate-100 p-8 shadow-sm space-y-8">
-                            <h3 class="text-xl font-black text-brand-secondary uppercase tracking-tighter">Thanh toán</h3>
-                            <div class="space-y-4">
-                                <label class="flex items-center gap-4 p-5 rounded-2xl border-2 border-slate-100 cursor-pointer hover:bg-slate-50 transition-all">
-                                    <input type="radio" name="paymentMethod" value="COD" class="w-5 h-5 text-brand-primary border-slate-300 focus:ring-brand-primary" />
-                                    <div class="flex-1">
-                                        <div class="font-bold text-slate-900">Tiền mặt (COD)</div>
-                                        <div class="text-[10px] text-slate-400 font-bold uppercase">Thanh toán khi nhận hàng</div>
-                                    </div>
-                                </label>
-                                <label class="flex items-center gap-4 p-5 rounded-2xl border-2 border-slate-100 cursor-pointer hover:bg-slate-50 transition-all">
-                                    <input type="radio" name="paymentMethod" value="BANK_TRANSFER" checked class="w-5 h-5 text-brand-primary border-slate-300 focus:ring-brand-primary" />
-                                    <div class="flex-1">
-                                        <div class="font-bold text-slate-900">Chuyển khoản</div>
-                                        <div class="text-[10px] text-slate-400 font-bold uppercase">Chuyển khoản ngân hàng hoặc QR</div>
-                                    </div>
-                                </label>
-                            </div>
-                        </div>
-
-                        <button type="submit" class="w-full h-20 rounded-[2rem] bg-brand-secondary text-white font-black uppercase tracking-[0.2em] text-xs hover:shadow-2xl transition-all shadow-xl active:scale-95">Xác nhận đặt hàng</button>
+                <!-- Coupon -->
+                <div class="bg-white rounded-[2.5rem] border border-slate-100 p-8 shadow-sm">
+                    <h4 class="text-sm font-black uppercase tracking-widest text-brand-secondary mb-6">Mã giảm giá</h4>
+                    <form th:action="@{/checkout/apply-coupon}" method="post" class="flex gap-3">
+                        <input name="code" th:value="${appliedCoupon}" type="text" placeholder="NHẬP MÃ TẠI ĐÂY"
+                               class="flex-1 px-6 py-4 rounded-2xl bg-slate-50 border-none focus:ring-2 focus:ring-brand-primary font-bold uppercase tracking-widest text-xs"/>
+                        <button type="submit"
+                                class="px-8 py-4 bg-brand-secondary text-white rounded-2xl font-black uppercase tracking-widest text-[10px] hover:shadow-xl transition-all">
+                            Áp dụng
+                        </button>
                     </form>
                 </div>
             </div>
+
+            <!-- Right: Shipping & Payment -->
+            <div class="lg:col-span-5">
+                <form th:action="@{/checkout/place-order}" method="post" class="space-y-8">
+                    <div class="bg-white rounded-[2.5rem] border border-slate-100 p-8 shadow-sm space-y-8">
+                        <h3 class="text-xl font-black text-brand-secondary uppercase tracking-tighter">Thông tin giao
+                            hàng</h3>
+
+                        <div class="space-y-6">
+                            <div class="space-y-2">
+                                <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Người
+                                    nhận</label>
+                                <input type="text" name="recipientName" required
+                                       class="w-full px-6 py-4 rounded-2xl bg-slate-50 border-none focus:ring-2 focus:ring-brand-primary font-bold"/>
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Số điện
+                                    thoại</label>
+                                <input type="tel" name="recipientPhone" required
+                                       class="w-full px-6 py-4 rounded-2xl bg-slate-50 border-none focus:ring-2 focus:ring-brand-primary font-bold"/>
+                            </div>
+
+                            <div class="space-y-4">
+                                <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Địa chỉ
+                                    của bạn</label>
+                                <div th:each="addr : ${addresses}" class="relative">
+                                    <input type="radio" name="address" th:id="'addr-' + ${addr.id}"
+                                           th:value="${addr.addressLine + ', ' + addr.ward + ', ' + addr.city}"
+                                           th:checked="${addr.isDefault}" class="peer hidden" required/>
+                                    <label th:for="'addr-' + ${addr.id}"
+                                           class="block p-5 rounded-2xl border-2 border-slate-100 peer-checked:border-brand-primary peer-checked:bg-orange-50/50 cursor-pointer transition-all">
+                                        <div class="font-bold text-slate-900" th:text="${addr.addressLine}"></div>
+                                        <div class="text-[10px] text-slate-400 font-bold uppercase mt-1"
+                                             th:text="${addr.ward} + ', ' + ${addr.city}"></div>
+                                    </label>
+                                </div>
+                                <div th:if="${#lists.isEmpty(addresses)}" class="space-y-2">
+                                    <textarea name="address" required
+                                              class="w-full px-6 py-4 rounded-2xl bg-slate-50 border-none focus:ring-2 focus:ring-brand-primary font-medium"
+                                              rows="3" placeholder="Nhập địa chỉ nhận hàng..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-[2.5rem] border border-slate-100 p-8 shadow-sm space-y-8">
+                        <h3 class="text-xl font-black text-brand-secondary uppercase tracking-tighter">Thanh toán</h3>
+                        <div class="space-y-4">
+                            <label class="flex items-center gap-4 p-5 rounded-2xl border-2 border-slate-100 cursor-pointer hover:bg-slate-50 transition-all">
+                                <input type="radio" name="paymentMethod" value="COD"
+                                       class="w-5 h-5 text-brand-primary border-slate-300 focus:ring-brand-primary"/>
+                                <div class="flex-1">
+                                    <div class="font-bold text-slate-900">Tiền mặt (COD)</div>
+                                    <div class="text-[10px] text-slate-400 font-bold uppercase">Thanh toán khi nhận
+                                        hàng
+                                    </div>
+                                </div>
+                            </label>
+                            <label class="flex items-center gap-4 p-5 rounded-2xl border-2 border-slate-100 cursor-pointer hover:bg-slate-50 transition-all">
+                                <input type="radio" name="paymentMethod" value="BANK_TRANSFER" checked
+                                       class="w-5 h-5 text-brand-primary border-slate-300 focus:ring-brand-primary"/>
+                                <div class="flex-1">
+                                    <div class="font-bold text-slate-900">Chuyển khoản</div>
+                                    <div class="text-[10px] text-slate-400 font-bold uppercase">Chuyển khoản ngân hàng
+                                        hoặc QR
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <button type="submit"
+                            class="w-full h-20 rounded-[2rem] bg-brand-secondary text-white font-black uppercase tracking-[0.2em] text-xs hover:shadow-2xl transition-all shadow-xl active:scale-95">
+                        Xác nhận đặt hàng
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
+</div>
 </body>
 </html>

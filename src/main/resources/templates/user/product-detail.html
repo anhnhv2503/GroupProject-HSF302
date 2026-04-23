@@ -108,13 +108,13 @@
                                             <div>
                                                 <h4 class="font-bold text-brand-secondary text-sm uppercase tracking-tight" th:text="${review.user.fullName}">User Name</h4>
                                                 <div class="flex text-amber-400 text-[10px]">
-                                                    <span th:each="i : ${#numbers.sequence(1, 5)}" 
-                                                          class="material-symbols-outlined text-sm" 
+                                                    <span th:each="i : ${#numbers.sequence(1, 5)}"
+                                                          class="material-symbols-outlined text-sm"
                                                           th:classappend="${i <= review.rating} ? 'fill-1' : ''">star</span>
                                                 </div>
                                             </div>
                                         </div>
-                                        <span class="text-[10px] font-bold text-slate-300 uppercase tracking-widest" th:text="${#temporals.format(review.createdAt, 'dd/MM/yyyy')}">Date</span>
+                                        <span class="text-[10px] font-bold text-slate-300 uppercase tracking-widest" th:text="${#temporals.format(review.createdDate, 'dd/MM/yyyy')}">Date</span>
                                     </div>
                                     <p class="text-slate-600 leading-relaxed font-medium text-sm" th:text="${review.comment}">Comment content...</p>
                                 </div>
