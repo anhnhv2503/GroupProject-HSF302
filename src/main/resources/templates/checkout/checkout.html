@@ -331,10 +331,19 @@
                     </div>
 
                     <!-- CTA Button -->
-                    <button type="submit"
+                    <th:block th:if="${canAddToCart == null or canAddToCart}">
+                        <button type="submit"
                             class="mt-6 inline-flex w-full items-center justify-center rounded-2xl bg-primary px-4 py-3 text-xs font-black uppercase tracking-widest text-white shadow-lg shadow-primary/20 hover:opacity-90 transition">
-                        <i class="bi bi-lock-fill"></i>ĐẶT HÀNG NGAY
-                    </button>
+                            <i class="bi bi-lock-fill"></i>ĐẶT HÀNG NGAY
+                        </button>
+                    </th:block>
+                    <th:block th:if="${canAddToCart != null and !canAddToCart}">
+                        <button type="button" disabled
+                            class="mt-6 inline-flex w-full items-center justify-center rounded-2xl bg-slate-300 px-4 py-3 text-xs font-black uppercase tracking-widest text-slate-500 cursor-not-allowed"
+                            title="Quyền mua hàng của bạn đã bị thu hồi. Liên hệ admin.">
+                            <i class="bi bi-x-circle-fill"></i>QUYỀN MUA HÀNG ĐÃ BỊ THU HỒI
+                        </button>
+                    </th:block>
                     <p class="text-center text-gray-600 text-xs font-semibold tracking-wider">
                         <i class="bi bi-shield-check text-green-600 mr-1"></i>
                         Cam kết bảo mật thông tin 100%
