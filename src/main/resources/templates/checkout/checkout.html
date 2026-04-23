@@ -81,11 +81,18 @@
                 <!-- Coupon -->
                 <div class="bg-white rounded-[2.5rem] border border-slate-100 p-8 shadow-sm">
                     <h4 class="text-sm font-black uppercase tracking-widest text-brand-secondary mb-6">Mã giảm giá</h4>
+                    
+                    <!-- Coupon Error Notification -->
+                    <div th:if="${couponError != null}" class="mb-6 p-4 bg-red-50 border border-red-100 rounded-2xl text-red-600 text-xs font-bold flex items-center gap-3 animate-pulse">
+                        <span class="material-symbols-outlined text-sm">warning</span>
+                        <span th:text="${couponError}"></span>
+                    </div>
+
                     <form th:action="@{/checkout/apply-coupon}" method="post" class="flex gap-3">
                         <input name="code" th:value="${appliedCoupon}" type="text" placeholder="NHẬP MÃ TẠI ĐÂY"
-                               class="flex-1 px-6 py-4 rounded-2xl bg-slate-50 border-none focus:ring-2 focus:ring-brand-primary font-bold uppercase tracking-widest text-xs"/>
+                               class="flex-1 px-6 py-4 rounded-2xl bg-slate-50 border-none focus:ring-2 focus:ring-brand-primary font-bold uppercase tracking-widest text-xs transition-all"/>
                         <button type="submit"
-                                class="px-8 py-4 bg-brand-secondary text-white rounded-2xl font-black uppercase tracking-widest text-[10px] hover:shadow-xl transition-all">
+                                class="px-8 py-4 bg-brand-secondary text-white rounded-2xl font-black uppercase tracking-widest text-[10px] hover:shadow-xl transition-all active:scale-95">
                             Áp dụng
                         </button>
                     </form>

@@ -1,13 +1,22 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head th:replace="~{layout/main :: head(${product.name})}"></head>
+
 <body th:replace="~{layout/main :: layout(~{:: .detail-content})}">
     <div class="detail-content">
         <style>
-            .tab-btn.active { color: #f26522; border-bottom: 2px solid #f26522; }
-            .quantity-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+            .tab-btn.active {
+                color: #f26522;
+                border-bottom: 2px solid #f26522;
+            }
+
+            .quantity-btn:disabled {
+                opacity: 0.3;
+                cursor: not-allowed;
+            }
         </style>
-        
+
         <div class="bg-slate-50 pb-32 pt-10">
             <!-- Breadcrumb -->
             <nav class="max-w-7xl mx-auto px-8 mb-10">
@@ -24,25 +33,30 @@
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-16">
                     <!-- Gallery -->
                     <div class="lg:col-span-7">
-                        <div class="aspect-square rounded-[3rem] overflow-hidden bg-white border border-slate-100 shadow-sm relative">
-                            <img id="mainDetailImage" th:if="${product.images != null and !product.images.isEmpty()}" th:src="@{${product.images[0].imageUrl}}" class="w-full h-full object-cover" />
-                            <img th:unless="${product.images != null and !product.images.isEmpty()}" src="https://via.placeholder.com/800x800?text=Premium+Seafood" class="w-full h-full object-cover" />
+                        <div
+                            class="aspect-square rounded-[3rem] overflow-hidden bg-white border border-slate-100 shadow-sm relative">
+                            <img id="mainDetailImage" th:if="${product.images != null and !product.images.isEmpty()}"
+                                th:src="@{${product.images[0].imageUrl}}" class="w-full h-full object-cover" />
+                            <img th:unless="${product.images != null and !product.images.isEmpty()}"
+                                src="https://via.placeholder.com/800x800?text=Premium+Seafood"
+                                class="w-full h-full object-cover" />
                         </div>
                     </div>
 
                     <!-- Info -->
                     <div class="lg:col-span-5 space-y-10">
                         <div>
-                            <span class="text-brand-primary font-black text-xs uppercase tracking-widest block mb-4" th:text="${product.category.name}">Collection</span>
-                            <h1 class="text-5xl font-black text-brand-secondary tracking-tighter uppercase leading-none mb-6" th:text="${product.name}">Product Name</h1>
+                            <span class="text-brand-primary font-black text-xs uppercase tracking-widest block mb-4"
+                                th:text="${product.category.name}">Collection</span>
+                            <h1 class="text-5xl font-black text-brand-secondary tracking-tighter uppercase leading-none mb-6"
+                                th:text="${product.name}">Product Name</h1>
                             <div class="flex items-center gap-6" th:with="avgRating=${#lists.isEmpty(reviews) ? 5 : 0}">
                                 <div class="flex text-amber-400">
-                                    <span th:each="i : ${#numbers.sequence(1, 5)}" 
-                                          class="material-symbols-outlined"
-                                          th:classappend="${!#lists.isEmpty(reviews) ? (i <= #aggregates.avg(reviews.![rating]) ? 'fill-1' : '') : 'fill-1'}">star</span>
+                                    <span th:each="i : ${#numbers.sequence(1, 5)}" class="material-symbols-outlined"
+                                        th:classappend="${!#lists.isEmpty(reviews) ? (i <= #aggregates.avg(reviews.![rating]) ? 'fill-1' : '') : 'fill-1'}">star</span>
                                 </div>
                                 <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                                    <span th:text="${#lists.size(reviews)}">0</span> Đánh giá 
+                                    <span th:text="${#lists.size(reviews)}">0</span> Đánh giá
                                     <span class="mx-2">•</span>
                                     Đã bán <span th:text="${product.soldCount ?: 0}">0</span>
                                 </span>
@@ -51,33 +65,57 @@
 
                         <div class="p-10 rounded-[2.5rem] bg-white border border-slate-100 shadow-sm">
                             <div class="flex items-baseline gap-3 mb-2">
-                                <span class="text-5xl font-black text-brand-secondary tracking-tighter" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' đ'"></span>
+                                <span class="text-5xl font-black text-brand-secondary tracking-tighter"
+                                    th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' đ'"></span>
                                 <span class="text-lg font-bold text-slate-400">/ kg</span>
                             </div>
-                            <p class="text-xs text-slate-400 font-medium">Giá đã bao gồm VAT và phí bảo quản tiêu chuẩn.</p>
+                            <br>
+                            <p class="text-xs text-slate-400 font-medium">Cam kết hoàn
+                                tiền
+                                200% nếu phát hiện hàng giả, kém chất lượng.</p>
                         </div>
 
-                        <form th:action="@{/cart/add}" th:onsubmit="'addToCartAjax(event, this)'" method="post" class="space-y-8">
+                        <form th:action="@{/cart/add}" th:onsubmit="'addToCartAjax(event, this)'" method="post"
+                            class="space-y-8">
                             <div class="space-y-4">
-                                <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Số lượng đặt hàng</label>
+                                <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Số lượng
+                                    đặt hàng</label>
                                 <div class="flex items-center gap-4">
                                     <div class="flex items-center bg-white border border-slate-200 rounded-2xl p-2">
-                                        <button type="button" onclick="updateQuantity(-1)" class="w-10 h-10 flex items-center justify-center rounded-xl hover:bg-slate-50 transition-colors"><span class="material-symbols-outlined">remove</span></button>
-                                        <input type="number" id="purchaseQuantity" name="quantity" value="1" min="1" class="w-16 text-center font-black text-lg bg-transparent border-none focus:ring-0" readonly />
-                                        <button type="button" onclick="updateQuantity(1)" class="w-10 h-10 flex items-center justify-center rounded-xl hover:bg-slate-50 transition-colors"><span class="material-symbols-outlined">add</span></button>
+                                        <button type="button" onclick="updateQuantity(-1)" id="decreaseBtn"
+                                            class="w-10 h-10 flex items-center justify-center rounded-xl hover:bg-slate-50 transition-colors"><span
+                                                class="material-symbols-outlined">remove</span></button>
+
+                                        <input type="number" id="purchaseQuantity" name="quantity" value="1" min="1"
+                                            th:data-stock="${product.stockQuantity}"
+                                            class="w-16 text-center font-black text-lg bg-transparent border-none focus:ring-0"
+                                            readonly />
+
+                                        <button type="button" onclick="updateQuantity(1)" id="increaseBtn"
+                                            class="w-10 h-10 flex items-center justify-center rounded-xl hover:bg-slate-50 transition-colors"><span
+                                                class="material-symbols-outlined">add</span></button>
                                     </div>
-                                    <span class="text-xs font-bold text-slate-400 uppercase">Còn lại: <span th:text="${product.stockQuantity}">0</span></span>
+                                    <span class="text-xs font-bold text-slate-400 uppercase">Còn lại: <span
+                                            th:text="${product.stockQuantity}">0</span></span>
                                 </div>
                             </div>
 
                             <input type="hidden" name="productId" th:value="${product.id}" />
                             <input type="hidden" name="name" th:value="${product.name}" />
                             <input type="hidden" name="price" th:value="${product.price}" />
-                            <input type="hidden" name="imageUrl" th:value="${not #lists.isEmpty(product.images) ? product.images[0].imageUrl : ''}" />
-                            
+                            <input type="hidden" name="imageUrl"
+                                th:value="${not #lists.isEmpty(product.images) ? product.images[0].imageUrl : ''}" />
+
                             <div class="flex gap-4">
-                                <button type="submit" class="flex-1 bg-brand-primary text-white h-16 rounded-2xl font-black text-xs uppercase tracking-widest hover:shadow-2xl transition-all shadow-lg active:scale-95">Thêm vào giỏ hàng</button>
-                                <button type="button" th:onclick="'toggleWishlistAjax(event, this, ' + ${product.id} + ')'" class="w-16 h-16 rounded-2xl border border-slate-200 flex items-center justify-center text-slate-300 hover:text-red-500 transition-all group"><span class="material-symbols-outlined group-hover:fill-1">favorite</span></button>
+                                <button type="submit"
+                                    th:disabled="${product.stockQuantity == 0}"
+                                    class="flex-1 bg-brand-primary text-white h-16 rounded-2xl font-black text-xs uppercase tracking-widest hover:shadow-2xl transition-all shadow-lg active:scale-95 disabled:bg-slate-200 disabled:text-slate-400 disabled:shadow-none disabled:cursor-not-allowed"
+                                    th:text="${product.stockQuantity == 0 ? 'Sản phẩm đã hết hàng' : 'Thêm vào giỏ hàng'}">Thêm
+                                     vào giỏ hàng</button>
+                                <button type="button"
+                                    th:onclick="'toggleWishlistAjax(event, this, ' + ${product.id} + ')'"
+                                    class="w-16 h-16 rounded-2xl border border-slate-200 flex items-center justify-center text-slate-300 hover:text-red-500 transition-all group"><span
+                                        class="material-symbols-outlined group-hover:fill-1">favorite</span></button>
                             </div>
                         </form>
                     </div>
@@ -86,8 +124,12 @@
                 <!-- Tabs -->
                 <div class="mt-24 border-t border-slate-100 pt-16">
                     <div class="flex gap-12 mb-12 border-b border-slate-100">
-                        <button onclick="switchTab('desc')" id="btn-desc" class="tab-btn active pb-6 text-xs font-black uppercase tracking-widest">Mô tả sản phẩm</button>
-                        <button onclick="switchTab('reviews')" id="btn-reviews" class="tab-btn pb-6 text-xs font-black uppercase tracking-widest">Đánh giá khách hàng</button>
+                        <button onclick="switchTab('desc')" id="btn-desc"
+                            class="tab-btn active pb-6 text-xs font-black uppercase tracking-widest">Mô tả sản
+                            phẩm</button>
+                        <button onclick="switchTab('reviews')" id="btn-reviews"
+                            class="tab-btn pb-6 text-xs font-black uppercase tracking-widest">Đánh giá khách
+                            hàng</button>
                     </div>
                     <div id="tab-desc" class="tab-content text-slate-600 leading-relaxed max-w-4xl font-medium">
                         <p th:text="${product.description}"></p>
@@ -96,81 +138,122 @@
                         <div class="grid grid-cols-1 lg:grid-cols-12 gap-16">
                             <!-- Review List -->
                             <div class="lg:col-span-7 space-y-10">
-                                <div th:if="${#lists.isEmpty(reviews)}" class="py-20 text-center bg-white rounded-[2rem] border border-dashed border-slate-200">
-                                    <span class="material-symbols-outlined text-4xl text-slate-200 mb-4">rate_review</span>
+                                <div th:if="${#lists.isEmpty(reviews)}"
+                                    class="py-20 text-center bg-white rounded-[2rem] border border-dashed border-slate-200">
+                                    <span
+                                        class="material-symbols-outlined text-4xl text-slate-200 mb-4">rate_review</span>
                                     <p class="text-slate-400 font-medium">Chưa có đánh giá nào cho sản phẩm này.</p>
                                 </div>
 
-                                <div th:each="review : ${reviews}" class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-50 space-y-4">
+                                <div th:each="review : ${reviews}"
+                                    class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-50 space-y-4">
                                     <div class="flex justify-between items-start">
                                         <div class="flex items-center gap-4">
-                                            <div class="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center text-brand-secondary font-black text-xs uppercase" th:text="${#strings.substring(review.user.fullName, 0, 1)}">U</div>
+                                            <div class="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center text-brand-secondary font-black text-xs uppercase"
+                                                th:text="${#strings.substring(review.user.fullName, 0, 1)}">U</div>
                                             <div>
-                                                <h4 class="font-bold text-brand-secondary text-sm uppercase tracking-tight" th:text="${review.user.fullName}">User Name</h4>
+                                                <h4 class="font-bold text-brand-secondary text-sm uppercase tracking-tight"
+                                                    th:text="${review.user.fullName}">User Name</h4>
                                                 <div class="flex text-amber-400 text-[10px]">
                                                     <span th:each="i : ${#numbers.sequence(1, 5)}"
-                                                          class="material-symbols-outlined text-sm"
-                                                          th:classappend="${i <= review.rating} ? 'fill-1' : ''">star</span>
+                                                        class="material-symbols-outlined text-sm"
+                                                        th:classappend="${i <= review.rating} ? 'fill-1' : ''">star</span>
                                                 </div>
                                             </div>
                                         </div>
-                                        <span class="text-[10px] font-bold text-slate-300 uppercase tracking-widest" th:text="${#temporals.format(review.createdDate, 'dd/MM/yyyy')}">Date</span>
+                                        <span class="text-[10px] font-bold text-slate-300 uppercase tracking-widest"
+                                            th:text="${#temporals.format(review.createdDate, 'dd/MM/yyyy')}">Date</span>
                                     </div>
-                                    <p class="text-slate-600 leading-relaxed font-medium text-sm" th:text="${review.comment}">Comment content...</p>
+                                    <p class="text-slate-600 leading-relaxed font-medium text-sm"
+                                        th:text="${review.comment}">Comment content...</p>
                                 </div>
                             </div>
 
                             <!-- Review Form -->
                             <div class="lg:col-span-5">
                                 <div class="sticky top-32 space-y-8">
-                                    <div th:if="${reviewSuccess}" class="bg-green-50 border border-green-100 text-green-600 p-6 rounded-2xl text-xs font-bold uppercase tracking-widest" th:text="${reviewSuccess}"></div>
-                                    <div th:if="${reviewError}" class="bg-red-50 border border-red-100 text-red-600 p-6 rounded-2xl text-xs font-bold uppercase tracking-widest" th:text="${reviewError}"></div>
+                                    <div th:if="${reviewSuccess}"
+                                        class="bg-green-50 border border-green-100 text-green-600 p-6 rounded-2xl text-xs font-bold uppercase tracking-widest"
+                                        th:text="${reviewSuccess}"></div>
+                                    <div th:if="${reviewError}"
+                                        class="bg-red-50 border border-red-100 text-red-600 p-6 rounded-2xl text-xs font-bold uppercase tracking-widest"
+                                        th:text="${reviewError}"></div>
 
-                                    <div th:if="${canReview}" class="bg-brand-secondary p-10 rounded-[2.5rem] text-white shadow-2xl">
-                                        <h3 class="text-2xl font-black uppercase tracking-tighter mb-2">Gửi đánh giá</h3>
-                                        <p class="text-xs text-white/60 font-medium mb-8">Chia sẻ trải nghiệm của bạn về sản phẩm này.</p>
-                                        
-                                        <form th:action="@{'/products/' + ${product.id} + '/review'}" method="post" class="space-y-6">
+                                    <div th:if="${canReview}"
+                                        class="bg-brand-secondary p-10 rounded-[2.5rem] text-white shadow-2xl">
+                                        <h3 class="text-2xl font-black uppercase tracking-tighter mb-2">Gửi đánh giá
+                                        </h3>
+                                        <p class="text-xs text-white/60 font-medium mb-8">Chia sẻ trải nghiệm của bạn về
+                                            sản phẩm này.</p>
+
+                                        <form th:action="@{'/products/' + ${product.id} + '/review'}" method="post"
+                                            class="space-y-6">
                                             <div class="space-y-3">
-                                                <label class="text-[10px] font-black uppercase tracking-[0.2em] text-white/40">Xếp hạng của bạn</label>
+                                                <label
+                                                    class="text-[10px] font-black uppercase tracking-[0.2em] text-white/40">Xếp
+                                                    hạng của bạn</label>
                                                 <div class="flex gap-2">
                                                     <div class="flex flex-row-reverse justify-end">
-                                                        <input type="radio" id="star5" name="rating" value="5" class="hidden peer" required />
-                                                        <label for="star5" class="material-symbols-outlined cursor-pointer text-white/20 peer-checked:text-amber-400 hover:text-amber-400 peer-hover:text-amber-400 transition-colors">star</label>
-                                                        <input type="radio" id="star4" name="rating" value="4" class="hidden peer" />
-                                                        <label for="star4" class="material-symbols-outlined cursor-pointer text-white/20 peer-checked:text-amber-400 hover:text-amber-400 peer-hover:text-amber-400 transition-colors">star</label>
-                                                        <input type="radio" id="star3" name="rating" value="3" class="hidden peer" />
-                                                        <label for="star3" class="material-symbols-outlined cursor-pointer text-white/20 peer-checked:text-amber-400 hover:text-amber-400 peer-hover:text-amber-400 transition-colors">star</label>
-                                                        <input type="radio" id="star2" name="rating" value="2" class="hidden peer" />
-                                                        <label for="star2" class="material-symbols-outlined cursor-pointer text-white/20 peer-checked:text-amber-400 hover:text-amber-400 peer-hover:text-amber-400 transition-colors">star</label>
-                                                        <input type="radio" id="star1" name="rating" value="1" class="hidden peer" />
-                                                        <label for="star1" class="material-symbols-outlined cursor-pointer text-white/20 peer-checked:text-amber-400 hover:text-amber-400 peer-hover:text-amber-400 transition-colors">star</label>
+                                                        <input type="radio" id="star5" name="rating" value="5"
+                                                            class="hidden peer" required />
+                                                        <label for="star5"
+                                                            class="material-symbols-outlined cursor-pointer text-white/20 peer-checked:text-amber-400 hover:text-amber-400 peer-hover:text-amber-400 transition-colors">star</label>
+                                                        <input type="radio" id="star4" name="rating" value="4"
+                                                            class="hidden peer" />
+                                                        <label for="star4"
+                                                            class="material-symbols-outlined cursor-pointer text-white/20 peer-checked:text-amber-400 hover:text-amber-400 peer-hover:text-amber-400 transition-colors">star</label>
+                                                        <input type="radio" id="star3" name="rating" value="3"
+                                                            class="hidden peer" />
+                                                        <label for="star3"
+                                                            class="material-symbols-outlined cursor-pointer text-white/20 peer-checked:text-amber-400 hover:text-amber-400 peer-hover:text-amber-400 transition-colors">star</label>
+                                                        <input type="radio" id="star2" name="rating" value="2"
+                                                            class="hidden peer" />
+                                                        <label for="star2"
+                                                            class="material-symbols-outlined cursor-pointer text-white/20 peer-checked:text-amber-400 hover:text-amber-400 peer-hover:text-amber-400 transition-colors">star</label>
+                                                        <input type="radio" id="star1" name="rating" value="1"
+                                                            class="hidden peer" />
+                                                        <label for="star1"
+                                                            class="material-symbols-outlined cursor-pointer text-white/20 peer-checked:text-amber-400 hover:text-amber-400 peer-hover:text-amber-400 transition-colors">star</label>
                                                     </div>
                                                 </div>
                                             </div>
 
                                             <div class="space-y-3">
-                                                <label class="text-[10px] font-black uppercase tracking-[0.2em] text-white/40">Nội dung đánh giá</label>
-                                                <textarea name="comment" rows="4" class="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white text-sm focus:ring-brand-primary focus:border-brand-primary placeholder:text-white/20" placeholder="Viết cảm nhận của bạn..."></textarea>
+                                                <label
+                                                    class="text-[10px] font-black uppercase tracking-[0.2em] text-white/40">Nội
+                                                    dung đánh giá</label>
+                                                <textarea name="comment" rows="4"
+                                                    class="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white text-sm focus:ring-brand-primary focus:border-brand-primary placeholder:text-white/20"
+                                                    placeholder="Viết cảm nhận của bạn..."></textarea>
                                             </div>
 
-                                            <button type="submit" class="w-full bg-brand-primary text-white py-4 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-white hover:text-brand-secondary transition-all shadow-xl">Gửi đánh giá ngay</button>
+                                            <button type="submit"
+                                                class="w-full bg-brand-primary text-white py-4 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-white hover:text-brand-secondary transition-all shadow-xl">Gửi
+                                                đánh giá ngay</button>
                                         </form>
                                     </div>
 
-                                    <div th:unless="${canReview}" class="bg-white p-10 rounded-[2.5rem] border border-slate-100">
+                                    <div th:unless="${canReview}"
+                                        class="bg-white p-10 rounded-[2.5rem] border border-slate-100">
                                         <div th:if="${hasReviewed}" class="text-center space-y-4">
-                                            <div class="w-16 h-16 bg-green-50 text-green-500 rounded-full flex items-center justify-center mx-auto">
+                                            <div
+                                                class="w-16 h-16 bg-green-50 text-green-500 rounded-full flex items-center justify-center mx-auto">
                                                 <span class="material-symbols-outlined">verified</span>
                                             </div>
-                                            <h4 class="font-black text-brand-secondary uppercase tracking-tight">Bạn đã đánh giá</h4>
-                                            <p class="text-xs text-slate-400 font-medium">Cảm ơn bạn đã đóng góp ý kiến cho sản phẩm này.</p>
+                                            <h4 class="font-black text-brand-secondary uppercase tracking-tight">Bạn đã
+                                                đánh giá</h4>
+                                            <p class="text-xs text-slate-400 font-medium">Cảm ơn bạn đã đóng góp ý kiến
+                                                cho sản phẩm này.</p>
                                         </div>
                                         <div th:unless="${hasReviewed}" class="text-center space-y-4">
                                             <span class="material-symbols-outlined text-slate-200 text-4xl">lock</span>
-                                            <h4 class="font-black text-brand-secondary uppercase tracking-tight">Chưa thể đánh giá</h4>
-                                            <p class="text-[10px] text-slate-400 font-bold uppercase leading-relaxed">Bạn cần mua sản phẩm và nhận hàng thành công để có thể gửi đánh giá.</p>
-                                            <a href="/products" class="inline-block text-[10px] font-black text-brand-primary uppercase tracking-widest mt-4">Mua ngay</a>
+                                            <h4 class="font-black text-brand-secondary uppercase tracking-tight">Chưa
+                                                thể đánh giá</h4>
+                                            <p class="text-[10px] text-slate-400 font-bold uppercase leading-relaxed">
+                                                Bạn cần mua sản phẩm và nhận hàng thành công để có thể gửi đánh giá.</p>
+                                            <a href="/products"
+                                                class="inline-block text-[10px] font-black text-brand-primary uppercase tracking-widest mt-4">Mua
+                                                ngay</a>
                                         </div>
                                     </div>
                                 </div>
@@ -183,10 +266,30 @@
 
         <script th:inline="javascript">
             function updateQuantity(delta) {
+
                 const input = document.getElementById('purchaseQuantity');
-                let val = parseInt(input.value) + delta;
+                const increaseBtn = document.getElementById('increaseBtn');
+                const decreaseBtn = document.getElementById('decreaseBtn');
+
+                let val = parseInt(input.value);
+
+                const maxStock = parseInt(input.dataset.stock);
+
+                val += delta;
+
+                // Không nhỏ hơn 1
                 if (val < 1) val = 1;
+
+                // Không vượt stock
+                if (val > maxStock) val = maxStock;
+
                 input.value = val;
+
+                // Disable nút +
+                increaseBtn.disabled = val >= maxStock;
+
+                // Disable nút -
+                decreaseBtn.disabled = val <= 1;
             }
             function switchTab(name) {
                 document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
@@ -203,29 +306,29 @@
                 fetch(form.action || '/cart/add', {
                     method: 'POST',
                     body: params,
-                    headers: { 
+                    headers: {
                         'X-Requested-With': 'XMLHttpRequest',
                         'Content-Type': 'application/x-www-form-urlencoded'
                     }
                 })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        const badge = document.getElementById('cart-badge');
-                        if (badge) badge.innerText = data.count;
-                        const btn = form.querySelector('button[type="submit"]');
-                        const originalText = btn.innerText;
-                        btn.innerText = 'ĐÃ THÊM VÀO GIỎ';
-                        btn.classList.replace('bg-brand-primary', 'bg-green-600');
-                        setTimeout(() => {
-                            btn.innerText = originalText;
-                            btn.classList.replace('bg-green-600', 'bg-brand-primary');
-                        }, 2000);
-                    } else if (data.error) {
-                        alert(data.error);
-                    }
-                })
-                .catch(error => console.error('Error:', error));
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            const badge = document.getElementById('cart-badge');
+                            if (badge) badge.innerText = data.count;
+                            const btn = form.querySelector('button[type="submit"]');
+                            const originalText = btn.innerText;
+                            btn.innerText = 'ĐÃ THÊM VÀO GIỎ';
+                            btn.classList.replace('bg-brand-primary', 'bg-green-600');
+                            setTimeout(() => {
+                                btn.innerText = originalText;
+                                btn.classList.replace('bg-green-600', 'bg-brand-primary');
+                            }, 2000);
+                        } else if (data.error) {
+                            alert(data.error);
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
             }
 
             function toggleWishlistAjax(event, btn, productId) {
@@ -235,28 +338,28 @@
                     method: 'POST',
                     headers: { 'X-Requested-With': 'XMLHttpRequest' }
                 })
-                .then(response => response.json())
-                .then(data => {
-                    const icon = btn.querySelector('.material-symbols-outlined');
-                    const badge = document.getElementById('wishlist-badge');
-                    
-                    if (data.status === 'added') {
-                        icon.classList.add('fill-1');
-                        icon.classList.replace('text-slate-300', 'text-red-500');
-                    } else {
-                        icon.classList.remove('fill-1');
-                        icon.classList.replace('text-red-500', 'text-slate-300');
-                    }
-                    if (badge && data.count !== undefined) badge.innerText = data.count;
-                })
-                .catch(error => console.error('Error:', error));
+                    .then(response => response.json())
+                    .then(data => {
+                        const icon = btn.querySelector('.material-symbols-outlined');
+                        const badge = document.getElementById('wishlist-badge');
+
+                        if (data.status === 'added') {
+                            icon.classList.add('fill-1');
+                            icon.classList.replace('text-slate-300', 'text-red-500');
+                        } else {
+                            icon.classList.remove('fill-1');
+                            icon.classList.replace('text-red-500', 'text-slate-300');
+                        }
+                        if (badge && data.count !== undefined) badge.innerText = data.count;
+                    })
+                    .catch(error => console.error('Error:', error));
             }
         </script>
         <script th:inline="javascript">
             function setRating(star) {
                 const rating = star.getAttribute('data-rating');
                 document.getElementById('rating-input').value = rating;
-                
+
                 const stars = document.querySelectorAll('.star-item');
                 stars.forEach((s, index) => {
                     if (index < rating) {
@@ -275,4 +378,5 @@
         </script>
     </div>
 </body>
+
 </html>

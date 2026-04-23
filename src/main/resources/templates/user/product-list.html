@@ -57,8 +57,12 @@
                         <div th:each="product : ${products}" class="group bg-white rounded-[2.5rem] overflow-hidden flex flex-col transition-all duration-500 border border-slate-100 hover:shadow-2xl">
                             <div class="relative aspect-[4/5] overflow-hidden bg-slate-50">
                                 <a th:href="@{'/products/' + ${product.id}}">
-                                    <img th:if="${product.images != null and !product.images.isEmpty()}" th:src="@{${product.images[0].imageUrl}}" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
-                                    <img th:unless="${product.images != null and !product.images.isEmpty()}" src="https://via.placeholder.com/400x500?text=Seafood" class="w-full h-full object-cover" />
+                                    <img th:if="${product.images != null and !product.images.isEmpty()}" th:src="@{${product.images[0].imageUrl}}" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" th:classappend="${product.stockQuantity == 0 ? 'grayscale' : ''}" />
+                                    <img th:unless="${product.images != null and !product.images.isEmpty()}" src="https://via.placeholder.com/400x500?text=Seafood" class="w-full h-full object-cover" th:classappend="${product.stockQuantity == 0 ? 'grayscale' : ''}" />
+                                    <!-- Out of Stock Badge -->
+                                    <div th:if="${product.stockQuantity == 0}" class="absolute inset-0 bg-slate-900/40 backdrop-blur-[2px] flex items-center justify-center z-20">
+                                        <span class="bg-white text-slate-900 px-6 py-2 rounded-full font-black text-xs uppercase tracking-widest shadow-2xl">Hết hàng</span>
+                                    </div>
                                 </a>
                                 <!-- Wishlist Heart -->
                                 <button type="button" 
@@ -91,8 +95,10 @@
                                         <input type="hidden" name="name" th:value="${product.name}" />
                                         <input type="hidden" name="price" th:value="${product.price}" />
                                         <input type="hidden" name="imageUrl" th:value="${not #lists.isEmpty(product.images) ? product.images[0].imageUrl : ''}" />
-                                        <button type="submit" class="w-12 h-12 bg-brand-primary text-white rounded-2xl flex items-center justify-center shadow-lg hover:shadow-orange-500/30 transition-all active:scale-95">
-                                            <span class="material-symbols-outlined">add_shopping_cart</span>
+                                        <button type="submit" 
+                                                th:disabled="${product.stockQuantity == 0}"
+                                                class="w-12 h-12 bg-brand-primary text-white rounded-2xl flex items-center justify-center shadow-lg hover:shadow-orange-500/30 transition-all active:scale-95 disabled:bg-slate-200 disabled:text-slate-400 disabled:shadow-none disabled:cursor-not-allowed">
+                                            <span class="material-symbols-outlined" th:text="${product.stockQuantity == 0 ? 'block' : 'add_shopping_cart'}">add_shopping_cart</span>
                                         </button>
                                     </form>
                                 </div>

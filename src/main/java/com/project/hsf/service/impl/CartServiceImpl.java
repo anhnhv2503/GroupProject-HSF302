@@ -53,6 +53,7 @@ public class CartServiceImpl implements CartService {
             cart.put(key, item);
         }
         session.setAttribute(CART_SESSION_KEY, cart);
+        updateCartCount(session, cart);
     }
 
     @Override
@@ -72,6 +73,7 @@ public class CartServiceImpl implements CartService {
             }
         }
         session.setAttribute(CART_SESSION_KEY, cart);
+        updateCartCount(session, cart);
     }
 
     @Override
@@ -79,11 +81,13 @@ public class CartServiceImpl implements CartService {
         Map<String, CartItemDTO> cart = getCart(session);
         cart.remove(itemKey);
         session.setAttribute(CART_SESSION_KEY, cart);
+        updateCartCount(session, cart);
     }
 
     @Override
     public void clearCart(HttpSession session) {
         session.removeAttribute(CART_SESSION_KEY);
+        session.setAttribute("cartCount", 0);
     }
 
     @Override
@@ -91,5 +95,10 @@ public class CartServiceImpl implements CartService {
         return getCart(session).values().stream()
                 .mapToDouble(CartItemDTO::getSubtotal)
                 .sum();
+    }
+
+    private void updateCartCount(HttpSession session, Map<String, CartItemDTO> cart) {
+        int count = cart.values().stream().mapToInt(CartItemDTO::getQuantity).sum();
+        session.setAttribute("cartCount", count);
     }
 }

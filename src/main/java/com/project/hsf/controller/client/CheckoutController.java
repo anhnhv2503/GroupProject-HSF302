@@ -57,19 +57,29 @@ public class CheckoutController {
 
         if (appliedCouponCode != null) {
             Coupon coupon = couponService.findByCode(appliedCouponCode).orElse(null);
-            if (coupon != null && Boolean.TRUE.equals(coupon.getActive())) {
-                if (totalPrice >= coupon.getMinOrderValue().doubleValue()) {
-                    if ("PERCENT".equalsIgnoreCase(coupon.getDiscountType())
-                            || "PERCENTAGE".equalsIgnoreCase(coupon.getDiscountType())) {
-                        discountAmount = totalPrice * (coupon.getDiscountValue().doubleValue() / 100.0);
+            if (coupon != null) {
+                if (Boolean.TRUE.equals(coupon.getActive())) {
+                    if (totalPrice >= coupon.getMinOrderValue().doubleValue()) {
+                        if ("PERCENT".equalsIgnoreCase(coupon.getDiscountType())
+                                || "PERCENTAGE".equalsIgnoreCase(coupon.getDiscountType())) {
+                            discountAmount = totalPrice * (coupon.getDiscountValue().doubleValue() / 100.0);
+                        } else {
+                            discountAmount = coupon.getDiscountValue().doubleValue();
+                        }
                     } else {
-                        discountAmount = coupon.getDiscountValue().doubleValue();
+                        model.addAttribute("couponError", "Đơn hàng chưa đạt giá trị tối thiểu " + coupon.getMinOrderValue() + "đ để áp dụng mã này.");
+                        session.removeAttribute("appliedCoupon");
+                        appliedCouponCode = null;
                     }
                 } else {
-                    model.addAttribute("couponError", "Đơn hàng chưa đạt giá trị tối thiểu " + coupon.getMinOrderValue() + "đ");
+                    model.addAttribute("couponError", "Mã giảm giá này hiện không còn hoạt động.");
                     session.removeAttribute("appliedCoupon");
                     appliedCouponCode = null;
                 }
+            } else {
+                model.addAttribute("couponError", "Mã giảm giá không tồn tại.");
+                session.removeAttribute("appliedCoupon");
+                appliedCouponCode = null;
             }
         }
 
@@ -93,7 +103,11 @@ public class CheckoutController {
 
     @PostMapping("/apply-coupon")
     public String applyCoupon(@RequestParam String code, HttpSession session) {
-        session.setAttribute("appliedCoupon", code.toUpperCase());
+        if (code == null || code.trim().isEmpty()) {
+            session.removeAttribute("appliedCoupon");
+        } else {
+            session.setAttribute("appliedCoupon", code.trim().toUpperCase());
+        }
         return "redirect:/checkout";
     }
 
