@@ -38,8 +38,10 @@
             }
         };
     </script>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&amp;family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&amp;family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap"
+          rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+          rel="stylesheet"/>
 
     <style>
         .material-symbols-outlined {
@@ -79,8 +81,12 @@
             <p class="mt-2 text-on-surface-variant">Quản lý và cập nhật trạng thái đơn hàng</p>
         </div>
 
-        <div th:if="${successMessage}" class="rounded-xl border border-green-200 bg-green-50 text-green-700 px-4 py-3 text-sm font-semibold" th:text="${successMessage}"></div>
-        <div th:if="${errorMessage}" class="rounded-xl border border-red-200 bg-red-50 text-red-700 px-4 py-3 text-sm font-semibold" th:text="${errorMessage}"></div>
+        <div th:if="${successMessage}"
+             class="rounded-xl border border-green-200 bg-green-50 text-green-700 px-4 py-3 text-sm font-semibold"
+             th:text="${successMessage}"></div>
+        <div th:if="${errorMessage}"
+             class="rounded-xl border border-red-200 bg-red-50 text-red-700 px-4 py-3 text-sm font-semibold"
+             th:text="${errorMessage}"></div>
 
         <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
             <aside class="xl:col-span-1 rounded-2xl bg-white border border-outline-variant/20 p-6 shadow-sm h-fit">
@@ -88,22 +94,29 @@
 
                 <form method="get" class="mb-4 space-y-3" id="filterForm">
                     <div class="relative">
-                        <input type="text" name="orderCode" th:value="${orderCode}" placeholder="Tìm mã đơn hàng..." 
+                        <input type="text" name="orderCode" th:value="${orderCode}" placeholder="Tìm mã đơn hàng..."
                                class="w-full pl-10 pr-4 py-2 border border-outline-variant/30 rounded-xl text-sm focus:ring-primary focus:border-primary">
                         <span class="material-symbols-outlined absolute left-3 top-2 text-on-surface-variant text-sm">search</span>
                     </div>
-                    
+
                     <div class="flex p-1 bg-slate-100 rounded-xl">
-                        <button type="button" onclick="filterByMethod('')" 
+                        <button type="button" onclick="filterByMethod('')"
                                 class="flex-1 py-1.5 text-[10px] font-bold uppercase rounded-lg transition-all"
-                                th:classappend="${param.paymentMethod == null or param.paymentMethod[0] == ''} ? 'bg-white shadow-sm text-tertiary' : 'text-slate-500'">Tất cả</button>
-                        <button type="button" onclick="filterByMethod('COD')" 
+                                th:classappend="${param.paymentMethod == null or param.paymentMethod[0] == ''} ? 'bg-white shadow-sm text-tertiary' : 'text-slate-500'">
+                            Tất cả
+                        </button>
+                        <button type="button" onclick="filterByMethod('COD')"
                                 class="flex-1 py-1.5 text-[10px] font-bold uppercase rounded-lg transition-all"
-                                th:classappend="${param.paymentMethod != null and param.paymentMethod[0] == 'COD'} ? 'bg-white shadow-sm text-tertiary' : 'text-slate-500'">COD</button>
-                        <button type="button" onclick="filterByMethod('BANK_TRANSFER')" 
+                                th:classappend="${param.paymentMethod != null and param.paymentMethod[0] == 'COD'} ? 'bg-white shadow-sm text-tertiary' : 'text-slate-500'">
+                            COD
+                        </button>
+                        <button type="button" onclick="filterByMethod('BANK_TRANSFER')"
                                 class="flex-1 py-1.5 text-[10px] font-bold uppercase rounded-lg transition-all"
-                                th:classappend="${param.paymentMethod != null and param.paymentMethod[0] == 'BANK_TRANSFER'} ? 'bg-white shadow-sm text-tertiary' : 'text-slate-500'">Online</button>
-                        <input type="hidden" name="paymentMethod" th:value="${param.paymentMethod}" id="paymentMethodFilter"/>
+                                th:classappend="${param.paymentMethod != null and param.paymentMethod[0] == 'BANK_TRANSFER'} ? 'bg-white shadow-sm text-tertiary' : 'text-slate-500'">
+                            Online
+                        </button>
+                        <input type="hidden" name="paymentMethod" th:value="${param.paymentMethod}"
+                               id="paymentMethodFilter"/>
                     </div>
                 </form>
 
@@ -114,7 +127,8 @@
                     }
                 </script>
 
-                <div th:if="${#lists.isEmpty(orders)}" class="rounded-xl border border-dashed border-outline-variant/40 p-6 text-center text-sm text-on-surface-variant">
+                <div th:if="${#lists.isEmpty(orders)}"
+                     class="rounded-xl border border-dashed border-outline-variant/40 p-6 text-center text-sm text-on-surface-variant">
                     Chưa có đơn hàng nào.
                 </div>
 
@@ -129,31 +143,39 @@
                                   th:classappend="${order.orderStatus.name() == 'SHIPPED'} ? ' bg-amber-100 text-amber-700' : (${order.orderStatus.name() == 'CONFIRMED' or order.orderStatus.name() == 'PROCESSING'} ? ' bg-blue-100 text-blue-700' : (${order.orderStatus.name() == 'DELIVERED'} ? ' bg-emerald-100 text-emerald-700' : (${order.orderStatus.name() == 'CANCELLED'} ? ' bg-rose-100 text-rose-700' : ' bg-slate-100 text-slate-600')))"
                                   th:text="${order.orderStatus.getLabel()}">PENDING</span>
                         </div>
-                        <p class="text-sm text-on-surface-variant mt-2" th:text="${order.customer != null ? (order.customer.fullName != null ? order.customer.fullName : order.customer.username) : 'Khách vãng lai'}">Nguyễn Văn A</p>
+                        <p class="text-sm text-on-surface-variant mt-2"
+                           th:text="${order.customer != null ? (order.customer.fullName != null ? order.customer.fullName : order.customer.username) : 'Khách vãng lai'}">
+                            Nguyễn Văn A</p>
                         <div class="mt-2 flex items-center justify-between text-xs">
                             <div class="flex items-center gap-1.5">
-                                <span class="px-1.5 py-0.5 rounded bg-slate-100 text-[9px] font-bold text-on-surface-variant" th:text="${order.paymentMethod}">COD</span>
-                                <span class="px-1.5 py-0.5 rounded text-[9px] font-bold" 
+                                <span class="px-1.5 py-0.5 rounded bg-slate-100 text-[9px] font-bold text-on-surface-variant"
+                                      th:text="${order.paymentMethod}">COD</span>
+                                <span class="px-1.5 py-0.5 rounded text-[9px] font-bold"
                                       th:classappend="${order.paymentStatus.name() == 'PAID'} ? ' bg-green-100 text-green-700' : ' bg-red-100 text-red-700'"
                                       th:text="${order.paymentStatus}">PAID</span>
                             </div>
-                            <span class="font-bold text-primary font-numeric" th:text="${#numbers.formatDecimal(order.finalPrice != null ? order.finalPrice : order.totalPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'">100.000 đ</span>
+                            <span class="font-bold text-primary font-numeric"
+                                  th:text="${#numbers.formatDecimal(order.finalPrice != null ? order.finalPrice : order.totalPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'">100.000 đ</span>
                         </div>
                     </a>
                 </div>
             </aside>
 
             <section class="xl:col-span-2 space-y-4">
-                <div th:if="${selectedOrder == null}" class="rounded-2xl bg-white border border-outline-variant/20 p-10 text-center text-on-surface-variant">
+                <div th:if="${selectedOrder == null}"
+                     class="rounded-2xl bg-white border border-outline-variant/20 p-10 text-center text-on-surface-variant">
                     Vui lòng chọn một đơn hàng để xem chi tiết.
                 </div>
 
-                <div th:if="${selectedOrder != null}" class="rounded-2xl bg-white border border-outline-variant/20 p-6 shadow-sm space-y-4">
+                <div th:if="${selectedOrder != null}"
+                     class="rounded-2xl bg-white border border-outline-variant/20 p-6 shadow-sm space-y-4">
                     <div class="flex items-center justify-between gap-4">
                         <div class="flex items-center gap-3">
-                            <h2 class="text-4xl font-headline font-bold text-tertiary font-numeric" th:text="'#' + ${selectedOrder.orderCode}">#CODE</h2>
+                            <h2 class="text-4xl font-headline font-bold text-tertiary font-numeric"
+                                th:text="'#' + ${selectedOrder.orderCode}">#CODE</h2>
                             <div class="flex flex-col">
-                                <span class="text-[10px] text-on-surface-variant uppercase font-bold tracking-widest" th:text="${#temporals.format(selectedOrder.createdDate, 'dd/MM/yyyy HH:mm')}">12/04/2026</span>
+                                <span class="text-[10px] text-on-surface-variant uppercase font-bold tracking-widest"
+                                      th:text="${#temporals.format(selectedOrder.createdDate, 'dd/MM/yyyy HH:mm')}">12/04/2026</span>
                             </div>
                         </div>
                         <span class="inline-flex items-center px-4 py-1.5 rounded-full text-xs font-bold uppercase"
@@ -163,8 +185,11 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="rounded-xl border border-outline-variant/20 p-4 bg-background/40">
-                            <p class="text-xs font-bold uppercase tracking-wider text-on-surface-variant">Khách hàng & Người nhận</p>
-                            <p class="mt-2 text-2xl font-bold text-tertiary" th:text="${selectedOrder.recipientName != null ? selectedOrder.recipientName : (selectedOrder.customer != null ? selectedOrder.customer.fullName : 'Khách vãng lai')}">Nguyễn Văn A</p>
+                            <p class="text-xs font-bold uppercase tracking-wider text-on-surface-variant">Khách hàng &
+                                Người nhận</p>
+                            <p class="mt-2 text-2xl font-bold text-tertiary"
+                               th:text="${selectedOrder.recipientName != null ? selectedOrder.recipientName : (selectedOrder.customer != null ? selectedOrder.customer.fullName : 'Khách vãng lai')}">
+                                Nguyễn Văn A</p>
                             <div class="flex items-center gap-2 mt-1 text-sm text-on-surface-variant">
                                 <span class="material-symbols-outlined text-base">call</span>
                                 <span th:text="${selectedOrder.recipientPhone != null ? selectedOrder.recipientPhone : (selectedOrder.customer != null ? selectedOrder.customer.phone : '-') }">+84 912 345 678</span>
@@ -177,91 +202,132 @@
 
                         <div class="rounded-xl border border-outline-variant/20 p-4 bg-background/40">
                             <div class="flex justify-between items-start">
-                                <p class="text-xs font-bold uppercase tracking-wider text-on-surface-variant">Thanh toán</p>
-                                <span class="px-2 py-0.5 rounded text-[10px] font-bold" 
+                                <p class="text-xs font-bold uppercase tracking-wider text-on-surface-variant">Thanh
+                                    toán</p>
+                                <span class="px-2 py-0.5 rounded text-[10px] font-bold"
                                       th:classappend="${selectedOrder.paymentStatus.name() == 'PAID'} ? ' bg-green-100 text-green-700' : ' bg-red-100 text-red-700'"
                                       th:text="${selectedOrder.paymentStatus}">PAID</span>
                             </div>
-                            <p class="mt-2 text-xl font-bold text-tertiary" th:text="${selectedOrder.paymentMethod}">COD</p>
-                            <p class="text-4xl font-bold text-primary font-numeric mt-1" th:text="${#numbers.formatDecimal(selectedOrder.finalPrice != null ? selectedOrder.finalPrice : selectedOrder.totalPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'">100.000 đ</p>
-                            <p th:if="${selectedOrder.discountAmount != null and selectedOrder.discountAmount > 0}" class="text-xs text-green-600 font-bold mt-1">
-                                Đã giảm: <span th:text="${#numbers.formatDecimal(selectedOrder.discountAmount, 0, 'COMMA', 0, 'POINT')} + ' đ'"></span>
+                            <p class="mt-2 text-xl font-bold text-tertiary" th:text="${selectedOrder.paymentMethod}">
+                                COD</p>
+                            <p class="text-4xl font-bold text-primary font-numeric mt-1"
+                               th:text="${#numbers.formatDecimal(selectedOrder.finalPrice != null ? selectedOrder.finalPrice : selectedOrder.totalPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'">
+                                100.000 đ</p>
+                            <p th:if="${selectedOrder.discountAmount != null and selectedOrder.discountAmount > 0}"
+                               class="text-xs text-green-600 font-bold mt-1">
+                                Đã giảm: <span
+                                    th:text="${#numbers.formatDecimal(selectedOrder.discountAmount, 0, 'COMMA', 0, 'POINT')} + ' đ'"></span>
                             </p>
                         </div>
                     </div>
 
                     <div class="rounded-xl border border-outline-variant/20 p-4">
                         <p class="text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-3">Sản phẩm</p>
-                        <div th:if="${#lists.isEmpty(selectedItems)}" class="text-sm text-on-surface-variant">Không có sản phẩm trong đơn hàng này.</div>
+                        <div th:if="${#lists.isEmpty(selectedItems)}" class="text-sm text-on-surface-variant">Không có
+                            sản phẩm trong đơn hàng này.
+                        </div>
                         <div class="space-y-3">
                             <div th:each="item : ${selectedItems}" class="flex items-center justify-between gap-4">
                                 <div class="flex items-center gap-3 min-w-0">
-                                    <img th:src="${item.productImageUrl != null ? item.productImageUrl : 'https://placehold.co/56x56'}" alt="Product" class="w-14 h-14 rounded-lg object-cover border border-outline-variant/20"/>
+                                    <img th:src="${item.productImageUrl != null ? item.productImageUrl : 'https://placehold.co/56x56'}"
+                                         alt="Product"
+                                         class="w-14 h-14 rounded-lg object-cover border border-outline-variant/20"/>
                                     <div class="min-w-0">
-                                        <p class="font-bold text-tertiary truncate" th:text="${item.productName != null ? item.productName : 'Sản phẩm'}">Tôm Hùm Alaska</p>
-                                        <p class="text-sm text-on-surface-variant font-numeric" th:text="${item.quantity} + ' x ' + ${#numbers.formatDecimal(item.unitPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'">2 x 100.000 đ</p>
+                                        <p class="font-bold text-tertiary truncate"
+                                           th:text="${item.productName != null ? item.productName : 'Sản phẩm'}">Tôm Hùm
+                                            Alaska</p>
+                                        <p class="text-sm text-on-surface-variant font-numeric"
+                                           th:text="${item.quantity} + ' x ' + ${#numbers.formatDecimal(item.unitPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'">
+                                            2 x 100.000 đ</p>
                                     </div>
                                 </div>
-                                <p class="font-bold text-primary font-numeric" th:text="${#numbers.formatDecimal(item.subtotal != null ? item.subtotal : item.unitPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'">100.000 đ</p>
+                                <p class="font-bold text-primary font-numeric"
+                                   th:text="${#numbers.formatDecimal(item.unitPrice * item.quantity, 0, 'COMMA', 0, 'POINT')} + ' đ'">
+                                    100.000 đ</p>
                             </div>
+                        </div>
+                        <div class="border-t border-outline-variant/20 mt-4 pt-4 flex justify-end">
+                            <p class="text-sm text-on-surface-variant font-numeric"
+                               th:text="'Tổng cộng: ' + ${#numbers.formatDecimal(selectedOrder.totalPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'">
+                                Tổng cộng: 200.000 đ
+                                /p>
                         </div>
                     </div>
 
                     <div class="rounded-xl border border-outline-variant/20 p-4">
-                        <p class="text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-4">Tiến trình đơn hàng</p>
-                        <div th:if="${#lists.isEmpty(statusHistories)}" class="text-sm text-on-surface-variant">Chưa có lịch sử trạng thái.</div>
+                        <p class="text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-4">Tiến trình
+                            đơn hàng</p>
+                        <div th:if="${#lists.isEmpty(statusHistories)}" class="text-sm text-on-surface-variant">Chưa có
+                            lịch sử trạng thái.
+                        </div>
                         <div class="space-y-6 relative before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-100">
                             <div th:each="history : ${statusHistories}" class="relative pl-8">
                                 <span class="absolute left-0 top-1.5 w-6 h-6 rounded-full bg-white border-2 flex items-center justify-center z-10"
                                       th:classappend="${historyStat.first} ? ' border-primary' : ' border-slate-300'">
                                     <span th:if="${historyStat.first}" class="w-2 h-2 rounded-full bg-primary"></span>
-                                    <span th:unless="${historyStat.first}" class="w-1.5 h-1.5 rounded-full bg-slate-300"></span>
+                                    <span th:unless="${historyStat.first}"
+                                          class="w-1.5 h-1.5 rounded-full bg-slate-300"></span>
                                 </span>
                                 <div class="flex justify-between items-start">
-                                    <p class="font-bold text-tertiary" th:text="${history.status.getLabel()}">Trạng thái</p>
-                                    <span class="text-[10px] text-on-surface-variant font-bold font-numeric bg-slate-50 px-2 py-0.5 rounded-full" th:text="${#temporals.format(history.changedAt, 'dd/MM HH:mm')}">12/04 10:30</span>
+                                    <p class="font-bold text-tertiary" th:text="${history.status.getLabel()}">Trạng
+                                        thái</p>
+                                    <span class="text-[10px] text-on-surface-variant font-bold font-numeric bg-slate-50 px-2 py-0.5 rounded-full"
+                                          th:text="${#temporals.format(history.changedAt, 'dd/MM HH:mm')}">12/04 10:30</span>
                                 </div>
-                                <p class="text-xs text-on-surface-variant mt-0.5 italic" th:text="${history.note != null ? history.note : ''}">Ghi chú...</p>
+                                <p class="text-xs text-on-surface-variant mt-0.5 italic"
+                                   th:text="${history.note != null ? history.note : ''}">Ghi chú...</p>
                             </div>
                         </div>
                     </div>
 
                     <!-- Dynamic Action Buttons -->
-                    <div class="pt-4 border-t border-outline-variant/10 grid grid-cols-1 md:grid-cols-2 gap-3" 
+                    <div class="pt-4 border-t border-outline-variant/10 grid grid-cols-1 md:grid-cols-2 gap-3"
                          th:if="${selectedOrder.orderStatus.name() != 'DELIVERED' and selectedOrder.orderStatus.name() != 'CANCELLED'}">
-                        
+
                         <div class="flex items-center gap-3">
                             <!-- PENDING -> CONFIRMED (Next Step) -->
-                            <form th:if="${selectedOrder.orderStatus.name() == 'PENDING'}" th:action="@{'/admin/orders/' + ${selectedOrder.id} + '/status'}" method="post" class="flex-1">
+                            <form th:if="${selectedOrder.orderStatus.name() == 'PENDING'}"
+                                  th:action="@{'/admin/orders/' + ${selectedOrder.id} + '/status'}" method="post"
+                                  class="flex-1">
                                 <input type="hidden" name="status" value="CONFIRMED"/>
-                                <button type="submit" class="w-full flex items-center justify-center gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-4 transition-all shadow-lg shadow-emerald-600/20">
+                                <button type="submit"
+                                        class="w-full flex items-center justify-center gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-4 transition-all shadow-lg shadow-emerald-600/20">
                                     <span class="material-symbols-outlined text-base">check_circle</span>
                                     Xác Nhận Đơn
                                 </button>
                             </form>
 
                             <!-- CONFIRMED -> PROCESSING (Next Step) -->
-                            <form th:if="${selectedOrder.orderStatus.name() == 'CONFIRMED'}" th:action="@{'/admin/orders/' + ${selectedOrder.id} + '/status'}" method="post" class="flex-1">
+                            <form th:if="${selectedOrder.orderStatus.name() == 'CONFIRMED'}"
+                                  th:action="@{'/admin/orders/' + ${selectedOrder.id} + '/status'}" method="post"
+                                  class="flex-1">
                                 <input type="hidden" name="status" value="PROCESSING"/>
-                                <button type="submit" class="w-full flex items-center justify-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 transition-all shadow-lg shadow-blue-600/20">
+                                <button type="submit"
+                                        class="w-full flex items-center justify-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 transition-all shadow-lg shadow-blue-600/20">
                                     <span class="material-symbols-outlined text-base">inventory_2</span>
                                     Chuẩn Bị Hàng
                                 </button>
                             </form>
 
                             <!-- PROCESSING -> SHIPPED (Next Step) -->
-                            <form th:if="${selectedOrder.orderStatus.name() == 'PROCESSING'}" th:action="@{'/admin/orders/' + ${selectedOrder.id} + '/status'}" method="post" class="flex-1">
+                            <form th:if="${selectedOrder.orderStatus.name() == 'PROCESSING'}"
+                                  th:action="@{'/admin/orders/' + ${selectedOrder.id} + '/status'}" method="post"
+                                  class="flex-1">
                                 <input type="hidden" name="status" value="SHIPPED"/>
-                                <button type="submit" class="w-full flex items-center justify-center gap-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-4 transition-all shadow-lg shadow-amber-500/20">
+                                <button type="submit"
+                                        class="w-full flex items-center justify-center gap-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-4 transition-all shadow-lg shadow-amber-500/20">
                                     <span class="material-symbols-outlined text-base">local_shipping</span>
                                     Giao Hàng
                                 </button>
                             </form>
 
                             <!-- SHIPPED -> DELIVERED (Final Step) -->
-                            <form th:if="${selectedOrder.orderStatus.name() == 'SHIPPED'}" th:action="@{'/admin/orders/' + ${selectedOrder.id} + '/status'}" method="post" class="flex-1">
+                            <form th:if="${selectedOrder.orderStatus.name() == 'SHIPPED'}"
+                                  th:action="@{'/admin/orders/' + ${selectedOrder.id} + '/status'}" method="post"
+                                  class="flex-1">
                                 <input type="hidden" name="status" value="DELIVERED"/>
-                                <button type="submit" class="w-full flex items-center justify-center gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-4 transition-all shadow-lg shadow-emerald-600/20">
+                                <button type="submit"
+                                        class="w-full flex items-center justify-center gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-4 transition-all shadow-lg shadow-emerald-600/20">
                                     <span class="material-symbols-outlined text-base">verified</span>
                                     Hoàn Tất
                                 </button>
@@ -270,10 +336,12 @@
 
                         <div class="flex items-center gap-3">
                             <!-- CANCELLED (Available for all non-terminal statuses) -->
-                            <form th:action="@{'/admin/orders/' + ${selectedOrder.id} + '/status'}" method="post" class="flex-1">
+                            <form th:action="@{'/admin/orders/' + ${selectedOrder.id} + '/status'}" method="post"
+                                  class="flex-1">
                                 <input type="hidden" name="status" value="CANCELLED"/>
-                                <input type="text" name="note" placeholder="Lý do hủy..." class="hidden" id="cancelNote"/>
-                                <button type="submit" onclick="return confirm('Bạn có chắc muốn hủy đơn hàng này?')" 
+                                <input type="text" name="note" placeholder="Lý do hủy..." class="hidden"
+                                       id="cancelNote"/>
+                                <button type="submit" onclick="return confirm('Bạn có chắc muốn hủy đơn hàng này?')"
                                         class="w-full flex items-center justify-center gap-2 rounded-xl border border-rose-200 hover:bg-rose-50 text-rose-600 font-bold py-3 px-4 transition-all">
                                     <span class="material-symbols-outlined text-base">cancel</span>
                                     Hủy Đơn
@@ -283,20 +351,22 @@
                     </div>
 
                     <!-- Terminal State Banner -->
-                    <div th:if="${selectedOrder.orderStatus.name() == 'DELIVERED'}" class="p-4 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center gap-3 text-emerald-700">
+                    <div th:if="${selectedOrder.orderStatus.name() == 'DELIVERED'}"
+                         class="p-4 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center gap-3 text-emerald-700">
                         <span class="material-symbols-outlined">task_alt</span>
                         <span class="font-bold">Đơn hàng này đã hoàn tất thành công.</span>
                     </div>
-                    <div th:if="${selectedOrder.orderStatus.name() == 'CANCELLED'}" class="p-4 rounded-xl bg-rose-50 border border-rose-100 flex items-center gap-3 text-rose-700">
+                    <div th:if="${selectedOrder.orderStatus.name() == 'CANCELLED'}"
+                         class="p-4 rounded-xl bg-rose-50 border border-rose-100 flex items-center gap-3 text-rose-700">
                         <span class="material-symbols-outlined">error</span>
                         <span class="font-bold">Đơn hàng này đã bị hủy.</span>
                     </div>
                 </div>
             </section>
         </div>
-                </div>
-            </section>
-        </div>
+    </div>
+    </section>
+    </div>
     </div>
 </main>
 </body>
