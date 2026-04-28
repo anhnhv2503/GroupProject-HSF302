@@ -1,6 +1,7 @@
 package com.project.hsf.config;
 
 
+import com.project.hsf.service.impl.CustomOAuth2UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,7 +23,6 @@ public class SecurityConfig {
     private final List<String> publicUrl =
             List.of(
                     "/",
-                    "/home",
                     "/login/**",
                     "/register/**",
                     "/products/**",
@@ -39,9 +39,11 @@ public class SecurityConfig {
 
     @Autowired
     private UserDetailsService userDetailsService;
+    @Autowired
+    private CustomOAuth2UserService customOAuth2UserService;
 
     @Bean
-    public static PasswordEncoder passwordEncoder(){
+    public static PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
@@ -50,8 +52,12 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers(publicUrl.toArray(String[]::new)).permitAll()
-                .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
+                .oauth2Login(oauth ->
+                        oauth.loginPage("/login")
+                                .defaultSuccessUrl("/home", true)
+                                .userInfoEndpoint(userInfo -> userInfo.oidcUserService(customOAuth2UserService)))
                 .formLogin((form) -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/login")
@@ -64,7 +70,7 @@ public class SecurityConfig {
                                 return;
                             }
 
-                            response.sendRedirect("/home");
+                            response.sendRedirect("/");
                         })
                         .failureUrl("/login?error=true")
                         .permitAll())
