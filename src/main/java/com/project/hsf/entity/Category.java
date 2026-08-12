@@ -38,11 +38,11 @@ public class Category {
     @Column(name = "active", nullable = false)
     private Boolean active = false;
 
-    @ColumnDefault("getdate()")
+    @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "created_date")
     private Instant createdDate;
 
-    @ColumnDefault("getdate()")
+    @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "updated_date")
     private Instant updatedDate;
 

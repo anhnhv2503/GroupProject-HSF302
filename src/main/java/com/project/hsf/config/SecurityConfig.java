@@ -33,7 +33,10 @@ public class SecurityConfig {
                     "/register-user",
                     "/cart",
                     "/wishlist/**",
-                    "/chatbot/**"
+                    "/chatbot/**",
+                    // PayOS calls this from their own servers, with no login session. The endpoint
+                    // protects itself with an HMAC signature rather than relying on Spring Security.
+                    "/api/payments/payos/webhook"
             );
 //    private final List<String> privateUrl = new ArrayList<>();
 

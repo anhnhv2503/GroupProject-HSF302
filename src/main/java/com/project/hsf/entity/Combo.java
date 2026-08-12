@@ -59,18 +59,18 @@ public class Combo {
     private Boolean active = false;
 
     @NotNull
-    @ColumnDefault("getdate()")
+    @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "valid_from", nullable = false)
     private Instant validFrom;
 
     @Column(name = "valid_until")
     private Instant validUntil;
 
-    @ColumnDefault("getdate()")
+    @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "created_date")
     private Instant createdDate;
 
-    @ColumnDefault("getdate()")
+    @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "updated_date")
     private Instant updatedDate;
 

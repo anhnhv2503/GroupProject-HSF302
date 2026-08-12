@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Nationalized;
@@ -89,18 +90,25 @@ public class SeafoodProduct {
     private String unit;
 
     @CreationTimestamp
-    @ColumnDefault("getdate()")
+    @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "created_date")
     private Instant createdDate;
 
     @UpdateTimestamp
-    @ColumnDefault("getdate()")
+    @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "updated_date")
     private Instant updatedDate;
 
+    /**
+     * @BatchSize collapses N image queries for N products into ceil(N/32) IN (...) queries.
+     * Batching is used instead of a fetch join because a product has many images: fetch-joining
+     * both images and reviews would multiply rows (cartesian product) in the result.
+     */
+    @BatchSize(size = 32)
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductImage> images = new ArrayList<>();
 
+    @BatchSize(size = 32)
     @OneToMany(mappedBy = "product")
     private List<ProductReview> reviews = new ArrayList<>();
 }

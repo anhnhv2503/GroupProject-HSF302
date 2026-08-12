@@ -36,7 +36,7 @@ public class CouponUsage {
     @Column(name = "order_id")
     private Long orderId;
 
-    @ColumnDefault("getdate()")
+    @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "used_at")
     private Instant usedAt;
 

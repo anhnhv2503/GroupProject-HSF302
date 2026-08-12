@@ -1,13 +1,16 @@
 package com.project.hsf.service.impl;
 
 import java.math.BigDecimal;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.project.hsf.service.CartService;
+import com.project.hsf.service.PaymentService;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vn.payos.PayOS;
@@ -50,8 +53,18 @@ public class OrderServiceImpl implements OrderService {
     private final PaymentRepository paymentRepository;
     private final PayOS payOS;
     private final CartService cartService;
+    private final PaymentService paymentService;
 
-    private final String CALLBACK_URL = "http://localhost:8080/checkout/callback";
+    /**
+     * Payment window of a PayOS link. Shared by link creation (expiredAt) and the expiry job so the
+     * two cannot drift apart: if the link died at 30 minutes but the job waited 60, stock would sit
+     * reserved for an extra 30 minutes for nothing.
+     */
+    static final Duration PAYMENT_WINDOW = Duration.ofMinutes(30);
+
+    /** Application base URL, used to build the PayOS return/cancel URLs. */
+    @Value("${app.base-url:http://localhost:8080}")
+    private String baseUrl;
 
     @Override
     @Transactional(readOnly = true)
@@ -107,6 +120,22 @@ public class OrderServiceImpl implements OrderService {
 
         if (!isValidTransition) {
             throw new IllegalStateException("Khong the chuyen tu trang thai " + currentStatus + " sang " + targetStatus + ".");
+        }
+
+        // Cancelling is more than flipping a status column: stock was deducted and a coupon
+        // redemption was counted at placement time, so both have to be given back. A PAID order is
+        // not auto-restored here because a refund is involved - that is handled separately.
+        if (targetStatus == OrderStatus.CANCELLED) {
+            if (order.getPaymentStatus() == PaymentStatus.PAID) {
+                throw new IllegalStateException(
+                        "Don da thanh toan. Can hoan tien truoc khi huy, khong huy truc tiep tai day.");
+            }
+            if (currentStatus == OrderStatus.PENDING) {
+                cancelOrder(orderId, note != null ? note : "Admin huy don.", "Admin");
+                return;
+            }
+            restoreReservedStock(orderId);
+            releaseCouponIfAny(order);
         }
 
         // 3. Payment Enforcement for Online Orders
@@ -301,14 +330,15 @@ public class OrderServiceImpl implements OrderService {
                     .price(finalPrice.longValue())
                     .build();
 
+            String callbackUrl = baseUrl + "/checkout/callback";
             CreatePaymentLinkRequest request = CreatePaymentLinkRequest.builder()
                     .orderCode(orderCode)
                     .amount(finalPrice.longValue())
                     .description("Thanh toán đơn hàng")
                     .item(item)
-                    .returnUrl(CALLBACK_URL)
-                    .cancelUrl(CALLBACK_URL)
-                    .expiredAt((System.currentTimeMillis() / 1000) + (30 * 60))
+                    .returnUrl(callbackUrl)
+                    .cancelUrl(callbackUrl)
+                    .expiredAt((System.currentTimeMillis() / 1000) + PAYMENT_WINDOW.toSeconds())
                     .build();
             CreatePaymentLinkResponse response = payOS.paymentRequests().create(request);
             return response.getCheckoutUrl();
@@ -318,54 +348,105 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order processOrder(Long orderCode, String status, boolean cancel, HttpSession session) {
-        Order order = orderRepository.findByOrderCode(orderCode).orElse(null);
-
-        if (order != null) {
-            Payment payment = paymentRepository.findByOrderId(order.getId()).orElse(null);
-            if (cancel) {
-                order.setOrderStatus(OrderStatus.CANCELLED);
-                order.setPaymentStatus(PaymentStatus.UNPAID);
-                if (payment != null) payment.setStatus(PaymentStatus.CANCELLED.name());
-            } else if (PaymentStatus.PAID.name().equals(status)) {
-                order.setOrderStatus(OrderStatus.CONFIRMED);
-                order.setPaymentStatus(PaymentStatus.PAID);
-                if (payment != null) payment.setStatus(PaymentStatus.PAID.name());
-            } else {
-                order.setOrderStatus(OrderStatus.CANCELLED);
-                order.setPaymentStatus(PaymentStatus.UNPAID);
-                if (payment != null) payment.setStatus(PaymentStatus.CANCELLED.name());
-            }
-            if (payment != null) paymentRepository.save(payment);
-            Order savedOrder = orderRepository.save(order);
-            cartService.clearCart(session);
-            return savedOrder;
+    @Transactional
+    public Order handlePaymentReturn(Long orderCode, boolean userCancelled, User customer, HttpSession session) {
+        Order order = findOwnedOrderByCode(orderCode, customer);
+        if (order == null) {
+            return null;
         }
-        return null;
+
+        if (userCancelled) {
+            cancelOrder(order.getId(), "Khach hang huy tai trang thanh toan PayOS.", "CUSTOMER");
+        } else {
+            // The status parameter on the URL is deliberately ignored: it used to be enough to type
+            // /checkout/callback?status=PAID to get a paid order. Now PayOS is asked directly.
+            paymentService.reconcileOrderWithProvider(orderCode);
+        }
+
+        cartService.clearCart(session);
+        return orderRepository.findByOrderCode(orderCode).orElse(null);
     }
 
     @Override
-    public Order orderCallback(Long orderCode, boolean success, HttpSession session) {
-        Order order = orderRepository.findByOrderCode(orderCode).orElse(null);
+    @Transactional(readOnly = true)
+    public Order findOwnedOrderByCode(Long orderCode, User customer) {
+        if (orderCode == null || customer == null) {
+            return null;
+        }
+        return orderRepository.findByOrderCodeAndCustomerId(orderCode, customer.getId()).orElse(null);
+    }
 
-        if (order != null) {
-            Payment payment = paymentRepository.findByOrderId(order.getId()).orElse(null);
-            if (success) {
-                order.setOrderStatus(OrderStatus.PENDING);
-                order.setPaymentStatus(PaymentStatus.UNPAID);
-                if (payment != null) payment.setStatus(PaymentStatus.PENDING.name());
-            } else {
-                order.setOrderStatus(OrderStatus.CANCELLED);
-                order.setPaymentStatus(PaymentStatus.UNPAID);
-                if (payment != null) payment.setStatus(PaymentStatus.CANCELLED.name());
-            }
-            if (payment != null) paymentRepository.save(payment);
-            Order savedOrder = orderRepository.save(order);
-            cartService.clearCart(session);
-            return savedOrder;
+    @Override
+    @Transactional
+    public boolean cancelOrder(Long orderId, String reason, String changedBy) {
+        Order order = orderRepository.findById(orderId).orElse(null);
+        if (order == null) {
+            return false;
         }
 
-        return null;
+        // Cancel first, compensate after. 0 rows updated means the order is in another state
+        // (already paid, or another flow just cancelled it) - leave now, do not return stock twice.
+        int cancelled = orderRepository.cancelIfStillPending(orderId, Instant.now());
+        if (cancelled == 0) {
+            return false;
+        }
+
+        restoreReservedStock(orderId);
+        releaseCouponIfAny(order);
+
+        Payment payment = paymentRepository.findByOrderId(orderId).orElse(null);
+        if (payment != null) {
+            payment.setStatus(PaymentStatus.CANCELLED.name());
+            payment.setUpdatedDate(Instant.now());
+            paymentRepository.save(payment);
+        }
+
+        OrderStatusHistory history = new OrderStatusHistory();
+        history.setOrder(order);
+        history.setStatus(OrderStatus.CANCELLED);
+        history.setChangedBy(changedBy);
+        history.setChangedAt(Instant.now());
+        history.setNote(reason);
+        orderStatusHistoryRepository.save(history);
+
+        log.info("Cancelled order {} ({}), stock returned.", orderId, changedBy);
+        return true;
+    }
+
+    @Override
+    @Transactional
+    public int expireUnpaidOrders() {
+        Instant cutoff = Instant.now().minus(PAYMENT_WINDOW);
+        List<Order> expired = orderRepository.findExpiredUnpaidOrders(
+                PaymentMethod.BANK_TRANSFER.name(), cutoff);
+
+        int cancelledCount = 0;
+        for (Order order : expired) {
+            if (cancelOrder(order.getId(),
+                    "Tu dong huy: qua han thanh toan " + PAYMENT_WINDOW.toMinutes() + " phut.",
+                    "SYSTEM")) {
+                cancelledCount++;
+            }
+        }
+        return cancelledCount;
+    }
+
+    /**
+     * Returns exactly the quantities that were deducted at placement, read from order_items rather
+     * than the session cart - the session may already have been cleared or changed by cancel time.
+     */
+    private void restoreReservedStock(Long orderId) {
+        for (OrderItem item : orderItemRepository.findByOrderId(orderId)) {
+            if (item.getProduct() != null && item.getQuantity() != null) {
+                seafoodProductRepository.restoreStock(item.getProduct().getId(), item.getQuantity());
+            }
+        }
+    }
+
+    private void releaseCouponIfAny(Order order) {
+        if (order.getCouponCode() != null && order.getCouponCode().getCode() != null) {
+            couponRepository.releaseCoupon(order.getCouponCode().getCode());
+        }
     }
 
     @Override

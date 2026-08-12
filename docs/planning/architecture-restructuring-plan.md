@@ -1,6 +1,4 @@
-# SeafoodStore Comprehensive Master Restructuring Plan
-
-> **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
+# Kế hoạch tái cấu trúc kiến trúc
 
 **Goal:** Chuyển đổi toàn diện dự án sang kiến trúc chuyên nghiệp: Backend tuân thủ Layered Architecture (Service Layer), Frontend tuân thủ Atomic Design & Decorator Layout.
 

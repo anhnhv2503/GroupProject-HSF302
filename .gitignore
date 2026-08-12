@@ -34,3 +34,10 @@ build/
 
 ### Uploads ###
 uploads/
+
+### Secrets - see .env.example for the template ###
+.env
+.env.*
+!.env.example
+*.local.properties
+application-local.properties

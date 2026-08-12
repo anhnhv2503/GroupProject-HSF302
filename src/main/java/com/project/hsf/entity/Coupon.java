@@ -57,7 +57,7 @@ public class Coupon {
     private Integer usedCount;
 
     @NotNull
-    @ColumnDefault("getdate()")
+    @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "valid_from", nullable = false)
     private Instant validFrom;
 
@@ -70,11 +70,11 @@ public class Coupon {
     @Column(name = "active", nullable = false)
     private Boolean active = false;
 
-    @ColumnDefault("getdate()")
+    @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "created_date")
     private Instant createdDate;
 
-    @ColumnDefault("getdate()")
+    @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "updated_date")
     private Instant updatedDate;
 

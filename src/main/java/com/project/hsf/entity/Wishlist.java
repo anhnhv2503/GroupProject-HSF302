@@ -31,7 +31,7 @@ public class Wishlist {
     @JoinColumn(name = "product_id", nullable = false)
     private SeafoodProduct product;
 
-    @ColumnDefault("getdate()")
+    @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "added_date")
     private Instant addedDate;
 

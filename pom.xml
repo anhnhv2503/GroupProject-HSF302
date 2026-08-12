@@ -81,6 +81,12 @@
 			<artifactId>spring-boot-starter-data-jpa-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<!-- DB in-memory cho test tang repository, khong can dung SQL Server that -->
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>test</scope>
+		</dependency>
 		<!-- Bootstrap 5 WebJars -->
 		<dependency>
 			<groupId>org.webjars</groupId>

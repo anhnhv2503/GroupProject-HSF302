@@ -61,7 +61,7 @@ public class OrderStatusHistory {
     @Column(name = "changed_by", length = 50)
     private String changedBy;
 
-    @ColumnDefault("getdate()")
+    @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "changed_at")
     private Instant changedAt;
 

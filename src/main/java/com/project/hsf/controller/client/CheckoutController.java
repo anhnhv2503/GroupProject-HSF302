@@ -158,32 +158,71 @@ public class CheckoutController {
         }
     }
 
+    /**
+     * The page a customer lands on after leaving PayOS.
+     *
+     * PayOS still appends a {@code status} parameter to this URL, but it is NOT used to decide the
+     * order state. It used to be trusted, which meant typing
+     * /checkout/callback?status=PAID&cancel=false by hand produced a paid order without paying.
+     * PAID now only comes from a signature-verified webhook or server-to-server reconciliation.
+     */
     @GetMapping("/callback")
     public String paymentCallback(
             Model model,
             @RequestParam("orderCode") String orderCode,
-            @RequestParam("status") String status,
-            @RequestParam("cancel") boolean cancel,
+            @RequestParam(value = "cancel", defaultValue = "false") boolean cancel,
+            Principal principal,
             HttpSession session) {
 
-        Long parsedOrderCode = Long.parseLong(orderCode);
-        Order order = orderService.processOrder(parsedOrderCode, status, cancel, session);
-        if (order == null) {
-            model.addAttribute("error", "Không tìm thấy đơn hàng hoặc đã xử lý trước đó.");
+        if (principal == null) {
+            return "redirect:/login";
+        }
+
+        Long parsedOrderCode;
+        try {
+            parsedOrderCode = Long.parseLong(orderCode);
+        } catch (NumberFormatException e) {
+            model.addAttribute("error", "Mã đơn hàng không hợp lệ.");
             return "payment/callback";
         }
+
+        User user = userService.findByUsername(principal.getName());
+        Order order = orderService.handlePaymentReturn(parsedOrderCode, cancel, user, session);
+        if (order == null) {
+            model.addAttribute("error", "Không tìm thấy đơn hàng.");
+            return "payment/callback";
+        }
+
         model.addAttribute("order", order);
-        model.addAttribute("status", status);
+        model.addAttribute("status", order.getPaymentStatus().name());
         return "payment/callback";
     }
 
+    /**
+     * Thank-you page for cash-on-delivery orders. Read-only: the order was already created in
+     * /place-order, so there is nothing left to write here.
+     */
     @GetMapping("/checkout")
     public String orderCallback(
             Model model,
             @RequestParam("orderCode") String orderCode,
-            @RequestParam("success") boolean success,
-            HttpSession session) {
-        Order order = orderService.orderCallback(Long.parseLong(orderCode), success, session);
+            Principal principal) {
+
+        if (principal == null) {
+            return "redirect:/login";
+        }
+
+        User user = userService.findByUsername(principal.getName());
+        Order order;
+        try {
+            order = orderService.findOwnedOrderByCode(Long.parseLong(orderCode), user);
+        } catch (NumberFormatException e) {
+            order = null;
+        }
+
+        if (order == null) {
+            model.addAttribute("error", "Không tìm thấy đơn hàng.");
+        }
         model.addAttribute("order", order);
         return "payment/order-callback";
     }

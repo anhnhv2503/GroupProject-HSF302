@@ -20,4 +20,12 @@ public interface CouponRepository extends JpaRepository<Coupon, Long> {
     @Query("UPDATE Coupon c SET c.usedCount = c.usedCount + 1 WHERE c.code = :code AND c.usedCount < c.maxUses AND c.active = true AND c.validUntil > CURRENT_TIMESTAMP")
     int claimCoupon(@Param("code") String code);
 
+    /**
+     * Releases a redemption when an order is cancelled. The {@code usedCount > 0} guard prevents
+     * the counter going negative if this is called twice for the same order.
+     */
+    @Modifying(clearAutomatically = true)
+    @Query("UPDATE Coupon c SET c.usedCount = c.usedCount - 1 WHERE c.code = :code AND c.usedCount > 0")
+    int releaseCoupon(@Param("code") String code);
+
 }

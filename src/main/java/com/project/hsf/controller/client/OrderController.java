@@ -58,7 +58,9 @@ public class OrderController {
         if (order == null) {
             return "error/404";
         }
-        if(user.getId() != order.getCustomer().getId()) {
+        // Must use equals: getId() returns a Long object, so != compares references. Long only
+        // caches -128..127, so small ids happened to work while larger ids gave a false 403.
+        if (!user.getId().equals(order.getCustomer().getId())) {
             return "error/403";
         }
         

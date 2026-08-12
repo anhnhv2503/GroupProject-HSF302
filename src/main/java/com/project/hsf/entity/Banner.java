@@ -54,12 +54,12 @@ public class Banner {
     private Boolean active = true;
 
     @CreationTimestamp
-    @ColumnDefault("getdate()")
+    @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "created_date")
     private Instant createdDate;
 
     @UpdateTimestamp
-    @ColumnDefault("getdate()")
+    @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "updated_date")
     private Instant updatedDate;
 }

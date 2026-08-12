@@ -45,7 +45,7 @@ public class ProductImage {
     @Column(name = "is_primary", nullable = false)
     private Boolean isPrimary = false;
 
-    @ColumnDefault("getdate()")
+    @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "created_date")
     private Instant createdDate;
 

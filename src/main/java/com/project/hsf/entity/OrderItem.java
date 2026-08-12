@@ -67,7 +67,7 @@ public class OrderItem {
     @Column(name = "subtotal", precision = 21, scale = 2, insertable = false, updatable = false)
     private BigDecimal subtotal;
 
-    @ColumnDefault("getdate()")
+    @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "created_date")
     private Instant createdDate;
 
